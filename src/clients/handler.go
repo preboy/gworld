@@ -1,9 +1,10 @@
 package clients
 
 import (
-	"bytes"
-	"encoding/gob"
+	// "bytes"
+	// "encoding/gob"
 	"fmt"
+	"reflect"
 )
 
 // opcode
@@ -13,16 +14,26 @@ var SC_PING uint16 = 0x2
 
 type HANDLER = func(packet *Packet)
 
-var msg_handler [0x10000]HANDLER
-
-func RegisterHandler(opcode uint16, f HANDLER) {
-	msg_handler[opcode] = f
+type Message interface {
+	OnRequest(plr *Player)
 }
 
-func handle(packet *Packet) {
-	handler := msg_handler[packet.code]
-	if handler != nil {
-		handler(packet)
+var msg_handler [0x1000]reflect.Type
+
+func RegisterMessageType(opcode uint16, msg Message) {
+	msg_handler[opcode] = reflect.TypeOf(msg)
+}
+
+func Dispatcher(packet *Packet, plr *Player) {
+	fmt.Println("new packet", packet.code, len(packet.data))
+	ty := msg_handler[packet.code]
+	if ty != nil {
+		msg := reflect.New(ty)
+		obj := msg.Interface().(Message)
+		// proto.Marshal(msg.Interface().(Message))
+		obj.OnRequest(plr)
+	} else {
+		fmt.Println("invalid packet ", packet.code, packet.data)
 	}
 }
 
@@ -32,14 +43,10 @@ type Student struct {
 	man  bool
 }
 
-func msg_ping(packet *Packet) {
-	var s Student
-	buf := bytes.NewBuffer(packet.data)
-	dec := gob.NewDecoder(buf)
-	dec.Decode(&s)
-	fmt.Println(s)
+func (self *Student) OnRequest(plr *Player) {
+
 }
 
 func init() {
-	RegisterHandler(CS_PING, msg_ping)
+	RegisterMessageType(CS_PING, &Student{})
 }

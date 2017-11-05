@@ -1,7 +1,7 @@
 package clients
 
 import (
-	"fmt"
+	_ "fmt"
 	"math/rand"
 	"net"
 	"time"
@@ -15,12 +15,14 @@ type Player struct {
 	data   uint32
 	// 再搞几个通道用来通信
 	ch_packet chan Packet
+	evtMgr    *EventMgr
 }
 
 var _plrs_map = make(map[uint32]*Player)
 var _plrs_arr = make([]*Player, 0x1000)
 
 var _index uint32
+var last_update int64
 
 func CreatePlayer(name string) *Player {
 
@@ -56,19 +58,35 @@ func GetPlayerById(pid uint32) *Player {
 	return plr
 }
 
-func player_loop(plr *Player) {
+func prepare_update(plr *Player) bool {
+	now := time.Now().Unix()
+	if now-100 >= last_update {
+		last_update = now
+		plr.OnUpdate()
+		return true
+	}
+	return false
+}
 
+func player_loop(plr *Player) {
 	for {
 		select {
-		case pck := <-plr.ch_packet:
-			fmt.Println("new packet", pck.code, len(pck.data))
-
-		// case <-time.After(1 * time.Minute):
-		// fmt.Println("1 Minute later")
+		case packet := <-plr.ch_packet:
+			Dispatcher(&packet, plr)
 		default:
-			// fmt.Println("not get packet")
-			time.Sleep(50 * time.Millisecond)
+			if !prepare_update(plr) {
+				time.Sleep(50 * time.Millisecond)
+			}
 		}
 	}
+}
 
+// ----------------- player evnet -----------------
+
+func (plr *Player) OnUpdate() {
+	plr.evtMgr.Loop()
+}
+
+func (plr *Player) OnEvent(evt *EventInfo) int {
+	return 0
 }
