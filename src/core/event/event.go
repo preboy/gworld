@@ -37,7 +37,7 @@ func (self *EventMgr) Fire(evt *EventInfo) {
 	self.evts <- evt
 }
 
-func (self *EventMgr) Loop() {
+func (self *EventMgr) Update() {
 	for {
 		select {
 		case evt := <-self.evts:

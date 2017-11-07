@@ -16,16 +16,14 @@ type Socket struct {
 	conn      *net.TCPConn
 	w         *sync.WaitGroup
 	plr       IPlayerSocket
-	q_packets chan *Packet
 	on_open   func(*Socket)
 	on_closed func(*Socket)
 }
 
 func NewSocket(conn *net.TCPConn) *Socket {
 	return &Socket{
-		conn:      conn,
-		w:         &sync.WaitGroup{},
-		q_packets: make(chan *Packet),
+		conn: conn,
+		w:    &sync.WaitGroup{},
 	}
 }
 
@@ -45,25 +43,6 @@ func (self *Socket) Stop() {
 	self.on_closed(self)
 	self.conn.Close()
 	self.w.Wait()
-}
-
-// running in player's main routine
-func (self *Socket) DispatchPacket() bool {
-	dispose := false
-	for {
-		select {
-		case packet := <-self.q_packets:
-			if self.plr != nil {
-				self.plr.OnRecvPacket(packet)
-			} else {
-				fmt.Println("no plr")
-			}
-			dispose = true
-		default:
-			break
-		}
-	}
-	return dispose
 }
 
 func (self *Socket) rt_recv() {
@@ -101,15 +80,7 @@ func (self *Socket) rt_recv() {
 			}
 			l += len
 		}
-
-		// 将数据原样发过去
-		// self.conn.Write(head[:])
-		// self.conn.Write(body[0:size])
-
-		self.q_packets <- NewPacket(code, body)
-		// if plr {
-		// 	plr.OnRecvPacket(packet)
-		// }
+		self.dispatch_packet(NewPacket(code, body))
 	}
 
 	fmt.Println("socket rt_recv end", self)
@@ -121,4 +92,17 @@ func (self *Socket) rt_send() {
 // 发送数据可以另外弄一个routine
 func (self *Socket) Send(data []byte) {
 	self.conn.Write(data)
+}
+
+func (self *Socket) dispatch_packet(packet *Packet) {
+	// 心跳包不处理
+	if packet.opcode < 100 {
+	} else {
+		if self.plr != nil {
+			self.plr.OnRecvPacket(packet)
+		} else {
+
+		}
+	}
+
 }

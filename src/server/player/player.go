@@ -5,8 +5,8 @@ import (
 )
 
 import (
-	"public/event"
-	"public/tcp"
+	"core/event"
+	"core/tcp"
 )
 
 type Player struct {
@@ -16,12 +16,15 @@ type Player struct {
 	data        uint32
 	socket      *tcp.Socket
 	evtMgr      *event.EventMgr
+	q_packets   chan *Packet
 	last_update int64
 	//	quit        chan bool
 }
 
 func NewPlayer() {
-	plr = &Player{}
+	plr = &Player{
+		q_packets: make(chan *Packet, 0x100),
+	}
 	plr.init()
 	return plr
 }
@@ -30,12 +33,7 @@ func NewPlayer() {
 
 func (self *Player) Loop() {
 	for {
-		busy := false
-		if self.socket {
-			if b := self.socket.DispatchPacket(); b {
-				busy = true
-			}
-		}
+		busy := self.dispatch_packet()
 		if b := self.update(); b {
 			busy = true
 		}
@@ -57,7 +55,7 @@ func (self *Player) update() bool {
 
 func (self *Player) on_update() {
 	if self.evtMgr {
-		self.evtMgr.Loop()
+		self.evtMgr.Update()
 	}
 }
 

@@ -3,7 +3,7 @@ package player
 import ()
 
 import (
-	"public/event"
+	"core/event"
 )
 
 func (self *Player) OnEvent(event *EventInfo) int {

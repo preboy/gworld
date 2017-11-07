@@ -6,7 +6,7 @@ import (
 )
 
 import (
-	"public/tcp"
+	"core/tcp"
 )
 
 var (
