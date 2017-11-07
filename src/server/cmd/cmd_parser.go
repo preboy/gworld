@@ -1,4 +1,4 @@
-package utils
+package cmd
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 
 func ParseCommand(cmd *string) {
 	switch *cmd {
-    case "":
+	case "":
 
 	case "a":
 		fmt.Println("you input a")

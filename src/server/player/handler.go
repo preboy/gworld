@@ -1,8 +1,6 @@
 package clients
 
 import (
-	// "bytes"
-	// "encoding/gob"
 	"fmt"
 	"reflect"
 )
@@ -12,13 +10,17 @@ import (
 var CS_PING uint16 = 0x1
 var SC_PING uint16 = 0x2
 
+const (
+	MAX_PACKET_COUNT = 0x1000
+)
+
 type HANDLER = func(packet *Packet)
 
 type Message interface {
 	OnRequest(plr *Player)
 }
 
-var msg_handler [0x1000]reflect.Type
+var msg_handler [MAX_PACKET_COUNT]reflect.Type
 
 func RegisterMessageType(opcode uint16, msg Message) {
 	msg_handler[opcode] = reflect.TypeOf(msg)

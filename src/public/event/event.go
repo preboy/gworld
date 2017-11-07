@@ -1,4 +1,4 @@
-package clients
+package event
 
 // EventID
 const (
@@ -26,19 +26,15 @@ type IPlayerEventMgr interface {
 	OnEvent(evt *EventInfo) int
 }
 
-func NewEventMgr(player IPlayerEventMgr) *EventMgr {
+func NewEventMgr(plr IPlayerEventMgr) *EventMgr {
 	return &EventMgr{
-		plr:  player,
+		plr:  plr,
 		evts: make(chan *EventInfo),
 	}
 }
 
 func (self *EventMgr) Fire(evt *EventInfo) {
 	self.evts <- evt
-}
-
-func (self *EventMgr) FireDirect(evt *EventInfo) {
-	self.plr.OnEvent(evt)
 }
 
 func (self *EventMgr) Loop() {
