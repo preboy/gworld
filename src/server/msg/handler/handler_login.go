@@ -1,4 +1,4 @@
-package msg
+package handler
 
 import (
 	"server/player"
@@ -14,6 +14,8 @@ type StudentResp struct {
 	fuck string
 }
 
-func (self *Student) OnRequest(plr *player.Player, res s) bool {
+func (self *Student) OnRequest(plr *player.Player, res msg.IMessage) bool {
+	resp := res.(*StudentResp)
 
+	return true
 }

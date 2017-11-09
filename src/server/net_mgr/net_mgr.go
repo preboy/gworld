@@ -18,7 +18,7 @@ var (
 // 新建一个对象，并开启一个route
 func on_client_connected(conn *net.TCPConn) {
 	s := session.NewSession()
-	socket := tcp.NewSocket(conns, s)
+	socket := tcp.NewSocket(conn, s)
 	s.SetSocket(socket)
 	socket.Start(on_client_open, on_client_closed)
 }
