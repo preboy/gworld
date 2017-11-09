@@ -9,12 +9,20 @@ import (
 import (
 	"core/tcp"
 	"public/protocol"
-	"server/player/handlers"
+	// "server/player/msg"
 )
 
+type msg_type struct {
+	Req, Res reflect.Type
+}
+
+type IMessage interface {
+	OnRequest(plr *Player) bool
+}
+
 var (
-	protocol_request  [protocol.PROTO_END]reflect.Type
-	protocol_response map[reflect.Type]protocol.PROTO_END
+	map_msgid_type = [protocol.PROTO_END]*msg_type{}
+	map_type_msgid = make(map[reflect.Type]uint16)
 )
 
 // 将Packet转化为Message
@@ -22,11 +30,11 @@ func (self *Player) OnRecvPacket(packet *tcp.Packet) {
 	self.q_packets <- packet
 }
 
-func (self *Player) dispatch_packet() {
+func (self *Player) dispatch_packet() bool {
 	busy := false
 	for {
 		select {
-		case packet := q_packets:
+		case packet := <-self.q_packets:
 			self.on_dispatch_packet(packet)
 			busy = true
 		default:
@@ -38,52 +46,54 @@ func (self *Player) dispatch_packet() {
 
 func (self *Player) on_dispatch_packet(packet *tcp.Packet) {
 	// 根据opcode生成对应的结构体对象，跳动对象的Handler方法
-	typ := protocol_request[packet.opcode]
-	if typ {
-		obj := reflect.New(typ).Interface().(*typ)
+	mt := map_msgid_type[packet.Opcode]
+	if mt != nil {
+		req := reflect.New(mt.Req).Interface().(*mt.Req)
+		res := reflect.New(mt.Res).Interface().(*mt.Res)
 		// proto.Unmarshal(packet.data, obj)
-		obj.OnRequest(self)
+		if req.OnRequest(self, res) {
+			// data, err := proto.Marshal(res)
+			// if err {
+			// fmt.Println("fuck")
+			// } else {
+			// self.Send(data)
+			// }
+		}
 	} else {
-		fmt.Println("unknown packet", packet.opcode)
+		fmt.Println("unknown packet", packet.Opcode)
 	}
 }
 
-func register_protocol_request(opcode uint16, obj interface{}) {
-	if opcode < protocol.PROTO_END {
-		protocol_request[opcode] = reflect.TypeOf(obj)
+func register_protocol(opcode protocol.ProtoID, req interface{}, res interface{}) {
+	if opcode >= protocol.PROTO_END {
+		return
 	}
-}
-
-func register_protocol_response(opcode uint16, obj interface{}) {
-	if opcode < protocol.PROTO_END {
-		protocol_response[reflect.TypeOf(obj)] = opcode
+	map_msgid_type[opcode] = &msg_type{
+		reflect.TypeOf(req),
+		reflect.TypeOf(res),
 	}
+	map_type_msgid[reflect.TypeOf(res)] = opcode
 }
 
 func init() {
-	register_protocol_request(protocol.CS_LOGIN, handlers.Student{})
+	register_protocol(protocol.CS_LOGIN, msg.Student{}, msg.StudentResp{})
 }
 
-func init() {
-	register_protocol_response(protocol.SC_LOGIN, handlers.StudentResp{})
-}
-
-func (self *Socket) SendPacket(opcode uint16, data []byte) {
-}
-
-func (self *Player) send(obj interface{}) {
+func (self *Player) SendPacket(obj interface{}) {
 	// data, err = proto.Marshal(&obj)
 	// if err {
 	// return
 	// }
 
 	typ := reflect.TypeOf(obj)
-	opcode, ok := protocol_response[typ]
+	opcode, err := protocol_response[typ]
 	if err == nil {
 		buf := new(bytes.Buffer)
 		binary.Write(buf, binary.LittleEndian, uint16(len(data)))
 		binary.Write(buf, binary.LittleEndian, opcode)
 		binary.Write(buf, binary.LittleEndian, data)
-		plr.socket.Send(buf)
+		self.Send(buf)
+	} else {
+		fmt.Println("invalid obj")
 	}
 }

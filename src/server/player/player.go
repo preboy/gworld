@@ -10,20 +10,22 @@ import (
 )
 
 type Player struct {
-	pid         uint32
+	pid         uint64
 	aid         uint32
 	name        string
+	acct        string
 	data        uint32
-	socket      *tcp.Socket
+	s           ISession
 	evtMgr      *event.EventMgr
-	q_packets   chan *Packet
+	q_packets   chan *tcp.Packet
 	last_update int64
+	run         bool
 	//	quit        chan bool
 }
 
-func NewPlayer() {
-	plr = &Player{
-		q_packets: make(chan *Packet, 0x100),
+func NewPlayer() *Player {
+	plr := &Player{
+		q_packets: make(chan *tcp.Packet, 0x100),
 	}
 	plr.init()
 	return plr
@@ -32,6 +34,14 @@ func NewPlayer() {
 // ----------------- player evnet -----------------
 
 func (self *Player) Loop() {
+	if self.run {
+		return
+	}
+	self.run = true
+	defer func() {
+		self.run = false
+	}()
+
 	for {
 		busy := self.dispatch_packet()
 		if b := self.update(); b {
@@ -54,7 +64,7 @@ func (self *Player) update() bool {
 }
 
 func (self *Player) on_update() {
-	if self.evtMgr {
+	if self.evtMgr != nil {
 		self.evtMgr.Update()
 	}
 }

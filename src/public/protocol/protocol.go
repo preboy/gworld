@@ -10,11 +10,14 @@ const (
 
 	// general
 	CS_PING
-	CS_PONG
+	SS_PONG
 
 	// client to/from server
-	CS_LOGIN ProtoID = iota + 0x1000
+	CS_LOGIN
 	SC_LOGIN
+	CS_ENTER_GAME
+
+	CS_OTHER ProtoID = iota + 0x1000
 
 	// end flag
 	PROTO_END ProtoID = 0x1000

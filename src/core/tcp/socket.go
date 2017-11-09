@@ -8,27 +8,24 @@ import (
 	"sync"
 )
 
-type IPlayerSocket interface {
+type ISession interface {
 	OnRecvPacket(packet *Packet)
 }
 
 type Socket struct {
 	conn      *net.TCPConn
 	w         *sync.WaitGroup
-	plr       IPlayerSocket
+	s         ISession
 	on_open   func(*Socket)
 	on_closed func(*Socket)
 }
 
-func NewSocket(conn *net.TCPConn) *Socket {
+func NewSocket(conn *net.TCPConn, s ISession) *Socket {
 	return &Socket{
 		conn: conn,
+		s:    s,
 		w:    &sync.WaitGroup{},
 	}
-}
-
-func (self *Socket) SetPlayer(plr IPlayerSocket) {
-	self.plr = plr
 }
 
 func (self *Socket) Start(on_open, on_closed func(*Socket)) {
@@ -80,7 +77,7 @@ func (self *Socket) rt_recv() {
 			}
 			l += len
 		}
-		self.dispatch_packet(NewPacket(code, body))
+		self.s.OnRecvPacket(NewPacket(code, body))
 	}
 
 	fmt.Println("socket rt_recv end", self)
@@ -92,17 +89,4 @@ func (self *Socket) rt_send() {
 // 发送数据可以另外弄一个routine
 func (self *Socket) Send(data []byte) {
 	self.conn.Write(data)
-}
-
-func (self *Socket) dispatch_packet(packet *Packet) {
-	// 心跳包不处理
-	if packet.opcode < 100 {
-	} else {
-		if self.plr != nil {
-			self.plr.OnRecvPacket(packet)
-		} else {
-
-		}
-	}
-
 }

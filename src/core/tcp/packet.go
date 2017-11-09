@@ -1,13 +1,13 @@
 package tcp
 
 type Packet struct {
-	opcode uint16
-	data   []byte
+	Opcode uint16
+	Data   []byte
 }
 
 func NewPacket(opcode uint16, data []byte) *Packet {
 	return &Packet{
-		opcode: opcode,
-		data:   data,
+		Opcode: opcode,
+		Data:   data,
 	}
 }
