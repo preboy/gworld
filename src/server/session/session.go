@@ -7,6 +7,7 @@ import (
 
 import (
 	"core/tcp"
+	"public/protocol"
 	"server/player"
 )
 
@@ -24,18 +25,18 @@ func NewSession() *Session {
 	return &Session{}
 }
 
-func (self *Session) SetSocket(socket *tcp.Socket) *Session {
+func (self *Session) SetSocket(socket *tcp.Socket) {
 	self.socket = socket
 }
 
-func (self *Session) SetPlayer(player *player.Player) *Session {
+func (self *Session) SetPlayer(player *player.Player) {
 	self.player = player
 }
 
 func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	self.last_touch = time.Now().Unix()
 
-	if packet.opcode == protocol.CS_PING {
+	if packet.Opcode == uint16(protocol.MSG_PING) {
 		self.on_ping(packet)
 		return
 	}
@@ -45,13 +46,13 @@ func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 		return
 	}
 
-	switch packet.opcode {
-	case protocol.CS_LOGIN:
+	switch packet.Opcode {
+	case protocol.MSG_LOGIN:
 		self.on_login(packet)
-	case protocol.CS_ENTER_GAME:
+	case protocol.MSG_ENTER_GAME:
 		self.on_enter_game(packet)
 	default:
-		fmt.Println("unknown packet in session:", packet.opcode)
+		fmt.Println("unknown packet in session:", packet.Opcode)
 	}
 }
 

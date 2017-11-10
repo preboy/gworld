@@ -1,24 +1,20 @@
 package protocol
 
-type ProtoID uint16
-
 // 按照功能 分段
 
 const (
 	//start flag
-	PROTO_BEGIN ProtoID = iota
+	PROTO_BEGIN uint16 = iota
 
 	// general
-	CS_PING
-	SS_PONG
+	MSG_PING
 
 	// client to/from server
-	CS_LOGIN
-	SC_LOGIN
-	CS_ENTER_GAME
+	MSG_LOGIN
+	MSG_ENTER_GAME
 
-	CS_OTHER ProtoID = iota + 0x1000
+	MSG_OTHER uint16 = iota + 0x1000
 
 	// end flag
-	PROTO_END ProtoID = 0x1000
+	MSG_END uint16 = 0x2000
 )

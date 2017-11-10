@@ -2,7 +2,13 @@ package player
 
 import (
 	"core/tcp"
-	"server/msg"
+	"public/protocol"
+)
+
+type msg_func = func(*Player, *tcp.Packet)
+
+var (
+	_funcs = [protocol.MSG_END]msg_func{}
 )
 
 // 将Packet转化为Message
@@ -15,11 +21,25 @@ func (self *Player) dispatch_packet() bool {
 	for {
 		select {
 		case packet := <-self.q_packets:
-			msg.OnPacket(packet, self)
+			self.on_packet(packet)
 			busy = true
 		default:
 			break
 		}
 	}
 	return busy
+}
+
+func (self *Player) on_packet(packet *tcp.Packet) {
+	f := _funcs[packet.Opcode]
+	if f != nil {
+		f(self, packet)
+	}
+}
+
+func register_handler(opcode uint16, f msg_func) {
+	if opcode >= protocol.MSG_END {
+		return
+	}
+	_funcs[opcode] = f
 }

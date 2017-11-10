@@ -11,7 +11,7 @@ import (
 
 type Player struct {
 	pid         uint64
-	aid         uint32
+	sid         uint32
 	name        string
 	acct        string
 	data        uint32
@@ -53,6 +53,7 @@ func (self *Player) Loop() {
 	}
 }
 
+// -------------- private function --------------
 func (self *Player) update() bool {
 	now := time.Now().Unix()
 	if now-100 >= self.last_update {
@@ -73,4 +74,9 @@ func (self *Player) init() {
 	// event mgr
 	self.evtMgr = event.NewEventMgr(self)
 
+}
+
+// -------------- public function --------------
+func (self *Player) GetSid() int {
+	return int(self.sid)
 }

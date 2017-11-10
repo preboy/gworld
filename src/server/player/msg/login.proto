@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package msg;
+
+message LoginRequest {
+  string acct = 1;
+  string pass = 2;
+}
+
+message LoginResponse {
+    uint32 result = 1;
+}

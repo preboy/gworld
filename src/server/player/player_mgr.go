@@ -13,25 +13,25 @@ var (
 )
 
 var (
-	_plrs_aid  = [MAX_PLAYER_COUNT]*Player{}
+	_plrs_sid  = [MAX_PLAYER_COUNT]*Player{}
 	_plrs_pid  = make(map[uint64]*Player)
 	_plrs_name = make(map[string]*Player)
 	_plrs_acct = make(map[string]*Player)
 )
 
 // 后期优化:保存index，每次从index处查找
-func query_avail_index() int {
+func query_avail_slot_index() int {
 	for i := 0; i < MAX_PLAYER_COUNT; i++ {
-		if _plrs_aid[i] == nil {
+		if _plrs_sid[i] == nil {
 			return i
 		}
 	}
 	return -1
 }
 
-func GetPlayerByAid(aid int) *Player {
-	if aid >= 0 && aid < MAX_PLAYER_COUNT {
-		return _plrs_aid[aid]
+func GetPlayerBySid(sid int) *Player {
+	if sid >= 0 && sid < MAX_PLAYER_COUNT {
+		return _plrs_sid[sid]
 	}
 	return nil
 }
@@ -80,11 +80,11 @@ func CreatePlayer() *Player {
 	plr := NewPlayer()
 
 	plr.pid = rand.Uint64()
-	plr.aid = uint32(query_avail_index())
+	plr.sid = uint32(query_avail_slot_index())
 	plr.name = ""
 	plr.acct = ""
 
-	_plrs_aid[plr.aid] = plr
+	_plrs_sid[plr.sid] = plr
 	_plrs_pid[plr.pid] = plr
 
 	_plrs_name[plr.name] = plr
