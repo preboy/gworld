@@ -1,11 +1,9 @@
 package player
 
-import ()
-
 import (
 	"core/event"
 )
 
-func (self *Player) OnEvent(event *event.EventInfo) int {
+func (self *Player) OnEvent(evt *event.Event) int {
 	return 0
 }

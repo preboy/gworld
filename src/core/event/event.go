@@ -4,36 +4,36 @@ package event
 const (
 
 	// system event
-	EVT_SYSTEM_READY = iota
+	EVT_SYS_READY uint32 = iota
 
 	// player evnet
-	EVT_PLAYER_LOGIN
-	EVT_PLAYER_LOGOUT
-	EVT_PLAYER_LEVEL_UP
-	EVT_PLAYER_LEVEL_DIED
+	EVT_PLR_LOGIN
+	EVT_PLR_LOGOUT
+	EVT_PLR_LEVEL_UP
+	EVT_PLR_LEVEL_DIED
 )
 
-type EventInfo struct {
-	EvnetID int
+type Event struct {
+	id uint32
 }
 
 type EventMgr struct {
-	evts chan *EventInfo
-	plr  IPlayerEventMgr
+	evts     chan *Event
+	receiver IEventReceiver
 }
 
-type IPlayerEventMgr interface {
-	OnEvent(evt *EventInfo) int
+type IEventReceiver interface {
+	OnEvent(evt *Event) int
 }
 
-func NewEventMgr(plr IPlayerEventMgr) *EventMgr {
+func NewEventMgr(r IEventReceiver) *EventMgr {
 	return &EventMgr{
-		plr:  plr,
-		evts: make(chan *EventInfo),
+		receiver: r,
+		evts:     make(chan *Event),
 	}
 }
 
-func (self *EventMgr) Fire(evt *EventInfo) {
+func (self *EventMgr) Fire(evt *Event) {
 	self.evts <- evt
 }
 
@@ -41,7 +41,7 @@ func (self *EventMgr) Update() {
 	for {
 		select {
 		case evt := <-self.evts:
-			self.plr.OnEvent(evt)
+			self.receiver.OnEvent(evt)
 		default:
 			break
 		}

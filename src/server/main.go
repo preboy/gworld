@@ -8,11 +8,14 @@ import (
 )
 
 import (
+	"core/log"
 	"server/cmd"
 	"server/net_mgr"
 )
 
 func main() {
+
+	log.Start("GameServer")
 
 	fmt.Println("server start ...")
 
@@ -34,6 +37,8 @@ func main() {
 	fmt.Println("server closing")
 
 	net_mgr.Stop()
+
+	log.Stop()
 
 	fmt.Println("server closed")
 }

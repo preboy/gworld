@@ -60,6 +60,14 @@ func (self *Session) Send(data []byte) {
 	self.socket.Send(data)
 }
 
+func (self *Session) Disconnect() {
+	self.player = nil
+	if self.socket != nil {
+		self.socket.Stop()
+		self.socket = nil
+	}
+}
+
 // ------------------ session handler ------------------
 
 // 心跳包

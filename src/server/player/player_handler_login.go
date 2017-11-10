@@ -12,12 +12,10 @@ func init() {
 }
 
 func handler_login(plr *Player, packet *tcp.Packet) {
-
 	req := msg.LoginRequest{}
 	res := msg.LoginResponse{}
-
 	proto.Unmarshal(packet.Data, &req)
+	// TODO something
 
-	// todo
-	plr.SendPacket(packet.Opcode, res)
+	plr.SendPacket(packet.Opcode, &res)
 }
