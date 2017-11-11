@@ -11,7 +11,7 @@ var (
 func Start(name string) {
 	filename := name + time.Now().Format("__2006-01-02__15_04_05") + ".log"
 	if gLogger == nil {
-		gLogger = NewLogger(filename)
+		gLogger = NewLogger(filename, true)
 	}
 }
 

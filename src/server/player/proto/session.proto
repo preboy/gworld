@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package msg;
+
+message PingRequest {
+  uint32 time = 1;
+}
+
+message PingResponse {
+    uint32 time = 1;
+}
+
+
+message EnterGameRequest {
+}
+

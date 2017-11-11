@@ -8,5 +8,5 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    uint32 result = 1;
+    uint32 error_code = 1;
 }

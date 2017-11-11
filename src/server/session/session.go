@@ -1,14 +1,24 @@
 package session
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
+	"regexp"
 	"time"
 )
 
 import (
+	"github.com/gogo/protobuf/proto"
+)
+
+import (
+	"core/log"
 	"core/tcp"
 	"public/protocol"
+	"server/err"
 	"server/player"
+	"server/player/msg"
 )
 
 type Session struct {
@@ -19,6 +29,14 @@ type Session struct {
 	verify     bool   // 验证是否通过
 	account    string // 账号名
 	last_touch int64  // 心跳时间
+}
+
+var (
+	_re *regexp.Regexp
+)
+
+func init() {
+	_re = regexp.MustCompile("^test[0-9]{3}$")
 }
 
 func NewSession() *Session {
@@ -60,6 +78,21 @@ func (self *Session) Send(data []byte) {
 	self.socket.Send(data)
 }
 
+func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
+	data, err := proto.Marshal(obj)
+	if err == nil {
+		l := uint16(len(data))
+		b := make([]byte, 0, l+2+2)
+		buf := bytes.NewBuffer(b)
+		binary.Write(buf, binary.LittleEndian, uint16(len(data)))
+		binary.Write(buf, binary.LittleEndian, opcode)
+		binary.Write(buf, binary.LittleEndian, data)
+		self.Send(buf.Bytes())
+	} else {
+		fmt.Println("SendPacket Error:failed to Marshal obj")
+	}
+}
+
 func (self *Session) Disconnect() {
 	self.player = nil
 	if self.socket != nil {
@@ -72,14 +105,31 @@ func (self *Session) Disconnect() {
 
 // 心跳包
 func (self *Session) on_ping(packet *tcp.Packet) {
-	fmt.Println("on_ping")
+	req := msg.PingRequest{}
+	res := msg.PingResponse{}
+	proto.Unmarshal(packet.Data, &req)
+
+	res.Time = req.Time
+	self.SendPacket(packet.Opcode, &res)
+	fmt.Println("session: on_ping", req.Time)
 }
 
 // 登录
 func (self *Session) on_login(packet *tcp.Packet) {
-	fmt.Println("on_login")
-	// self.verify = true
-	// self.account = "zcg"
+	req := msg.LoginRequest{}
+	res := msg.LoginResponse{}
+	proto.Unmarshal(packet.Data, &req)
+	// TODO something
+	res.ErrorCode = err.ERR_LOGIN_FAILED
+
+	if _re.MatchString(req.Acct) {
+		if req.Pass == "1" {
+			self.verify = true
+			res.ErrorCode = err.ERR_OK
+		}
+	}
+	self.SendPacket(packet.Opcode, &res)
+	log.GetLogger().Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
 }
 
 // 进入游戏
@@ -88,6 +138,5 @@ func (self *Session) on_enter_game(packet *tcp.Packet) {
 	if !self.verify {
 		return
 	}
-
 	player.EnterGame(self.account, self)
 }

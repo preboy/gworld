@@ -6,9 +6,10 @@ import (
 )
 
 type Logger struct {
-	f    *os.File
-	q    chan string
-	quit chan bool
+	f      *os.File
+	q      chan string
+	quit   chan bool
+	screen bool
 }
 
 // public
@@ -38,12 +39,14 @@ func (self *Logger) Fatal(format string, a ...interface{}) {
 }
 
 func (self *Logger) Go() {
-
 	go func() {
 		for {
 			select {
 			case s := <-self.q:
 				self.f.WriteString(s)
+				if self.screen {
+					fmt.Println(s)
+				}
 			case <-self.quit:
 				break
 			}
@@ -63,16 +66,17 @@ func (self *Logger) _write_string(s string) {
 }
 
 // public module function
-func NewLogger(name string) *Logger {
+func NewLogger(name string, screen bool) *Logger {
 	f, err := os.Create(name)
 	if err != nil {
 		return nil
 	}
 
 	l := &Logger{
-		f:    f,
-		q:    make(chan string),
-		quit: make(chan bool),
+		f:      f,
+		q:      make(chan string),
+		quit:   make(chan bool),
+		screen: screen,
 	}
 	l.Go()
 	return l

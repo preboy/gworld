@@ -10,11 +10,12 @@ const (
 	EVT_PLR_LOGIN
 	EVT_PLR_LOGOUT
 	EVT_PLR_LEVEL_UP
-	EVT_PLR_LEVEL_DIED
+	EVT_PLR_LEVEL_DEAD
 )
 
 type Event struct {
-	id uint32
+	id  uint32
+	ptr interface{}
 }
 
 type EventMgr struct {
@@ -23,13 +24,20 @@ type EventMgr struct {
 }
 
 type IEventReceiver interface {
-	OnEvent(evt *Event) int
+	OnEvent(evt *Event)
+}
+
+func NewEvent(id uint32, ptr interface{}) *Event {
+	return &Event{
+		id:  id,
+		ptr: ptr,
+	}
 }
 
 func NewEventMgr(r IEventReceiver) *EventMgr {
 	return &EventMgr{
 		receiver: r,
-		evts:     make(chan *Event),
+		evts:     make(chan *Event, 0x100),
 	}
 }
 
