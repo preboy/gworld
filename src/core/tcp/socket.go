@@ -16,8 +16,8 @@ type Socket struct {
 	conn      *net.TCPConn
 	w         *sync.WaitGroup
 	s         ISession
-	on_open   func(*Socket)
-	on_closed func(*Socket)
+	fn_open   func(*Socket)
+	fn_closed func(*Socket)
 }
 
 func NewSocket(conn *net.TCPConn, s ISession) *Socket {
@@ -28,16 +28,23 @@ func NewSocket(conn *net.TCPConn, s ISession) *Socket {
 	}
 }
 
-func (self *Socket) Start(on_open, on_closed func(*Socket)) {
-	self.on_open = on_open
-	self.on_closed = on_closed
-	self.on_open(self)
+func (self *Socket) Start(oopen, closed func(*Socket)) {
+	self.fn_open = oopen
+	self.fn_closed = closed
+
+	if self.fn_open != nil {
+		self.fn_open(self)
+	}
+
 	go self.rt_recv()
 	go self.rt_send()
 }
 
 func (self *Socket) Stop() {
-	self.on_closed(self)
+	if self.fn_closed != nil {
+		self.fn_closed(self)
+	}
+
 	self.conn.Close()
 	self.w.Wait()
 }

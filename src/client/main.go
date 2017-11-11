@@ -1,11 +1,22 @@
 package main
 
 import (
-	"bufio"
+	"client/net_mgr"
 )
+
+var (
+	quit chan bool
+)
+
+func init() {
+	quit = make(chan bool)
+}
 
 func main() {
 
-	fmt.Println("server closed")
+	net_mgr.Start()
 
+	<-quit
+
+	net_mgr.Stop()
 }

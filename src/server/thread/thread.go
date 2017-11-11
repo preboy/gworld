@@ -1,4 +1,4 @@
-package routine
+package thread
 
 import (
 	"time"
