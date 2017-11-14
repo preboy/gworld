@@ -1,6 +1,12 @@
 package main
 
 import (
+	"bufio"
+	"os"
+	"strings"
+)
+
+import (
 	"client/cmd"
 	"client/net_mgr"
 )

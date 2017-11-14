@@ -30,7 +30,7 @@ func (self *Session) Go() {
 	go func() {
 		for {
 			select {
-			case packet := self.q_packets:
+			case packet := <-self.q_packets:
 				self.on_packet(packet)
 			default:
 				time.Sleep(20 * time.Millisecond)
