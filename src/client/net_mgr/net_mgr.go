@@ -25,6 +25,7 @@ func Start() {
 		socket = tcp.NewSocket(conn, s)
 		s.SetSocket(socket)
 		socket.Start(on_client_open, on_client_closed)
+		s.Go()
 	}
 }
 
