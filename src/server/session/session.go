@@ -16,9 +16,9 @@ import (
 	"core/log"
 	"core/tcp"
 	"public/protocol"
+	"public/protocol/msg"
 	"server/err"
 	"server/player"
-	"server/player/msg"
 )
 
 type Session struct {

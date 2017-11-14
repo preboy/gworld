@@ -4,7 +4,7 @@ import (
 	"core/tcp"
 	"github.com/gogo/protobuf/proto"
 	"public/protocol"
-	"server/player/msg"
+	"public/protocol/msg"
 )
 
 func init() {
