@@ -9,10 +9,14 @@ import (
 import (
 	"client/cmd"
 	"client/net_mgr"
+	"core/schedule"
+	"core/timer"
 )
 
 func main() {
 
+	timer.Start()
+	schedule.Start()
 	net_mgr.Start()
 
 	reader := bufio.NewReader(os.Stdin)
@@ -27,4 +31,7 @@ func main() {
 	}
 
 	net_mgr.Stop()
+	schedule.Stop()
+	timer.Stop()
+
 }

@@ -9,16 +9,19 @@ import (
 
 import (
 	"core/log"
+	"core/schedule"
+	"core/timer"
 	"server/cmd"
 	"server/net_mgr"
 )
 
 func main() {
 
-	log.Start("GameServer")
-
 	fmt.Println("server start ...")
 
+	log.Start("GameServer")
+	timer.Start()
+	schedule.Start()
 	net_mgr.Start()
 
 	fmt.Println("server running ...")
@@ -37,7 +40,8 @@ func main() {
 	fmt.Println("server closing")
 
 	net_mgr.Stop()
-
+	schedule.Start()
+	timer.Stop()
 	log.Stop()
 
 	fmt.Println("server closed")

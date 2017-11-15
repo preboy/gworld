@@ -6,6 +6,13 @@ const (
 	// system event
 	EVT_SYS_READY uint32 = iota
 
+	EVT_SCHED_MIN
+	EVT_SCHED_HOUR
+	EVT_SCHED_DAY
+	EVT_SCHED_WEEK
+	EVT_SCHED_MONTH
+	EVT_SCHED_YEAR
+
 	// player evnet
 	EVT_PLR_LOGIN
 	EVT_PLR_LOGOUT

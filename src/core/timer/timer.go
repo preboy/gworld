@@ -51,7 +51,11 @@ func (self *TimerMgr) Update() {
 			} else {
 				self.receiver.OnTimer(id)
 			}
-			timer.curr = now
+			if timer.repeat {
+				timer.curr = now
+			} else {
+				self.CancelTimer(id)
+			}
 		}
 	}
 }

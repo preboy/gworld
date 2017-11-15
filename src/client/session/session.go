@@ -5,17 +5,22 @@ import (
 )
 import (
 	"core/tcp"
+	"core/timer"
 )
 
 type Session struct {
 	socket    *tcp.Socket
 	q_packets chan *tcp.Packet
+	timeMgr   *timer.TimerMgr
 }
 
 func NewSession() *Session {
-	return &Session{
+	s := &Session{
 		q_packets: make(chan *tcp.Packet, 0x100),
 	}
+
+	s.init()
+	return s
 }
 
 func (self *Session) SetSocket(s *tcp.Socket) {
@@ -40,7 +45,15 @@ func (self *Session) Go() {
 	}()
 }
 
+func (self *Session) init() {
+	self.timeMgr = timer.NewTimerMgr(self)
+}
+
 func (self *Session) on_packet(packet *tcp.Packet) {
+
+}
+
+func (self *Session) OnTimer(id uint64) {
 
 }
 
