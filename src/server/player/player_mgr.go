@@ -71,7 +71,6 @@ func EnterGame(acct string, s ISession) {
 
 	s.SetPlayer(plr)
 	plr.SetSession(s)
-
 }
 
 // ------------- local function -------------

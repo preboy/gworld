@@ -1,6 +1,7 @@
 package thread
 
 import (
+	"sync"
 	"time"
 )
 
@@ -9,11 +10,18 @@ type thread_func = func()
 type Thread struct {
 	u    thread_func
 	run  bool
-	quit chan int
+	quit chan bool
+	w    *sync.WaitGroup
+	itvl uint32
 }
 
 func (self *Thread) Go() {
 	go func() {
+		self.w.Add(1)
+		defer func() {
+			self.w.Done()
+		}()
+
 		if self.run {
 			return
 		}
@@ -21,12 +29,13 @@ func (self *Thread) Go() {
 		defer func() {
 			self.run = false
 		}()
+
 		for {
 			select {
-			case <-quit:
+			case <-self.quit:
 				break
 			default:
-				time.Sleep(20 * time.Millisecond)
+				time.Sleep(time.Duration(self.itvl) * time.Millisecond)
 			}
 			self.u()
 		}
@@ -34,17 +43,21 @@ func (self *Thread) Go() {
 }
 
 func (self *Thread) Stop() {
-	self.quit <- 0
+	self.quit <- true
+	self.w.Wait()
 }
 
-func (self *Thread) IsRunning() {
+func (self *Thread) IsRunning() bool {
 	return self.run
 }
 
-func NewThread(f thread_func) *Thread {
+func NewThread(f thread_func, i uint32) *Thread {
 	if f != nil {
 		return &Thread{
-			u: f,
+			u:    f,
+			w:    &sync.WaitGroup{},
+			itvl: i,
+			quit: make(chan bool),
 		}
 	}
 	return nil

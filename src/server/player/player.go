@@ -7,6 +7,7 @@ import (
 import (
 	"core/event"
 	"core/tcp"
+	"core/timer"
 )
 
 type Player struct {
@@ -17,6 +18,7 @@ type Player struct {
 	data        uint32
 	s           ISession
 	evtMgr      *event.EventMgr
+	timerMgr    *timer.TimerMgr
 	q_packets   chan *tcp.Packet
 	last_update int64
 	run         bool
@@ -65,15 +67,13 @@ func (self *Player) update() bool {
 }
 
 func (self *Player) on_update() {
-	if self.evtMgr != nil {
-		self.evtMgr.Update()
-	}
+	self.evtMgr.Update()
+	self.timerMgr.Update()
 }
 
 func (self *Player) init() {
-	// event mgr
 	self.evtMgr = event.NewEventMgr(self)
-
+	self.timerMgr = timer.NewTimerMgr(self)
 }
 
 // -------------- public function --------------
