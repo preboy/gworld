@@ -6,7 +6,9 @@ import (
 )
 
 import (
+	"core/log"
 	"core/tcp"
+	"server/game"
 	"server/session"
 )
 
@@ -32,8 +34,10 @@ func on_client_closed(socket *tcp.Socket) {
 }
 
 func Start() {
+	addr := game.GetServerConfig().Listen_addr
 	server = tcp.NewTcpServer()
-	server.Start(":4040", on_client_connected)
+	server.Start(addr, on_client_connected)
+	log.GetLogger().Info("server listen on: %s", addr)
 }
 
 func Stop() {

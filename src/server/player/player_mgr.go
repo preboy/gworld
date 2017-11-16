@@ -13,6 +13,7 @@ var (
 )
 
 var (
+	// 在内存中的玩家，包括主动上线、从DB中被拉上线的
 	_plrs_sid  = [MAX_PLAYER_COUNT]*Player{}
 	_plrs_pid  = make(map[uint64]*Player)
 	_plrs_name = make(map[string]*Player)

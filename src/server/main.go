@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	_ "time"
 )
 
 import (
@@ -12,6 +13,7 @@ import (
 	"core/schedule"
 	"core/timer"
 	"server/cmd"
+	"server/game"
 	"server/net_mgr"
 )
 
@@ -20,6 +22,14 @@ func main() {
 	fmt.Println("server start ...")
 
 	log.Start("GameServer")
+
+	if !game.Init() {
+		log.GetLogger().Error("Fail on game.Init")
+		log.Stop()
+		// time.Sleep(100 * time.Microsecond)
+		return
+	}
+
 	timer.Start()
 	schedule.Start()
 	net_mgr.Start()
@@ -42,7 +52,8 @@ func main() {
 	net_mgr.Stop()
 	schedule.Start()
 	timer.Stop()
-	log.Stop()
 
 	fmt.Println("server closed")
+
+	log.Stop()
 }

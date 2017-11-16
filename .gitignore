@@ -1,4 +1,5 @@
-/bin
+/bin/*.log
+/bin/*.exe
 /pkg
 /src/gopkg.in
 /src/github.com

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -8,7 +9,7 @@ import (
 
 func RegisterSignalHandler(f func(os.Signal)) {
 	go func() {
-		log.Info("register signal complete")
+		fmt.Println("register signal complete")
 
 		c := make(chan os.Signal, 10)
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)

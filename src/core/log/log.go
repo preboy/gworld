@@ -3,9 +3,11 @@ package log
 import (
 	"fmt"
 	"os"
+	"sync"
 )
 
 type Logger struct {
+	w      *sync.WaitGroup
 	f      *os.File
 	q      chan string
 	quit   chan bool
@@ -13,6 +15,10 @@ type Logger struct {
 }
 
 // public
+func (self *Logger) Println(a ...interface{}) {
+	fmt.Println(a...)
+}
+
 func (self *Logger) Info(format string, a ...interface{}) {
 	s := "[" + get_time_string() + "] " + fmt.Sprintf(format, a...) + "\n"
 	self._write_string(s)
@@ -40,6 +46,22 @@ func (self *Logger) Fatal(format string, a ...interface{}) {
 
 func (self *Logger) Go() {
 	go func() {
+		defer func() {
+		E:
+			for {
+				select {
+				case s := <-self.q:
+					self.f.WriteString(s)
+				default:
+					break E
+				}
+			}
+			self.f.Close()
+			self.w.Done()
+		}()
+
+		self.w.Add(1)
+
 		for {
 			select {
 			case s := <-self.q:
@@ -48,16 +70,15 @@ func (self *Logger) Go() {
 					fmt.Println(s)
 				}
 			case <-self.quit:
-				break
+				return
 			}
-
 		}
-		self.f.Close()
 	}()
 }
 
 func (self *Logger) Stop() {
 	self.quit <- true
+	self.w.Wait()
 }
 
 // private
@@ -73,8 +94,9 @@ func NewLogger(name string, screen bool) *Logger {
 	}
 
 	l := &Logger{
+		w:      &sync.WaitGroup{},
 		f:      f,
-		q:      make(chan string),
+		q:      make(chan string, 0x100),
 		quit:   make(chan bool),
 		screen: screen,
 	}
