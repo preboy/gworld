@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"time"
 )
 
 type ISession interface {
@@ -41,10 +42,6 @@ func (self *Socket) Start(oopen, closed func(*Socket)) {
 }
 
 func (self *Socket) Stop() {
-	if self.fn_closed != nil {
-		self.fn_closed(self)
-	}
-
 	self.conn.Close()
 	self.w.Wait()
 }
@@ -55,17 +52,17 @@ func (self *Socket) rt_recv() {
 	}()
 
 	self.w.Add(1)
-
+J:
 	for {
 		head := make([]byte, 4)
 		var l int = 0
 		for l < 4 {
-			len, err := self.conn.Read(head[l:4])
-			if err != nil {
+			n, err := self.conn.Read(head[l:4])
+			if err != nil || n == 0 {
 				fmt.Println("read err:", err)
-				break
+				break J
 			}
-			l += len
+			l += n
 		}
 		buff := bytes.NewReader(head)
 
@@ -77,17 +74,19 @@ func (self *Socket) rt_recv() {
 		l = 0
 		body := make([]byte, size)
 		for uint16(l) < size {
-			len, err := self.conn.Read(body[l:size])
-			if err != nil {
+			n, err := self.conn.Read(body[l:size])
+			if err != nil || n == 0 {
 				fmt.Println("read err:", err)
-				break
+				break J
 			}
-			l += len
+			l += n
 		}
 		self.s.OnRecvPacket(NewPacket(code, body))
 	}
 
-	fmt.Println("socket rt_recv end", self)
+	if self.fn_closed != nil {
+		self.fn_closed(self)
+	}
 }
 
 func (self *Socket) rt_send() {
@@ -95,5 +94,13 @@ func (self *Socket) rt_send() {
 
 // 发送数据可以另外弄一个routine
 func (self *Socket) Send(data []byte) {
-	self.conn.Write(data)
+	n, err := self.conn.Write(data)
+	if err != nil {
+		fmt.Println("Write err:", err)
+		self.Stop()
+	} else if n < len(data) {
+		fmt.Println("Write dealy")
+		time.Sleep(100 * time.Millisecond)
+		self.Send(data[n:])
+	}
 }
