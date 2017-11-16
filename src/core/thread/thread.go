@@ -33,7 +33,7 @@ func (self *Thread) Go() {
 		for {
 			select {
 			case <-self.quit:
-				break
+				return
 			default:
 				time.Sleep(time.Duration(self.itvl) * time.Millisecond)
 			}

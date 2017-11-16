@@ -58,7 +58,7 @@ func (self *EventMgr) Update() {
 		case evt := <-self.evts:
 			self.receiver.OnEvent(evt)
 		default:
-			break
+			return
 		}
 	}
 }

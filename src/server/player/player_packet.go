@@ -24,7 +24,7 @@ func (self *Player) dispatch_packet() bool {
 			self.on_packet(packet)
 			busy = true
 		default:
-			break
+			return busy
 		}
 	}
 	return busy
