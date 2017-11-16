@@ -24,7 +24,7 @@ func main() {
 	log.Start("GameServer")
 
 	if !game.Init() {
-		log.GetLogger().Error("Fail on game.Init")
+		log.Error("Fail on game.Init")
 		log.Stop()
 		// time.Sleep(100 * time.Microsecond)
 		return

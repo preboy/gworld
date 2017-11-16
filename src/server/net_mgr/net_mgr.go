@@ -37,7 +37,7 @@ func Start() {
 	addr := game.GetServerConfig().Listen_addr
 	server = tcp.NewTcpServer()
 	server.Start(addr, on_client_connected)
-	log.GetLogger().Info("server listen on: %s", addr)
+	log.Info("server listen on: %s", addr)
 }
 
 func Stop() {

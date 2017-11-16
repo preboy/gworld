@@ -28,11 +28,11 @@ func LoadServerConfig(file string) bool {
 			if err == nil {
 				_sc = &sc
 			} else {
-				log.GetLogger().Debug("zcg_err2 : %s", err.Error())
+				log.Debug("zcg_err2 : %s", err.Error())
 				return false
 			}
 		} else {
-			log.GetLogger().Debug("zcg_err : %s", err.Error())
+			log.Debug("zcg_err : %s", err.Error())
 			return false
 		}
 	}

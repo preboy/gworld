@@ -129,7 +129,7 @@ func (self *Session) on_login(packet *tcp.Packet) {
 		}
 	}
 	self.SendPacket(packet.Opcode, &res)
-	log.GetLogger().Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
+	log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
 }
 
 // 进入游戏

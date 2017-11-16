@@ -20,27 +20,27 @@ func (self *Logger) Println(a ...interface{}) {
 }
 
 func (self *Logger) Info(format string, a ...interface{}) {
-	s := "[" + get_time_string() + "] " + fmt.Sprintf(format, a...) + "\n"
+	s := log_prefix(1) + fmt.Sprintf(format, a...) + log_suffix()
 	self._write_string(s)
 }
 
 func (self *Logger) Debug(format string, a ...interface{}) {
-	s := "\033[1;36m [" + get_time_string() + "] " + fmt.Sprintf(format, a...) + "\033[m\n"
+	s := log_prefix(2) + fmt.Sprintf(format, a...) + log_suffix()
 	self._write_string(s)
 }
 
 func (self *Logger) Warning(format string, a ...interface{}) {
-	s := "\033[1;33m [" + get_time_string() + "] " + fmt.Sprintf(format, a...) + "\033[m\n"
+	s := log_prefix(3) + fmt.Sprintf(format, a...) + log_suffix()
 	self._write_string(s)
 }
 
 func (self *Logger) Error(format string, a ...interface{}) {
-	s := "\033[1;31m [" + get_time_string() + "] " + fmt.Sprintf(format, a...) + "\033[m\n"
+	s := log_prefix(4) + fmt.Sprintf(format, a...) + log_suffix()
 	self._write_string(s)
 }
 
 func (self *Logger) Fatal(format string, a ...interface{}) {
-	s := "\033[1;35m [" + get_time_string() + "] " + fmt.Sprintf(format, a...) + "\033[m\n"
+	s := log_prefix(5) + fmt.Sprintf(format, a...) + log_suffix()
 	self._write_string(s)
 }
 
