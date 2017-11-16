@@ -13,16 +13,12 @@ func gen_id() uint32 {
 	return atomic.AddUint32(&_idseq, 1)
 }
 
-func Connect(host string) *net.TCPConn {
+func Connect(host string) (*net.TCPConn, error) {
 	addr, err := net.ResolveTCPAddr("tcp4", host)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	conn, err := net.DialTCP("tcp", nil, addr)
-	if err != nil {
-		return nil
-	}
-	return conn
+	return net.DialTCP("tcp", nil, addr)
 }
 
 func AsyncConnect(host string, cb func(*net.TCPConn, uint32)) uint32 {

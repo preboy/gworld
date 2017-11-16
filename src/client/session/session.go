@@ -83,7 +83,15 @@ func (self *Session) update() {
 }
 
 func (self *Session) on_packet(packet *tcp.Packet) {
-
+	if packet.Opcode == protocol.MSG_PING {
+		res := &msg.PingResponse{}
+		err := proto.Unmarshal(packet.Data, res)
+		if err != nil {
+			fmt.Println("Unmarshal Error:", err)
+		} else {
+			fmt.Println("PingResponse", res.Time)
+		}
+	}
 }
 
 func (self *Session) OnTimer(id uint64) {
