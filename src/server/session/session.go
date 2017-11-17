@@ -134,9 +134,21 @@ func (self *Session) on_login(packet *tcp.Packet) {
 
 // 进入游戏
 func (self *Session) on_enter_game(packet *tcp.Packet) {
-	fmt.Println("on_enter_game")
+	req := msg.EnterGameRequest{}
+	res := msg.EnterGameResponse{}
+
+	proto.Unmarshal(packet.Data, &req)
+
 	if !self.verify {
-		return
+		res.ErrorCode = err.ERR_NOT_LOGIN
+	} else {
+		if player.EnterGame(self.account, self) {
+			res.ErrorCode = err.ERR_OK
+		} else {
+			res.ErrorCode = err.ERR_FAILED
+		}
 	}
-	player.EnterGame(self.account, self)
+
+	self.SendPacket(packet.Opcode, &res)
+	log.Debug("on_enter_game: %v", res.ErrorCode)
 }
