@@ -1,9 +1,5 @@
 package player
 
-import (
-	"math/rand"
-)
-
 const (
 	MAX_PLAYER_COUNT = 0X4000
 )
@@ -61,34 +57,42 @@ func GetPlayerByAcct(acct string) *Player {
 	return plr
 }
 
-func EnterGame(acct string, s ISession) {
+func EnterGame(acct string, s ISession) bool {
 	// 在内存中查找玩家
 	// 在DB中查找玩家
-	var plr *Player = nil
-	plr = GetPlayerByAcct(acct)
+	var plr *Player = CreatePlayer(acct)
 	if plr == nil {
-		plr = CreatePlayer()
+		return false
 	}
-
 	s.SetPlayer(plr)
 	plr.SetSession(s)
+	plr.Go()
+	return true
 }
 
 // ------------- local function -------------
-func CreatePlayer() *Player {
+func CreatePlayer(acct string) *Player {
+	plr := GetPlayerByAcct(acct)
+	if plr == nil {
+		data := GetPlayerData(acct)
+		if data == nil {
+			data = CreatePlayerData(acct)
+		}
+		if data == nil {
+			return nil
+		}
 
-	plr := NewPlayer()
+		plr = NewPlayer()
 
-	plr.pid = rand.Uint64()
-	plr.sid = uint32(query_avail_slot_index())
-	plr.name = ""
-	plr.acct = ""
+		// 新的对象入坑
+		plr.sid = uint32(query_avail_slot_index())
+		plr.data = data
 
-	_plrs_sid[plr.sid] = plr
-	_plrs_pid[plr.pid] = plr
-
-	_plrs_name[plr.name] = plr
-	_plrs_acct[plr.acct] = plr
+		_plrs_sid[plr.sid] = plr
+		_plrs_pid[data.Pid] = plr
+		_plrs_name[data.Name] = plr
+		_plrs_acct[data.Acct] = plr
+	}
 
 	return plr
 }

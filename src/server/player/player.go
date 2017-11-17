@@ -11,11 +11,8 @@ import (
 )
 
 type Player struct {
-	pid         uint64
 	sid         uint32
-	name        string
-	acct        string
-	data        uint32
+	data        *PlayerData
 	s           ISession
 	evtMgr      *event.EventMgr
 	timerMgr    *timer.TimerMgr
@@ -34,8 +31,7 @@ func NewPlayer() *Player {
 }
 
 // ----------------- player evnet -----------------
-
-func (self *Player) Loop() {
+func (self *Player) Go() {
 	if self.run {
 		return
 	}
@@ -79,4 +75,8 @@ func (self *Player) init() {
 // -------------- public function --------------
 func (self *Player) GetSid() int {
 	return int(self.sid)
+}
+
+func (self *Player) GetPlayerData() *PlayerData {
+	return self.data
 }
