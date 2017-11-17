@@ -90,13 +90,14 @@ func get_tick() uint64 {
 
 func update_tick() {
 	_lock.Lock()
-	_curr_millisec = uint64(time.Now().UnixNano() / 1000 / 1000)
+	_curr_millisec = uint64(float64(time.Now().UnixNano()) / 1000 / 1000)
 	_lock.Unlock()
 }
 
 func Start() {
 	_lock = &sync.RWMutex{}
 	if _thread == nil {
+		update_tick()
 		_thread = thread.NewThread(update_tick, 20)
 		_thread.Go()
 	}

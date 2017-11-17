@@ -24,6 +24,7 @@ type Session struct {
 	q_packets chan *tcp.Packet
 	timerMgr  *timer.TimerMgr
 
+	stage_id int
 	tid_ping uint64
 }
 
@@ -75,11 +76,16 @@ func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
 
 func (self *Session) init() {
 	self.timerMgr = timer.NewTimerMgr(self)
-	self.tid_ping = self.timerMgr.CreateTimer(3000, true, nil)
+	self.tid_ping = self.timerMgr.CreateTimer(10*1000, true, nil)
+	self.timerMgr.CreateTimer(8*1000, false, func() {
+		fmt.Println("in timer : next")
+		Next(self)
+	})
 }
 
 func (self *Session) update() {
 	self.timerMgr.Update()
+	stages[self.stage_id].OnUpdate(self)
 }
 
 func (self *Session) on_packet(packet *tcp.Packet) {
@@ -100,6 +106,6 @@ func (self *Session) OnTimer(id uint64) {
 		r := rand.Uint32()
 		req.Time = r
 		self.SendPacket(protocol.MSG_PING, req)
-		fmt.Println("It's time to ping", r)
+		fmt.Println("PingRequest", r)
 	}
 }
