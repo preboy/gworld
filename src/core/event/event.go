@@ -23,8 +23,8 @@ const (
 )
 
 type Event struct {
-	id  uint32
-	ptr interface{}
+	Id  uint32
+	Ptr interface{}
 }
 
 type EventMgr struct {
@@ -38,8 +38,8 @@ type IEventReceiver interface {
 
 func NewEvent(id uint32, ptr interface{}) *Event {
 	return &Event{
-		id:  id,
-		ptr: ptr,
+		Id:  id,
+		Ptr: ptr,
 	}
 }
 
