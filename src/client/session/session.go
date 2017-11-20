@@ -26,6 +26,8 @@ type Session struct {
 
 	stage_id int
 	tid_ping uint64
+
+	stage_data interface{}
 }
 
 func NewSession() *Session {
@@ -97,6 +99,8 @@ func (self *Session) on_packet(packet *tcp.Packet) {
 		} else {
 			fmt.Println("PingResponse", res.Time)
 		}
+	} else {
+		stages[self.stage_id].OnPacket(self, packet)
 	}
 }
 
@@ -107,5 +111,7 @@ func (self *Session) OnTimer(id uint64) {
 		req.Time = r
 		self.SendPacket(protocol.MSG_PING, req)
 		fmt.Println("PingRequest", r)
+	} else {
+		stages[self.stage_id].OnTimer(self, id)
 	}
 }

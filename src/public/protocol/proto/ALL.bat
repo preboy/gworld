@@ -1,4 +1,5 @@
 @echo off
-protoc  --gogofaster_out=..\msg *.proto
+
+forfiles /M *.proto /C "cmd /c protoc --gogofaster_out=..\msg @file"
 echo Done
 pause

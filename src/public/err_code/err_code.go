@@ -1,4 +1,4 @@
-package err
+package err_code
 
 const (
 	ERR_OK           uint32 = iota // 无错误

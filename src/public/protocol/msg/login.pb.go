@@ -6,14 +6,10 @@
 
 	It is generated from these files:
 		login.proto
-		session.proto
 
 	It has these top-level messages:
 		LoginRequest
 		LoginResponse
-		PingRequest
-		PingResponse
-		EnterGameRequest
 */
 package msg
 
