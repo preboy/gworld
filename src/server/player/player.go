@@ -34,30 +34,32 @@ func NewPlayer() *Player {
 
 // ----------------- player evnet -----------------
 func (self *Player) Go() {
-	if self.run {
-		return
-	}
-
-	self.run = true
-	self.w.Add(1)
-
-	defer func() {
-		self.run = false
-		self.w.Done()
-	}()
-
-	for {
-		busy := self.dispatch_packet()
-		if b := self.update(); b {
-			busy = true
+	go func() {
+		if self.run {
+			return
 		}
-		if !busy {
-			if !self.run {
-				return
+
+		self.run = true
+		self.w.Add(1)
+
+		defer func() {
+			self.run = false
+			self.w.Done()
+		}()
+
+		for {
+			busy := self.dispatch_packet()
+			if b := self.update(); b {
+				busy = true
 			}
-			time.Sleep(20 * time.Millisecond)
+			if !busy {
+				if !self.run {
+					return
+				}
+				time.Sleep(20 * time.Millisecond)
+			}
 		}
-	}
+	}()
 }
 
 func (self *Player) Stop() {

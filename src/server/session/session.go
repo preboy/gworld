@@ -53,7 +53,6 @@ func (self *Session) SetPlayer(player *player.Player) {
 
 func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	self.last_touch = time.Now().Unix()
-
 	if packet.Opcode == uint16(protocol.MSG_PING) {
 		self.on_ping(packet)
 		return
@@ -111,6 +110,7 @@ func (self *Session) on_ping(packet *tcp.Packet) {
 
 	res.Time = req.Time
 	self.SendPacket(packet.Opcode, &res)
+
 	fmt.Println("session: on_ping", req.Time)
 }
 
@@ -137,7 +137,10 @@ func (self *Session) on_enter_game(packet *tcp.Packet) {
 	req := msg.EnterGameRequest{}
 	res := msg.EnterGameResponse{}
 
-	proto.Unmarshal(packet.Data, &req)
+	err := proto.Unmarshal(packet.Data, &req)
+	if err != nil {
+		return
+	}
 
 	if !self.verify {
 		res.ErrorCode = err_code.ERR_NOT_LOGIN

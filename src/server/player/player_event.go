@@ -1,6 +1,10 @@
 package player
 
 import (
+	"fmt"
+)
+
+import (
 	"core/event"
 )
 
@@ -13,5 +17,5 @@ func (self *Player) FireEvent(evt *event.Event) {
 }
 
 func (self *Player) OnEvent(evt *event.Event) {
-
+	fmt.Println("OnPlayerEvent:", evt)
 }

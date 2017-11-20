@@ -12,6 +12,7 @@ const (
 	// client to/from server
 	MSG_LOGIN
 	MSG_ENTER_GAME
+	MSG_PlayerData
 
 	MSG_OTHER uint16 = iota + 0x1000
 

@@ -36,6 +36,7 @@ func NewSession() *Session {
 	}
 
 	s.init()
+
 	return s
 }
 
@@ -78,9 +79,8 @@ func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
 
 func (self *Session) init() {
 	self.timerMgr = timer.NewTimerMgr(self)
-	self.tid_ping = self.timerMgr.CreateTimer(10*1000, true, nil)
-	self.timerMgr.CreateTimer(8*1000, false, func() {
-		fmt.Println("in timer : next")
+	self.tid_ping = self.timerMgr.CreateTimer(30*1000, true, nil)
+	self.timerMgr.CreateTimer(3*1000, false, func() {
 		Next(self)
 	})
 }

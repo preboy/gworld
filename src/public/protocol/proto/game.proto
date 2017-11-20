@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package msg;
+
+message PlayerDataRequest {
+    uint64 id = 1;
+}
+
+message PlayerDataResponse {
+    string acct = 1;
+    string name = 2;
+    uint64 pid  = 3;
+    uint32 sid  = 4;
+    uint64 id   = 5;
+}
