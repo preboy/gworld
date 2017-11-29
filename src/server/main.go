@@ -24,6 +24,7 @@ var (
 
 func main() {
 	log.Start("GameServer")
+
 	log.Info("server start ...")
 
 	if !game.Init() {
@@ -37,7 +38,6 @@ func main() {
 		if sig == syscall.SIGHUP {
 			fmt.Println("signal catched: syscall.SIGHUP")
 		} else {
-
 			close(quit)
 		}
 	})
@@ -56,11 +56,10 @@ func main() {
 	// 		cmd.ParseCommand(&text)
 	// 	}
 	// }
+
 	log.Info("server running ...")
 	<-quit
 	log.Info("server stopping ...")
-
-	fmt.Println("server closing")
 
 	net_mgr.Stop()
 	schedule.Start()
