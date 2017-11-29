@@ -1,27 +1,30 @@
 package main
 
 import (
-	"bufio"
+	_ "bufio"
 	"fmt"
 	"os"
-	"strings"
-	_ "time"
+	_ "strings"
+	"syscall"
 )
 
 import (
 	"core/log"
 	"core/schedule"
 	"core/timer"
-	"server/cmd"
+	"core/utils"
+	_ "server/cmd"
 	"server/game"
 	"server/net_mgr"
 )
 
+var (
+	quit = make(chan bool)
+)
+
 func main() {
-
-	fmt.Println("server start ...")
-
 	log.Start("GameServer")
+	log.Info("server start ...")
 
 	if !game.Init() {
 		log.Error("Fail on game.Init")
@@ -30,22 +33,32 @@ func main() {
 		return
 	}
 
+	utils.RegisterSignalHandler(func(sig os.Signal) {
+		if sig == syscall.SIGHUP {
+			fmt.Println("signal catched: syscall.SIGHUP")
+		} else {
+
+			close(quit)
+		}
+	})
+
 	timer.Start()
 	schedule.Start()
 	net_mgr.Start()
 
-	fmt.Println("server running ...")
-
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		text, _ := reader.ReadString('\n')
-		text = strings.Trim(text, " \r\n\t")
-		if strings.Compare(text, "quit") == 0 {
-			break
-		} else {
-			cmd.ParseCommand(&text)
-		}
-	}
+	// reader := bufio.NewReader(os.Stdin)
+	// for {
+	// 	text, _ := reader.ReadString('\n')
+	// 	text = strings.Trim(text, " \r\n\t")
+	// 	if strings.Compare(text, "quit") == 0 {
+	// 		break
+	// 	} else {
+	// 		cmd.ParseCommand(&text)
+	// 	}
+	// }
+	log.Info("server running ...")
+	<-quit
+	log.Info("server stopping ...")
 
 	fmt.Println("server closing")
 
