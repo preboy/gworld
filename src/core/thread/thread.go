@@ -5,10 +5,8 @@ import (
 	"time"
 )
 
-type thread_func = func()
-
 type Thread struct {
-	u    thread_func
+	u    func()
 	run  bool
 	quit chan bool
 	w    *sync.WaitGroup
@@ -51,7 +49,7 @@ func (self *Thread) IsRunning() bool {
 	return self.run
 }
 
-func NewThread(f thread_func, i uint32) *Thread {
+func NewThread(f func(), i uint32) *Thread {
 	if f != nil {
 		return &Thread{
 			u:    f,
