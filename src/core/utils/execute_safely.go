@@ -9,14 +9,13 @@ package utils
 
 import (
 	"core/log"
-	"runtime/debug"
 )
 
 func ExecuteSafely(f func()) {
 	defer func() {
 		e := recover()
 		if e != nil {
-			log.Error("STACK TRACE:", string(debug.Stack()))
+			log.Error("STACK TRACE:", Callstack())
 		}
 	}()
 
