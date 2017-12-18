@@ -91,7 +91,7 @@ func (self *Session) update() {
 }
 
 func (self *Session) on_packet(packet *tcp.Packet) {
-	if packet.Opcode == protocol.MSG_PING {
+	if packet.Opcode == protocol.MSG_SC_PING {
 		res := &msg.PingResponse{}
 		err := proto.Unmarshal(packet.Data, res)
 		if err != nil {
@@ -109,7 +109,7 @@ func (self *Session) OnTimer(id uint64) {
 		req := &msg.PingRequest{}
 		r := rand.Uint32()
 		req.Time = r
-		self.SendPacket(protocol.MSG_PING, req)
+		self.SendPacket(protocol.MSG_CS_PING, req)
 		fmt.Println("PingRequest", r)
 	} else {
 		stages[self.stage_id].OnTimer(self, id)

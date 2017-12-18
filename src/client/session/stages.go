@@ -59,7 +59,7 @@ func init() {
 		req := &msg.LoginRequest{}
 		req.Acct = "test341"
 		req.Pass = "1"
-		s.SendPacket(protocol.MSG_LOGIN, req)
+		s.SendPacket(protocol.MSG_CS_LOGIN, req)
 
 		s.stage_data = &StageLogin{
 			send:   true,
@@ -82,7 +82,7 @@ func init() {
 	}
 
 	stages[idx].OnPacket = func(s *Session, packet *tcp.Packet) {
-		if packet.Opcode == protocol.MSG_LOGIN {
+		if packet.Opcode == protocol.MSG_SC_LOGIN {
 			res := &msg.LoginResponse{}
 			err := proto.Unmarshal(packet.Data, res)
 			if err == nil {
@@ -106,7 +106,7 @@ func init() {
 	stages[idx].OnEnter = func(s *Session) {
 		fmt.Println("Stage:", s.stage_id, "OnEnter")
 		req := &msg.EnterGameRequest{}
-		s.SendPacket(protocol.MSG_ENTER_GAME, req)
+		s.SendPacket(protocol.MSG_CS_ENTER_GAME, req)
 		s.stage_data = &StageGame{
 			ingame: false,
 		}
@@ -127,7 +127,7 @@ func init() {
 	}
 
 	stages[idx].OnPacket = func(s *Session, packet *tcp.Packet) {
-		if packet.Opcode == protocol.MSG_ENTER_GAME {
+		if packet.Opcode == protocol.MSG_SC_ENTER_GAME {
 			res := &msg.EnterGameResponse{}
 			err := proto.Unmarshal(packet.Data, res)
 			if err == nil {
@@ -141,7 +141,7 @@ func init() {
 			} else {
 				fmt.Println("proto.Unmarshal ERROR", err)
 			}
-		} else if packet.Opcode == protocol.MSG_PlayerData {
+		} else if packet.Opcode == protocol.MSG_SC_PlayerData {
 			res := &msg.PlayerDataResponse{}
 			err := proto.Unmarshal(packet.Data, res)
 			if err == nil {
@@ -161,7 +161,7 @@ func init() {
 		if id == sd.tid {
 			req := &msg.PlayerDataRequest{}
 			req.Id = id
-			s.SendPacket(protocol.MSG_PlayerData, req)
+			s.SendPacket(protocol.MSG_CS_PlayerData, req)
 			fmt.Println("玩家数据：请求中...")
 		}
 	}

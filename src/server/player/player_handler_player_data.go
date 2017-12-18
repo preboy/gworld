@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	register_handler(protocol.MSG_PlayerData, handler_player_data)
+	register_handler(protocol.MSG_CS_PlayerData, handler_player_data)
 }
 
 func handler_player_data(plr *Player, packet *tcp.Packet) {
@@ -25,5 +25,5 @@ func handler_player_data(plr *Player, packet *tcp.Packet) {
 	res.Sid = plr.sid
 	res.Id = req.Id
 
-	plr.SendPacket(packet.Opcode, &res)
+	plr.SendPacket(protocol.MSG_SC_PlayerData, &res)
 }
