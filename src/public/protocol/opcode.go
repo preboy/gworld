@@ -7,18 +7,18 @@ const (
 	PROTO_BEGIN uint16 = iota
 
 	// general
-	MSG_CS_PING
-	MSG_SC_PING
+	MSG_CS_PING uint16 = 0x0001
+	MSG_SC_PING uint16 = 0x0002
 
 	// client to/from server
-	MSG_CS_LOGIN
-	MSG_SC_LOGIN
+	MSG_CS_LOGIN uint16 = 0x0003
+	MSG_SC_LOGIN uint16 = 0x0004
 
-	MSG_CS_ENTER_GAME
-	MSG_SC_ENTER_GAME
+	MSG_CS_ENTER_GAME uint16 = 0x0005
+	MSG_SC_ENTER_GAME uint16 = 0x0006
 
-	MSG_CS_PlayerData
-	MSG_SC_PlayerData
+	MSG_CS_PlayerData uint16 = 0x0007
+	MSG_SC_PlayerData uint16 = 0x0008
 
 	MSG_OTHER uint16 = iota + 0x1000
 
