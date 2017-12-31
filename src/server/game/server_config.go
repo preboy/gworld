@@ -17,7 +17,8 @@ type ServerConfig struct {
 	Server_id   uint16 `json:"server_id"`
 	Server_name string `json:"server_name"`
 	Listen_addr string `json:"listen_addr"`
-	Plat_ID     string
+	PlatID      string `json:"plat_id"`
+	DBAddr      string `json:"db_addr"`
 }
 
 func LoadServerConfig(file string) bool {

@@ -9,6 +9,7 @@ import (
 )
 
 import (
+	"core/db"
 	"core/log"
 	"core/schedule"
 	"core/timer"
@@ -42,6 +43,8 @@ func main() {
 		}
 	})
 
+	db.Open(game.GetServerConfig().DBAddr)
+
 	timer.Start()
 	schedule.Start()
 	net_mgr.Start()
@@ -64,6 +67,8 @@ func main() {
 	net_mgr.Stop()
 	schedule.Start()
 	timer.Stop()
+
+	db.Close()
 
 	fmt.Println("server closed")
 

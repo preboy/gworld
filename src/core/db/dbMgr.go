@@ -10,8 +10,8 @@ func GetDB() *Database {
 	return _db
 }
 
-func Open(url string) bool {
-	return _db.Open(url)
+func Open(addr string) {
+	_db.Open(addr, true)
 }
 
 func Close() {

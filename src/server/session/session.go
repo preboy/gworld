@@ -129,6 +129,10 @@ func (self *Session) on_login(packet *tcp.Packet) {
 		}
 	}
 	self.SendPacket(protocol.MSG_SC_LOGIN, &res)
+	if res.ErrorCode == err_code.ERR_OK {
+		self.account = req.Acct
+	}
+
 	log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
 }
 

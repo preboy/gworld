@@ -4,6 +4,7 @@ package db
 
 import (
 	"core/log"
+	"core/utils"
 	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -14,6 +15,7 @@ import (
 
 type M bson.M
 type Change mgo.Change
+type Condition bson.M
 
 type Database struct {
 	host      string       // connection string
@@ -158,7 +160,7 @@ func (self *Database) CreateTTLIndex(coll string, name string, key string, sec i
 		ExpireAfter: time.Duration(sec) * time.Second,
 	})
 	if err != nil {
-		log.Errorf("<CreateTTLIndex>: field: %s.%s, error: %s", coll, key, err)
+		log.Error("<CreateTTLIndex>: field: %s.%s, error: %s", coll, key, err)
 	}
 }
 
@@ -177,7 +179,7 @@ func (self *Database) CreateIndex(coll string, name string, keys []string, uniqu
 		Unique: unique,
 	})
 	if err != nil {
-		log.Errorf("<CreateIndex>: field: %s.%v, error: %s", coll, keys, err)
+		log.Error("<CreateIndex>: field: %s.%v, error: %s", coll, keys, err)
 	}
 }
 
@@ -227,7 +229,7 @@ func (self *Database) GetObject(coll string, id interface{}, obj interface{}) er
 	err := session.DB("").C(coll).FindId(id).One(obj)
 	if is_critical(session, err) {
 		log.Error("db.GetObject():", err, coll, id)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -239,7 +241,7 @@ func (self *Database) GetObjectByCond(coll string, cond interface{}, obj interfa
 	err := session.DB("").C(coll).Find(cond).One(obj)
 	if is_critical(session, err) {
 		log.Error("db.GetObjectByCond():", err, coll, cond)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -251,7 +253,7 @@ func (self *Database) GetProjectionByCond(coll string, cond interface{}, proj in
 	err := session.DB("").C(coll).Find(cond).Select(proj).One(obj)
 	if is_critical(session, err) {
 		log.Error("db.GetProjectionByCond():", err, coll, cond, proj)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -263,7 +265,7 @@ func (self *Database) GetAllObjects(coll string, obj interface{}) error {
 	err := session.DB("").C(coll).Find(nil).All(obj)
 	if is_critical(session, err) {
 		log.Error("db.GetAllObjects():", err, coll)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -275,7 +277,7 @@ func (self *Database) GetAllObjectsByCond(coll string, cond interface{}, obj int
 	err := session.DB("").C(coll).Find(cond).All(obj)
 	if is_critical(session, err) {
 		log.Error("db.GetAllObjectsByCond():", err, coll, cond)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -287,7 +289,7 @@ func (self *Database) GetAllProjectionsByCond(coll string, cond interface{}, pro
 	err := session.DB("").C(coll).Find(cond).Select(proj).All(obj)
 	if is_critical(session, err) {
 		log.Error("db.GetAllProjectionsByCond():", err, coll, cond, proj)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -299,7 +301,7 @@ func (self *Database) Insert(coll string, doc interface{}) error {
 	err := session.DB("").C(coll).Insert(doc)
 	if is_critical(session, err) {
 		log.Error("db.Insert():", err, coll, doc)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -311,7 +313,7 @@ func (self *Database) Remove(coll string, id interface{}) error {
 	err := session.DB("").C(coll).RemoveId(id)
 	if is_critical(session, err) {
 		log.Error("db.Remove():", err, coll, id)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -323,7 +325,7 @@ func (self *Database) RemoveByCond(coll string, cond interface{}) error {
 	err := session.DB("").C(coll).Remove(cond)
 	if is_critical(session, err) {
 		log.Error("db.RemoveByCond():", err, coll, cond)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -335,7 +337,7 @@ func (self *Database) RemoveAll(coll string, cond interface{}) error {
 	_, err := session.DB("").C(coll).RemoveAll(cond)
 	if is_critical(session, err) {
 		log.Error("db.RemoveAll():", err, coll, cond)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -347,7 +349,7 @@ func (self *Database) Update(coll string, id interface{}, doc interface{}) error
 	err := session.DB("").C(coll).UpdateId(id, doc)
 	if is_critical(session, err) {
 		log.Error("db.Update():", err, coll, id)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -359,7 +361,7 @@ func (self *Database) UpdateByCond(coll string, cond interface{}, doc interface{
 	err := session.DB("").C(coll).Update(cond, doc)
 	if is_critical(session, err) {
 		log.Error("db.UpdateByCond():", err, coll, cond, doc)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -371,7 +373,7 @@ func (self *Database) UpdateAll(coll string, cond interface{}, doc interface{}) 
 	_, err := session.DB("").C(coll).UpdateAll(cond, doc)
 	if is_critical(session, err) {
 		log.Error("db.UpdateAll():", err, coll, cond, doc)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -383,7 +385,7 @@ func (self *Database) Upsert(coll string, id interface{}, doc interface{}) error
 	_, err := session.DB("").C(coll).UpsertId(id, doc)
 	if is_critical(session, err) {
 		log.Error("db.Upsert():", err, coll, id)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -395,7 +397,7 @@ func (self *Database) UpsertByCond(coll string, cond interface{}, doc interface{
 	_, err := session.DB("").C(coll).Upsert(cond, doc)
 	if is_critical(session, err) {
 		log.Error("db.UpsertByCond():", err, coll, cond)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }
@@ -407,7 +409,7 @@ func (self *Database) FindAndModify(coll string, cond interface{}, chg Change, p
 	_, err := session.DB("").C(coll).Find(cond).Select(proj).Apply(mgo.Change(chg), r)
 	if is_critical(session, err) {
 		log.Error("db.FindAndModify():", err, coll, cond, proj)
-		log.Error(core.Callstack())
+		log.Error(utils.Callstack())
 	}
 	return err
 }

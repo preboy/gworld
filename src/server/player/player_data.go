@@ -1,6 +1,8 @@
 package player
 
 import (
+	"core/db"
+	"core/log"
 	"server/game"
 )
 
@@ -9,6 +11,11 @@ type PlayerData struct {
 	Name string `bson:nName"`
 	Acct string `bson:"acct"`
 	Pid  uint64 `bson:"pid"`
+
+	// 英雄
+	Heros map[uint32]*Hero `bson:"heros"`
+	// 背包
+	Bag *PlayerBag `bson:"bag"`
 }
 
 func (self *Player) GetData() *PlayerData {
@@ -16,13 +23,29 @@ func (self *Player) GetData() *PlayerData {
 }
 
 func (self *Player) Save() {
-
+	err := db.GetDB().Insert("player_data", self.data)
+	if err != nil {
+		log.Error("Faild to save")
+	}
 }
 
-// --------- global
+// ------------------ global ------------------
 
 func GetPlayerData(acct string) *PlayerData {
-	return nil
+	var data PlayerData
+	err := db.GetDB().GetObjectByCond(
+		"player_data",
+		&data,
+		db.Condition{
+			"acct": acct,
+		},
+	)
+
+	if err != nil {
+		return nil
+	}
+
+	return &data
 }
 
 func CreatePlayerData(acct string) *PlayerData {
