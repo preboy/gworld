@@ -1,6 +1,9 @@
 /bin/*.log
 /bin/*.exe
+/bin/server
+/bin/client
 /pkg
 /src/gopkg.in
 /src/github.com
 /src/test
+
