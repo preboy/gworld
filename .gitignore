@@ -3,6 +3,7 @@
 /bin/server
 /bin/client
 /bin/exporter
+/bin/exporter_map
 /pkg
 /src/gopkg.in
 /src/github.com
