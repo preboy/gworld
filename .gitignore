@@ -2,6 +2,7 @@
 /bin/*.exe
 /bin/server
 /bin/client
+/bin/exporter
 /pkg
 /src/gopkg.in
 /src/github.com

@@ -11,3 +11,6 @@ go get github.com/gogo/protobuf/protoc-gen-gogofaster
 go get github.com/gogo/protobuf/gogoproto
 ```
 protoc  --gogofaster_out=. login.proto
+
+## for tools\exporter
+go get  github.com/tealeg/xlsx
