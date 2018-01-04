@@ -8,4 +8,5 @@
 /src/gopkg.in
 /src/github.com
 /src/test
-
+/plan/json
+/plan/lua
