@@ -1,12 +1,17 @@
 @echo off
 
-rem: record export
-exporter jl excel/hero.xlsx  HeroProto
 
+del /S /Q json\*.*
+del /S /Q lua\*.*
+
+
+rem: record export
+exporter jl excel/hero_英雄表.xlsx  HeroProto
+exporter jl excel/creature_怪物表.xlsx  CreatureProto
 
 
 rem: map export
-exporter_map jl excel/global.xlsx  global
+exporter_map jl excel/global_全局表.xlsx  global
 
 
 pause

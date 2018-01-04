@@ -1,0 +1,146 @@
+[
+	{
+		"id" : 2001001,
+		"name" : "鼠",
+		"level" : 1,
+		"atk" : 100,
+		"def" : 80,
+		"hp" : 1000,
+		"apm" : 6,
+		"crit" : 5,
+		"crit_hurt" : 40
+	},
+
+	{
+		"id" : 2001002,
+		"name" : "牛",
+		"level" : 2,
+		"atk" : 120,
+		"def" : 90,
+		"hp" : 1100,
+		"apm" : 8,
+		"crit" : 5,
+		"crit_hurt" : 45
+	},
+
+	{
+		"id" : 2001003,
+		"name" : "虎",
+		"level" : 3,
+		"atk" : 140,
+		"def" : 100,
+		"hp" : 1200,
+		"apm" : 10,
+		"crit" : 5,
+		"crit_hurt" : 50
+	},
+
+	{
+		"id" : 2001004,
+		"name" : "兔",
+		"level" : 4,
+		"atk" : 160,
+		"def" : 110,
+		"hp" : 1300,
+		"apm" : 12,
+		"crit" : 5,
+		"crit_hurt" : 55
+	},
+
+	{
+		"id" : 2001005,
+		"name" : "龙",
+		"level" : 5,
+		"atk" : 180,
+		"def" : 120,
+		"hp" : 1400,
+		"apm" : 14,
+		"crit" : 5,
+		"crit_hurt" : 60
+	},
+
+	{
+		"id" : 2001006,
+		"name" : "蛇",
+		"level" : 6,
+		"atk" : 200,
+		"def" : 130,
+		"hp" : 1500,
+		"apm" : 16,
+		"crit" : 5,
+		"crit_hurt" : 65
+	},
+
+	{
+		"id" : 2001007,
+		"name" : "马",
+		"level" : 7,
+		"atk" : 220,
+		"def" : 140,
+		"hp" : 1600,
+		"apm" : 18,
+		"crit" : 5,
+		"crit_hurt" : 70
+	},
+
+	{
+		"id" : 2001008,
+		"name" : "羊",
+		"level" : 8,
+		"atk" : 240,
+		"def" : 150,
+		"hp" : 1700,
+		"apm" : 20,
+		"crit" : 5,
+		"crit_hurt" : 75
+	},
+
+	{
+		"id" : 2001009,
+		"name" : "猴",
+		"level" : 9,
+		"atk" : 260,
+		"def" : 160,
+		"hp" : 1800,
+		"apm" : 22,
+		"crit" : 5,
+		"crit_hurt" : 80
+	},
+
+	{
+		"id" : 2001010,
+		"name" : "鸡",
+		"level" : 10,
+		"atk" : 280,
+		"def" : 170,
+		"hp" : 1900,
+		"apm" : 24,
+		"crit" : 5,
+		"crit_hurt" : 85
+	},
+
+	{
+		"id" : 2001011,
+		"name" : "狗",
+		"level" : 11,
+		"atk" : 300,
+		"def" : 180,
+		"hp" : 2000,
+		"apm" : 26,
+		"crit" : 5,
+		"crit_hurt" : 90
+	},
+
+	{
+		"id" : 2001012,
+		"name" : "猪",
+		"level" : 12,
+		"atk" : 320,
+		"def" : 190,
+		"hp" : 2100,
+		"apm" : 28,
+		"crit" : 5,
+		"crit_hurt" : 95
+	}
+
+]
