@@ -1,16 +1,16 @@
 @echo off
 
 
-rmdir /S /Q ..\..\2dgame\simulator\win32\src\configuration
-rmdir /S /Q ..\bin\configuration
+rmdir /S /Q ..\..\2dgame\simulator\win32\src\config
+rmdir /S /Q ..\bin\config
 
 
-mkdir ..\..\2dgame\simulator\win32\src\configuration
-mkdir ..\bin\configuration
+mkdir ..\..\2dgame\simulator\win32\src\config
+mkdir ..\bin\config
 
 
-copy /Y lua\*.lua   ..\..\2dgame\simulator\win32\src\configuration\*.lua
-copy /Y json\*.json ..\bin\configuration\*.json
+copy /Y lua\*.lua   ..\..\2dgame\simulator\win32\src\config\*.lua
+copy /Y json\*.json ..\bin\config\*.json
 
 
 echo COPY OVER !

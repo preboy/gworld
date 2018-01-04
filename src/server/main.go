@@ -16,6 +16,7 @@ import (
 	"core/utils"
 	_ "server/cmd"
 	"server/game"
+	"server/game/config"
 	"server/net_mgr"
 )
 
@@ -48,6 +49,8 @@ func main() {
 	timer.Start()
 	schedule.Start()
 	net_mgr.Start()
+
+	config.Load()
 
 	// reader := bufio.NewReader(os.Stdin)
 	// for {
