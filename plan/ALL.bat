@@ -1,9 +1,12 @@
 @echo off
 
 rem: record export
-exporter jl excel/hero.xlsx  zcg
+exporter jl excel/hero.xlsx  HeroProto
 
 
 
 rem: map export
-exporter_map jl excel/hero.xlsx  global
+exporter_map jl excel/global.xlsx  global
+
+
+pause
