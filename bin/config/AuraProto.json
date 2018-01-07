@@ -1,0 +1,197 @@
+[
+	{
+		"id" : 2001,
+		"level" : 1,
+		"name" : "技能一",
+		"duration" : 0,
+		"uptime" : 0,
+		"sid" : 1,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2001,
+		"level" : 2,
+		"name" : "技能一",
+		"duration" : 0,
+		"uptime" : 0,
+		"sid" : 1,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2001,
+		"level" : 3,
+		"name" : "技能一",
+		"duration" : 0,
+		"uptime" : 0,
+		"sid" : 1,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2001,
+		"level" : 4,
+		"name" : "技能一",
+		"duration" : 0,
+		"uptime" : 0,
+		"sid" : 1,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2001,
+		"level" : 5,
+		"name" : "技能一",
+		"duration" : 0,
+		"uptime" : 0,
+		"sid" : 1,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2002,
+		"level" : 1,
+		"name" : "技能二",
+		"duration" : 0,
+		"uptime" : 1000,
+		"sid" : 2,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2002,
+		"level" : 2,
+		"name" : "技能二",
+		"duration" : 0,
+		"uptime" : 1000,
+		"sid" : 2,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2002,
+		"level" : 3,
+		"name" : "技能二",
+		"duration" : 0,
+		"uptime" : 1000,
+		"sid" : 2,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2002,
+		"level" : 4,
+		"name" : "技能二",
+		"duration" : 0,
+		"uptime" : 1000,
+		"sid" : 2,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2002,
+		"level" : 5,
+		"name" : "技能二",
+		"duration" : 0,
+		"uptime" : 1000,
+		"sid" : 2,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2003,
+		"level" : 1,
+		"name" : "技能3",
+		"duration" : 5000,
+		"uptime" : 2000,
+		"sid" : 3,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2003,
+		"level" : 2,
+		"name" : "技能3",
+		"duration" : 5000,
+		"uptime" : 2000,
+		"sid" : 3,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2003,
+		"level" : 3,
+		"name" : "技能3",
+		"duration" : 5000,
+		"uptime" : 2000,
+		"sid" : 3,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2003,
+		"level" : 4,
+		"name" : "技能3",
+		"duration" : 5000,
+		"uptime" : 2000,
+		"sid" : 3,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	},
+
+	{
+		"id" : 2003,
+		"level" : 5,
+		"name" : "技能3",
+		"duration" : 5000,
+		"uptime" : 2000,
+		"sid" : 3,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : 0,
+		"param4" : 0
+	}
+
+]
