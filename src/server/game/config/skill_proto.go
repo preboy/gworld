@@ -17,20 +17,21 @@ type AddAttr struct {
 }
 
 type SkillProto struct {
-	Id        uint32      `json:"id"`
-	Level     uint32      `json:"level"`
-	Name      string      `json:"name"`
-	Object    uint32      `json:"object"`
-	Cast_time uint32      `json:"cast_time"`
-	Cd_time   uint32      `json:"cd_time"`
-	Type      uint32      `json:"type"`
-	Range     uint32      `json:"range"`
-	Auras     []*AuraInfo `json:"auras"`
-	Attrs     []*AddAttr  `json:"add_attr"`
+	Id     uint32      `json:"id"`
+	Lv     uint32      `json:"lv"`
+	Name   string      `json:"name"`
+	Target uint32      `json:"target"`
+	Itv_t  uint32      `json:"itv_t"`
+	Last_t uint32      `json:"last_t"`
+	Cd_t   uint32      `json:"cd_t"`
+	Type   uint32      `json:"type"`
+	Range  uint32      `json:"range"`
+	Auras  []*AuraInfo `json:"auras"`
+	Attrs  []*AddAttr  `json:"add_attr"`
 }
 
 type SkillProtoConf struct {
-	items map[uint32]*SkillProto
+	items map[uint64]*SkillProto
 }
 
 var _SkillProtoConf SkillProtoConf
@@ -55,19 +56,21 @@ func load_skill() {
 		return
 	}
 
-	_SkillProtoConf.items = make(map[uint32]*SkillProto)
+	_SkillProtoConf.items = make(map[uint64]*SkillProto)
 
 	for _, v := range arr {
-		_SkillProtoConf.items[v.Id] = v
+		key := MakeUint64(v.Id, v.Lv)
+		_SkillProtoConf.items[key] = v
 	}
 
 	log.Info("[SkillProtoConf] load OK")
 }
 
-func (self *SkillProtoConf) GetSkillProto(id uint32) *SkillProto {
+func (self *SkillProtoConf) GetSkillProto(id, lv uint32) *SkillProto {
 	if self.items == nil {
 		return nil
 	}
 
-	return self.items[id]
+	key := MakeUint64(id, lv)
+	return self.items[key]
 }

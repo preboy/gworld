@@ -1,8 +1,5 @@
-package player
+package game
 
-import ()
-
-// 对象属性
 type Property struct {
 	Atk       uint32 // 攻击
 	Def       uint32 // 防御
@@ -11,4 +8,8 @@ type Property struct {
 	Hp_max    uint32 // HP上限
 	Crit      uint32 // 暴击
 	Crit_hurt uint32 // 暴伤
+}
+
+func (self *Property) GetPower() uint32 {
+	return 2
 }

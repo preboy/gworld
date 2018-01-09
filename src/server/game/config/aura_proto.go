@@ -8,7 +8,7 @@ import (
 
 type AuraProto struct {
 	Id       uint32 `json:"id"`
-	Level    uint32 `json:"level"`
+	Lv       uint32 `json:"level"`
 	Name     string `json:"name"`
 	Duration uint32 `json:"duration"`
 	Uptime   uint32 `json:"uptime"`
@@ -20,7 +20,7 @@ type AuraProto struct {
 }
 
 type AuraProtoConf struct {
-	items map[uint32]*AuraProto
+	items map[uint64]*AuraProto
 }
 
 var _AuraProtoConf AuraProtoConf
@@ -45,19 +45,21 @@ func load_aura() {
 		return
 	}
 
-	_AuraProtoConf.items = make(map[uint32]*AuraProto)
+	_AuraProtoConf.items = make(map[uint64]*AuraProto)
 
 	for _, v := range arr {
-		_AuraProtoConf.items[v.Id] = v
+		key := MakeUint64(v.Id, v.Lv)
+		_AuraProtoConf.items[key] = v
 	}
 
 	log.Info("[AuraProtoConf] load OK")
 }
 
-func (self *AuraProtoConf) GetAuraProto(id uint32) *AuraProto {
+func (self *AuraProtoConf) GetAuraProto(id, lv uint32) *AuraProto {
 	if self.items == nil {
 		return nil
 	}
 
-	return self.items[id]
+	key := MakeUint64(id, lv)
+	return self.items[key]
 }

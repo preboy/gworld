@@ -13,7 +13,7 @@ type PlayerData struct {
 	Pid  uint64 `bson:"pid"`
 
 	// 英雄
-	Heros map[uint32]*Hero `bson:"heros"`
+	Heros map[uint32]*game.Hero `bson:"heros"`
 	// 背包
 	Bag *PlayerBag `bson:"bag"`
 }
