@@ -1,6 +1,7 @@
 package game
 
 import (
+	"core/log"
 	"server/game/config"
 )
 
@@ -68,11 +69,40 @@ func (self *SkillBattle) onStart() {
 
 func (self *SkillBattle) onUpdate() {
 	// 攻击、加光环
+	targets := self.find_targets()
+	for _, target := range targets {
+		// fmt.Println(target)
+		if self.sp.Type == 1 {
+			bc
 
+		} else if self.sp.Type == 2 {
+			// TODO
+			for _, a := range self.sp.Auras {
+				target.AddAura(self.owner, a.Id, a.Lv)
+			}
+		}
+	}
 }
 
 func (self *SkillBattle) onFinish() {
 	if self.sp.Itv_t == 0 {
 		self.onUpdate()
 	}
+}
+
+// private method
+func (self *SkillBattle) find_targets() (targets []*BattleUnit) {
+	switch self.sp.Target {
+	case 0: // 0：自己
+		targets = append(targets, self.owner)
+	case 1: // 1: 己方全体
+		targets = append(targets, self.owner.GetAllies(true)...)
+	case 2: // 2: 敌人
+		targets = append(targets, self.owner.GetRivals(false)...)
+	case 3: // 3: 敌方全体
+		targets = append(targets, self.owner.GetRivals(true)...)
+	default:
+		log.Warning("Invalid Skill Target", self.sp.Target)
+	}
+	return
 }

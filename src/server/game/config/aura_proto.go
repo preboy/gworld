@@ -7,16 +7,16 @@ import (
 )
 
 type AuraProto struct {
-	Id       uint32 `json:"id"`
-	Lv       uint32 `json:"level"`
-	Name     string `json:"name"`
-	Duration uint32 `json:"duration"`
-	Uptime   uint32 `json:"uptime"`
-	Sid      uint32 `json:"sid"`
-	Param1   uint32 `json:"param1"`
-	Param2   uint32 `json:"param2"`
-	Param3   uint32 `json:"param3"`
-	Param4   uint32 `json:"param4"`
+	Id     uint32 `json:"id"`
+	Lv     uint32 `json:"level"`
+	Name   string `json:"name"`
+	Last_t uint32 `json:"last_t"`
+	Itv_t  uint32 `json:"itv_t"`
+	Sid    uint32 `json:"sid"`
+	Param1 int32  `json:"param1"`
+	Param2 int32  `json:"param2"`
+	Param3 int32  `json:"param3"`
+	Param4 int32  `json:"param4"`
 }
 
 type AuraProtoConf struct {

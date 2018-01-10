@@ -1,6 +1,21 @@
 package game
 
 // ==================================================
+type BattleEvent uint32
+
+const (
+	BattleEvent_AddAura BattleEvent = 1 + iota
+	BattleEvent1
+)
+
+type SkillContext struct {
+	caster *BattleUnit
+	target *BattleUnit
+	base   Property
+	preAtk Property
+}
+
+// ==================================================
 
 type BattleUnit struct {
 	UnitType   uint32         // 生物类型
@@ -74,12 +89,21 @@ func (self *BattleUnit) GetAllies(include_myself bool) []*BattleUnit {
 }
 
 func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
-	a := NewAuraBattle(id, lv)
-	a.Init(caster, self)
-	self.Auras = append(self.Auras, a)
+	aura := NewAuraBattle(id, lv)
+	if aura == nil {
+		return
+	}
+	aura.Init(caster, self)
+	self.Auras = append(self.Auras, aura)
 }
 
 func (self *BattleUnit) DelAura(id, lv uint32) {
+	for k, aura := range self.Auras {
+		if aura.sp.Id == id && aura.sp.Lv == lv {
+			self.Auras[k] = nil
+			break
+		}
+	}
 }
 
 // ==================================================

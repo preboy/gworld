@@ -9,6 +9,7 @@ import (
 type AuraInfo struct {
 	Rate uint32 `json:"rate"`
 	Id   uint32 `json:"id"`
+	Lv   uint32 `json:"lv"`
 }
 
 type AddAttr struct {

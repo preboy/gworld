@@ -285,7 +285,12 @@ func main() {
 		if err == nil {
 			fmt.Println(file_name + " Checking: OK")
 		} else {
-			fmt.Println(file_name+" Checking Invalid: ", err)
+			e := err.(*json.SyntaxError)
+			if e != nil {
+				fmt.Printf("%v: hecking Invalid: %v [offset: %v]\n", file_name, e.Error(), e.Offset)
+			} else {
+				fmt.Println(file_name+" Checking Invalid: ", err)
+			}
 		}
 	}()
 
