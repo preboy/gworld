@@ -71,9 +71,9 @@ func (self *AuraBattle) onUpdate() {
 	}
 }
 
-func (self *AuraBattle) OnEvent(evt BattleEvent) {
+func (self *AuraBattle) OnEvent(evt BattleEvent, sc *SkillContext) {
 	if self.eff != nil {
-		self.eff.OnEvent(evt, self)
+		self.eff.OnEvent(evt, self, sc)
 	}
 }
 

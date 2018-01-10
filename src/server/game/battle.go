@@ -4,15 +4,25 @@ package game
 type BattleEvent uint32
 
 const (
-	BattleEvent_AddAura BattleEvent = 1 + iota
-	BattleEvent1
+	_                  BattleEvent = 1 + iota
+	BattleEvent_PreAtk             // 计算攻击之前 (累积光环的附加攻击)
+	BattleEvent_AftAtk             // 计算攻击之后 (额外附加伤害)
+	BattleEvent_Damage             // 伤害发出之后 (暂无)
+	BattleEvent_PreDef             // 计算防御之前 (抵挡伤害)
+	BattleEvent_AftDef             // 计算防御之后 (抵挡伤害)
 )
+
+type SkillDamage struct {
+	hurt uint32
+	crit bool
+}
 
 type SkillContext struct {
 	caster *BattleUnit
 	target *BattleUnit
 	base   Property
 	preAtk Property
+	damage SkillDamage
 }
 
 // ==================================================
@@ -20,13 +30,7 @@ type SkillContext struct {
 type BattleUnit struct {
 	UnitType   uint32         // 生物类型
 	troop      *BattleTroop   // 队伍
-	Atk        uint32         // 攻击
-	Def        uint32         // 防御
-	Apm        uint32         // 手速
-	Hp_cur     uint32         // HP当前
-	Hp_max     uint32         // HP上限
-	Crit       uint32         // 暴击
-	Crit_hurt  uint32         // 暴伤
+	Prop       Property       // 战斗属性
 	Skills     []*SkillBattle // 主动释放技能
 	Auras      []*AuraBattle  // 光环(技能ID)
 	Dead       bool           // 是否死亡
@@ -58,10 +62,12 @@ func (self *BattleUnit) Update(time uint32) {
 		}
 	}
 	// 光环
-	for k, v := range self.Auras {
-		v.Update(time)
-		if v.IsFinish() {
-			self.Auras[k] = nil
+	for k, aura := range self.Auras {
+		if aura != nil {
+			aura.Update(time)
+			if aura.IsFinish() {
+				self.Auras[k] = nil
+			}
 		}
 	}
 }

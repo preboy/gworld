@@ -73,8 +73,7 @@ func (self *SkillBattle) onUpdate() {
 	for _, target := range targets {
 		// fmt.Println(target)
 		if self.sp.Type == 1 {
-			bc
-
+			self.do_attack(target)
 		} else if self.sp.Type == 2 {
 			// TODO
 			for _, a := range self.sp.Auras {
@@ -105,4 +104,16 @@ func (self *SkillBattle) find_targets() (targets []*BattleUnit) {
 		log.Warning("Invalid Skill Target", self.sp.Target)
 	}
 	return
+}
+
+func (self *SkillBattle) do_attack(target *BattleUnit) {
+	sc := &SkillContext{}
+	sc.caster = self.owner
+	sc.target = target
+	sc.base = self.owner.Prop
+	for _, aura := range self.owner.Auras {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_PreAtk, sc)
+		}
+	}
 }

@@ -15,7 +15,7 @@ type Effect interface {
 	OnStart(ab *AuraBattle)
 	OnUpdate(ab *AuraBattle)
 	OnFinish(ab *AuraBattle)
-	OnEvent(evt BattleEvent, ab *AuraBattle)
+	OnEvent(evt BattleEvent, ab *AuraBattle, sc *SkillContext)
 }
 
 type effect_func = func() Effect
@@ -64,7 +64,7 @@ func (self *Effect_1) OnFinish(ab *AuraBattle) {
 	fmt.Println("eff 1 OnFinish")
 }
 
-func (self *Effect_1) OnEvent(evt BattleEvent, ab *AuraBattle) {
+func (self *Effect_1) OnEvent(evt BattleEvent, ab *AuraBattle, sc *SkillContext) {
 
 }
 
