@@ -1,13 +1,8 @@
-package game
+package battle
 
 import (
 	"server/game/config"
 )
-
-type Aura struct {
-	Id    uint32 `bson:id"`    // ID
-	Level uint32 `bson:level"` // 等级
-}
 
 type AuraBattle struct {
 	owner       *BattleUnit

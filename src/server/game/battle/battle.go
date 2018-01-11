@@ -1,4 +1,4 @@
-package game
+package battle
 
 // ==================================================
 type BattleEvent uint32

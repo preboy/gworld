@@ -1,17 +1,10 @@
-package game
+package battle
 
 import (
 	"core/log"
 	"core/math"
 	"server/game/config"
 )
-
-// 主动技能
-type Skill struct {
-	Id       uint32 `bson:id"`        // ID
-	Level    uint32 `bson:level"`     // 等级
-	EffectId uint32 `bson:effect_id"` // 技能附加效果ID
-}
 
 // ==================================================
 

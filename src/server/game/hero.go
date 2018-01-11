@@ -1,5 +1,9 @@
 package game
 
+import (
+	"server/game/battle"
+)
+
 type Hero struct {
 	// 这里的数据就是要存入DB的数据
 	Pid        uint32       `bson:pid"`          // 配置表ID
@@ -28,10 +32,10 @@ func (self *Hero) ToPlayer() *Hero {
 	return self
 }
 
-func (self *Hero) UnitType() int {
-	return UT_Hero
+func (self *Hero) UnitType() UnitType {
+	return UnitType_Hero
 }
 
-func (self *Hero) ToBattleUnit() *BattleUnit {
+func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	return nil
 }

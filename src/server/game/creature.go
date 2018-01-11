@@ -1,8 +1,12 @@
 package game
 
+import (
+	"server/game/battle"
+)
+
 // 对象属性
 type Creature struct {
-	Property
+	battle.Property
 }
 
 func NewCreature(cid uint32) *Creature {
@@ -19,10 +23,10 @@ func (self *Creature) ToPlayer() *Creature {
 	return self
 }
 
-func (self *Creature) UnitType() int {
-	return UT_Creature
+func (self *Creature) UnitType() UnitType {
+	return UnitType_Creature
 }
 
-func (self *Creature) ToBattleUnit() *BattleUnit {
+func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	return nil
 }

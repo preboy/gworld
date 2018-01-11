@@ -1,4 +1,4 @@
-package game
+package battle
 
 type Property struct {
 	Atk       uint32 // 攻击
