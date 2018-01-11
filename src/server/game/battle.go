@@ -6,9 +6,7 @@ type BattleEvent uint32
 const (
 	_                  BattleEvent = 1 + iota
 	BattleEvent_PreAtk             // 计算攻击之前 (累积光环的附加攻击)
-	BattleEvent_AftAtk             // 计算攻击之后 (额外附加伤害)
-	BattleEvent_Damage             // 伤害发出之后 (暂无)
-	BattleEvent_PreDef             // 计算防御之前 (抵挡伤害)
+	BattleEvent_Damage             // 计算伤害 (双方暂不做任何计算)
 	BattleEvent_AftDef             // 计算防御之后 (抵挡伤害)
 )
 
@@ -18,11 +16,15 @@ type SkillDamage struct {
 }
 
 type SkillContext struct {
-	caster *BattleUnit
-	target *BattleUnit
-	base   Property
-	preAtk Property
-	damage SkillDamage
+	caster      *BattleUnit
+	target      *BattleUnit
+	caster_prop *Property   // 攻击者的基本属性(只读)
+	target_prop *Property   // 防御者的基本属性(只读)
+	prop_add    Property    // 攻击者光环加成
+	damage_send SkillDamage // 攻击者造成实际伤害
+	damage_recv SkillDamage // 防御者计算防御之后的伤害
+	damage_sub  SkillDamage // 防御者计算防御之后光环减免部分
+	damage      SkillDamage //最终造成的实际伤害
 }
 
 // ==================================================
@@ -41,7 +43,6 @@ func (self *BattleUnit) Update(time uint32) {
 	if self.Dead {
 		return
 	}
-
 	// 释放技能
 	if self.Skill_Curr == nil {
 		// 释放
@@ -145,7 +146,7 @@ func (self *BattleTroop) SetBtm(u *BattleUnit) {
 	self.btm = u
 }
 
-func (self *BattleTroop) Dead() bool {
+func (self *BattleTroop) Lose() bool {
 	return (self.top == nil || self.top.Dead) && (self.mid == nil || self.mid.Dead) && (self.btm == nil || self.btm.Dead)
 }
 
@@ -252,10 +253,10 @@ func (self *Battle) Calc() *BattleResult {
 		self.defender.Update(time)
 
 		// 战斗是否结束
-		if self.attacker.Dead() {
+		if self.attacker.Lose() {
 			br.Win = 0
 			break
-		} else if self.defender.Dead() {
+		} else if self.defender.Lose() {
 			br.Win = 1
 			break
 		}

@@ -2,6 +2,7 @@ package game
 
 import (
 	"core/log"
+	"core/math"
 	"server/game/config"
 )
 
@@ -68,7 +69,7 @@ func (self *SkillBattle) onStart() {
 }
 
 func (self *SkillBattle) onUpdate() {
-	// 攻击、加光环
+	//释放一次技能: 攻击、加光环
 	targets := self.find_targets()
 	for _, target := range targets {
 		// fmt.Println(target)
@@ -110,10 +111,56 @@ func (self *SkillBattle) do_attack(target *BattleUnit) {
 	sc := &SkillContext{}
 	sc.caster = self.owner
 	sc.target = target
-	sc.base = self.owner.Prop
+
+	sc.caster_prop = &(sc.caster.Prop)
+	sc.target_prop = &(sc.target.Prop)
+
+	// step 1: pre calc attack
 	for _, aura := range self.owner.Auras {
 		if aura != nil {
 			aura.OnEvent(BattleEvent_PreAtk, sc)
 		}
+	}
+	// step 2: calc attack
+	hurt := sc.caster_prop.Atk + sc.prop_add.Atk
+	crit := sc.caster_prop.Crit + sc.prop_add.Crit
+	sc.damage_send.hurt = hurt
+	sc.damage_send.crit = false
+	if math.RandomHitn(int(crit), 100) {
+		sc.damage_send.crit = true
+		sc.damage_send.hurt = hurt * (sc.caster_prop.Crit_hurt + sc.prop_add.Crit_hurt)
+	}
+	// step 3: send damage
+	for _, aura := range self.owner.Auras {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_Damage, sc)
+		}
+	}
+	// step 4 : recv damage
+	for _, aura := range target.Auras {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_Damage, sc)
+		}
+	}
+
+	// step 5: 计算防御
+	hurt = sc.damage_send.hurt - sc.target_prop.Def
+	if hurt < 0 {
+		hurt = 1
+	}
+	sc.damage_recv.hurt = hurt
+	// step 6: 防御之后光环减免
+	for _, aura := range target.Auras {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_AftDef, sc)
+		}
+	}
+	// step 7 : 计算实际伤害
+	sc.damage.hurt = sc.damage_recv.hurt - sc.damage_sub.hurt
+	if sc.damage.hurt > target.Prop.Hp_cur {
+		target.Prop.Hp_cur -= sc.damage.hurt
+	} else {
+		target.Prop.Hp_cur = 0
+		target.Dead = true
 	}
 }
