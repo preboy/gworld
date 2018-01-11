@@ -5,10 +5,6 @@ import (
 	"fmt"
 )
 
-type EffectCtx struct {
-	//
-}
-
 // ============================================================
 
 type Effect interface {
@@ -18,19 +14,19 @@ type Effect interface {
 	OnEvent(evt BattleEvent, ab *AuraBattle, sc *SkillContext)
 }
 
-type effect_func = func() Effect
+type effect_creator = func() Effect
 
-var effects map[uint32]effect_func
+var ecs map[uint32]effect_creator
 
 func init() {
-	effects = make(map[uint32]effect_func, 0x100)
+	ecs = make(map[uint32]effect_creator, 0x100)
 }
 
-func RegisterEffect(i uint32, f effect_func) {
-	if _, ok := effects[i]; ok {
-		log.Warning("dup eff: id = ", i)
+func RegisterEffect(i uint32, f effect_creator) {
+	if _, ok := ecs[i]; ok {
+		log.Warning("dup effect_creator: id = ", i)
 	}
-	effects[i] = f
+	ecs[i] = f
 }
 
 func LoadEffects() {
@@ -39,7 +35,7 @@ func LoadEffects() {
 }
 
 func NewEffect(i uint32) Effect {
-	if fn, ok := effects[i]; ok {
+	if fn, ok := ecs[i]; ok {
 		return fn()
 	}
 	return nil
