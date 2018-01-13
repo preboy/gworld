@@ -4,6 +4,8 @@ import (
 	"core/log"
 )
 
+// 道具是否存在
+
 type ItemProxy struct {
 	items map[uint32]int64
 }

@@ -12,6 +12,7 @@ func Load() {
 	load_hero()
 	load_aura()
 	load_skill()
+	load_item()
 
 	log.Info("Loading Config COMPLETE !!!")
 }
