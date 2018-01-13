@@ -14,8 +14,9 @@ type PlayerData struct {
 
 	// 英雄
 	Heros map[uint32]*game.Hero `bson:"heros"`
-	// 背包
-	Bag *PlayerBag `bson:"bag"`
+
+	// 道具
+	Items map[uint32]uint64 `bson:"items"`
 }
 
 func (self *Player) GetData() *PlayerData {
