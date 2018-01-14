@@ -7,8 +7,16 @@ import (
 )
 
 type ItemProto struct {
-	Id   uint32 `json:"id"`
-	Name string `json:"name"`
+	Id     uint32 `json:"id"`
+	Name   string `json:"name"`
+	Qulity uint32 `json:"qulity"`
+	Type_p uint32 `json:"type_p"`
+	Type_s uint32 `json:"type_s"`
+	Sid    uint32 `json:"sid"`
+	Param1 uint32 `json:"param1"`
+	Param2 uint32 `json:"param2"`
+	Param3 uint32 `json:"param3"`
+	Param4 uint32 `json:"param4"`
 }
 
 type ItemProtoConf struct {

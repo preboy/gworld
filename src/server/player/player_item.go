@@ -1,45 +1,38 @@
 package player
 
 import (
-	"core/log"
+	_ "core/log"
+	"server/game/config"
 )
 
 // 道具是否存在
 
 type ItemProxy struct {
-	items map[uint32]int64
+	add map[uint32]uint64
+	sub map[uint32]uint64
 }
 
 func NewItemProxy() *ItemProxy {
 	ib := &ItemProxy{}
-	ib.items = make(map[uint32]int64)
+	ib.add = make(map[uint32]uint64)
+	ib.sub = make(map[uint32]uint64)
 	return ib
 }
 
-func (self *ItemProxy) Add(id uint32, cnt int64) {
-	if cnt <= 0 {
-		log.Error("ItemProxy.Add Param Error:", id, cnt)
-		return
-	}
-	self.items[id] += cnt
+func (self *ItemProxy) Add(id uint32, cnt uint64) {
+	self.add[id] += cnt
 }
 
-func (self *ItemProxy) Sub(id uint32, cnt int64) {
-	if cnt >= 0 {
-		log.Error("ItemProxy.Sub Param Error:", id, cnt)
-		return
-	}
-	self.items[id] -= cnt
+func (self *ItemProxy) Sub(id uint32, cnt uint64) {
+	self.sub[id] += cnt
 }
 
 // 检测包裹里是否有足够的道具
 func (self *ItemProxy) Enough(plr *Player) bool {
 	Items := plr.data.Items
-	for id, cnt := range self.items {
-		if cnt < 0 {
-			if Items[id] < uint64(-cnt) {
-				return false
-			}
+	for id, cnt := range self.sub {
+		if Items[id] < cnt {
+			return false
 		}
 	}
 	return true
@@ -47,17 +40,39 @@ func (self *ItemProxy) Enough(plr *Player) bool {
 
 func (self *ItemProxy) Apply(plr *Player) {
 	Items := plr.data.Items
-	for id, cnt := range self.items {
-		if cnt < 0 {
-			if Items[id] >= uint64(-cnt) {
-				Items[id] -= uint64(-cnt)
-			}
+	for id, cnt := range self.add {
+		Items[id] += cnt
+	}
+	for id, cnt := range self.sub {
+		if Items[id] >= cnt {
+			Items[id] -= cnt
 		} else {
-			Items[id] += uint64(cnt)
+			Items[id] = 0
 		}
 	}
 }
 
 func (self *Player) GetItemCnt(id uint32) uint64 {
 	return self.data.Items[id]
+}
+
+// 玩家使用道具(常规道具)
+func (self *Player) DoItem(id uint32, cnt uint64) bool {
+	ip := config.GetItemProtoConf().ItemProto(id)
+	if ip == nil || ip.Sid == 0 {
+		return false
+	}
+
+	goods := NewItemProxy()
+	goods.Sub(id, cnt)
+	if !goods.Enough(self) {
+		return false
+	}
+	goods.Apply(self)
+
+	if script, ok := _item_scripts[ip.Sid]; ok {
+		script(self, ip.Param1, ip.Param2, ip.Param3, ip.Param4)
+	}
+
+	return true
 }
