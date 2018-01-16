@@ -247,7 +247,9 @@ func (self *Battle) Calc() *BattleResult {
 	var time uint32
 	br := &BattleResult{}
 
+	bout := 0
 	for {
+		bout++
 		// 打一轮
 		self.attacker.Update(time)
 		self.defender.Update(time)
@@ -261,6 +263,10 @@ func (self *Battle) Calc() *BattleResult {
 			break
 		}
 
+		// 超时失败
+		if bout == 9 {
+			break
+		}
 		time += 200
 	}
 

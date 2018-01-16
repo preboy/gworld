@@ -54,3 +54,40 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 
 	return u
 }
+
+// ==================================================
+
+func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
+	team := config.GetCreatureTeamConf().GetCreatureTeam(id)
+	if team == nil {
+		return nil
+	}
+
+	troop := &battle.BattleTroop{}
+
+	if len(team.Top) > 0 {
+		top := team.Top[0]
+		c := NewCreature(top.Id, top.Lv)
+		if c != nil {
+			troop.SetTop(c.ToBattleUnit())
+		}
+	}
+
+	if len(team.Mid) > 0 {
+		mid := team.Mid[0]
+		c := NewCreature(mid.Id, mid.Lv)
+		if c != nil {
+			troop.SetMid(c.ToBattleUnit())
+		}
+	}
+
+	if len(team.Btm) > 0 {
+		btm := team.Btm[0]
+		c := NewCreature(btm.Id, btm.Lv)
+		if c != nil {
+			troop.SetBtm(c.ToBattleUnit())
+		}
+	}
+
+	return troop
+}
