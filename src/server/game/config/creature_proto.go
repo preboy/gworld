@@ -19,7 +19,7 @@ type CreatureProto struct {
 }
 
 type CreatureProtoConf struct {
-	items map[uint32]*CreatureProto
+	items map[uint64]*CreatureProto
 }
 
 var _CreatureProtoConf CreatureProtoConf
@@ -44,19 +44,21 @@ func load_creature() {
 		return
 	}
 
-	_CreatureProtoConf.items = make(map[uint32]*CreatureProto)
+	_CreatureProtoConf.items = make(map[uint64]*CreatureProto)
 
 	for _, v := range arr {
-		_CreatureProtoConf.items[v.Id] = v
+		key := MakeUint64(v.Id, v.Level)
+		_CreatureProtoConf.items[key] = v
 	}
 
 	log.Info("[CreatureProtoConf] load OK")
 }
 
-func (self *CreatureProtoConf) GetCreatureProto(id uint32) *CreatureProto {
+func (self *CreatureProtoConf) GetCreatureProto(id, lv uint32) *CreatureProto {
 	if self.items == nil {
 		return nil
 	}
 
-	return self.items[id]
+	key := MakeUint64(id, lv)
+	return self.items[key]
 }

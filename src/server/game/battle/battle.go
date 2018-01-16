@@ -31,8 +31,8 @@ type SkillContext struct {
 
 type BattleUnit struct {
 	UnitType   uint32         // 生物类型
-	troop      *BattleTroop   // 队伍
-	Prop       Property       // 战斗属性
+	Troop      *BattleTroop   // 队伍
+	Prop       *Property      // 战斗属性
 	Skills     []*SkillBattle // 主动释放技能
 	Auras      []*AuraBattle  // 光环(技能ID)
 	Dead       bool           // 是否死亡
@@ -76,9 +76,9 @@ func (self *BattleUnit) Update(time uint32) {
 // 寻找对手 all:敌方所有单位
 func (self *BattleUnit) GetRivals(all bool) (ret []*BattleUnit) {
 	if all {
-		return self.troop.GetRivals()
+		return self.Troop.GetRivals()
 	} else {
-		r := self.troop.GetRival(self)
+		r := self.Troop.GetRival(self)
 		if r != nil {
 			ret = append(ret, r)
 		}
@@ -89,9 +89,9 @@ func (self *BattleUnit) GetRivals(all bool) (ret []*BattleUnit) {
 // 寻找所有的队友 include_myself:是否包括自己
 func (self *BattleUnit) GetAllies(include_myself bool) []*BattleUnit {
 	if include_myself {
-		return self.troop.GetMembers(nil)
+		return self.Troop.GetMembers(nil)
 	} else {
-		return self.troop.GetMembers(self)
+		return self.Troop.GetMembers(self)
 	}
 }
 
@@ -128,9 +128,9 @@ func NewBattleTroop(t *BattleUnit, m *BattleUnit, b *BattleUnit) *BattleTroop {
 		mid: m,
 		btm: b,
 	}
-	t.troop = bt
-	m.troop = bt
-	b.troop = bt
+	t.Troop = bt
+	m.Troop = bt
+	b.Troop = bt
 	return bt
 }
 

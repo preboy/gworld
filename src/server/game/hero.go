@@ -2,6 +2,7 @@ package game
 
 import (
 	"server/game/battle"
+	"server/game/config"
 )
 
 type Hero struct {
@@ -37,5 +38,25 @@ func (self *Hero) UnitType() UnitType {
 }
 
 func (self *Hero) ToBattleUnit() *battle.BattleUnit {
-	return nil
+	u := &battle.BattleUnit{
+		UnitType:   uint32(self.UnitType()),
+		Troop:      nil,
+		Dead:       false,
+		Skill_Curr: nil,
+	}
+	proto := config.GetHeroProtoConf().GetHeroProto(self.Pid, self.Level)
+	u.Prop = &battle.Property{
+		Atk:       proto.Atk,
+		Def:       proto.Def,
+		Apm:       proto.Apm,
+		Hp_cur:    proto.Hp,
+		Hp_max:    proto.Hp,
+		Crit:      proto.Crit,
+		Crit_hurt: proto.Crit_hurt,
+	}
+
+	// 	Skills     []*SkillBattle
+	// Auras      []*AuraBattle
+
+	return u
 }

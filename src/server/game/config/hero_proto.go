@@ -53,7 +53,7 @@ func load_hero() {
 	log.Info("[HeroProtoConf] load OK")
 }
 
-func (self *HeroProtoConf) GetHeroProto(id uint32) *HeroProto {
+func (self *HeroProtoConf) GetHeroProto(id, lv uint32) *HeroProto {
 	if self.items == nil {
 		return nil
 	}

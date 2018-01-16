@@ -105,8 +105,8 @@ func (self *SkillBattle) do_attack(target *BattleUnit) {
 	sc.caster = self.owner
 	sc.target = target
 
-	sc.caster_prop = &(sc.caster.Prop)
-	sc.target_prop = &(sc.target.Prop)
+	sc.caster_prop = sc.caster.Prop
+	sc.target_prop = sc.target.Prop
 
 	// step 1: pre calc attack
 	for _, aura := range self.owner.Auras {

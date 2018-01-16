@@ -157,3 +157,11 @@ MapProto		3000  ------ 3999
 ItemProto		4000  ------ 4999	
 HeroProto		5000  ------ 5999
 CreatureProto		10000 ------ 19999
+
+
+
+schedule:
+	player garden
+	battle
+	group
+
