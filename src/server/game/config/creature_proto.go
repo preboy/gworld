@@ -44,7 +44,7 @@ func load_creature() {
 		return
 	}
 
-	_CreatureProtoConf.items = make(map[uint64]*CreatureProto)
+	_CreatureProtoConf.items = make(map[uint64]*CreatureProto, 0x400)
 
 	for _, v := range arr {
 		key := MakeUint64(v.Id, v.Level)

@@ -19,7 +19,7 @@ type HeroProto struct {
 }
 
 type HeroProtoConf struct {
-	items map[uint32]*HeroProto
+	items map[uint64]*HeroProto
 }
 
 var _HeroProtoConf HeroProtoConf
@@ -44,10 +44,11 @@ func load_hero() {
 		return
 	}
 
-	_HeroProtoConf.items = make(map[uint32]*HeroProto)
+	_HeroProtoConf.items = make(map[uint64]*HeroProto, 0x100)
 
 	for _, v := range arr {
-		_HeroProtoConf.items[v.Id] = v
+		key := MakeUint64(v.Id, v.Level)
+		_HeroProtoConf.items[key] = v
 	}
 
 	log.Info("[HeroProtoConf] load OK")
@@ -58,5 +59,6 @@ func (self *HeroProtoConf) GetHeroProto(id, lv uint32) *HeroProto {
 		return nil
 	}
 
-	return self.items[id]
+	key := MakeUint64(id, lv)
+	return self.items[key]
 }

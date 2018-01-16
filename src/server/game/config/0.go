@@ -13,6 +13,7 @@ func Load() {
 	load_aura()
 	load_skill()
 	load_item()
+	load_creature_team()
 
 	log.Info("Loading Config COMPLETE !!!")
 }
