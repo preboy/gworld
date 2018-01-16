@@ -1,10 +1,10 @@
 package main
 
 import (
-	_ "bufio"
+	"bufio"
 	"fmt"
 	"os"
-	_ "strings"
+	"strings"
 	"syscall"
 )
 
@@ -14,7 +14,7 @@ import (
 	"core/schedule"
 	"core/timer"
 	"core/utils"
-	_ "server/cmd"
+	"server/cmd"
 	"server/game"
 	"server/game/config"
 	"server/net_mgr"
@@ -52,19 +52,29 @@ func main() {
 
 	config.Load()
 
-	// reader := bufio.NewReader(os.Stdin)
-	// for {
-	// 	text, _ := reader.ReadString('\n')
-	// 	text = strings.Trim(text, " \r\n\t")
-	// 	if strings.Compare(text, "quit") == 0 {
-	// 		break
-	// 	} else {
-	// 		cmd.ParseCommand(&text)
-	// 	}
-	// }
-
 	log.Info("server running ...")
-	<-quit
+
+	reader := bufio.NewReader(os.Stdin)
+
+	// set debug flag
+	if true {
+		for {
+			text, _ := reader.ReadString('\n')
+			text = strings.Trim(text, " \r\n\t")
+			if text == "" {
+				continue
+			}
+			if strings.Compare(text, "quit") == 0 {
+				close(quit)
+				break
+			} else {
+				cmd.ParseCommand(&text)
+			}
+		}
+	} else {
+		<-quit
+	}
+
 	log.Info("server stopping ...")
 
 	net_mgr.Stop()

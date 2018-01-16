@@ -265,6 +265,7 @@ func (self *Battle) Calc() *BattleResult {
 
 		// 超时失败
 		if bout == 9 {
+			br.Win = 0
 			break
 		}
 		time += 200

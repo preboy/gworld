@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+func init() {
+	debug.SetTraceback("all")
+}
+
 func Callstack() string {
 	return string(debug.Stack())
 }
