@@ -53,7 +53,7 @@ func (self *BattleUnit) Update(time uint32) {
 		return
 	}
 
-	fmt.Println("BattleUnit Update", time, self.Base.Name())
+	fmt.Println("BattleUnit Update", time, self.Base.Name(), len(self.Skills), len(self.Auras))
 
 	// 释放技能
 	if self.Skill_Curr == nil {
@@ -279,7 +279,7 @@ func (self *Battle) Calc() *BattleResult {
 		}
 
 		// 超时失败
-		if bout == 9 {
+		if bout == 99 {
 			br.Win = 0
 			fmt.Println("bout out!")
 			break

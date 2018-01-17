@@ -6,16 +6,28 @@ import (
 	"io/ioutil"
 )
 
+type SkillConf struct {
+	Id uint32 `json:"id"`
+	Lv uint32 `json:"lv"`
+}
+
+type AuraConf struct {
+	Id uint32 `json:"id"`
+	Lv uint32 `json:"lv"`
+}
+
 type CreatureProto struct {
-	Id        uint32 `json:"id"`
-	Name      string `json:"name"`
-	Level     uint32 `json:"level"`
-	Atk       uint32 `json:"atk"`
-	Def       uint32 `json:"def"`
-	Hp        uint32 `json:"hp"`
-	Apm       uint32 `json:"apm"`
-	Crit      uint32 `json:"crit"`
-	Crit_hurt uint32 `json:"crit_hurt"`
+	Id        uint32       `json:"id"`
+	Name      string       `json:"name"`
+	Level     uint32       `json:"level"`
+	Atk       uint32       `json:"atk"`
+	Def       uint32       `json:"def"`
+	Hp        uint32       `json:"hp"`
+	Apm       uint32       `json:"apm"`
+	Crit      uint32       `json:"crit"`
+	Crit_hurt uint32       `json:"crit_hurt"`
+	Skills    []*SkillConf `json:"skill"`
+	Auras     []*AuraConf  `json:"aura"`
 }
 
 type CreatureProtoConf struct {

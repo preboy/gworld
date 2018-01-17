@@ -52,6 +52,7 @@ func (self *SkillBattle) Update(time uint32) {
 }
 
 func (self *SkillBattle) InCD(time uint32) bool {
+	fmt.Println("CD信息:", time, self.start_time, self.sp.Cd_t)
 	return time-self.start_time < self.sp.Cd_t
 }
 

@@ -47,6 +47,20 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		Skill_Curr: nil,
 	}
 
+	for _, v := range self.proto.Skills {
+		skill := battle.NewSkillBattle(v.Id, v.Lv)
+		if skill != nil {
+			u.Skills = append(u.Skills, skill)
+		}
+	}
+
+	for _, v := range self.proto.Auras {
+		aura := battle.NewAuraBattle(v.Id, v.Lv)
+		if aura != nil {
+			u.Auras = append(u.Auras, aura)
+		}
+	}
+
 	u.Prop = &battle.Property{
 		Atk:       self.proto.Atk,
 		Def:       self.proto.Def,
