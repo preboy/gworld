@@ -12,6 +12,7 @@ type Unit interface {
 	ToCreature() *Creature
 	ToPlayer() *Hero
 	UnitType() int
+	Name() string
 }
 
 // 主动技能

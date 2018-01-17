@@ -1,5 +1,9 @@
 package battle
 
+import (
+	"fmt"
+)
+
 // ==================================================
 type BattleEvent uint32
 
@@ -9,6 +13,10 @@ const (
 	BattleEvent_Damage             // 计算伤害 (双方暂不做任何计算)
 	BattleEvent_AftDef             // 计算防御之后 (抵挡伤害)
 )
+
+type UnitBase interface {
+	Name() string
+}
 
 type SkillDamage struct {
 	hurt uint32
@@ -30,6 +38,7 @@ type SkillContext struct {
 // ==================================================
 
 type BattleUnit struct {
+	Base       UnitBase       // 父类
 	UnitType   uint32         // 生物类型
 	Troop      *BattleTroop   // 队伍
 	Prop       *Property      // 战斗属性
@@ -43,6 +52,9 @@ func (self *BattleUnit) Update(time uint32) {
 	if self.Dead {
 		return
 	}
+
+	fmt.Println("BattleUnit Update", time, self.Base.Name())
+
 	// 释放技能
 	if self.Skill_Curr == nil {
 		// 释放
@@ -53,6 +65,7 @@ func (self *BattleUnit) Update(time uint32) {
 			self.Skill_Curr = v
 			break
 		}
+		fmt.Println("BattleUnit Update 准备释放技能", self.Skill_Curr)
 		if self.Skill_Curr != nil {
 			self.Skill_Curr.Cast(self, time)
 		}
@@ -244,12 +257,14 @@ func (self *Battle) GetAnotherTroop(troop *BattleTroop) *BattleTroop {
 // 计算战斗
 func (self *Battle) Calc() *BattleResult {
 
-	var time uint32
 	br := &BattleResult{}
 
-	bout := 0
+	var time uint32
+	var bout uint32
+
 	for {
 		bout++
+		fmt.Println("bout:", bout, time)
 		// 打一轮
 		self.attacker.Update(time)
 		self.defender.Update(time)
@@ -266,6 +281,7 @@ func (self *Battle) Calc() *BattleResult {
 		// 超时失败
 		if bout == 9 {
 			br.Win = 0
+			fmt.Println("bout out!")
 			break
 		}
 		time += 200

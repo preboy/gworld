@@ -17,6 +17,9 @@ type Hero struct {
 	Status     uint32       `bson:"status"`      // 当前状态：0:闲置军营 1:战舰出征
 	StatusData uint32       `bson:"status_data"` // 与当前状态相关的数据
 	Dead       bool         `bson:"dead"`        // 是否死亡
+
+	// not save
+	proto *config.HeroProto
 }
 
 func NewHero(cid uint32) *Hero {
@@ -37,8 +40,13 @@ func (self *Hero) UnitType() UnitType {
 	return UnitType_Hero
 }
 
+func (self *Hero) Name() string {
+	return self.proto.Name
+}
+
 func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
+		Base:       self,
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
 		Dead:       false,

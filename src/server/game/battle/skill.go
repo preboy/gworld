@@ -3,6 +3,7 @@ package battle
 import (
 	"core/log"
 	"core/math"
+	"fmt"
 	"server/game/config"
 )
 
@@ -32,6 +33,7 @@ func (self *SkillBattle) Cast(u *BattleUnit, time uint32) {
 	self.owner = u
 	self.start_time = time
 	self.update_time = time
+	fmt.Println(u.Base.Name(), "释放了技能", self.sp.Id)
 	self.onStart()
 }
 
@@ -104,6 +106,8 @@ func (self *SkillBattle) do_attack(target *BattleUnit) {
 	sc := &SkillContext{}
 	sc.caster = self.owner
 	sc.target = target
+
+	fmt.Println(sc.caster.Base.Name(), " 攻击了 ", sc.target.Base.Name())
 
 	sc.caster_prop = sc.caster.Prop
 	sc.target_prop = sc.target.Prop

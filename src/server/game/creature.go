@@ -34,8 +34,13 @@ func (self *Creature) UnitType() UnitType {
 	return UnitType_Creature
 }
 
+func (self *Creature) Name() string {
+	return self.proto.Name
+}
+
 func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
+		Base:       self,
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
 		Dead:       false,

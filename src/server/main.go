@@ -41,6 +41,7 @@ func main() {
 			fmt.Println("signal catched: syscall.SIGHUP")
 		} else {
 			close(quit)
+			os.Stdin.Close()
 		}
 	})
 
@@ -56,24 +57,25 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	// set debug flag
-	if true {
-		for {
-			text, _ := reader.ReadString('\n')
-			text = strings.Trim(text, " \r\n\t")
-			if text == "" {
-				continue
-			}
-			if strings.Compare(text, "quit") == 0 {
-				close(quit)
-				break
-			} else {
-				cmd.ParseCommand(&text)
-			}
+	for {
+		text, err := reader.ReadString('\n')
+		if err != nil {
+			log.Info("os.Stdin.Closed !")
+			break
 		}
-	} else {
-		<-quit
+		text = strings.Trim(text, " \r\n\t")
+		if text == "" {
+			continue
+		}
+		if strings.Compare(text, "quit") == 0 {
+			close(quit)
+			break
+		} else {
+			cmd.ParseCommand(&text)
+		}
 	}
+
+	<-quit
 
 	log.Info("server stopping ...")
 
