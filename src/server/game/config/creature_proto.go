@@ -6,16 +6,6 @@ import (
 	"io/ioutil"
 )
 
-type SkillConf struct {
-	Id uint32 `json:"id"`
-	Lv uint32 `json:"lv"`
-}
-
-type AuraConf struct {
-	Id uint32 `json:"id"`
-	Lv uint32 `json:"lv"`
-}
-
 type CreatureProto struct {
 	Id        uint32       `json:"id"`
 	Name      string       `json:"name"`

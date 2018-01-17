@@ -6,17 +6,6 @@ import (
 	"io/ioutil"
 )
 
-type AuraInfo struct {
-	Rate uint32 `json:"rate"`
-	Id   uint32 `json:"id"`
-	Lv   uint32 `json:"lv"`
-}
-
-type AddAttr struct {
-	Id  uint32 `json:"id"`
-	Val uint32 `json:"val"`
-}
-
 type SkillProto struct {
 	Id     uint32      `json:"id"`
 	Lv     uint32      `json:"lv"`
@@ -27,8 +16,8 @@ type SkillProto struct {
 	Cd_t   uint32      `json:"cd_t"`
 	Type   uint32      `json:"type"`
 	Range  uint32      `json:"range"`
-	Auras  []*AuraInfo `json:"auras"`
-	Attrs  []*AddAttr  `json:"add_attr"`
+	Auras  []*AuraConf `json:"aura"`
+	Attrs  []*AttrConf `json:"attr"`
 }
 
 type SkillProtoConf struct {

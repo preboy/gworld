@@ -9,19 +9,17 @@
 		"cd_t" : 4000,
 		"type" : 1,
 		"range" : 0,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 20,
 				"id" : 2001,
 				"lv" : 1
 			},
 			{
-				"rate" : 80,
 				"id" : 2002,
 				"lv" : 1
 			}
 		],
-		"add_attr" : [
+		"attr" : [
 			{
 				"id" : 1,
 				"val" : 100
@@ -47,19 +45,17 @@
 		"cd_t" : 4000,
 		"type" : 1,
 		"range" : 0,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 20,
 				"id" : 2001,
 				"lv" : 2
 			},
 			{
-				"rate" : 80,
 				"id" : 2002,
 				"lv" : 2
 			}
 		],
-		"add_attr" : [
+		"attr" : [
 			{
 				"id" : 1,
 				"val" : 100
@@ -85,19 +81,17 @@
 		"cd_t" : 4000,
 		"type" : 1,
 		"range" : 0,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 20,
 				"id" : 2001,
 				"lv" : 1
 			},
 			{
-				"rate" : 80,
 				"id" : 2002,
 				"lv" : 4
 			}
 		],
-		"add_attr" : [
+		"attr" : [
 			{
 				"id" : 1,
 				"val" : 100
@@ -123,19 +117,17 @@
 		"cd_t" : 4000,
 		"type" : 1,
 		"range" : 0,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 20,
 				"id" : 2001,
 				"lv" : 1
 			},
 			{
-				"rate" : 80,
 				"id" : 2002,
 				"lv" : 4
 			}
 		],
-		"add_attr" : [
+		"attr" : [
 			{
 				"id" : 1,
 				"val" : 100
@@ -161,19 +153,17 @@
 		"cd_t" : 4000,
 		"type" : 1,
 		"range" : 0,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 20,
 				"id" : 2001,
 				"lv" : 1
 			},
 			{
-				"rate" : 80,
 				"id" : 2002,
 				"lv" : 5
 			}
 		],
-		"add_attr" : [
+		"attr" : [
 			{
 				"id" : 1,
 				"val" : 100
@@ -199,14 +189,13 @@
 		"cd_t" : 6000,
 		"type" : 1,
 		"range" : 1,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 1
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -219,14 +208,13 @@
 		"cd_t" : 6000,
 		"type" : 1,
 		"range" : 1,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 2
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -239,14 +227,13 @@
 		"cd_t" : 6000,
 		"type" : 1,
 		"range" : 1,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 3
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -259,14 +246,13 @@
 		"cd_t" : 6000,
 		"type" : 1,
 		"range" : 1,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 4
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -279,14 +265,13 @@
 		"cd_t" : 6000,
 		"type" : 1,
 		"range" : 1,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 5
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -299,14 +284,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 1
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -319,14 +303,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 2
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -339,14 +322,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 3
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -359,14 +341,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 4
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -379,14 +360,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 5
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -399,14 +379,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 1
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -419,14 +398,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 2
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -439,14 +417,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 3
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -459,14 +436,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 4
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -479,14 +455,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 5
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -499,14 +474,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 1
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -519,14 +493,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 2
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -539,14 +512,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 3
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -559,14 +531,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 4
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	},
 
 	{
@@ -579,14 +550,13 @@
 		"cd_t" : 6000,
 		"type" : 2,
 		"range" : 2,
-		"auras" : [
+		"aura" : [
 			{
-				"rate" : 90,
 				"id" : 2003,
 				"lv" : 5
 			}
 		],
-		"add_attr" : []
+		"attr" : []
 	}
 
 ]
