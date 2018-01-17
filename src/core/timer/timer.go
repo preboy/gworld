@@ -12,6 +12,7 @@ var (
 	_curr_millisec uint64
 	_lock          *sync.RWMutex
 	_thread        *thread.Thread
+	_now           time.Time
 )
 
 func new_timer_id() uint64 {
@@ -90,13 +91,14 @@ func get_tick() uint64 {
 
 func update_tick() {
 	_lock.Lock()
-	_curr_millisec = uint64(float64(time.Now().UnixNano()) / 1000 / 1000)
+	_curr_millisec = uint64(float64(time.Since(_now).Nanoseconds()) / 1000 / 1000)
 	_lock.Unlock()
 }
 
 func Start() {
 	_lock = &sync.RWMutex{}
 	if _thread == nil {
+		_now = time.Now()
 		update_tick()
 		_thread = thread.NewThread(update_tick, 20)
 		_thread.Go()
