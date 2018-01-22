@@ -12,7 +12,8 @@ import (
 type SkillBattle struct {
 	sp          *config.SkillProto
 	owner       *BattleUnit //技能拥有者
-	start_time  uint32      // 技能释放时间(包含释放过程)，用于计算CD
+	cd_time     uint32      // 用于计算CD
+	start_time  uint32      // 技能开始释放时间
 	update_time uint32      // 对于有update的技能，记录上次时间
 	finish      bool        // 是否完成
 }
@@ -29,8 +30,9 @@ func NewSkillBattle(id, lv uint32) *SkillBattle {
 }
 
 func (self *SkillBattle) Cast(u *BattleUnit, time uint32) {
-	self.finish = false
 	self.owner = u
+	self.finish = false
+	self.cd_time = 0
 	self.start_time = time
 	self.update_time = time
 	fmt.Println(u.Name(), "释放了技能", self.sp.Id)
@@ -44,15 +46,22 @@ func (self *SkillBattle) Update(time uint32) {
 			self.update_time = time
 		}
 	}
-	if time-self.start_time >= self.sp.Last_t {
+
+	if !self.finish && time-self.start_time >= self.sp.Last_t {
 		self.onFinish()
-		self.finish = true
 		self.owner = nil
+		self.finish = true
+		self.cd_time = time
 	}
 }
 
-func (self *SkillBattle) InCD(time uint32) bool {
-	return time-self.start_time < self.sp.Cd_t
+// CD时间从技能释放结束开始计算
+// 普通技能的CD时间应配置为0
+func (self *SkillBattle) IsFree(time uint32) bool {
+	if time-self.cd_time >= self.sp.Cd_t {
+		return true
+	}
+	return false
 }
 
 func (self *SkillBattle) IsFinish() bool {

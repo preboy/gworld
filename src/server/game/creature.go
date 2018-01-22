@@ -44,16 +44,27 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
 		Dead:       false,
-		Skill_Curr: nil,
+		Skill_curr: nil,
 	}
 
-	for _, v := range self.proto.Skills {
+	// 攻速
+	u.Rest_time_last = uint32(60000 / self.proto.Apm)
+
+	// 普攻
+	if len(self.proto.Skill_common) > 0 {
+		sc := self.proto.Skill_common[0]
+		u.Skill_comm = battle.NewSkillBattle(sc.Id, sc.Lv)
+	}
+
+	// 技能
+	for _, v := range self.proto.Skill_extra {
 		skill := battle.NewSkillBattle(v.Id, v.Lv)
 		if skill != nil {
-			u.Skills = append(u.Skills, skill)
+			u.Skill_extra = append(u.Skill_extra, skill)
 		}
 	}
 
+	// 光环
 	for _, v := range self.proto.Auras {
 		aura := battle.NewAuraBattle(v.Id, v.Lv)
 		if aura != nil {
@@ -61,6 +72,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		}
 	}
 
+	// 基本属性
 	u.Prop = &battle.Property{
 		Atk:       self.proto.Atk,
 		Def:       self.proto.Def,

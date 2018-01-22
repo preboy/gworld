@@ -38,14 +38,17 @@ type SkillContext struct {
 // ==================================================
 
 type BattleUnit struct {
-	Base       UnitBase       // 父类
-	UnitType   uint32         // 生物类型
-	Troop      *BattleTroop   // 队伍
-	Prop       *Property      // 战斗属性
-	Skills     []*SkillBattle // 主动释放技能
-	Auras      []*AuraBattle  // 光环(技能ID)
-	Dead       bool           // 是否死亡
-	Skill_Curr *SkillBattle   // 是否正在释放技能
+	Base            UnitBase       // 父类
+	Prop            *Property      // 战斗属性
+	Troop           *BattleTroop   // 队伍
+	UnitType        uint32         // 生物类型
+	Auras           []*AuraBattle  // 光环(技能ID)
+	Skill_extra     []*SkillBattle // 额外技能(比较猛的)
+	Skill_comm      *SkillBattle   // 普通技能
+	Skill_curr      *SkillBattle   // 当前正在释放技能
+	Dead            bool           // 是否死亡
+	Rest_time_last  uint32
+	Rest_time_begin uint32
 }
 
 func (self *BattleUnit) Name() string {
@@ -61,21 +64,29 @@ func (self *BattleUnit) Update(time uint32) {
 		return
 	}
 
-	if self.Skill_Curr == nil {
-		for _, v := range self.Skills {
-			if v.InCD(time) {
+	if time-self.Rest_time_begin < self.Rest_time_last {
+		return
+	}
+
+	if self.Skill_curr == nil {
+		for _, v := range self.Skill_extra {
+			if !v.IsFree(time) {
 				continue
 			}
-			self.Skill_Curr = v
+			self.Skill_curr = v
 			break
 		}
-		if self.Skill_Curr != nil {
-			self.Skill_Curr.Cast(self, time)
+		if self.Skill_curr == nil {
+			self.Skill_curr = self.Skill_comm
+		}
+		if self.Skill_curr != nil {
+			self.Skill_curr.Cast(self, time)
 		}
 	} else {
-		self.Skill_Curr.Update(time)
-		if self.Skill_Curr.IsFinish() {
-			self.Skill_Curr = nil
+		self.Skill_curr.Update(time)
+		if self.Skill_curr.IsFinish() {
+			self.Skill_curr = nil
+			self.Rest_time_begin = time
 		}
 	}
 
@@ -291,13 +302,13 @@ func (self *Battle) Calc() *BattleResult {
 			break
 		}
 
-		// 超时失败
-		if bout == 99 {
+		// 超时失败(一分钟 600 = 60*1000/100)
+		if bout >= 600 {
 			br.Win = 0
 			fmt.Println("bout out!")
 			break
 		}
-		time += 200
+		time += 100
 	}
 
 	return br

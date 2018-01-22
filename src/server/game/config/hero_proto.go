@@ -7,15 +7,16 @@ import (
 )
 
 type HeroProto struct {
-	Id        uint32 `json:"id"`
-	Name      string `json:"name"`
-	Level     uint32 `json:"level"`
-	Atk       uint32 `json:"atk"`
-	Def       uint32 `json:"def"`
-	Hp        uint32 `json:"hp"`
-	Apm       uint32 `json:"apm"`
-	Crit      uint32 `json:"crit"`
-	Crit_hurt uint32 `json:"crit_hurt"`
+	Id           uint32       `json:"id"`
+	Name         string       `json:"name"`
+	Level        uint32       `json:"level"`
+	Atk          uint32       `json:"atk"`
+	Def          uint32       `json:"def"`
+	Hp           uint32       `json:"hp"`
+	Apm          uint32       `json:"apm"`
+	Crit         uint32       `json:"crit"`
+	Crit_hurt    uint32       `json:"crit_hurt"`
+	Skill_common []*SkillConf `json:"skill_common"`
 }
 
 type HeroProtoConf struct {
