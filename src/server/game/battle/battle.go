@@ -48,16 +48,20 @@ type BattleUnit struct {
 	Skill_Curr *SkillBattle   // 是否正在释放技能
 }
 
+func (self *BattleUnit) Name() string {
+	if self.Troop.IsAttacker {
+		return fmt.Sprintf("(%s[%s][%p])", self.Base.Name(), "攻", self)
+	} else {
+		return fmt.Sprintf("(%s[%s][%p])", self.Base.Name(), "防", self)
+	}
+}
+
 func (self *BattleUnit) Update(time uint32) {
 	if self.Dead {
 		return
 	}
 
-	fmt.Println("BattleUnit Update", time, self.Base.Name(), len(self.Skills), len(self.Auras))
-
-	// 释放技能
 	if self.Skill_Curr == nil {
-		// 释放
 		for _, v := range self.Skills {
 			if v.InCD(time) {
 				continue
@@ -65,7 +69,6 @@ func (self *BattleUnit) Update(time uint32) {
 			self.Skill_Curr = v
 			break
 		}
-		fmt.Println("BattleUnit Update 准备释放技能", self.Skill_Curr)
 		if self.Skill_Curr != nil {
 			self.Skill_Curr.Cast(self, time)
 		}
@@ -75,7 +78,7 @@ func (self *BattleUnit) Update(time uint32) {
 			self.Skill_Curr = nil
 		}
 	}
-	// 光环
+
 	for k, aura := range self.Auras {
 		if aura != nil {
 			aura.Update(time)
@@ -129,10 +132,11 @@ func (self *BattleUnit) DelAura(id, lv uint32) {
 // ==================================================
 
 type BattleTroop struct {
-	battle *Battle
-	top    *BattleUnit
-	mid    *BattleUnit
-	btm    *BattleUnit
+	battle     *Battle
+	top        *BattleUnit
+	mid        *BattleUnit
+	btm        *BattleUnit
+	IsAttacker bool // 是否是挑起战事的一方
 }
 
 func NewBattleTroop(t *BattleUnit, m *BattleUnit, b *BattleUnit) *BattleTroop {
@@ -148,14 +152,17 @@ func NewBattleTroop(t *BattleUnit, m *BattleUnit, b *BattleUnit) *BattleTroop {
 }
 
 func (self *BattleTroop) SetTop(u *BattleUnit) {
+	u.Troop = self
 	self.top = u
 }
 
 func (self *BattleTroop) SetMid(u *BattleUnit) {
+	u.Troop = self
 	self.mid = u
 }
 
 func (self *BattleTroop) SetBtm(u *BattleUnit) {
+	u.Troop = self
 	self.btm = u
 }
 
@@ -241,6 +248,10 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	}
 	a.battle = b
 	d.battle = b
+
+	a.IsAttacker = true
+	d.IsAttacker = false
+
 	return b
 }
 
@@ -271,9 +282,11 @@ func (self *Battle) Calc() *BattleResult {
 
 		// 战斗是否结束
 		if self.attacker.Lose() {
+			fmt.Println("防御者 胜 !!!")
 			br.Win = 0
 			break
 		} else if self.defender.Lose() {
+			fmt.Println("攻击者 胜 !!!")
 			br.Win = 1
 			break
 		}

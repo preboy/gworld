@@ -33,7 +33,7 @@ func (self *SkillBattle) Cast(u *BattleUnit, time uint32) {
 	self.owner = u
 	self.start_time = time
 	self.update_time = time
-	fmt.Println(u.Base.Name(), "释放了技能", self.sp.Id)
+	fmt.Println(u.Name(), "释放了技能", self.sp.Id)
 	self.onStart()
 }
 
@@ -52,7 +52,6 @@ func (self *SkillBattle) Update(time uint32) {
 }
 
 func (self *SkillBattle) InCD(time uint32) bool {
-	fmt.Println("CD信息:", time, self.start_time, self.sp.Cd_t)
 	return time-self.start_time < self.sp.Cd_t
 }
 
@@ -68,11 +67,15 @@ func (self *SkillBattle) onUpdate() {
 	//释放一次技能: 攻击、加光环
 	targets := self.find_targets()
 	for _, target := range targets {
-		// fmt.Println(target)
 		if self.sp.Type == 1 {
+			// 攻击
+			// 安全性检测
+			if target == self.owner {
+				fmt.Println("[WARNING]", self.owner.Name(), "要对自己造成伤害", self.sp.Id)
+			}
 			self.do_attack(target)
 		} else if self.sp.Type == 2 {
-			// TODO
+			// 加光环
 			for _, a := range self.sp.Auras {
 				target.AddAura(self.owner, a.Id, a.Lv)
 			}
@@ -107,8 +110,6 @@ func (self *SkillBattle) do_attack(target *BattleUnit) {
 	sc := &SkillContext{}
 	sc.caster = self.owner
 	sc.target = target
-
-	fmt.Println(sc.caster.Base.Name(), " 攻击了 ", sc.target.Base.Name())
 
 	sc.caster_prop = sc.caster.Prop
 	sc.target_prop = sc.target.Prop
@@ -155,10 +156,13 @@ func (self *SkillBattle) do_attack(target *BattleUnit) {
 	}
 	// step 7 : 计算实际伤害
 	sc.damage.hurt = sc.damage_recv.hurt - sc.damage_sub.hurt
-	if sc.damage.hurt > target.Prop.Hp_cur {
+	fmt.Println(sc.caster.Name(), " 对 ", sc.target.Name(), "造成了伤害:", sc.damage.hurt)
+	if sc.damage.hurt < target.Prop.Hp_cur {
 		target.Prop.Hp_cur -= sc.damage.hurt
 	} else {
 		target.Prop.Hp_cur = 0
 		target.Dead = true
+		fmt.Println(sc.target.Name(), "战死")
 	}
+
 }

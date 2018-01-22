@@ -9,7 +9,8 @@ import (
 )
 
 func init() {
-	debug.SetTraceback("all")
+	// 这个开启之后，显示所有线程的堆栈
+	// debug.SetTraceback("all")
 }
 
 func Callstack() string {
