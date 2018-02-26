@@ -1,6 +1,10 @@
 package player
 
 import (
+	"fmt"
+)
+
+import (
 	_ "core/timer"
 )
 
@@ -13,5 +17,5 @@ func (self *Player) CancelTimer(id uint64) {
 }
 
 func (self *Player) OnTimer(id uint64) {
-
+    fmt.Println("Player.OnTimer:", id)
 }

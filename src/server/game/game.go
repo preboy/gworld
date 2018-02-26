@@ -56,7 +56,7 @@ func (self *Server) Stop() {
 // ----------------- impl for interface
 
 // ----------------- IScuedule -----------------
-func (self *Server) EmitEvent(evt *event.Event) {
+func (self *Server) OnSchedule(evt *event.Event) {
 	self.evtMgr.Fire(evt)
 }
 

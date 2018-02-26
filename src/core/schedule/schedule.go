@@ -18,7 +18,7 @@ type date struct {
 }
 
 type ISchedule interface {
-	EmitEvent(evt *event.Event)
+	OnSchedule(evt *event.Event)
 }
 
 var (
@@ -49,7 +49,7 @@ func update_time() {
 	if _curr_date._curr_min != date._curr_min {
 		evt := event.NewEvent(event.EVT_SCHED_MIN, nil)
 		for _, obj := range _observer {
-			obj.EmitEvent(evt)
+			obj.OnSchedule(evt)
 		}
 	}
 
@@ -57,7 +57,7 @@ func update_time() {
 	if _curr_date._curr_hour != date._curr_hour {
 		evt := event.NewEvent(event.EVT_SCHED_HOUR, nil)
 		for _, obj := range _observer {
-			obj.EmitEvent(evt)
+			obj.OnSchedule(evt)
 		}
 	}
 
@@ -65,7 +65,7 @@ func update_time() {
 	if _curr_date._curr_day != date._curr_day {
 		evt := event.NewEvent(event.EVT_SCHED_DAY, nil)
 		for _, obj := range _observer {
-			obj.EmitEvent(evt)
+			obj.OnSchedule(evt)
 		}
 	}
 
@@ -73,7 +73,7 @@ func update_time() {
 	if _curr_date._curr_week != date._curr_week {
 		evt := event.NewEvent(event.EVT_SCHED_WEEK, nil)
 		for _, obj := range _observer {
-			obj.EmitEvent(evt)
+			obj.OnSchedule(evt)
 		}
 	}
 
@@ -81,7 +81,7 @@ func update_time() {
 	if _curr_date._curr_month != date._curr_month {
 		evt := event.NewEvent(event.EVT_SCHED_MONTH, nil)
 		for _, obj := range _observer {
-			obj.EmitEvent(evt)
+			obj.OnSchedule(evt)
 		}
 	}
 
@@ -89,7 +89,7 @@ func update_time() {
 	if _curr_date._curr_year != date._curr_year {
 		evt := event.NewEvent(event.EVT_SCHED_YEAR, nil)
 		for _, obj := range _observer {
-			obj.EmitEvent(evt)
+			obj.OnSchedule(evt)
 		}
 	}
 
