@@ -110,8 +110,12 @@ func Stop() {
 	}
 }
 
-func Register(name string, obj ISchedule) {
+func Register(name string, obj ISchedule) bool {
+    if Exist(name) != nil {
+        return false
+    }
 	_observer[name] = obj
+    return true
 }
 
 func UnRegister(name string) {

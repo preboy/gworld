@@ -29,6 +29,9 @@ func main() {
 
 	log.Info("server start ...")
 
+	server := game.NewServer()
+	server.Init()
+
 	if !game.Init() {
 		log.Error("Fail on game.Init")
 		log.Stop()
@@ -52,6 +55,8 @@ func main() {
 	net_mgr.Start()
 
 	config.Load()
+
+	server.Start()
 
 	log.Info("server running ...")
 
@@ -79,8 +84,10 @@ func main() {
 
 	log.Info("server stopping ...")
 
+	server.Stop()
+
 	net_mgr.Stop()
-	schedule.Start()
+	schedule.Stop()
 	timer.Stop()
 
 	db.Close()

@@ -11,14 +11,14 @@ import (
 
 type ISession interface {
 	OnRecvPacket(packet *Packet)
+	OnOpened()
+	OnClosed()
 }
 
 type Socket struct {
-	conn      *net.TCPConn
-	w         *sync.WaitGroup
-	s         ISession
-	fn_open   func(*Socket)
-	fn_closed func(*Socket)
+	conn *net.TCPConn
+	w    *sync.WaitGroup
+	s    ISession
 }
 
 func NewSocket(conn *net.TCPConn, s ISession) *Socket {
@@ -29,14 +29,8 @@ func NewSocket(conn *net.TCPConn, s ISession) *Socket {
 	}
 }
 
-func (self *Socket) Start(oopen, closed func(*Socket)) {
-	self.fn_open = oopen
-	self.fn_closed = closed
-
-	if self.fn_open != nil {
-		self.fn_open(self)
-	}
-
+func (self *Socket) Start() {
+	self.s.OnOpened()
 	go self.rt_recv()
 	go self.rt_send()
 }
@@ -84,9 +78,7 @@ J:
 		self.s.OnRecvPacket(NewPacket(code, body))
 	}
 
-	if self.fn_closed != nil {
-		self.fn_closed(self)
-	}
+	self.s.OnClosed()
 }
 
 func (self *Socket) rt_send() {

@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"regexp"
+	"sync/atomic"
 	"time"
 )
 
@@ -20,6 +21,8 @@ import (
 	"public/protocol/msg"
 	"server/player"
 )
+
+var counts_of_client uint32
 
 type Session struct {
 	socket *tcp.Socket
@@ -51,6 +54,7 @@ func (self *Session) SetPlayer(player *player.Player) {
 	self.player = player
 }
 
+// session interface impl
 func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	self.last_touch = time.Now().Unix()
 	if packet.Opcode == uint16(protocol.MSG_CS_PING) {
@@ -73,6 +77,18 @@ func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	}
 }
 
+func (self *Session) OnOpened() {
+	atomic.AddUint32(&counts_of_client, 1)
+}
+
+func (self *Session) OnClosed() {
+	atomic.AddUint32(&counts_of_client, ^uint32(0))
+	if self.player != nil {
+		self.player.Stop()
+	}
+}
+
+// self op
 func (self *Session) Send(data []byte) {
 	self.socket.Send(data)
 }

@@ -33,32 +33,33 @@ func NewPlayer() *Player {
 }
 
 // ----------------- player evnet -----------------
+// 角色线程主体，与玩家网络连接生命周期一致
+// 在循环之前需要先执行<时间差操作>
 func (self *Player) Go() {
-	go func() {
-		if self.run {
-			return
-		}
+	if self.run {
+		return
+	}
 
+	go func() {
 		self.run = true
 		self.w.Add(1)
 
 		defer func() {
-			self.run = false
 			self.w.Done()
 		}()
 
-		for {
+		self.persue()
+
+		for self.run {
 			busy := self.dispatch_packet()
 			if b := self.update(); b {
 				busy = true
 			}
 			if !busy {
-				if !self.run {
-					return
-				}
 				time.Sleep(20 * time.Millisecond)
 			}
 		}
+		println("player.Go exited")
 	}()
 }
 
@@ -69,8 +70,8 @@ func (self *Player) Stop() {
 
 // -------------- private function --------------
 func (self *Player) update() bool {
-	now := time.Now().Unix()
-	if now-100 >= self.last_update {
+	now := time.Now().UnixNano() / (1000 * 1000)
+	if now >= self.last_update+200 {
 		self.last_update = now
 		self.on_update()
 		return true
@@ -86,6 +87,17 @@ func (self *Player) on_update() {
 func (self *Player) init() {
 	self.evtMgr = event.NewEventMgr(self)
 	self.timerMgr = timer.NewTimerMgr(self)
+}
+
+// 处理离线时间段的搁置操作
+func (self *Player) persue() {
+	now := time.Now().UnixNano() / (1000 * 1000)
+	if now >= self.last_update+100 {
+
+	}
+
+	// OnSchedule
+
 }
 
 // -------------- public function --------------
