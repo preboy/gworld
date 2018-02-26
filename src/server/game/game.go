@@ -60,12 +60,18 @@ func (self *Server) OnSchedule(evt *event.Event) {
 	self.evtMgr.Fire(evt)
 }
 
-func (self *Server) FireEvent(evt *event.Event) {
-	self.OnEvent(evt)
-}
-
 func (self *Server) OnEvent(evt *event.Event) {
 	fmt.Println("Server.OnEvent:", evt)
+}
+
+func (self *Server) OnTimer(id uint64) {
+	fmt.Println("Server.OnTimer:", id)
+}
+
+// ----------------- public -----------------
+
+func (self *Server) FireEvent(evt *event.Event) {
+	self.OnEvent(evt)
 }
 
 func (self *Server) CreateTimer(i uint64, r bool, f func()) uint64 {
@@ -74,10 +80,6 @@ func (self *Server) CreateTimer(i uint64, r bool, f func()) uint64 {
 
 func (self *Server) CancelTimer(id uint64) {
 	self.timerMgr.CancelTimer(id)
-}
-
-func (self *Server) OnTimer(id uint64) {
-
 }
 
 // ----------------- private -----------------
