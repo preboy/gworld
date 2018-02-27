@@ -100,17 +100,6 @@ func (self *Player) init() {
 	self.timerMgr = timer.NewTimerMgr(self)
 }
 
-// 处理离线时间段的搁置操作
-func (self *Player) pursue() {
-	now := time.Now().UnixNano() / (1000 * 1000)
-	if now >= self.last_update+100 {
-
-	}
-
-	// OnSchedule
-
-}
-
 // -------------- public function --------------
 func (self *Player) GetSid() int {
 	return int(self.sid)

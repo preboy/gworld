@@ -62,7 +62,20 @@ func (self *Server) OnSchedule(evt *event.Event) {
 }
 
 func (self *Server) OnEvent(evt *event.Event) {
-	fmt.Println("Server.OnEvent:", evt)
+	switch evt.Id {
+	case event.EVT_SCHED_HOUR:
+		self.on_new_hour()
+	case event.EVT_SCHED_DAY:
+		self.on_new_day()
+	case event.EVT_SCHED_WEEK:
+		self.on_new_week()
+	case event.EVT_SCHED_MONTH:
+		self.on_new_month()
+	case event.EVT_SCHED_YEAR:
+		self.on_new_year()
+	default:
+		fmt.Println("Server.OnEvent:", evt)
+	}
 }
 
 func (self *Server) OnTimer(id uint64) {
