@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	SERVER_NAME = "Game"
+	_SERVER_NAME = "main_thread"
 )
 
 var (
@@ -32,22 +32,23 @@ func NewServer() *Server {
 	return _server
 }
 
-func (self *Server) Init() {
+func (self *Server) Start() {
+	if _thread != nil {
+		return
+	}
+
 	self.evtMgr = event.NewEventMgr(self)
 	self.timerMgr = timer.NewTimerMgr(self)
 
-	schedule.Register(SERVER_NAME, self)
-}
+	schedule.Register(_SERVER_NAME, self)
 
-func (self *Server) Start() {
-	if _thread == nil {
-		_thread = thread.NewThread(game_update, 100)
-		_thread.Go()
-	}
+	_thread = thread.NewThread(game_update, 100)
+	_thread.Go()
+
 }
 
 func (self *Server) Stop() {
-	schedule.UnRegister(SERVER_NAME)
+	schedule.UnRegister(_SERVER_NAME)
 	if _thread != nil {
 		_thread.Stop()
 	}

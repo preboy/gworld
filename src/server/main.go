@@ -9,12 +9,12 @@ import (
 )
 
 import (
-	"core/db"
 	"core/log"
 	"core/schedule"
 	"core/timer"
 	"core/utils"
 	"server/cmd"
+	"server/db_mgr"
 	"server/game"
 	"server/game/config"
 	"server/net_mgr"
@@ -28,9 +28,6 @@ func main() {
 	log.Start("GameServer")
 
 	log.Info("server start ...")
-
-	server := game.NewServer()
-	server.Init()
 
 	if !game.Init() {
 		log.Error("Fail on game.Init")
@@ -48,7 +45,7 @@ func main() {
 		}
 	})
 
-	db.Open(game.GetServerConfig().DBAddr)
+	db_mgr.Open(game.GetServerConfig().DBAddr)
 
 	timer.Start()
 	schedule.Start()
@@ -56,7 +53,8 @@ func main() {
 
 	config.Load()
 
-	server.Start()
+	main_thread := game.NewServer()
+	main_thread.Start()
 
 	log.Info("server running ...")
 
@@ -84,13 +82,13 @@ func main() {
 
 	log.Info("server stopping ...")
 
-	server.Stop()
+	main_thread.Stop()
 
 	net_mgr.Stop()
 	schedule.Stop()
 	timer.Stop()
 
-	db.Close()
+	db_mgr.Close()
 
 	fmt.Println("server closed")
 
