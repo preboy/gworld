@@ -79,6 +79,10 @@ func (self *Player) Stop() {
 	self.w.Wait()
 }
 
+func (self *Player) IsRun() bool {
+	return self.run
+}
+
 // -------------- private function --------------
 func (self *Player) update() bool {
 	now := time.Now().UnixNano() / (1000 * 1000)

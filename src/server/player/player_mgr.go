@@ -93,3 +93,9 @@ func CreatePlayer(acct string) *Player {
 
 	return plr
 }
+
+func EachPlayer(fn func(*Player)) {
+	for _, plr := range _plrs_acct {
+		fn(plr)
+	}
+}

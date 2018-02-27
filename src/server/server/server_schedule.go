@@ -1,7 +1,13 @@
-package game
+package server
+
+import (
+	"server/player"
+)
 
 func (self *Server) on_new_hour() {
-
+	player.EachPlayer(func(plr *player.Player) {
+		println("dd")
+	})
 }
 
 func (self *Server) on_new_day() {

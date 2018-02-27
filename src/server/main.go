@@ -18,6 +18,7 @@ import (
 	"server/game"
 	"server/game/config"
 	"server/net_mgr"
+	"server/server"
 )
 
 var (
@@ -53,7 +54,7 @@ func main() {
 
 	config.Load()
 
-	main_thread := game.NewServer()
+	main_thread := server.NewServer()
 	main_thread.Start()
 
 	log.Info("server running ...")
