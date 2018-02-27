@@ -45,12 +45,8 @@ func new_date() *date {
 func update_time() {
 	date := new_date()
 
-	// new minute
-	if _curr_date._curr_min != date._curr_min {
-		evt := event.NewEvent(event.EVT_SCHED_MIN, nil)
-		for _, obj := range _observer {
-			obj.OnSchedule(evt)
-		}
+	if _curr_date._curr_hour == date._curr_hour {
+		return
 	}
 
 	// new hour
@@ -111,11 +107,11 @@ func Stop() {
 }
 
 func Register(name string, obj ISchedule) bool {
-    if Exist(name) != nil {
-        return false
-    }
+	if Exist(name) != nil {
+		return false
+	}
 	_observer[name] = obj
-    return true
+	return true
 }
 
 func UnRegister(name string) {

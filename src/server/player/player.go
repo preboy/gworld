@@ -48,7 +48,14 @@ func (self *Player) Go() {
 			self.w.Done()
 		}()
 
-		self.persue()
+		// 登录处理
+		if self.data.LoginTimes == 0 {
+			self.on_first_login()
+		}
+		self.data.LoginTimes++
+		self.on_login()
+
+		self.pursue()
 
 		for self.run {
 			busy := self.dispatch_packet()
@@ -59,6 +66,10 @@ func (self *Player) Go() {
 				time.Sleep(20 * time.Millisecond)
 			}
 		}
+
+		self.on_logout()
+		self.Save()
+
 		println("player.Go exited")
 	}()
 }
@@ -90,7 +101,7 @@ func (self *Player) init() {
 }
 
 // 处理离线时间段的搁置操作
-func (self *Player) persue() {
+func (self *Player) pursue() {
 	now := time.Now().UnixNano() / (1000 * 1000)
 	if now >= self.last_update+100 {
 

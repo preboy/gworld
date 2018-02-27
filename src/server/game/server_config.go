@@ -14,7 +14,7 @@ var (
 )
 
 type ServerConfig struct {
-	Server_id   uint16 `json:"server_id"`
+	Server_id   uint32 `json:"server_id"`
 	Server_name string `json:"server_name"`
 	Listen_addr string `json:"listen_addr"`
 	PlatID      string `json:"plat_id"`

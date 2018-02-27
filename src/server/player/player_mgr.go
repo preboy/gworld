@@ -1,9 +1,5 @@
 package player
 
-import (
-	"core/event"
-)
-
 const (
 	MAX_PLAYER_COUNT = 0X4000
 )
@@ -76,16 +72,11 @@ func EnterGame(acct string, s ISession) bool {
 
 // ------------- local function -------------
 func CreatePlayer(acct string) *Player {
-	first := false
 	plr := GetPlayerByAcct(acct)
 	if plr == nil {
-		data := GetPlayerData(acct)
+		data := LoadPlayerData(acct)
 		if data == nil {
 			data = CreatePlayerData(acct)
-			first = true
-		}
-		if data == nil {
-			return nil
 		}
 
 		plr = NewPlayer()
@@ -99,12 +90,6 @@ func CreatePlayer(acct string) *Player {
 		_plrs_name[data.Name] = plr
 		_plrs_acct[data.Acct] = plr
 	}
-
-	if first {
-		plr.Save()
-		plr.FireEvent(event.NewEvent(event.EVT_PLR_LOGIN_FIRST, nil))
-	}
-	plr.FireEvent(event.NewEvent(event.EVT_PLR_LOGIN, nil))
 
 	return plr
 }

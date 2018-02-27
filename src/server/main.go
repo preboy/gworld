@@ -26,15 +26,7 @@ var (
 
 func main() {
 	log.Start("GameServer")
-
 	log.Info("server start ...")
-
-	if !game.Init() {
-		log.Error("Fail on game.Init")
-		log.Stop()
-		// time.Sleep(100 * time.Microsecond)
-		return
-	}
 
 	utils.RegisterSignalHandler(func(sig os.Signal) {
 		if sig == syscall.SIGHUP {
@@ -45,7 +37,15 @@ func main() {
 		}
 	})
 
+	if !game.LoadServerConfig("config.json") {
+		log.Error("game.LoadServerConfig: Failed")
+		log.Stop()
+		return
+	}
+
 	db_mgr.Open(game.GetServerConfig().DBAddr)
+
+	game.LoadServerData()
 
 	timer.Start()
 	schedule.Start()
@@ -87,6 +87,8 @@ func main() {
 	net_mgr.Stop()
 	schedule.Stop()
 	timer.Stop()
+
+	game.SaveServerData()
 
 	db_mgr.Close()
 

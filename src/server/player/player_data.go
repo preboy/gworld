@@ -15,10 +15,14 @@ type PlayerData struct {
 	Acct string `bson:"acct"`
 	Pid  uint64 `bson:"pid"`
 
-	Heros      map[uint32]*game.Hero `bson:"heros"`       // 英雄
-	Items      map[uint32]uint64     `bson:"items"`       // 道具
-	ItemsTimed map[uint32]TItemTimed `bson:"items_timed"` // 限时道具
-	VipLevel   uint32                `bson:"vip_level"`   // VIP 等级
+	Heros       map[uint32]*game.Hero `bson:"heros"`       // 英雄
+	Items       map[uint32]uint64     `bson:"items"`       // 道具
+	ItemsTimed  map[uint32]TItemTimed `bson:"items_timed"` // 限时道具
+	Level       uint32                `bson:"level"`       // 等级
+	VipLevel    uint32                `bson:"vip_level"`   // VIP等级
+	Last_update int64                 `bson:"last_update"` // 最后一次处理数据的时间
+	Male        bool                  `bson:"male"`        // 性别(默认:女)
+	LoginTimes  uint32                `bson:"login_times"` // 登录次数
 }
 
 func (self *Player) GetData() *PlayerData {
@@ -26,22 +30,29 @@ func (self *Player) GetData() *PlayerData {
 }
 
 func (self *Player) Save() {
-	err := db_mgr.GetDB().Insert(db_mgr.Table_name_players, self.data)
+	self.data.Last_update = self.last_update
+	err := db_mgr.GetDB().UpsertByCond(
+		db_mgr.Table_name_players,
+		db.Condition{
+			"acct": self.data.Acct,
+		},
+		self.data,
+	)
 	if err != nil {
-		log.Error("Faild to save")
+		log.Error("Player.Save: Faild")
 	}
 }
 
 // ------------------ global ------------------
 
-func GetPlayerData(acct string) *PlayerData {
+func LoadPlayerData(acct string) *PlayerData {
 	var data PlayerData
 	err := db_mgr.GetDB().GetObjectByCond(
 		db_mgr.Table_name_players,
-		&data,
 		db.Condition{
 			"acct": acct,
 		},
+		&data,
 	)
 
 	if err != nil {
