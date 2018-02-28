@@ -49,8 +49,11 @@ func update_time() {
 		return
 	}
 
+	_prev_date := _curr_date
+	_curr_date = date
+
 	// new hour
-	if _curr_date._curr_hour != date._curr_hour {
+	if _curr_date._curr_hour != _prev_date._curr_hour {
 		evt := event.NewEvent(event.EVT_SCHED_HOUR, nil)
 		for _, obj := range _observer {
 			obj.OnSchedule(evt)
@@ -58,7 +61,7 @@ func update_time() {
 	}
 
 	// new day
-	if _curr_date._curr_day != date._curr_day {
+	if _curr_date._curr_day != _prev_date._curr_day {
 		evt := event.NewEvent(event.EVT_SCHED_DAY, nil)
 		for _, obj := range _observer {
 			obj.OnSchedule(evt)
@@ -66,7 +69,7 @@ func update_time() {
 	}
 
 	// new week
-	if _curr_date._curr_week != date._curr_week {
+	if _curr_date._curr_week != _prev_date._curr_week {
 		evt := event.NewEvent(event.EVT_SCHED_WEEK, nil)
 		for _, obj := range _observer {
 			obj.OnSchedule(evt)
@@ -74,7 +77,7 @@ func update_time() {
 	}
 
 	// new month
-	if _curr_date._curr_month != date._curr_month {
+	if _curr_date._curr_month != _prev_date._curr_month {
 		evt := event.NewEvent(event.EVT_SCHED_MONTH, nil)
 		for _, obj := range _observer {
 			obj.OnSchedule(evt)
@@ -82,14 +85,12 @@ func update_time() {
 	}
 
 	// new year
-	if _curr_date._curr_year != date._curr_year {
+	if _curr_date._curr_year != _prev_date._curr_year {
 		evt := event.NewEvent(event.EVT_SCHED_YEAR, nil)
 		for _, obj := range _observer {
 			obj.OnSchedule(evt)
 		}
 	}
-
-	_curr_date = date
 }
 
 func Start() {

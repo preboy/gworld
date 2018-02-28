@@ -6,13 +6,7 @@ import (
 
 // 处理离线时间段的搁置操作
 func (self *Player) pursue() {
-	now := time.Now().UnixNano() / (1000 * 1000)
-	if now >= self.last_update+100 {
-
-	}
-
-	dt := (now - self.last_update) / 1000
-	self.on_pursue(dt)
+	self.on_pursue(time.Now().Unix() - self.last_update/1000)
 
 	end := time.Now()
 	bgn := time.Unix(self.last_update/1000, 0)
@@ -35,26 +29,6 @@ func (self *Player) pursue() {
 
 }
 
-func (self *Player) on_pursue(sec int64) {
-
-}
-
-func (self *Player) on_new_hour() {
-
-}
-
-func (self *Player) on_new_day() {
-
-}
-
-func (self *Player) on_new_week() {
-
-}
-
-func (self *Player) on_new_month() {
-
-}
-
-func (self *Player) on_new_year() {
+func (self *Player) on_pursue(off_sec int64) {
 
 }
