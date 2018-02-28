@@ -8,7 +8,6 @@ import (
 	"core/log"
 	"core/tcp"
 	"server/game"
-	"server/player"
 	"server/session"
 )
 
@@ -33,9 +32,6 @@ func Start() {
 
 func Stop() {
 	if server != nil {
-		player.EachPlayer(func(plr *player.Player) {
-			plr.Disconnect()
-		})
 		server.Stop()
 	}
 }

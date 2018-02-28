@@ -52,6 +52,8 @@ func (self *Server) Stop() {
 	if _thread != nil {
 		_thread.Stop()
 	}
+
+	self.on_stop()
 }
 
 // ----------------- impl for interface

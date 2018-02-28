@@ -85,11 +85,11 @@ func main() {
 
 	main_thread.Stop()
 
+	game.SaveServerData()
+
 	net_mgr.Stop()
 	schedule.Stop()
 	timer.Stop()
-
-	game.SaveServerData()
 
 	db_mgr.Close()
 
