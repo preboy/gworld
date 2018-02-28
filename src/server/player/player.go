@@ -70,7 +70,7 @@ func (self *Player) Go() {
 		self.on_logout()
 		self.Save()
 
-		println("player.Go exited")
+		println("player.Go exited:", self.data.Name)
 	}()
 }
 
