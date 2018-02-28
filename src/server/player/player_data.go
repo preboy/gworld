@@ -34,7 +34,7 @@ func (self *Player) GetData() *PlayerData {
 }
 
 func (self *Player) Save() {
-	self.data.Last_update = self.last_update
+	self.on_before_save()
 	err := db_mgr.GetDB().UpsertByCond(
 		db_mgr.Table_name_players,
 		db.Condition{
@@ -47,9 +47,17 @@ func (self *Player) Save() {
 	}
 }
 
+func (self *Player) on_before_save() {
+	self.data.Last_update = self.last_update
+}
+
+func (self *Player) on_after_load() {
+	self.last_update = self.data.Last_update
+}
+
 // ------------------ global ------------------
 
-func LoadPlayerData(acct string) *PlayerData {
+func LoadPlayerData(acct string) (bool, *PlayerData) {
 	var data PlayerData
 	err := db_mgr.GetDB().GetObjectByCond(
 		db_mgr.Table_name_players,
@@ -59,11 +67,11 @@ func LoadPlayerData(acct string) *PlayerData {
 		&data,
 	)
 
-	if err != nil {
-		return nil
+	if err == nil {
+		return true, &data
 	}
 
-	return &data
+	return false, nil
 }
 
 func CreatePlayerData(acct string) *PlayerData {

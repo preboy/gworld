@@ -74,12 +74,12 @@ func EnterGame(acct string, s ISession) bool {
 func CreatePlayer(acct string) *Player {
 	plr := GetPlayerByAcct(acct)
 	if plr == nil {
-		data := LoadPlayerData(acct)
-		if data == nil {
+		plr = NewPlayer()
+
+		ok, data := LoadPlayerData(acct)
+		if !ok {
 			data = CreatePlayerData(acct)
 		}
-
-		plr = NewPlayer()
 
 		// 新的对象入坑
 		plr.sid = uint32(query_avail_slot_index())
@@ -89,6 +89,10 @@ func CreatePlayer(acct string) *Player {
 		_plrs_pid[data.Pid] = plr
 		_plrs_name[data.Name] = plr
 		_plrs_acct[data.Acct] = plr
+
+		if ok {
+			plr.on_after_load()
+		}
 	}
 
 	return plr
