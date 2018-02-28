@@ -3,6 +3,7 @@ package player
 import (
 	"core/db"
 	"core/log"
+	"core/utils"
 	"server/db_mgr"
 	"server/game"
 )
@@ -47,12 +48,50 @@ func (self *Player) Save() {
 	}
 }
 
-func (self *Player) on_before_save() {
-	self.data.Last_update = self.last_update
-}
-
 func (self *Player) on_after_load() {
 	self.last_update = self.data.Last_update
+
+	data := self.GetData()
+
+	data.Heros = make(map[uint32]*game.Hero)
+	data.Items = make(map[uint32]uint64)
+	data.ItemsTimed = make(map[uint32]TItemTimed)
+
+	for k, v := range data.Heros_bson {
+		key := utils.Atou32(k)
+		data.Heros[key] = v
+	}
+	for k, v := range data.Items_bson {
+		key := utils.Atou32(k)
+		data.Items[key] = v
+	}
+	for k, v := range data.ItemsTimed_bson {
+		key := utils.Atou32(k)
+		data.ItemsTimed[key] = v
+	}
+}
+
+func (self *Player) on_before_save() {
+	self.data.Last_update = self.last_update
+
+	data := self.GetData()
+
+	data.Heros_bson = make(map[string]*game.Hero)
+	data.Items_bson = make(map[string]uint64)
+	data.ItemsTimed_bson = make(map[string]TItemTimed)
+
+	for k, v := range data.Heros {
+		key := utils.U32toa(k)
+		data.Heros_bson[key] = v
+	}
+	for k, v := range data.Items {
+		key := utils.U32toa(k)
+		data.Items_bson[key] = v
+	}
+	for k, v := range data.ItemsTimed {
+		key := utils.U32toa(k)
+		data.ItemsTimed_bson[key] = v
+	}
 }
 
 // ------------------ global ------------------
