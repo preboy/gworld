@@ -20,6 +20,9 @@ const (
 	MSG_CS_PlayerData uint16 = 0x0007
 	MSG_SC_PlayerData uint16 = 0x0008
 
+	MSG_CS_GMCommand uint16 = 0x0009
+	MSG_SC_GMCommand uint16 = 0x000A
+
 	MSG_OTHER uint16 = iota + 0x1000
 
 	// end flag

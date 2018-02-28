@@ -240,7 +240,7 @@ func (self *Database) GetObjectByCond(coll string, cond interface{}, obj interfa
 
 	err := session.DB("").C(coll).Find(cond).One(obj)
 	if is_critical(session, err) {
-		log.Error("db.GetObjectByCond():", err, coll, cond)
+		log.Error("db.GetObjectByCond(): %v, %v, %v", err, coll, cond)
 		log.Error(utils.Callstack())
 	}
 	return err

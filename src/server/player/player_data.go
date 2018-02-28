@@ -15,14 +15,18 @@ type PlayerData struct {
 	Acct string `bson:"acct"`
 	Pid  uint64 `bson:"pid"`
 
-	Heros       map[uint32]*game.Hero `bson:"heros"`       // 英雄
-	Items       map[uint32]uint64     `bson:"items"`       // 道具
-	ItemsTimed  map[uint32]TItemTimed `bson:"items_timed"` // 限时道具
-	Level       uint32                `bson:"level"`       // 等级
-	VipLevel    uint32                `bson:"vip_level"`   // VIP等级
-	Last_update int64                 `bson:"last_update"` // 最后一次处理数据的时间
-	Male        bool                  `bson:"male"`        // 性别(默认:女)
-	LoginTimes  uint32                `bson:"login_times"` // 登录次数
+	// remark:  map的键必要是字符串  加载之后，写入之前需要特别处理
+	Heros_bson      map[string]*game.Hero `bson:"heros"`       // 英雄
+	Items_bson      map[string]uint64     `bson:"items"`       // 道具
+	ItemsTimed_bson map[string]TItemTimed `bson:"items_timed"` // 限时道具
+	Heros           map[uint32]*game.Hero `bson:"-"`
+	Items           map[uint32]uint64     `bson:"-"`
+	ItemsTimed      map[uint32]TItemTimed `bson:"-"`
+	Level           uint32                `bson:"level"`       // 等级
+	VipLevel        uint32                `bson:"vip_level"`   // VIP等级
+	Last_update     int64                 `bson:"last_update"` // 最后一次处理数据的时间
+	Male            bool                  `bson:"male"`        // 性别(默认:女)
+	LoginTimes      uint32                `bson:"login_times"` // 登录次数
 }
 
 func (self *Player) GetData() *PlayerData {

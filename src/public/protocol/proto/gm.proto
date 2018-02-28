@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package msg;
+
+message GMCommandRequest {
+    string command  = 1;
+}
+
+message GMCommandResponse {
+    int32 result    = 1;
+}
