@@ -79,6 +79,7 @@ J:
 	}
 
 	self.s.OnClosed()
+    self.conn.Close()
 }
 
 func (self *Socket) rt_send() {

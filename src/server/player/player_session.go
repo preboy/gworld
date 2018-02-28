@@ -15,6 +15,7 @@ func (self *Player) SetSession(s ISession) {
 }
 
 func (self *Player) Disconnect() {
+    self.Stop()
 	self.s.Disconnect()
 	self.s = nil
 }
