@@ -13,11 +13,6 @@ func init() {
 
 func handler_player_notice(plr *Player, packet *tcp.Packet) {
 	req := msg.NoticeRequest{}
-	res := msg.NoticeResponse{}
 	proto.Unmarshal(packet.Data, &req)
-
-	res.Flag = req.Flag
-	res.Notice = req.Notice
-
-	plr.SendPacket(protocol.MSG_SC_Notice, &res)
+	plr.SendNotice(req.Notice, req.Flag)
 }
