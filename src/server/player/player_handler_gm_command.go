@@ -58,6 +58,17 @@ func (self *Player) on_gm_command(args []string) int32 {
 			ip.Apply(self)
 			println("curr:", item[0], self.GetItemCnt(id))
 		}
+	case "hero":
+		for i := 1; i < len(args); i++ {
+			item := strings.Split(args[i], "|")
+			id := utils.Atou32(item[0])
+			hero := self.GetHero(id)
+			if hero == nil {
+				self.AddHero(id)
+			} else {
+				self.SendNotice("Hero: "+item[0]+" already exist", 0)
+			}
+		}
 	default:
 		println("unknown command:", args[0])
 		return 0

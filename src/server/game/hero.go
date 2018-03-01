@@ -7,8 +7,7 @@ import (
 
 type Hero struct {
 	// 这里的数据就是要存入DB的数据
-	Pid        uint32       `bson:pid"`          // 配置表ID
-	Uid        uint32       `bson:uid"`          // 唯一ID
+	Id         uint32       `bson:id"`           // 配置表ID
 	Level      uint32       `bson:"level"`       // 等级
 	Quality    uint32       `bson:"quality"`     // 品质
 	Power      uint32       `bson:"power"`       // 战斗力
@@ -20,8 +19,17 @@ type Hero struct {
 	Dead       bool         `bson:"dead"`        // 是否死亡
 }
 
-func NewHero(cid uint32) *Hero {
-	return nil
+func NewHero(id uint32) *Hero {
+	proto := config.GetHeroProtoConf().GetHeroProto(id, 1)
+	if proto == nil {
+		return nil
+	}
+
+	hero := &Hero{
+		Id:    id,
+		Level: 1,
+	}
+	return hero
 }
 
 // ==================================================
@@ -39,7 +47,7 @@ func (self *Hero) UnitType() UnitType {
 }
 
 func (self *Hero) Name() string {
-	proto := config.GetHeroProtoConf().GetHeroProto(self.Pid, self.Level)
+	proto := config.GetHeroProtoConf().GetHeroProto(self.Id, self.Level)
 	return proto.Name
 }
 
@@ -52,7 +60,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		Skill_curr: nil,
 	}
 
-	proto := config.GetHeroProtoConf().GetHeroProto(self.Pid, self.Level)
+	proto := config.GetHeroProtoConf().GetHeroProto(self.Id, self.Level)
 
 	// 攻速
 	u.Rest_time_last = uint32(60000 / proto.Apm)
