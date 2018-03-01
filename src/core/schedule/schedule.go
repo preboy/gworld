@@ -32,10 +32,11 @@ func init() {
 
 func new_date() *date {
 	now := time.Now()
+	_, week := now.ISOWeek()
 	return &date{
 		_curr_year:  now.Year(),
 		_curr_month: int(now.Month()),
-		_curr_week:  int(now.Weekday()),
+		_curr_week:  int(week),
 		_curr_day:   now.Day(),
 		_curr_hour:  now.Hour(),
 		_curr_min:   now.Minute(),

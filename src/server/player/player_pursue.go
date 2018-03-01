@@ -22,7 +22,11 @@ func (self *Player) pursue() {
 	if now.Day() != lst.Day() {
 		self.on_new_day()
 	}
-	if now.Weekday() != lst.Weekday() {
+
+	_, week_now := now.ISOWeek()
+	_, week_lst := lst.ISOWeek()
+
+	if week_now != week_lst {
 		self.on_new_week()
 	}
 	if now.Month() != lst.Month() {
