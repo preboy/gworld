@@ -13,3 +13,23 @@ message PlayerDataResponse {
     uint32 sid  = 4;
     uint64 id   = 5;
 }
+
+
+message GMCommandRequest {
+    string command  = 1;
+}
+
+message GMCommandResponse {
+    int32 result    = 1;
+}
+
+
+message NoticeRequest {
+    int32  flag     = 1;
+    string notice   = 2;
+}
+
+message NoticeResponse {
+    int32  flag     = 1;
+    string notice   = 2;
+}

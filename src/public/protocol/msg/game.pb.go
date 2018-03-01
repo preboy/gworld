@@ -10,6 +10,10 @@
 	It has these top-level messages:
 		PlayerDataRequest
 		PlayerDataResponse
+		GMCommandRequest
+		GMCommandResponse
+		NoticeRequest
+		NoticeResponse
 */
 package msg
 
@@ -94,9 +98,93 @@ func (m *PlayerDataResponse) GetId() uint64 {
 	return 0
 }
 
+type GMCommandRequest struct {
+	Command string `protobuf:"bytes,1,opt,name=command,proto3" json:"command,omitempty"`
+}
+
+func (m *GMCommandRequest) Reset()                    { *m = GMCommandRequest{} }
+func (m *GMCommandRequest) String() string            { return proto.CompactTextString(m) }
+func (*GMCommandRequest) ProtoMessage()               {}
+func (*GMCommandRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{2} }
+
+func (m *GMCommandRequest) GetCommand() string {
+	if m != nil {
+		return m.Command
+	}
+	return ""
+}
+
+type GMCommandResponse struct {
+	Result int32 `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+}
+
+func (m *GMCommandResponse) Reset()                    { *m = GMCommandResponse{} }
+func (m *GMCommandResponse) String() string            { return proto.CompactTextString(m) }
+func (*GMCommandResponse) ProtoMessage()               {}
+func (*GMCommandResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{3} }
+
+func (m *GMCommandResponse) GetResult() int32 {
+	if m != nil {
+		return m.Result
+	}
+	return 0
+}
+
+type NoticeRequest struct {
+	Flag   int32  `protobuf:"varint,1,opt,name=flag,proto3" json:"flag,omitempty"`
+	Notice string `protobuf:"bytes,2,opt,name=notice,proto3" json:"notice,omitempty"`
+}
+
+func (m *NoticeRequest) Reset()                    { *m = NoticeRequest{} }
+func (m *NoticeRequest) String() string            { return proto.CompactTextString(m) }
+func (*NoticeRequest) ProtoMessage()               {}
+func (*NoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{4} }
+
+func (m *NoticeRequest) GetFlag() int32 {
+	if m != nil {
+		return m.Flag
+	}
+	return 0
+}
+
+func (m *NoticeRequest) GetNotice() string {
+	if m != nil {
+		return m.Notice
+	}
+	return ""
+}
+
+type NoticeResponse struct {
+	Flag   int32  `protobuf:"varint,1,opt,name=flag,proto3" json:"flag,omitempty"`
+	Notice string `protobuf:"bytes,2,opt,name=notice,proto3" json:"notice,omitempty"`
+}
+
+func (m *NoticeResponse) Reset()                    { *m = NoticeResponse{} }
+func (m *NoticeResponse) String() string            { return proto.CompactTextString(m) }
+func (*NoticeResponse) ProtoMessage()               {}
+func (*NoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{5} }
+
+func (m *NoticeResponse) GetFlag() int32 {
+	if m != nil {
+		return m.Flag
+	}
+	return 0
+}
+
+func (m *NoticeResponse) GetNotice() string {
+	if m != nil {
+		return m.Notice
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*PlayerDataRequest)(nil), "msg.PlayerDataRequest")
 	proto.RegisterType((*PlayerDataResponse)(nil), "msg.PlayerDataResponse")
+	proto.RegisterType((*GMCommandRequest)(nil), "msg.GMCommandRequest")
+	proto.RegisterType((*GMCommandResponse)(nil), "msg.GMCommandResponse")
+	proto.RegisterType((*NoticeRequest)(nil), "msg.NoticeRequest")
+	proto.RegisterType((*NoticeResponse)(nil), "msg.NoticeResponse")
 }
 func (m *PlayerDataRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -166,6 +254,111 @@ func (m *PlayerDataResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *GMCommandRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GMCommandRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Command) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(len(m.Command)))
+		i += copy(dAtA[i:], m.Command)
+	}
+	return i, nil
+}
+
+func (m *GMCommandResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *GMCommandResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Result != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Result))
+	}
+	return i, nil
+}
+
+func (m *NoticeRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *NoticeRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Flag != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Flag))
+	}
+	if len(m.Notice) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(len(m.Notice)))
+		i += copy(dAtA[i:], m.Notice)
+	}
+	return i, nil
+}
+
+func (m *NoticeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *NoticeResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Flag != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Flag))
+	}
+	if len(m.Notice) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(len(m.Notice)))
+		i += copy(dAtA[i:], m.Notice)
+	}
+	return i, nil
+}
+
 func encodeVarintGame(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -203,6 +396,51 @@ func (m *PlayerDataResponse) Size() (n int) {
 	}
 	if m.Id != 0 {
 		n += 1 + sovGame(uint64(m.Id))
+	}
+	return n
+}
+
+func (m *GMCommandRequest) Size() (n int) {
+	var l int
+	_ = l
+	l = len(m.Command)
+	if l > 0 {
+		n += 1 + l + sovGame(uint64(l))
+	}
+	return n
+}
+
+func (m *GMCommandResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.Result != 0 {
+		n += 1 + sovGame(uint64(m.Result))
+	}
+	return n
+}
+
+func (m *NoticeRequest) Size() (n int) {
+	var l int
+	_ = l
+	if m.Flag != 0 {
+		n += 1 + sovGame(uint64(m.Flag))
+	}
+	l = len(m.Notice)
+	if l > 0 {
+		n += 1 + l + sovGame(uint64(l))
+	}
+	return n
+}
+
+func (m *NoticeResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.Flag != 0 {
+		n += 1 + sovGame(uint64(m.Flag))
+	}
+	l = len(m.Notice)
+	if l > 0 {
+		n += 1 + l + sovGame(uint64(l))
 	}
 	return n
 }
@@ -454,6 +692,350 @@ func (m *PlayerDataResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *GMCommandRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GMCommandRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GMCommandRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Command", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Command = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *GMCommandResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: GMCommandResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: GMCommandResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Result", wireType)
+			}
+			m.Result = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Result |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *NoticeRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: NoticeRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: NoticeRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Flag", wireType)
+			}
+			m.Flag = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Flag |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Notice", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Notice = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *NoticeResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: NoticeResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: NoticeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Flag", wireType)
+			}
+			m.Flag = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Flag |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Notice", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Notice = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func skipGame(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
@@ -562,16 +1144,22 @@ var (
 func init() { proto.RegisterFile("game.proto", fileDescriptorGame) }
 
 var fileDescriptorGame = []byte{
-	// 171 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0x4f, 0xcc, 0x4d,
-	0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xce, 0x2d, 0x4e, 0x57, 0x52, 0xe6, 0x12, 0x0c,
-	0xc8, 0x49, 0xac, 0x4c, 0x2d, 0x72, 0x49, 0x2c, 0x49, 0x0c, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e,
-	0x11, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60, 0x54, 0x60, 0xd4, 0x60, 0x09, 0x62, 0xca, 0x4c,
-	0x51, 0x2a, 0xe0, 0x12, 0x42, 0x56, 0x54, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x2a, 0x24, 0xc4, 0xc5,
-	0x92, 0x98, 0x9c, 0x5c, 0x02, 0x56, 0xc7, 0x19, 0x04, 0x66, 0x83, 0xc4, 0xf2, 0x12, 0x73, 0x53,
-	0x25, 0x98, 0x20, 0x62, 0x20, 0xb6, 0x90, 0x00, 0x17, 0x73, 0x41, 0x66, 0x8a, 0x04, 0x33, 0xd8,
-	0x38, 0x10, 0x13, 0x24, 0x52, 0x9c, 0x99, 0x22, 0xc1, 0xa2, 0xc0, 0xa8, 0xc1, 0x1b, 0x04, 0x62,
-	0x42, 0x6d, 0x64, 0x85, 0xd9, 0xe8, 0x24, 0x70, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c,
-	0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x90, 0xc4, 0x06, 0x76, 0xb4, 0x31, 0x20, 0x00,
-	0x00, 0xff, 0xff, 0x3f, 0x68, 0x26, 0x00, 0xc2, 0x00, 0x00, 0x00,
+	// 258 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x51, 0xc1, 0x4a, 0xc4, 0x30,
+	0x14, 0x34, 0x6d, 0x77, 0xc5, 0x07, 0xbb, 0x74, 0x73, 0x90, 0x9c, 0xca, 0x12, 0x2f, 0x0b, 0x8a,
+	0x17, 0x8f, 0x7a, 0x52, 0xc1, 0x93, 0x22, 0xf9, 0x83, 0xd8, 0xc4, 0x12, 0x68, 0x9a, 0xda, 0x64,
+	0x0f, 0xfe, 0x85, 0x9f, 0xe5, 0xd1, 0x4f, 0x90, 0xfa, 0x23, 0x92, 0x34, 0xd1, 0x1e, 0xf7, 0x36,
+	0x33, 0xcc, 0xbc, 0x99, 0x36, 0x00, 0x0d, 0xd7, 0xf2, 0xb2, 0x1f, 0x8c, 0x33, 0x38, 0xd7, 0xb6,
+	0xa1, 0x67, 0xb0, 0x79, 0x6e, 0xf9, 0xbb, 0x1c, 0xee, 0xb9, 0xe3, 0x4c, 0xbe, 0xed, 0xa5, 0x75,
+	0x78, 0x0d, 0x99, 0x12, 0x04, 0x6d, 0xd1, 0xae, 0x60, 0x99, 0x12, 0xb4, 0x07, 0x3c, 0x37, 0xd9,
+	0xde, 0x74, 0x56, 0x62, 0x0c, 0x05, 0xaf, 0x6b, 0x17, 0x7c, 0x27, 0x2c, 0x60, 0xaf, 0x75, 0x5c,
+	0x4b, 0x92, 0x4d, 0x9a, 0xc7, 0xb8, 0x84, 0xbc, 0x57, 0x82, 0xe4, 0xe1, 0x9c, 0x87, 0x5e, 0xb1,
+	0x4a, 0x90, 0x62, 0x8b, 0x76, 0x2b, 0xe6, 0x61, 0x6c, 0x5c, 0xfc, 0x35, 0x5e, 0x40, 0xf9, 0xf0,
+	0x78, 0x67, 0xb4, 0xe6, 0x9d, 0x48, 0xab, 0x08, 0x1c, 0xd7, 0x93, 0x12, 0x2b, 0x13, 0xa5, 0xe7,
+	0xb0, 0x99, 0xb9, 0xe3, 0xbc, 0x53, 0x58, 0x0e, 0xd2, 0xee, 0xdb, 0x69, 0xe0, 0x82, 0x45, 0x46,
+	0xaf, 0x61, 0xf5, 0x64, 0x9c, 0xaa, 0x65, 0xba, 0x8b, 0xa1, 0x78, 0x6d, 0x79, 0x13, 0x6d, 0x01,
+	0xfb, 0x70, 0x17, 0x4c, 0xf1, 0x4b, 0x22, 0xa3, 0x37, 0xb0, 0x4e, 0xe1, 0xff, 0xbf, 0x70, 0x68,
+	0xfa, 0xb6, 0xfc, 0x1c, 0x2b, 0xf4, 0x35, 0x56, 0xe8, 0x7b, 0xac, 0xd0, 0xc7, 0x4f, 0x75, 0xf4,
+	0xb2, 0x0c, 0x4f, 0x71, 0xf5, 0x1b, 0x00, 0x00, 0xff, 0xff, 0x0a, 0x43, 0xb3, 0x50, 0x98, 0x01,
+	0x00, 0x00,
 }
