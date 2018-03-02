@@ -3,33 +3,74 @@ syntax = "proto3";
 package msg;
 
 message PlayerDataRequest {
-    uint64 id = 1;
+    uint64  id                  = 1;
 }
 
+message Item {
+    uint32  flag                = 1;    // 0:该道具总数量  1:变化量
+    uint32  id                  = 2;
+    int64   cnt                 = 3;
+}
+
+message Equipment {
+    uint32  quality             = 1;
+    uint32  level               = 2;
+}
+
+message Skill {
+    uint32  id                  = 1;
+    uint32  level               = 2;
+    uint32  effectId            = 3;
+}
+
+message Aura {
+    uint32  id                  = 1;
+    uint32  level               = 2;
+}
+
+message Hero {
+    uint32  id                  = 1;
+    uint32  level               = 2;
+    uint32  quality             = 3;
+    uint32  power               = 4;
+    repeated Equipment  equips  = 5;
+    repeated Skill      skills  = 6;
+    repeated Aura       auras   = 7;
+    uint32  status              = 8;
+    uint32  statusData          = 9;
+    bool    dead                = 10;
+}
+
+
 message PlayerDataResponse {
-    string acct = 1;
-    string name = 2;
-    uint64 pid  = 3;
-    uint32 sid  = 4;
-    uint64 id   = 5;
+    string  acct                = 1;
+    string  name                = 2;
+    uint64  pid                 = 3;
+    uint32  sid                 = 4;
+    uint64  id                  = 5;
+    uint32  level               = 6;
+    uint32  vipLevel            = 7;
+    bool    Male                = 8;
+    repeated Item   items       = 9;
+    repeated Hero   heros       = 10;
 }
 
 
 message GMCommandRequest {
-    string command  = 1;
+    string  command             = 1;
 }
 
 message GMCommandResponse {
-    int32 result    = 1;
+    int32   result              = 1;
 }
 
 
 message NoticeRequest {
-    int32  flag     = 1;
-    string notice   = 2;
+    int32  flag                 = 1;
+    string  notice              = 2;
 }
 
 message NoticeResponse {
-    int32  flag     = 1;
-    string notice   = 2;
+    int32   flag                = 1;
+    string  notice              = 2;
 }

@@ -9,6 +9,11 @@
 
 	It has these top-level messages:
 		PlayerDataRequest
+		Item
+		Equipment
+		Skill
+		Aura
+		Hero
 		PlayerDataResponse
 		GMCommandRequest
 		GMCommandResponse
@@ -50,18 +55,223 @@ func (m *PlayerDataRequest) GetId() uint64 {
 	return 0
 }
 
+type Item struct {
+	Flag uint32 `protobuf:"varint,1,opt,name=flag,proto3" json:"flag,omitempty"`
+	Id   uint32 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Cnt  int64  `protobuf:"varint,3,opt,name=cnt,proto3" json:"cnt,omitempty"`
+}
+
+func (m *Item) Reset()                    { *m = Item{} }
+func (m *Item) String() string            { return proto.CompactTextString(m) }
+func (*Item) ProtoMessage()               {}
+func (*Item) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{1} }
+
+func (m *Item) GetFlag() uint32 {
+	if m != nil {
+		return m.Flag
+	}
+	return 0
+}
+
+func (m *Item) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Item) GetCnt() int64 {
+	if m != nil {
+		return m.Cnt
+	}
+	return 0
+}
+
+type Equipment struct {
+	Quality uint32 `protobuf:"varint,1,opt,name=quality,proto3" json:"quality,omitempty"`
+	Level   uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+}
+
+func (m *Equipment) Reset()                    { *m = Equipment{} }
+func (m *Equipment) String() string            { return proto.CompactTextString(m) }
+func (*Equipment) ProtoMessage()               {}
+func (*Equipment) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{2} }
+
+func (m *Equipment) GetQuality() uint32 {
+	if m != nil {
+		return m.Quality
+	}
+	return 0
+}
+
+func (m *Equipment) GetLevel() uint32 {
+	if m != nil {
+		return m.Level
+	}
+	return 0
+}
+
+type Skill struct {
+	Id       uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Level    uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+	EffectId uint32 `protobuf:"varint,3,opt,name=effectId,proto3" json:"effectId,omitempty"`
+}
+
+func (m *Skill) Reset()                    { *m = Skill{} }
+func (m *Skill) String() string            { return proto.CompactTextString(m) }
+func (*Skill) ProtoMessage()               {}
+func (*Skill) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{3} }
+
+func (m *Skill) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Skill) GetLevel() uint32 {
+	if m != nil {
+		return m.Level
+	}
+	return 0
+}
+
+func (m *Skill) GetEffectId() uint32 {
+	if m != nil {
+		return m.EffectId
+	}
+	return 0
+}
+
+type Aura struct {
+	Id    uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Level uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+}
+
+func (m *Aura) Reset()                    { *m = Aura{} }
+func (m *Aura) String() string            { return proto.CompactTextString(m) }
+func (*Aura) ProtoMessage()               {}
+func (*Aura) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{4} }
+
+func (m *Aura) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Aura) GetLevel() uint32 {
+	if m != nil {
+		return m.Level
+	}
+	return 0
+}
+
+type Hero struct {
+	Id         uint32       `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Level      uint32       `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+	Quality    uint32       `protobuf:"varint,3,opt,name=quality,proto3" json:"quality,omitempty"`
+	Power      uint32       `protobuf:"varint,4,opt,name=power,proto3" json:"power,omitempty"`
+	Equips     []*Equipment `protobuf:"bytes,5,rep,name=equips" json:"equips,omitempty"`
+	Skills     []*Skill     `protobuf:"bytes,6,rep,name=skills" json:"skills,omitempty"`
+	Auras      []*Aura      `protobuf:"bytes,7,rep,name=auras" json:"auras,omitempty"`
+	Status     uint32       `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
+	StatusData uint32       `protobuf:"varint,9,opt,name=statusData,proto3" json:"statusData,omitempty"`
+	Dead       bool         `protobuf:"varint,10,opt,name=dead,proto3" json:"dead,omitempty"`
+}
+
+func (m *Hero) Reset()                    { *m = Hero{} }
+func (m *Hero) String() string            { return proto.CompactTextString(m) }
+func (*Hero) ProtoMessage()               {}
+func (*Hero) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{5} }
+
+func (m *Hero) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *Hero) GetLevel() uint32 {
+	if m != nil {
+		return m.Level
+	}
+	return 0
+}
+
+func (m *Hero) GetQuality() uint32 {
+	if m != nil {
+		return m.Quality
+	}
+	return 0
+}
+
+func (m *Hero) GetPower() uint32 {
+	if m != nil {
+		return m.Power
+	}
+	return 0
+}
+
+func (m *Hero) GetEquips() []*Equipment {
+	if m != nil {
+		return m.Equips
+	}
+	return nil
+}
+
+func (m *Hero) GetSkills() []*Skill {
+	if m != nil {
+		return m.Skills
+	}
+	return nil
+}
+
+func (m *Hero) GetAuras() []*Aura {
+	if m != nil {
+		return m.Auras
+	}
+	return nil
+}
+
+func (m *Hero) GetStatus() uint32 {
+	if m != nil {
+		return m.Status
+	}
+	return 0
+}
+
+func (m *Hero) GetStatusData() uint32 {
+	if m != nil {
+		return m.StatusData
+	}
+	return 0
+}
+
+func (m *Hero) GetDead() bool {
+	if m != nil {
+		return m.Dead
+	}
+	return false
+}
+
 type PlayerDataResponse struct {
-	Acct string `protobuf:"bytes,1,opt,name=acct,proto3" json:"acct,omitempty"`
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Pid  uint64 `protobuf:"varint,3,opt,name=pid,proto3" json:"pid,omitempty"`
-	Sid  uint32 `protobuf:"varint,4,opt,name=sid,proto3" json:"sid,omitempty"`
-	Id   uint64 `protobuf:"varint,5,opt,name=id,proto3" json:"id,omitempty"`
+	Acct     string  `protobuf:"bytes,1,opt,name=acct,proto3" json:"acct,omitempty"`
+	Name     string  `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Pid      uint64  `protobuf:"varint,3,opt,name=pid,proto3" json:"pid,omitempty"`
+	Sid      uint32  `protobuf:"varint,4,opt,name=sid,proto3" json:"sid,omitempty"`
+	Id       uint64  `protobuf:"varint,5,opt,name=id,proto3" json:"id,omitempty"`
+	Level    uint32  `protobuf:"varint,6,opt,name=level,proto3" json:"level,omitempty"`
+	VipLevel uint32  `protobuf:"varint,7,opt,name=vipLevel,proto3" json:"vipLevel,omitempty"`
+	Male     bool    `protobuf:"varint,8,opt,name=Male,proto3" json:"Male,omitempty"`
+	Items    []*Item `protobuf:"bytes,9,rep,name=items" json:"items,omitempty"`
+	Heros    []*Hero `protobuf:"bytes,10,rep,name=heros" json:"heros,omitempty"`
 }
 
 func (m *PlayerDataResponse) Reset()                    { *m = PlayerDataResponse{} }
 func (m *PlayerDataResponse) String() string            { return proto.CompactTextString(m) }
 func (*PlayerDataResponse) ProtoMessage()               {}
-func (*PlayerDataResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{1} }
+func (*PlayerDataResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{6} }
 
 func (m *PlayerDataResponse) GetAcct() string {
 	if m != nil {
@@ -98,6 +308,41 @@ func (m *PlayerDataResponse) GetId() uint64 {
 	return 0
 }
 
+func (m *PlayerDataResponse) GetLevel() uint32 {
+	if m != nil {
+		return m.Level
+	}
+	return 0
+}
+
+func (m *PlayerDataResponse) GetVipLevel() uint32 {
+	if m != nil {
+		return m.VipLevel
+	}
+	return 0
+}
+
+func (m *PlayerDataResponse) GetMale() bool {
+	if m != nil {
+		return m.Male
+	}
+	return false
+}
+
+func (m *PlayerDataResponse) GetItems() []*Item {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+func (m *PlayerDataResponse) GetHeros() []*Hero {
+	if m != nil {
+		return m.Heros
+	}
+	return nil
+}
+
 type GMCommandRequest struct {
 	Command string `protobuf:"bytes,1,opt,name=command,proto3" json:"command,omitempty"`
 }
@@ -105,7 +350,7 @@ type GMCommandRequest struct {
 func (m *GMCommandRequest) Reset()                    { *m = GMCommandRequest{} }
 func (m *GMCommandRequest) String() string            { return proto.CompactTextString(m) }
 func (*GMCommandRequest) ProtoMessage()               {}
-func (*GMCommandRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{2} }
+func (*GMCommandRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{7} }
 
 func (m *GMCommandRequest) GetCommand() string {
 	if m != nil {
@@ -121,7 +366,7 @@ type GMCommandResponse struct {
 func (m *GMCommandResponse) Reset()                    { *m = GMCommandResponse{} }
 func (m *GMCommandResponse) String() string            { return proto.CompactTextString(m) }
 func (*GMCommandResponse) ProtoMessage()               {}
-func (*GMCommandResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{3} }
+func (*GMCommandResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{8} }
 
 func (m *GMCommandResponse) GetResult() int32 {
 	if m != nil {
@@ -138,7 +383,7 @@ type NoticeRequest struct {
 func (m *NoticeRequest) Reset()                    { *m = NoticeRequest{} }
 func (m *NoticeRequest) String() string            { return proto.CompactTextString(m) }
 func (*NoticeRequest) ProtoMessage()               {}
-func (*NoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{4} }
+func (*NoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{9} }
 
 func (m *NoticeRequest) GetFlag() int32 {
 	if m != nil {
@@ -162,7 +407,7 @@ type NoticeResponse struct {
 func (m *NoticeResponse) Reset()                    { *m = NoticeResponse{} }
 func (m *NoticeResponse) String() string            { return proto.CompactTextString(m) }
 func (*NoticeResponse) ProtoMessage()               {}
-func (*NoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{5} }
+func (*NoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{10} }
 
 func (m *NoticeResponse) GetFlag() int32 {
 	if m != nil {
@@ -180,6 +425,11 @@ func (m *NoticeResponse) GetNotice() string {
 
 func init() {
 	proto.RegisterType((*PlayerDataRequest)(nil), "msg.PlayerDataRequest")
+	proto.RegisterType((*Item)(nil), "msg.Item")
+	proto.RegisterType((*Equipment)(nil), "msg.Equipment")
+	proto.RegisterType((*Skill)(nil), "msg.Skill")
+	proto.RegisterType((*Aura)(nil), "msg.Aura")
+	proto.RegisterType((*Hero)(nil), "msg.Hero")
 	proto.RegisterType((*PlayerDataResponse)(nil), "msg.PlayerDataResponse")
 	proto.RegisterType((*GMCommandRequest)(nil), "msg.GMCommandRequest")
 	proto.RegisterType((*GMCommandResponse)(nil), "msg.GMCommandResponse")
@@ -205,6 +455,222 @@ func (m *PlayerDataRequest) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Id))
+	}
+	return i, nil
+}
+
+func (m *Item) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Item) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Flag != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Flag))
+	}
+	if m.Id != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Id))
+	}
+	if m.Cnt != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Cnt))
+	}
+	return i, nil
+}
+
+func (m *Equipment) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Equipment) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Quality != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Quality))
+	}
+	if m.Level != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Level))
+	}
+	return i, nil
+}
+
+func (m *Skill) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Skill) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Id))
+	}
+	if m.Level != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Level))
+	}
+	if m.EffectId != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.EffectId))
+	}
+	return i, nil
+}
+
+func (m *Aura) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Aura) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Id))
+	}
+	if m.Level != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Level))
+	}
+	return i, nil
+}
+
+func (m *Hero) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Hero) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Id))
+	}
+	if m.Level != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Level))
+	}
+	if m.Quality != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Quality))
+	}
+	if m.Power != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Power))
+	}
+	if len(m.Equips) > 0 {
+		for _, msg := range m.Equips {
+			dAtA[i] = 0x2a
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if len(m.Skills) > 0 {
+		for _, msg := range m.Skills {
+			dAtA[i] = 0x32
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if len(m.Auras) > 0 {
+		for _, msg := range m.Auras {
+			dAtA[i] = 0x3a
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Status != 0 {
+		dAtA[i] = 0x40
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Status))
+	}
+	if m.StatusData != 0 {
+		dAtA[i] = 0x48
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.StatusData))
+	}
+	if m.Dead {
+		dAtA[i] = 0x50
+		i++
+		if m.Dead {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
 	}
 	return i, nil
 }
@@ -250,6 +716,50 @@ func (m *PlayerDataResponse) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x28
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Id))
+	}
+	if m.Level != 0 {
+		dAtA[i] = 0x30
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Level))
+	}
+	if m.VipLevel != 0 {
+		dAtA[i] = 0x38
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.VipLevel))
+	}
+	if m.Male {
+		dAtA[i] = 0x40
+		i++
+		if m.Male {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
+	if len(m.Items) > 0 {
+		for _, msg := range m.Items {
+			dAtA[i] = 0x4a
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if len(m.Heros) > 0 {
+		for _, msg := range m.Heros {
+			dAtA[i] = 0x52
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
 	}
 	return i, nil
 }
@@ -377,6 +887,105 @@ func (m *PlayerDataRequest) Size() (n int) {
 	return n
 }
 
+func (m *Item) Size() (n int) {
+	var l int
+	_ = l
+	if m.Flag != 0 {
+		n += 1 + sovGame(uint64(m.Flag))
+	}
+	if m.Id != 0 {
+		n += 1 + sovGame(uint64(m.Id))
+	}
+	if m.Cnt != 0 {
+		n += 1 + sovGame(uint64(m.Cnt))
+	}
+	return n
+}
+
+func (m *Equipment) Size() (n int) {
+	var l int
+	_ = l
+	if m.Quality != 0 {
+		n += 1 + sovGame(uint64(m.Quality))
+	}
+	if m.Level != 0 {
+		n += 1 + sovGame(uint64(m.Level))
+	}
+	return n
+}
+
+func (m *Skill) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovGame(uint64(m.Id))
+	}
+	if m.Level != 0 {
+		n += 1 + sovGame(uint64(m.Level))
+	}
+	if m.EffectId != 0 {
+		n += 1 + sovGame(uint64(m.EffectId))
+	}
+	return n
+}
+
+func (m *Aura) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovGame(uint64(m.Id))
+	}
+	if m.Level != 0 {
+		n += 1 + sovGame(uint64(m.Level))
+	}
+	return n
+}
+
+func (m *Hero) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovGame(uint64(m.Id))
+	}
+	if m.Level != 0 {
+		n += 1 + sovGame(uint64(m.Level))
+	}
+	if m.Quality != 0 {
+		n += 1 + sovGame(uint64(m.Quality))
+	}
+	if m.Power != 0 {
+		n += 1 + sovGame(uint64(m.Power))
+	}
+	if len(m.Equips) > 0 {
+		for _, e := range m.Equips {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if len(m.Skills) > 0 {
+		for _, e := range m.Skills {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if len(m.Auras) > 0 {
+		for _, e := range m.Auras {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if m.Status != 0 {
+		n += 1 + sovGame(uint64(m.Status))
+	}
+	if m.StatusData != 0 {
+		n += 1 + sovGame(uint64(m.StatusData))
+	}
+	if m.Dead {
+		n += 2
+	}
+	return n
+}
+
 func (m *PlayerDataResponse) Size() (n int) {
 	var l int
 	_ = l
@@ -396,6 +1005,27 @@ func (m *PlayerDataResponse) Size() (n int) {
 	}
 	if m.Id != 0 {
 		n += 1 + sovGame(uint64(m.Id))
+	}
+	if m.Level != 0 {
+		n += 1 + sovGame(uint64(m.Level))
+	}
+	if m.VipLevel != 0 {
+		n += 1 + sovGame(uint64(m.VipLevel))
+	}
+	if m.Male {
+		n += 2
+	}
+	if len(m.Items) > 0 {
+		for _, e := range m.Items {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if len(m.Heros) > 0 {
+		for _, e := range m.Heros {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
 	}
 	return n
 }
@@ -506,6 +1136,673 @@ func (m *PlayerDataRequest) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Item) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Item: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Item: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Flag", wireType)
+			}
+			m.Flag = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Flag |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cnt", wireType)
+			}
+			m.Cnt = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Cnt |= (int64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Equipment) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Equipment: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Equipment: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Quality", wireType)
+			}
+			m.Quality = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Quality |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+			}
+			m.Level = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Level |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Skill) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Skill: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Skill: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+			}
+			m.Level = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Level |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EffectId", wireType)
+			}
+			m.EffectId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.EffectId |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Aura) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Aura: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Aura: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+			}
+			m.Level = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Level |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Hero) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Hero: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Hero: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+			}
+			m.Level = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Level |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Quality", wireType)
+			}
+			m.Quality = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Quality |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Power", wireType)
+			}
+			m.Power = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Power |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Equips", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Equips = append(m.Equips, &Equipment{})
+			if err := m.Equips[len(m.Equips)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Skills", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Skills = append(m.Skills, &Skill{})
+			if err := m.Skills[len(m.Skills)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Auras", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Auras = append(m.Auras, &Aura{})
+			if err := m.Auras[len(m.Auras)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 9:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field StatusData", wireType)
+			}
+			m.StatusData = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.StatusData |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 10:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Dead", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Dead = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGame(dAtA[iNdEx:])
@@ -671,6 +1968,126 @@ func (m *PlayerDataResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+			}
+			m.Level = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Level |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VipLevel", wireType)
+			}
+			m.VipLevel = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.VipLevel |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Male", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Male = bool(v != 0)
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Items", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Items = append(m.Items, &Item{})
+			if err := m.Items[len(m.Items)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Heros", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Heros = append(m.Heros, &Hero{})
+			if err := m.Heros[len(m.Heros)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGame(dAtA[iNdEx:])
@@ -1144,22 +2561,39 @@ var (
 func init() { proto.RegisterFile("game.proto", fileDescriptorGame) }
 
 var fileDescriptorGame = []byte{
-	// 258 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x51, 0xc1, 0x4a, 0xc4, 0x30,
-	0x14, 0x34, 0x6d, 0x77, 0xc5, 0x07, 0xbb, 0x74, 0x73, 0x90, 0x9c, 0xca, 0x12, 0x2f, 0x0b, 0x8a,
-	0x17, 0x8f, 0x7a, 0x52, 0xc1, 0x93, 0x22, 0xf9, 0x83, 0xd8, 0xc4, 0x12, 0x68, 0x9a, 0xda, 0x64,
-	0x0f, 0xfe, 0x85, 0x9f, 0xe5, 0xd1, 0x4f, 0x90, 0xfa, 0x23, 0x92, 0x34, 0xd1, 0x1e, 0xf7, 0x36,
-	0x33, 0xcc, 0xbc, 0x99, 0x36, 0x00, 0x0d, 0xd7, 0xf2, 0xb2, 0x1f, 0x8c, 0x33, 0x38, 0xd7, 0xb6,
-	0xa1, 0x67, 0xb0, 0x79, 0x6e, 0xf9, 0xbb, 0x1c, 0xee, 0xb9, 0xe3, 0x4c, 0xbe, 0xed, 0xa5, 0x75,
-	0x78, 0x0d, 0x99, 0x12, 0x04, 0x6d, 0xd1, 0xae, 0x60, 0x99, 0x12, 0xb4, 0x07, 0x3c, 0x37, 0xd9,
-	0xde, 0x74, 0x56, 0x62, 0x0c, 0x05, 0xaf, 0x6b, 0x17, 0x7c, 0x27, 0x2c, 0x60, 0xaf, 0x75, 0x5c,
-	0x4b, 0x92, 0x4d, 0x9a, 0xc7, 0xb8, 0x84, 0xbc, 0x57, 0x82, 0xe4, 0xe1, 0x9c, 0x87, 0x5e, 0xb1,
-	0x4a, 0x90, 0x62, 0x8b, 0x76, 0x2b, 0xe6, 0x61, 0x6c, 0x5c, 0xfc, 0x35, 0x5e, 0x40, 0xf9, 0xf0,
-	0x78, 0x67, 0xb4, 0xe6, 0x9d, 0x48, 0xab, 0x08, 0x1c, 0xd7, 0x93, 0x12, 0x2b, 0x13, 0xa5, 0xe7,
-	0xb0, 0x99, 0xb9, 0xe3, 0xbc, 0x53, 0x58, 0x0e, 0xd2, 0xee, 0xdb, 0x69, 0xe0, 0x82, 0x45, 0x46,
-	0xaf, 0x61, 0xf5, 0x64, 0x9c, 0xaa, 0x65, 0xba, 0x8b, 0xa1, 0x78, 0x6d, 0x79, 0x13, 0x6d, 0x01,
-	0xfb, 0x70, 0x17, 0x4c, 0xf1, 0x4b, 0x22, 0xa3, 0x37, 0xb0, 0x4e, 0xe1, 0xff, 0xbf, 0x70, 0x68,
-	0xfa, 0xb6, 0xfc, 0x1c, 0x2b, 0xf4, 0x35, 0x56, 0xe8, 0x7b, 0xac, 0xd0, 0xc7, 0x4f, 0x75, 0xf4,
-	0xb2, 0x0c, 0x4f, 0x71, 0xf5, 0x1b, 0x00, 0x00, 0xff, 0xff, 0x0a, 0x43, 0xb3, 0x50, 0x98, 0x01,
-	0x00, 0x00,
+	// 529 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0xcd, 0x8e, 0xd3, 0x30,
+	0x10, 0x26, 0xcd, 0x4f, 0x9b, 0x41, 0x5b, 0x75, 0x2d, 0x54, 0x59, 0x1c, 0x4a, 0x65, 0x24, 0x54,
+	0x89, 0x55, 0x0f, 0x70, 0xdc, 0xbd, 0xf0, 0x27, 0xa8, 0xc4, 0x22, 0x64, 0x9e, 0xc0, 0x24, 0x6e,
+	0xb1, 0xc8, 0x5f, 0x63, 0x67, 0xd1, 0xbe, 0x05, 0x17, 0xde, 0x89, 0x23, 0x8f, 0x80, 0xca, 0x4b,
+	0x70, 0x44, 0x1e, 0x3b, 0xbb, 0x11, 0x70, 0xe8, 0xed, 0xfb, 0x66, 0xbe, 0x8c, 0x3d, 0xdf, 0x8c,
+	0x03, 0xb0, 0x13, 0xa5, 0x5c, 0x37, 0x6d, 0x6d, 0x6a, 0x12, 0x96, 0x7a, 0xc7, 0x1e, 0xc2, 0xe9,
+	0xfb, 0x42, 0x5c, 0xcb, 0xf6, 0xa5, 0x30, 0x82, 0xcb, 0x7d, 0x27, 0xb5, 0x21, 0x53, 0x18, 0xa9,
+	0x9c, 0x06, 0xcb, 0x60, 0x15, 0xf1, 0x91, 0xca, 0xd9, 0x05, 0x44, 0x1b, 0x23, 0x4b, 0x42, 0x20,
+	0xda, 0x16, 0x62, 0x87, 0x99, 0x13, 0x8e, 0xd8, 0x6b, 0x47, 0x18, 0x19, 0xa9, 0x9c, 0xcc, 0x20,
+	0xcc, 0x2a, 0x43, 0xc3, 0x65, 0xb0, 0x0a, 0xb9, 0x85, 0xec, 0x1c, 0xd2, 0x57, 0xfb, 0x4e, 0x35,
+	0xa5, 0xac, 0x0c, 0xa1, 0x30, 0xde, 0x77, 0xa2, 0x50, 0xe6, 0xda, 0x57, 0xe9, 0x29, 0xb9, 0x07,
+	0x71, 0x21, 0xaf, 0x64, 0xe1, 0x6b, 0x39, 0xc2, 0x36, 0x10, 0x7f, 0xf8, 0xac, 0x8a, 0x62, 0x70,
+	0x27, 0x77, 0xce, 0x7f, 0xe5, 0xe4, 0x3e, 0x4c, 0xe4, 0x76, 0x2b, 0x33, 0xb3, 0xc9, 0xf1, 0x0a,
+	0x27, 0xfc, 0x86, 0xb3, 0x33, 0x88, 0x9e, 0x75, 0xad, 0x38, 0xae, 0x12, 0xfb, 0x36, 0x82, 0xe8,
+	0x8d, 0x6c, 0xeb, 0x23, 0x0f, 0x1e, 0xf4, 0x15, 0xfe, 0xd3, 0x57, 0x53, 0x7f, 0x91, 0x2d, 0x8d,
+	0x9c, 0x1e, 0x09, 0x79, 0x04, 0x89, 0xb4, 0xa6, 0x68, 0x1a, 0x2f, 0xc3, 0xd5, 0xdd, 0x27, 0xd3,
+	0x75, 0xa9, 0x77, 0xeb, 0x1b, 0x9f, 0xb8, 0xcf, 0x12, 0x06, 0x89, 0xb6, 0xfd, 0x6b, 0x9a, 0xa0,
+	0x0e, 0x50, 0x87, 0x96, 0x70, 0x9f, 0x21, 0x0f, 0x20, 0x16, 0x5d, 0x2b, 0x34, 0x1d, 0xa3, 0x24,
+	0x45, 0x89, 0x6d, 0x95, 0xbb, 0x38, 0x99, 0x43, 0xa2, 0x8d, 0x30, 0x9d, 0xa6, 0x13, 0xbc, 0x83,
+	0x67, 0x64, 0x01, 0xe0, 0x90, 0x1d, 0x3e, 0x4d, 0x31, 0x37, 0x88, 0xd8, 0x79, 0xe7, 0x52, 0xe4,
+	0x14, 0x96, 0xc1, 0x6a, 0xc2, 0x11, 0xb3, 0xdf, 0x01, 0x90, 0xe1, 0xc6, 0xe8, 0xa6, 0xae, 0xb4,
+	0xb4, 0x52, 0x91, 0x65, 0x06, 0x7d, 0x4a, 0x39, 0x62, 0x1b, 0xab, 0x44, 0x29, 0xd1, 0xa8, 0x94,
+	0x23, 0xb6, 0xeb, 0xd1, 0x28, 0x37, 0x9b, 0x88, 0x5b, 0x68, 0x23, 0x5a, 0xe5, 0xde, 0x1d, 0x0b,
+	0xbd, 0xe3, 0x71, 0xbf, 0x7e, 0xb7, 0x8e, 0x27, 0x7f, 0x8d, 0xfa, 0x4a, 0x35, 0x6f, 0x31, 0x31,
+	0x76, 0xa3, 0xee, 0xb9, 0x3d, 0xf9, 0x52, 0x14, 0x12, 0xdb, 0x9d, 0x70, 0xc4, 0xd6, 0x25, 0x65,
+	0x64, 0xa9, 0x69, 0x3a, 0x70, 0xc9, 0xae, 0x35, 0x77, 0x71, 0x2b, 0xf8, 0x24, 0xdb, 0x5a, 0x53,
+	0x18, 0x08, 0xec, 0x0a, 0x70, 0x17, 0x67, 0x67, 0x30, 0x7b, 0x7d, 0xf9, 0xa2, 0x2e, 0x4b, 0x51,
+	0xe5, 0xfd, 0x53, 0xa1, 0x30, 0xce, 0x5c, 0xc4, 0xb7, 0xde, 0x53, 0xf6, 0x18, 0x4e, 0x07, 0x6a,
+	0x6f, 0xd3, 0x1c, 0x92, 0x56, 0xea, 0xae, 0x70, 0x46, 0xc5, 0xdc, 0x33, 0x76, 0x0e, 0x27, 0xef,
+	0x6a, 0xa3, 0x32, 0xd9, 0xd7, 0x1d, 0x3e, 0xb5, 0xd8, 0x3f, 0xb5, 0x39, 0x24, 0x15, 0x8a, 0xbc,
+	0xa3, 0x9e, 0xb1, 0x0b, 0x98, 0xf6, 0x1f, 0xdf, 0x4e, 0xe3, 0xd8, 0xaf, 0x9f, 0xcf, 0xbe, 0x1f,
+	0x16, 0xc1, 0x8f, 0xc3, 0x22, 0xf8, 0x79, 0x58, 0x04, 0x5f, 0x7f, 0x2d, 0xee, 0x7c, 0x4c, 0xf0,
+	0xff, 0xf0, 0xf4, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xc7, 0x65, 0x93, 0x67, 0x2d, 0x04, 0x00,
+	0x00,
 }

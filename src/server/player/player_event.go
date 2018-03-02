@@ -15,4 +15,10 @@ func (self *Player) FireEvent(evt *event.Event) {
 
 func (self *Player) OnEvent(evt *event.Event) {
 	fmt.Println("Player.OnEvent:", evt)
+
+	if evt.Id == event.EVT_SCHED_SYNC_CALL {
+		f := evt.Ptr.(func())
+		f()
+	}
+
 }
