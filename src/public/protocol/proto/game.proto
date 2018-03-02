@@ -66,7 +66,7 @@ message GMCommandResponse {
 
 
 message NoticeRequest {
-    int32  flag                 = 1;
+    int32   flag                = 1;
     string  notice              = 2;
 }
 
