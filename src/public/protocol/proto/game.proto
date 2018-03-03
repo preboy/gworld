@@ -50,9 +50,10 @@ message PlayerDataResponse {
     uint64  id                  = 5;
     uint32  level               = 6;
     uint32  vipLevel            = 7;
-    bool    Male                = 8;
+    bool    male                = 8;
     repeated Item   items       = 9;
     repeated Hero   heros       = 10;
+    repeated Aura   auras       = 11;
 }
 
 
