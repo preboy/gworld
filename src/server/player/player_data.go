@@ -6,6 +6,7 @@ import (
 	"core/utils"
 	"server/db_mgr"
 	"server/game"
+	"time"
 )
 
 type TItemTimed map[uint32]uint64 // "20180226" => cnt 表示2018-02-26之后过期
@@ -119,9 +120,10 @@ func CreatePlayerData(acct string) *PlayerData {
 	nam := game.GeneralPlayerName(pid)
 
 	data := &PlayerData{
-		Acct: acct,
-		Pid:  pid,
-		Name: nam,
+		Acct:        acct,
+		Pid:         pid,
+		Name:        nam,
+		Last_update: time.Now().Unix() * 1000,
 	}
 
 	return data
