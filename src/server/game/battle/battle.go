@@ -143,42 +143,39 @@ func (self *BattleUnit) DelAura(id, lv uint32) {
 // ==================================================
 
 type BattleTroop struct {
-	battle     *Battle
-	top        *BattleUnit
-	mid        *BattleUnit
-	btm        *BattleUnit
-	IsAttacker bool // 是否是挑起战事的一方
+	battle      *Battle
+	is_attacker bool        // 是否是挑起战事的一方
+	l_pioneer   *BattleUnit // 左先锋
+	r_pioneer   *BattleUnit // 右先锋
+	commander   *BattleUnit // 主帅
+	l_guarder   *BattleUnit // 右辅助
+	r_guarder   *BattleUnit // 右辅助
 }
 
-func NewBattleTroop(t *BattleUnit, m *BattleUnit, b *BattleUnit) *BattleTroop {
-	bt := &BattleTroop{
-		top: t,
-		mid: m,
-		btm: b,
+func NewBattleTroop(commander, l_pioneer, r_pioneer, l_guarder, r_guarder *BattleUnit) *BattleTroop {
+	if commander == nil {
+		return nil
 	}
-	t.Troop = bt
-	m.Troop = bt
-	b.Troop = bt
-	return bt
-}
 
-func (self *BattleTroop) SetTop(u *BattleUnit) {
-	u.Troop = self
-	self.top = u
-}
+	battle_troop := &BattleTroop{
+		commander: commander,
+		l_pioneer: l_pioneer,
+		r_pioneer: r_pioneer,
+		l_guarder: l_guarder,
+		r_guarder: r_guarder,
+	}
 
-func (self *BattleTroop) SetMid(u *BattleUnit) {
-	u.Troop = self
-	self.mid = u
-}
+	commander.Troop = battle_troop
+	l_pioneer.Troop = battle_troop
+	r_pioneer.Troop = battle_troop
+	l_guarder.Troop = battle_troop
+	r_guarder.Troop = battle_troop
 
-func (self *BattleTroop) SetBtm(u *BattleUnit) {
-	u.Troop = self
-	self.btm = u
+	return battle_troop
 }
 
 func (self *BattleTroop) Lose() bool {
-	return (self.top == nil || self.top.Dead) && (self.mid == nil || self.mid.Dead) && (self.btm == nil || self.btm.Dead)
+	return self.commander.Dead
 }
 
 func (self *BattleTroop) Update(time uint32) {
@@ -266,8 +263,6 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	return b
 }
 
-// ==================================================
-
 func (self *Battle) GetAnotherTroop(troop *BattleTroop) *BattleTroop {
 	if self.attacker == troop {
 		return self.defender
@@ -276,8 +271,36 @@ func (self *Battle) GetAnotherTroop(troop *BattleTroop) *BattleTroop {
 	}
 }
 
+func (self *Battle) GetWinner() *BattleTroop {
+	if self.attacker.Lose() {
+		return self.defender
+	} else if self.defender.Lose() {
+		return self.attacker
+	}
+	return nil
+}
+
+func (self *Battle) once_campaign(a *BattleUnit) {
+
+	d := get_defender_unit()
+
+	start(a, d)
+
+	// 左先锋vs左先锋
+	// 右先锋vs右先锋
+	// 在
+
+}
+
 // 计算战斗
-func (self *Battle) Calc() *BattleResult {
+func (self *Battle) Calc() {
+
+	self.once_campaign(l)
+	if self.GetWinner() != nil {
+		return
+	}
+
+	self.once_campaign(r)
 
 	br := &BattleResult{}
 
@@ -285,6 +308,7 @@ func (self *Battle) Calc() *BattleResult {
 	var bout uint32
 
 	for {
+
 		bout++
 		fmt.Println("bout:", bout, time)
 		// 打一轮
@@ -312,4 +336,8 @@ func (self *Battle) Calc() *BattleResult {
 	}
 
 	return br
+}
+
+func (self *Battle) GetResult() *BattleResult {
+	return nil
 }
