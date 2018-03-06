@@ -63,7 +63,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	proto := config.GetHeroProtoConf().GetHeroProto(self.Id, self.Level)
 
 	// 攻速
-	u.Rest_time_last = uint32(60000 / proto.Apm)
+	// u.Rest_time_last = uint32(60000 / proto.Apm)
 
 	// 普攻
 	if len(proto.Skill_common) > 0 {

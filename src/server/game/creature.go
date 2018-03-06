@@ -48,7 +48,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	}
 
 	// 攻速
-	u.Rest_time_last = uint32(60000 / self.proto.Apm)
+	// u.Rest_time_last = uint32(60000 / self.proto.Apm)
 
 	// 普攻
 	if len(self.proto.Skill_common) > 0 {
@@ -94,31 +94,32 @@ func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
 		return nil
 	}
 
-	troop := &battle.BattleTroop{}
+	var lp, rp, c, lg, rg *battle.BattleUnit
 
-	if len(team.Top) > 0 {
-		top := team.Top[0]
-		c := NewCreature(top.Id, top.Lv)
-		if c != nil {
-			troop.SetTop(c.ToBattleUnit())
-		}
+	if len(team.L_Pioneer) > 0 {
+		m := team.L_Pioneer[0]
+		lp = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	if len(team.Mid) > 0 {
-		mid := team.Mid[0]
-		c := NewCreature(mid.Id, mid.Lv)
-		if c != nil {
-			troop.SetMid(c.ToBattleUnit())
-		}
+	if len(team.R_Pioneer) > 0 {
+		m := team.R_Pioneer[0]
+		rp = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	if len(team.Btm) > 0 {
-		btm := team.Btm[0]
-		c := NewCreature(btm.Id, btm.Lv)
-		if c != nil {
-			troop.SetBtm(c.ToBattleUnit())
-		}
+	if len(team.Commander) > 0 {
+		m := team.Commander[0]
+		c = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	return troop
+	if len(team.L_Guarder) > 0 {
+		m := team.L_Guarder[0]
+		lg = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	}
+
+	if len(team.R_Guarder) > 0 {
+		m := team.R_Guarder[0]
+		rg = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	}
+
+	return battle.NewBattleTroop(lp, rp, c, lg, rg)
 }

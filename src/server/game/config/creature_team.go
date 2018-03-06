@@ -12,11 +12,13 @@ type PosCreatureInfo struct {
 }
 
 type CreatureTeam struct {
-	Id   uint32             `json:"id"`
-	Desc string             `json:"name"`
-	Top  []*PosCreatureInfo `json:"top"`
-	Mid  []*PosCreatureInfo `json:"mid"`
-	Btm  []*PosCreatureInfo `json:"btm"`
+	Id        uint32             `json:"id"`
+	Desc      string             `json:"name"`
+	L_Pioneer []*PosCreatureInfo `json:"l_pioneer"`
+	R_Pioneer []*PosCreatureInfo `json:"r_pioneer"`
+	Commander []*PosCreatureInfo `json:"commander"`
+	L_Guarder []*PosCreatureInfo `json:"l_guarder"`
+	R_Guarder []*PosCreatureInfo `json:"r_guarder"`
 }
 
 type CreatureTeamConf struct {

@@ -10,7 +10,6 @@ type BattleEvent uint32
 const (
 	_                  BattleEvent = 1 + iota
 	BattleEvent_PreAtk             // 计算攻击之前 (累积光环的附加攻击)
-	BattleEvent_Damage             // 计算伤害 (双方暂不做任何计算)
 	BattleEvent_AftDef             // 计算防御之后 (抵挡伤害)
 )
 
@@ -18,37 +17,19 @@ type UnitBase interface {
 	Name() string
 }
 
-type SkillDamage struct {
-	hurt uint32
-	crit bool
-}
-
-type SkillContext struct {
-	caster      *BattleUnit
-	target      *BattleUnit
-	caster_prop *Property   // 攻击者的基本属性(只读)
-	target_prop *Property   // 防御者的基本属性(只读)
-	prop_add    Property    // 攻击者光环加成
-	damage_send SkillDamage // 攻击者造成实际伤害
-	damage_recv SkillDamage // 防御者计算防御之后的伤害
-	damage_sub  SkillDamage // 防御者计算防御之后光环减免部分
-	damage      SkillDamage //最终造成的实际伤害
-}
-
 // ==================================================
 
 type BattleUnit struct {
-	Base            UnitBase       // 父类
-	Prop            *Property      // 战斗属性
-	Troop           *BattleTroop   // 队伍
-	UnitType        uint32         // 生物类型
-	Auras           []*AuraBattle  // 光环(技能ID)
-	Skill_extra     []*SkillBattle // 额外技能(比较猛的)
-	Skill_comm      *SkillBattle   // 普通技能
-	Skill_curr      *SkillBattle   // 当前正在释放技能
-	Dead            bool           // 是否死亡
-	Rest_time_last  uint32
-	Rest_time_begin uint32
+	Base        UnitBase       // 父类
+	Prop        *Property      // 战斗属性
+	Troop       *BattleTroop   // 队伍
+	UnitType    uint32         // 生物类型
+	Auras       []*AuraBattle  // 光环(技能ID)
+	Skill_extra []*SkillBattle // 额外技能(比较猛的)
+	Skill_comm  *SkillBattle   // 普通技能
+	Skill_curr  *SkillBattle   // 当前正在释放技能
+	Dead        bool           // 是否死亡
+	Rival       *BattleUnit    // 战场对手
 }
 
 func (self *BattleUnit) Name() string {
@@ -59,12 +40,17 @@ func (self *BattleUnit) Name() string {
 	}
 }
 
+func (self *BattleUnit) init_campaign(r *BattleUnit) {
+	self.Rival = r
+	self.Skill_curr = nil
+}
+
+func (self *BattleUnit) clear_campaign() {
+	self.Rival = nil
+}
+
 func (self *BattleUnit) Update(time uint32) {
 	if self.Dead {
-		return
-	}
-
-	if time-self.Rest_time_begin < self.Rest_time_last {
 		return
 	}
 
@@ -79,14 +65,11 @@ func (self *BattleUnit) Update(time uint32) {
 		if self.Skill_curr == nil {
 			self.Skill_curr = self.Skill_comm
 		}
-		if self.Skill_curr != nil {
-			self.Skill_curr.Cast(self, time)
-		}
+		self.Skill_curr.Cast(self, time)
 	} else {
 		self.Skill_curr.Update(time)
 		if self.Skill_curr.IsFinish() {
 			self.Skill_curr = nil
-			self.Rest_time_begin = time
 		}
 	}
 
@@ -97,28 +80,6 @@ func (self *BattleUnit) Update(time uint32) {
 				self.Auras[k] = nil
 			}
 		}
-	}
-}
-
-// 寻找对手 all:敌方所有单位
-func (self *BattleUnit) GetRivals(all bool) (ret []*BattleUnit) {
-	if all {
-		return self.Troop.GetRivals()
-	} else {
-		r := self.Troop.GetRival(self)
-		if r != nil {
-			ret = append(ret, r)
-		}
-		return
-	}
-}
-
-// 寻找所有的队友 include_myself:是否包括自己
-func (self *BattleUnit) GetAllies(include_myself bool) []*BattleUnit {
-	if include_myself {
-		return self.Troop.GetMembers(nil)
-	} else {
-		return self.Troop.GetMembers(self)
 	}
 }
 
@@ -133,7 +94,7 @@ func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
 
 func (self *BattleUnit) DelAura(id, lv uint32) {
 	for k, aura := range self.Auras {
-		if aura.sp.Id == id && aura.sp.Lv == lv {
+		if aura.proto.Id == id && aura.proto.Lv == lv {
 			self.Auras[k] = nil
 			break
 		}
@@ -145,6 +106,7 @@ func (self *BattleUnit) DelAura(id, lv uint32) {
 type BattleTroop struct {
 	battle      *Battle
 	is_attacker bool // 是否是挑起战事的一方
+	is_massacre bool // 是否击杀对方guarder
 
 	l_pioneer *BattleUnit // 左先锋
 	r_pioneer *BattleUnit // 右先锋
@@ -153,7 +115,7 @@ type BattleTroop struct {
 	r_guarder *BattleUnit // 右辅助
 }
 
-func NewBattleTroop(commander, l_pioneer, r_pioneer, l_guarder, r_guarder *BattleUnit) *BattleTroop {
+func NewBattleTroop(l_pioneer, r_pioneer, l_guarder, commander, r_guarder *BattleUnit) *BattleTroop {
 	if commander == nil {
 		return nil
 	}
@@ -179,75 +141,30 @@ func (self *BattleTroop) Lose() bool {
 	return self.commander.Dead
 }
 
-// func (self *BattleTroop) Update(time uint32) {
-// 	if self.top != nil {
-// 		self.top.Update(time)
-// 	}
-// 	if self.mid != nil {
-// 		self.mid.Update(time)
-// 	}
-// 	if self.btm != nil {
-// 		self.btm.Update(time)
-// 	}
-// }
-
-func (self *BattleTroop) GetRivals() []*BattleUnit {
-	troop := self.battle.GetAnotherTroop(self)
-	return troop.GetMembers(nil)
-}
-
-// func (self *BattleTroop) GetRival(u *BattleUnit) *BattleUnit {
-// 	if u == nil {
-// 		return nil
-// 	}
-// 	troop := self.battle.GetAnotherTroop(self)
-// 	if u == self.top {
-// 		return troop.top
-// 	}
-// 	if u == self.mid {
-// 		return troop.mid
-// 	}
-// 	if u == self.btm {
-// 		return troop.btm
-// 	}
-// 	return nil
-// }
-
-// func (self *BattleTroop) GetMembers(exclude *BattleUnit) (ret []*BattleUnit) {
-// 	if exclude == nil || exclude != self.top {
-// 		if self.top != nil {
-// 			ret = append(ret, self.top)
-// 		}
-// 	}
-// 	if exclude == nil || exclude != self.mid {
-// 		if self.mid != nil {
-// 			ret = append(ret, self.mid)
-// 		}
-// 	}
-// 	if exclude == nil || exclude != self.btm {
-// 		if self.btm != nil {
-// 			ret = append(ret, self.btm)
-// 		}
-// 	}
-// 	return
-// }
-
 // ==================================================
+type BattleDetail struct {
+	a    *BattleUnit // 攻击方出战者
+	d    *BattleUnit // 防御方出战者
+	a_hp uint32      // 攻击者用下的HP
+	d_hp uint32      // 防御者用下的HP
+}
 
 type BattleResult struct {
-	Win uint32 // 0:attacker负  1:attacker胜
+	R       uint32 // 0:attacker负  1:attacker胜
+	Details []*BattleDetail
 }
 
-// 生成发给客户端的消息
 func (self *BattleResult) ToMsg() string {
-	return "{}"
+	return "s"
 }
 
 // ==================================================
 
 type Battle struct {
-	attacker *BattleTroop
-	defender *BattleTroop
+	attacker  *BattleTroop
+	defender  *BattleTroop
+	result    BattleResult // 战斗结果
+	campaigns int          // 战斗次数
 }
 
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
@@ -264,14 +181,6 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	return b
 }
 
-func (self *Battle) GetAnotherTroop(troop *BattleTroop) *BattleTroop {
-	if self.attacker == troop {
-		return self.defender
-	} else {
-		return self.attacker
-	}
-}
-
 func (self *Battle) GetWinner() *BattleTroop {
 	if self.attacker.Lose() {
 		return self.defender
@@ -281,16 +190,180 @@ func (self *Battle) GetWinner() *BattleTroop {
 	return nil
 }
 
-func (self *Battle) get_rivals(a *BattleUnit) *BattleUnit {
+func (self *Battle) get_unit_pos(u *BattleUnit) int {
+	troop := u.Troop
+	if troop == self.attacker {
+		switch u {
+		case troop.l_pioneer:
+			return 1
+		case troop.r_pioneer:
+			return 2
+		case troop.commander:
+			return 3
+		case troop.l_guarder:
+			return 4
+		case troop.r_guarder:
+			return 5
+		default:
+			return 0
+		}
+	}
+	if troop == self.defender {
+		switch u {
+		case troop.l_pioneer:
+			return 6
+		case troop.r_pioneer:
+			return 7
+		case troop.commander:
+			return 8
+		case troop.l_guarder:
+			return 9
+		case troop.r_guarder:
+			return 10
+		default:
+			return 0
+		}
+	}
+	return 0
+}
+
+func (self *Battle) get_unit_name(u *BattleUnit) (string, int) {
+	troop := u.Troop
+	if troop == self.attacker {
+		switch u {
+		case troop.l_pioneer:
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左先锋"), 1
+		case troop.r_pioneer:
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右先锋"), 2
+		case troop.commander:
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "主帅"), 3
+		case troop.l_guarder:
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左辅助"), 4
+		case troop.r_guarder:
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右辅助"), 5
+		default:
+			return "unknown[攻]", 0
+		}
+	}
+	if troop == self.defender {
+		switch u {
+		case troop.l_pioneer:
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左先锋"), 6
+		case troop.r_pioneer:
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右先锋"), 7
+		case troop.commander:
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "主帅"), 8
+		case troop.l_guarder:
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左辅助"), 9
+		case troop.r_guarder:
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右辅助"), 10
+		default:
+			return "unknown[防]", 0
+		}
+	}
+	return "unknown", 0
+}
+
+// u: 只能为攻击方的单位
+func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
+	if u == nil || u.Dead {
+		return nil
+	}
+
+	ta := self.attacker
+	td := self.defender
+
+	if u == ta.l_pioneer {
+		r := td.r_pioneer
+		if r != nil && !r.Dead {
+			return r
+		}
+		r = td.r_guarder
+		if ta.is_massacre && r != nil && !r.Dead {
+			return r
+		}
+		r = td.commander
+		if !r.Dead {
+			return r
+		}
+	} else if u == ta.r_pioneer {
+		r := td.l_pioneer
+		if r != nil && r.Dead {
+			return r
+		}
+		r = td.l_guarder
+		if ta.is_massacre && r != nil && !r.Dead {
+			return r
+		}
+		r = td.commander
+		if !r.Dead {
+			return r
+		}
+	} else if u == ta.commander {
+		r := td.l_pioneer
+		if r != nil && !r.Dead {
+			return r
+		}
+		r = td.r_pioneer
+		if r != nil && !r.Dead {
+			return r
+		}
+		r = td.commander
+		if !r.Dead {
+			return r
+		}
+	}
+
 	return nil
 }
 
-func (self *Battle) do_campaign(a *BattleUnit) {
+func (self *Battle) do_campaign(u *BattleUnit) {
+	r := self.get_rival(u)
+	if r == nil {
+		fmt.Println("self.get_rival: nil", u)
+		return
+	}
 
-	d := self.get_rivals(a)
+	u.init_campaign(r)
+	r.init_campaign(u)
+
+	self.campaigns++
+
+	var time uint32
+	var bout uint32
 
 	for {
+		// 打一轮
+		bout++
+		fmt.Println("场次 回合 时间:", self.campaigns, bout, time)
+
+		u.Update(time)
+		r.Update(time)
+
+		if u.Dead || r.Dead {
+			break
+		}
+
+		// 超时(一分钟 600 = 60*1000/100)
+		if bout >= 600 {
+			fmt.Println("bout timeout !")
+			u.Dead = true
+			r.Dead = true
+			break
+		}
+		time += 100
 	}
+
+	u.clear_campaign()
+	r.clear_campaign()
+
+	// 记录结果过程
+	self.result.Details = append(self.result.Details, &BattleDetail{
+		a:    u,
+		d:    r,
+		a_hp: u.Prop.Hp_cur,
+		d_hp: r.Prop.Hp_cur,
+	})
 
 }
 
@@ -298,32 +371,39 @@ func (self *Battle) do_campaign(a *BattleUnit) {
 func (self *Battle) Calc() {
 
 	l := self.attacker.l_pioneer
-	if l != nil {
-		for !l.Dead && self.GetWinner() == nil {
-			self.do_campaign(l)
-		}
-	}
-
 	r := self.attacker.r_pioneer
-	if r != nil {
-		for !r.Dead && self.GetWinner() == nil {
+	c := self.attacker.commander
+
+	for {
+		if l != nil && !l.Dead && self.GetWinner() == nil {
 			self.do_campaign(l)
+			if self.GetWinner() != nil {
+				return
+			}
+		}
+		if r != nil && !r.Dead && self.GetWinner() == nil {
+			self.do_campaign(r)
+			if self.GetWinner() != nil {
+				return
+			}
 		}
 	}
 
-	chief := self.attacker.commander
-	for !chief.Dead && self.GetWinner() == nil {
-		self.do_campaign(chief)
+	for !c.Dead && self.GetWinner() == nil {
+		self.do_campaign(c)
+		if self.GetWinner() != nil {
+			return
+		}
 	}
-
-	if self.attacker.Lose() {
-		fmt.Println("防御者 胜 !!!")
-	} else {
-		fmt.Println("攻击者 胜 !!!")
-	}
-
 }
 
 func (self *Battle) GetResult() *BattleResult {
-	return nil
+	if self.GetWinner() == self.attacker {
+		self.result.R = 1
+		fmt.Println("攻击者 胜 !!!")
+	} else {
+		self.result.R = 0
+		fmt.Println("防御者 胜 !!!")
+	}
+	return &self.result
 }

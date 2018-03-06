@@ -7,7 +7,7 @@ import (
 type AuraBattle struct {
 	owner       *BattleUnit
 	caster      *BattleUnit
-	sp          *config.AuraProto
+	proto       *config.AuraProto
 	eff         Effect
 	start_time  uint32
 	update_time uint32 // 对于有update的技能，记录上次时间
@@ -16,12 +16,12 @@ type AuraBattle struct {
 }
 
 func NewAuraBattle(id, lv uint32) *AuraBattle {
-	sp := config.GetAuraProtoConf().GetAuraProto(id, lv)
-	if sp == nil {
+	proto := config.GetAuraProtoConf().GetAuraProto(id, lv)
+	if proto == nil {
 		return nil
 	}
 	ab := &AuraBattle{
-		sp: sp,
+		proto: proto,
 	}
 	return ab
 }
@@ -38,20 +38,16 @@ func (self *AuraBattle) Update(time uint32) {
 		self.update_time = time
 		self.onStart()
 	}
-	if self.sp.Itv_t != 0 {
-		if time-self.update_time > self.sp.Itv_t {
+	if self.proto.Itv_t != 0 {
+		if time-self.update_time > self.proto.Itv_t {
 			self.onUpdate()
 			self.update_time = time
 		}
 	}
-	if time-self.start_time >= self.sp.Last_t {
+	if time-self.start_time >= self.proto.Last_t {
 		self.onFinish()
 		self.finish = true
 	}
-}
-
-func (self *AuraBattle) IsFinish() bool {
-	return self.finish
 }
 
 func (self *AuraBattle) onStart() {
@@ -66,14 +62,18 @@ func (self *AuraBattle) onUpdate() {
 	}
 }
 
-func (self *AuraBattle) OnEvent(evt BattleEvent, sc *SkillContext) {
-	if self.eff != nil {
-		self.eff.OnEvent(evt, self, sc)
-	}
-}
-
 func (self *AuraBattle) onFinish() {
 	if self.eff != nil {
 		self.eff.OnFinish(self)
+	}
+}
+
+func (self *AuraBattle) IsFinish() bool {
+	return self.finish
+}
+
+func (self *AuraBattle) OnEvent(evt BattleEvent, sc *SkillContext) {
+	if self.eff != nil {
+		self.eff.OnEvent(evt, self, sc)
 	}
 }
