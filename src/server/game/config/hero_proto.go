@@ -13,7 +13,6 @@ type HeroProto struct {
 	Atk          uint32       `json:"atk"`
 	Def          uint32       `json:"def"`
 	Hp           uint32       `json:"hp"`
-	Apm          uint32       `json:"apm"`
 	Crit         uint32       `json:"crit"`
 	Crit_hurt    uint32       `json:"crit_hurt"`
 	Skill_common []*SkillConf `json:"skill_common"`

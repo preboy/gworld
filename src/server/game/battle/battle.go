@@ -42,9 +42,9 @@ type BattleUnit struct {
 	Auras_battle    []*AuraBattle  // 战斗中产生的光环(战斗结束之后保留)
 	Auras_guarder   []*AuraBattle  // 辅助光环(战斗之前加，战斗之后结束，包括辅助、主帅加的)
 
-	Skill_commander *SkillBattle // 主将技能(自用，二选一)
-	Aura_commander  *AuraCfg     // 主将光环(二选一)
-	Aura_guarder    *AuraCfg     // 辅将光环
+	Skill_commander *SkillCfg // 主将技能(自用，二选一)
+	Aura_commander  *AuraCfg  // 主将光环(二选一)
+	Aura_guarder    *AuraCfg  // 辅将光环
 }
 
 func (self *BattleUnit) Name() string {
@@ -76,75 +76,51 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 	troop := self.Troop
 	switch self {
 	case troop.l_pioneer:
-		{
-			// 左先锋接受左辅将以及主帅的祝福
-			g := troop.l_guarder
-			a := g.Aura_guarder
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
-			}
-			g = troop.commander
-			a = g.Aura_commander
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
-			}
-		}
+		fallthrough
 	case troop.r_pioneer:
 		{
-			// 右先锋接受右辅将以及主帅的祝福
-			g := troop.r_guarder
-			a := g.Aura_guarder
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
-			}
-			g = troop.commander
-			a = g.Aura_commander
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+			// 右先锋接受主帅的祝福
+			u := troop.commander
+			if u != nil && !u.Dead {
+				a := u.Aura_commander
+				if a != nil && a.Id != 0 {
+					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+				}
 			}
 		}
 	case troop.commander:
 		{
 			// 主帅接受两辅将以及自己的祝福
-			g := troop.l_guarder
-			a := g.Aura_guarder
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+			u := troop.l_guarder
+			if u != nil && !u.Dead {
+				a := u.Aura_guarder
+				if a != nil && a.Id != 0 {
+					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+				}
 			}
-			g = troop.r_guarder
-			a = g.Aura_guarder
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+			u = troop.r_guarder
+			if u != nil && !u.Dead {
+				a := u.Aura_guarder
+				if a != nil && a.Id != 0 {
+					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+				}
 			}
-			a = self.Aura_commander
+			a := self.Aura_commander
 			if a != nil && a.Id != 0 {
 				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
 			}
 		}
 	case troop.l_guarder:
-		{
-			// 辅将接受主将以及自己的祝福
-			g := troop.commander
-			a := g.Aura_commander
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
-			}
-			a = self.Aura_guarder
-			if a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
-			}
-		}
+		fallthrough
 	case troop.r_guarder:
 		{
-			// 辅将接受主将以及自己的祝福
-			g := troop.commander
-			a := g.Aura_commander
-			if g != nil && !g.Dead && a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
-			}
-			a = self.Aura_guarder
-			if a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+			// 右辅将接受主将的祝福
+			u := troop.commander
+			if u != nil && !u.Dead {
+				a := u.Aura_commander
+				if a != nil && a.Id != 0 {
+					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+				}
 			}
 		}
 	default:
@@ -297,6 +273,13 @@ func NewBattleTroop(l_pioneer, r_pioneer, l_guarder, commander, r_guarder *Battl
 	r_pioneer.Troop = troop
 	l_guarder.Troop = troop
 	r_guarder.Troop = troop
+
+	// 加主帅技能
+	s := troop.commander.Skill_commander
+	if s != nil {
+		skill := NewSkillBattle(s.Id, s.Lv)
+		troop.commander.Skill_exclusive = append(troop.commander.Skill_exclusive, skill)
+	}
 
 	return troop
 }

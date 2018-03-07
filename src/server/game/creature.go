@@ -73,7 +73,6 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	u.Prop = &battle.Property{
 		Atk:       self.proto.Atk,
 		Def:       self.proto.Def,
-		Apm:       self.proto.Apm,
 		Hp_cur:    self.proto.Hp,
 		Hp_max:    self.proto.Hp,
 		Crit:      self.proto.Crit,

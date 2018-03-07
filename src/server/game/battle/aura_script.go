@@ -41,7 +41,7 @@ func create_aura_script(proto *config.AuraProto) AuraScript {
 	if f, ok := _creators[proto.Id]; ok {
 		return f()
 	} else {
-		log.Error("Not Found AuraScript: AuraProto.Id = ", proto.Id)
+		log.Error("Not Found AuraScript: AuraProto.Id = %v", proto.Id)
 		return nil
 	}
 }
