@@ -76,7 +76,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		v := &self.Skills[i]
 		skill := battle.NewSkillBattle(v.Id, v.Level)
 		if skill != nil {
-			u.Skill_extra = append(u.Skill_extra, skill)
+			u.Skill_exclusive = append(u.Skill_exclusive, skill)
 		}
 	}
 
@@ -85,7 +85,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		v := &self.Auras[i]
 		aura := battle.NewAuraBattle(v.Id, v.Level)
 		if aura != nil {
-			u.Auras = append(u.Auras, aura)
+			u.Auras_basic = append(u.Auras_basic, aura)
 		}
 	}
 

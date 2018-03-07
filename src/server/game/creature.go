@@ -47,20 +47,17 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		Skill_curr: nil,
 	}
 
-	// 攻速
-	// u.Rest_time_last = uint32(60000 / self.proto.Apm)
-
 	// 普攻
 	if len(self.proto.Skill_common) > 0 {
-		sc := self.proto.Skill_common[0]
-		u.Skill_comm = battle.NewSkillBattle(sc.Id, sc.Lv)
+		s := self.proto.Skill_common[0]
+		u.Skill_comm = battle.NewSkillBattle(s.Id, s.Lv)
 	}
 
 	// 技能
 	for _, v := range self.proto.Skill_extra {
-		skill := battle.NewSkillBattle(v.Id, v.Lv)
-		if skill != nil {
-			u.Skill_extra = append(u.Skill_extra, skill)
+		s := battle.NewSkillBattle(v.Id, v.Lv)
+		if s != nil {
+			u.Skill_exclusive = append(u.Skill_exclusive, s)
 		}
 	}
 
@@ -68,7 +65,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	for _, v := range self.proto.Auras {
 		aura := battle.NewAuraBattle(v.Id, v.Lv)
 		if aura != nil {
-			u.Auras = append(u.Auras, aura)
+			u.Auras_basic = append(u.Auras_basic, aura)
 		}
 	}
 

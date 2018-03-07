@@ -11,9 +11,9 @@ type SkillProto struct {
 	Lv     uint32      `json:"lv"`
 	Name   string      `json:"name"`
 	Target uint32      `json:"target"`
-	Itv_t  uint32      `json:"itv_t"`
-	Last_t uint32      `json:"last_t"`
-	Cd_t   uint32      `json:"cd_t"`
+	Itv_t  int32       `json:"itv_t"`
+	Last_t int32       `json:"last_t"`
+	Cd_t   int32       `json:"cd_t"`
 	Type   uint32      `json:"type"`
 	Range  uint32      `json:"range"`
 	Auras  []*AuraConf `json:"aura"`

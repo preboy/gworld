@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"core/log"
 	"server/game/config"
 )
 
@@ -8,20 +9,22 @@ type AuraBattle struct {
 	owner       *BattleUnit
 	caster      *BattleUnit
 	proto       *config.AuraProto
-	eff         Effect
-	start_time  uint32
-	update_time uint32 // 对于有update的技能，记录上次时间
-	start       bool   // 就否初始化完成
-	finish      bool   // 是否完成
+	script      AuraScript
+	start_time  int32
+	update_time int32 // 对于有update的技能，记录上次时间
+	start       bool  // 就否初始化完成
+	finish      bool  // 是否完成
 }
 
 func NewAuraBattle(id, lv uint32) *AuraBattle {
 	proto := config.GetAuraProtoConf().GetAuraProto(id, lv)
 	if proto == nil {
+		log.Error("NewAuraBattle Failed:", id, lv)
 		return nil
 	}
 	ab := &AuraBattle{
-		proto: proto,
+		proto:  proto,
+		script: create_aura_script(proto),
 	}
 	return ab
 }
@@ -31,7 +34,19 @@ func (self *AuraBattle) Init(caster, owner *BattleUnit) {
 	self.caster = caster
 }
 
-func (self *AuraBattle) Update(time uint32) {
+// 每场战斗开始时调用
+func (self *AuraBattle) Reset() {
+	self.start = false
+	self.finish = false
+	self.start_time = 0
+	self.update_time = 0
+}
+
+func (self *AuraBattle) Update(time int32) {
+	if self.finish {
+		return
+	}
+
 	if !self.start {
 		self.start = true
 		self.start_time = time
@@ -51,20 +66,20 @@ func (self *AuraBattle) Update(time uint32) {
 }
 
 func (self *AuraBattle) onStart() {
-	if self.eff != nil {
-		self.eff.OnStart(self)
+	if self.script != nil {
+		self.script.OnStart(self)
 	}
 }
 
 func (self *AuraBattle) onUpdate() {
-	if self.eff != nil {
-		self.eff.OnUpdate(self)
+	if self.script != nil {
+		self.script.OnUpdate(self)
 	}
 }
 
 func (self *AuraBattle) onFinish() {
-	if self.eff != nil {
-		self.eff.OnFinish(self)
+	if self.script != nil {
+		self.script.OnFinish(self)
 	}
 }
 
@@ -72,8 +87,8 @@ func (self *AuraBattle) IsFinish() bool {
 	return self.finish
 }
 
-func (self *AuraBattle) OnEvent(evt BattleEvent, sc *SkillContext) {
-	if self.eff != nil {
-		self.eff.OnEvent(evt, self, sc)
+func (self *AuraBattle) OnEvent(evt BattleEvent, ctx *SkillContext) {
+	if self.script != nil {
+		self.script.OnEvent(evt, self, ctx)
 	}
 }

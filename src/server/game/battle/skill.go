@@ -29,9 +29,9 @@ type SkillContext struct {
 type SkillBattle struct {
 	proto       *config.SkillProto // 技能原型
 	owner       *BattleUnit        //技能拥有者
-	cd_time     uint32             // 用于计算CD
-	start_time  uint32             // 技能开始释放时间
-	update_time uint32             // 对于有update的技能，记录上次时间
+	cd_time     int32              // 用于计算CD
+	start_time  int32              // 技能开始释放时间
+	update_time int32              // 对于有update的技能，记录上次时间
 	finish      bool               // 是否完成
 }
 
@@ -41,30 +41,44 @@ func NewSkillBattle(id, lv uint32) *SkillBattle {
 		return nil
 	}
 	sb := &SkillBattle{
-		proto: proto,
+		proto:  proto,
+		finish: true,
 	}
 	return sb
 }
 
-func (self *SkillBattle) Cast(u *BattleUnit, time uint32) {
+func (self *SkillBattle) Reset(common bool) {
+	self.owner = nil
+	self.finish = true
+	self.start_time = 0
+	self.update_time = 0
+	if !common {
+		self.cd_time = 0
+	} else {
+		self.cd_time = -(self.proto.Cd_t)
+	}
+}
+
+func (self *SkillBattle) Cast(u *BattleUnit, time int32) {
 	self.owner = u
 	self.finish = false
-	self.cd_time = 0
 	self.start_time = time
 	self.update_time = time
 	self.onStart()
 	fmt.Println(u.Name(), "释放了技能", self.proto.Id)
 }
 
-func (self *SkillBattle) Update(time uint32) {
+func (self *SkillBattle) Update(time int32) {
+	if self.finish {
+		return
+	}
 	if self.proto.Itv_t != 0 {
 		if time-self.update_time > self.proto.Itv_t {
 			self.onUpdate()
 			self.update_time = time
 		}
 	}
-
-	if !self.finish && time-self.start_time >= self.proto.Last_t {
+	if time-self.start_time >= self.proto.Last_t {
 		self.onFinish()
 		self.owner = nil
 		self.finish = true
@@ -74,7 +88,7 @@ func (self *SkillBattle) Update(time uint32) {
 
 // CD时间从技能释放结束开始计算
 // 普通技能的CD时间应配置为0
-func (self *SkillBattle) IsFree(time uint32) bool {
+func (self *SkillBattle) IsFree(time int32) bool {
 	if time-self.cd_time >= self.proto.Cd_t {
 		return true
 	}
@@ -102,7 +116,7 @@ func (self *SkillBattle) onUpdate() {
 	case 2: // 加光环
 		{
 			for _, a := range self.proto.Auras {
-				target.AddAura(self.owner, a.Id, a.Lv)
+				target.AddAuraBattle(self.owner, a.Id, a.Lv)
 			}
 		}
 	default:
@@ -119,53 +133,73 @@ func (self *SkillBattle) onFinish() {
 }
 
 func (self *SkillBattle) do_attack(target *BattleUnit) {
-	sc := &SkillContext{}
-	sc.caster = self.owner
-	sc.target = target
+	ctx := &SkillContext{}
+	ctx.caster = self.owner
+	ctx.target = target
 
-	sc.caster_prop = sc.caster.Prop
-	sc.target_prop = sc.target.Prop
+	ctx.caster_prop = ctx.caster.Prop
+	ctx.target_prop = ctx.target.Prop
 
 	// step 1: 计算光环
-	for _, aura := range sc.caster.Auras {
+	for _, aura := range ctx.caster.Auras_basic {
 		if aura != nil {
-			aura.OnEvent(BattleEvent_PreAtk, sc)
+			aura.OnEvent(BattleEvent_PreAtk, ctx)
+		}
+	}
+	for _, aura := range ctx.caster.Auras_battle {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_PreAtk, ctx)
+		}
+	}
+	for _, aura := range ctx.caster.Auras_guarder {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_PreAtk, ctx)
 		}
 	}
 
 	// step 2: 计算输出伤害
-	hurt := sc.caster_prop.Atk + sc.prop_add.Atk
-	crit := sc.caster_prop.Crit + sc.prop_add.Crit
-	sc.damage_send.hurt = hurt
-	sc.damage_send.crit = false
+	hurt := ctx.caster_prop.Atk + ctx.prop_add.Atk
+	crit := ctx.caster_prop.Crit + ctx.prop_add.Crit
+	ctx.damage_send.hurt = hurt
+	ctx.damage_send.crit = false
 	if math.RandomHitn(int(crit), 100) {
-		sc.damage_send.crit = true
-		sc.damage_send.hurt = hurt * (sc.caster_prop.Crit_hurt + sc.prop_add.Crit_hurt)
+		ctx.damage_send.crit = true
+		ctx.damage_send.hurt = hurt * (ctx.caster_prop.Crit_hurt + ctx.prop_add.Crit_hurt)
 	}
 
 	// step 3: 计算防御
-	hurt = sc.damage_send.hurt - sc.target_prop.Def
+	hurt = ctx.damage_send.hurt - ctx.target_prop.Def
 	if hurt < 0 {
 		hurt = 1
 	}
-	sc.damage_recv.hurt = hurt
+	ctx.damage_recv.hurt = hurt
 
 	// step 4: 计算光环
-	for _, aura := range target.Auras {
+	for _, aura := range target.Auras_basic {
 		if aura != nil {
-			aura.OnEvent(BattleEvent_AftDef, sc)
+			aura.OnEvent(BattleEvent_AftDef, ctx)
+		}
+	}
+	for _, aura := range target.Auras_battle {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_AftDef, ctx)
+		}
+	}
+	for _, aura := range target.Auras_guarder {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_AftDef, ctx)
 		}
 	}
 
 	// step 5: 计算最终伤害
-	sc.damage.hurt = sc.damage_recv.hurt - sc.damage_sub.hurt
-	fmt.Println(sc.caster.Name(), " 对 ", sc.target.Name(), "造成了伤害:", sc.damage.hurt)
-	if sc.damage.hurt < target.Prop.Hp_cur {
-		target.Prop.Hp_cur -= sc.damage.hurt
+	ctx.damage.hurt = ctx.damage_recv.hurt - ctx.damage_sub.hurt
+	if ctx.damage.hurt < target.Prop.Hp_cur {
+		target.Prop.Hp_cur -= ctx.damage.hurt
+		fmt.Println(ctx.caster.Name(), " 伤害了 ", ctx.target.Name(), ctx.damage.hurt)
 	} else {
 		target.Prop.Hp_cur = 0
 		target.Dead = true
-		fmt.Println(sc.target.Name(), "战死")
+		fmt.Println(ctx.caster.Name(), " <击杀了> ", ctx.target.Name(), ctx.damage.hurt)
 	}
 
 }
