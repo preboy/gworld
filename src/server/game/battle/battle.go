@@ -2,6 +2,7 @@ package battle
 
 import (
 	"fmt"
+	"msg"
 )
 
 // ==================================================
@@ -32,24 +33,24 @@ type BattleUnit struct {
 	Prop     *Property    // 战斗属性
 	Troop    *BattleTroop // 队伍
 	UnitType uint32       // 生物类型
+	Pos      uint32       // 位置
 	Dead     bool         // 是否死亡
 	Rival    *BattleUnit  // 战场对手
 
-	Skill_curr      *SkillBattle   // 当前正在释放技能
-	Skill_comm      *SkillBattle   // 普通技能
-	Skill_exclusive []*SkillBattle // 专有技能(比较猛的)
-	Auras_basic     []*AuraBattle  // 英雄技能、角色加成、等等
-	Auras_battle    []*AuraBattle  // 战斗中产生的光环(战斗结束之后保留)
-	Auras_guarder   []*AuraBattle  // 辅助光环(战斗之前加，战斗之后结束，包括辅助、主帅加的)
+	Skill_curr      *BattleSkill   // 当前正在释放技能
+	Skill_comm      *BattleSkill   // 普攻
+	Skill_exclusive []*BattleSkill // 专有技能(比较猛的)
+	Auras_basic     []*BattleAura  // 英雄技能、角色加成、等等
+	Auras_battle    []*BattleAura  // 战斗中产生的光环(战斗结束之后保留)
+	Auras_guarder   []*BattleAura  // 辅助光环(战斗之前加，战斗之后结束，包括辅助、主帅加的)
 
-	Skill_commander *SkillCfg // 主将技能(自用，二选一)
-	Aura_commander  *AuraCfg  // 主将光环(二选一)
+	Skill_commander *SkillCfg // 主帅技能(自用，二选一)
+	Aura_commander  *AuraCfg  // 主帅光环(二选一)
 	Aura_guarder    *AuraCfg  // 辅将光环
 }
 
 func (self *BattleUnit) Name() string {
-	name, _ := self.Troop.battle.get_unit_name(self)
-	return name
+	return self.Troop.battle.get_unit_name(self)
 }
 
 func (self *BattleUnit) init_campaign(r *BattleUnit) {
@@ -289,29 +290,20 @@ func (self *BattleTroop) Lose() bool {
 }
 
 // ==================================================
+
 type BattleDetail struct {
-	a    *BattleUnit // 攻击方出战者
-	d    *BattleUnit // 防御方出战者
-	a_hp uint32      // 攻击者用下的HP
-	d_hp uint32      // 防御者用下的HP
+	a_pos uint32 // 攻击方出战者
+	d_pos uint32 // 防御方出战者
+	a_hp  uint32 // 攻击者当下的HP
+	d_hp  uint32 // 防御者当下的HP
 }
-
-type BattleResult struct {
-	R       uint32 // 0:attacker负  1:attacker胜
-	Details []*BattleDetail
-}
-
-func (self *BattleResult) ToMsg() string {
-	return "s"
-}
-
-// ==================================================
 
 type Battle struct {
 	attacker  *BattleTroop
 	defender  *BattleTroop
-	result    BattleResult // 战斗结果
-	campaigns int          // 战斗次数
+	campaigns int // 战斗次数
+	details   []*BattleDetail
+	R         uint32 // 0:attacker负  1:attacker胜
 }
 
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
@@ -329,6 +321,38 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	a.is_attacker = true
 	d.is_attacker = false
 
+	if a.l_pioneer != nil {
+		a.l_pioneer.Pos = 1
+	}
+	if a.r_pioneer != nil {
+		a.r_pioneer.Pos = 2
+	}
+	if a.commander != nil {
+		a.commander.Pos = 3
+	}
+	if a.l_guarder != nil {
+		a.l_guarder.Pos = 4
+	}
+	if a.r_guarder != nil {
+		a.r_guarder.Pos = 5
+	}
+
+	if d.l_pioneer != nil {
+		d.l_pioneer.Pos = 6
+	}
+	if d.r_pioneer != nil {
+		d.r_pioneer.Pos = 7
+	}
+	if d.commander != nil {
+		d.commander.Pos = 8
+	}
+	if d.l_guarder != nil {
+		d.l_guarder.Pos = 9
+	}
+	if d.r_guarder != nil {
+		d.r_guarder.Pos = 10
+	}
+
 	return b
 }
 
@@ -341,78 +365,41 @@ func (self *Battle) GetWinner() *BattleTroop {
 	return nil
 }
 
-func (self *Battle) get_unit_pos(u *BattleUnit) int {
+func (self *Battle) get_unit_name(u *BattleUnit) string {
 	troop := u.Troop
 	if troop == self.attacker {
 		switch u {
 		case troop.l_pioneer:
-			return 1
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左先锋")
 		case troop.r_pioneer:
-			return 2
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右先锋")
 		case troop.commander:
-			return 3
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "主帅")
 		case troop.l_guarder:
-			return 4
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左辅助")
 		case troop.r_guarder:
-			return 5
+			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右辅助")
 		default:
-			return 0
+			return "unknown[攻]"
 		}
 	}
 	if troop == self.defender {
 		switch u {
 		case troop.l_pioneer:
-			return 6
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左先锋")
 		case troop.r_pioneer:
-			return 7
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右先锋")
 		case troop.commander:
-			return 8
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "主帅")
 		case troop.l_guarder:
-			return 9
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左辅助")
 		case troop.r_guarder:
-			return 10
+			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右辅助")
 		default:
-			return 0
+			return "unknown[防]"
 		}
 	}
-	return 0
-}
-
-func (self *Battle) get_unit_name(u *BattleUnit) (string, int) {
-	troop := u.Troop
-	if troop == self.attacker {
-		switch u {
-		case troop.l_pioneer:
-			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左先锋"), 1
-		case troop.r_pioneer:
-			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右先锋"), 2
-		case troop.commander:
-			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "主帅"), 3
-		case troop.l_guarder:
-			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左辅助"), 4
-		case troop.r_guarder:
-			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右辅助"), 5
-		default:
-			return "unknown[攻]", 0
-		}
-	}
-	if troop == self.defender {
-		switch u {
-		case troop.l_pioneer:
-			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左先锋"), 6
-		case troop.r_pioneer:
-			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右先锋"), 7
-		case troop.commander:
-			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "主帅"), 8
-		case troop.l_guarder:
-			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左辅助"), 9
-		case troop.r_guarder:
-			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右辅助"), 10
-		default:
-			return "unknown[防]", 0
-		}
-	}
-	return "unknown", 0
+	return "unknown"
 }
 
 // u: 只能为攻击方的单位
@@ -510,10 +497,10 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 
 	// 记录结果过程
 	self.result.Details = append(self.result.Details, &BattleDetail{
-		a:    u,
-		d:    r,
-		a_hp: u.Prop.Hp_cur,
-		d_hp: r.Prop.Hp_cur,
+		a_pos: u.Pos,
+		d_pos: r.Pos,
+		a_hp:  u.Prop.Hp_cur,
+		d_hp:  r.Prop.Hp_cur,
 	})
 
 }
@@ -549,6 +536,9 @@ func (self *Battle) Calc() {
 }
 
 func (self *Battle) GetResult() *BattleResult {
+
+	// all unit
+
 	if self.GetWinner() == self.attacker {
 		self.result.R = 1
 		fmt.Println("攻击者 胜 !!!")
@@ -558,3 +548,7 @@ func (self *Battle) GetResult() *BattleResult {
 	}
 	return &self.result
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+// ==================================================

@@ -26,7 +26,7 @@ type SkillContext struct {
 	damage      SkillDamage //最终造成的实际伤害
 }
 
-type SkillBattle struct {
+type BattleSkill struct {
 	proto       *config.SkillProto // 技能原型
 	owner       *BattleUnit        //技能拥有者
 	cd_time     int32              // 用于计算CD
@@ -35,19 +35,19 @@ type SkillBattle struct {
 	finish      bool               // 是否完成
 }
 
-func NewSkillBattle(id, lv uint32) *SkillBattle {
+func NewSkillBattle(id, lv uint32) *BattleSkill {
 	proto := config.GetSkillProtoConf().GetSkillProto(id, lv)
 	if proto == nil {
 		return nil
 	}
-	sb := &SkillBattle{
+	sb := &BattleSkill{
 		proto:  proto,
 		finish: true,
 	}
 	return sb
 }
 
-func (self *SkillBattle) Reset(common bool) {
+func (self *BattleSkill) Reset(common bool) {
 	self.owner = nil
 	self.finish = true
 	self.start_time = 0
@@ -59,7 +59,7 @@ func (self *SkillBattle) Reset(common bool) {
 	}
 }
 
-func (self *SkillBattle) Cast(u *BattleUnit, time int32) {
+func (self *BattleSkill) Cast(u *BattleUnit, time int32) {
 	self.owner = u
 	self.finish = false
 	self.start_time = time
@@ -68,7 +68,7 @@ func (self *SkillBattle) Cast(u *BattleUnit, time int32) {
 	fmt.Println(u.Name(), "释放了技能", self.proto.Id)
 }
 
-func (self *SkillBattle) Update(time int32) {
+func (self *BattleSkill) Update(time int32) {
 	if self.finish {
 		return
 	}
@@ -88,22 +88,22 @@ func (self *SkillBattle) Update(time int32) {
 
 // CD时间从技能释放结束开始计算
 // 普通技能的CD时间应配置为0
-func (self *SkillBattle) IsFree(time int32) bool {
+func (self *BattleSkill) IsFree(time int32) bool {
 	if time-self.cd_time >= self.proto.Cd_t {
 		return true
 	}
 	return false
 }
 
-func (self *SkillBattle) IsFinish() bool {
+func (self *BattleSkill) IsFinish() bool {
 	return self.finish
 }
 
-func (self *SkillBattle) onStart() {
+func (self *BattleSkill) onStart() {
 	// nothing to do
 }
 
-func (self *SkillBattle) onUpdate() {
+func (self *BattleSkill) onUpdate() {
 	target := self.owner.Rival
 	switch self.proto.Type {
 	case 1: // 攻击目标
@@ -126,13 +126,13 @@ func (self *SkillBattle) onUpdate() {
 	}
 }
 
-func (self *SkillBattle) onFinish() {
+func (self *BattleSkill) onFinish() {
 	if self.proto.Itv_t == 0 {
 		self.onUpdate()
 	}
 }
 
-func (self *SkillBattle) do_attack(target *BattleUnit) {
+func (self *BattleSkill) do_attack(target *BattleUnit) {
 	ctx := &SkillContext{}
 	ctx.caster = self.owner
 	ctx.target = target

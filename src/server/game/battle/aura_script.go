@@ -9,10 +9,10 @@ import (
 // ============================================================
 
 type AuraScript interface {
-	OnStart(ab *AuraBattle)
-	OnUpdate(ab *AuraBattle)
-	OnFinish(ab *AuraBattle)
-	OnEvent(evt BattleEvent, ab *AuraBattle, ctx *SkillContext)
+	OnStart(ab *BattleAura)
+	OnUpdate(ab *BattleAura)
+	OnFinish(ab *BattleAura)
+	OnEvent(evt BattleEvent, ab *BattleAura, ctx *SkillContext)
 }
 
 type script_creator = func() AuraScript
@@ -54,19 +54,19 @@ type AuraScript_1 struct {
 	// 在这里存储每个光环自身的数据
 }
 
-func (self *AuraScript_1) OnStart(ab *AuraBattle) {
+func (self *AuraScript_1) OnStart(ab *BattleAura) {
 	fmt.Println("AuraScript_1 OnStart")
 }
 
-func (self *AuraScript_1) OnUpdate(ab *AuraBattle) {
+func (self *AuraScript_1) OnUpdate(ab *BattleAura) {
 	fmt.Println("AuraScript_1 OnUpdate")
 }
 
-func (self *AuraScript_1) OnFinish(ab *AuraBattle) {
+func (self *AuraScript_1) OnFinish(ab *BattleAura) {
 	fmt.Println("AuraScript_1 OnFinish")
 }
 
-func (self *AuraScript_1) OnEvent(evt BattleEvent, ab *AuraBattle, ctx *SkillContext) {
+func (self *AuraScript_1) OnEvent(evt BattleEvent, ab *BattleAura, ctx *SkillContext) {
 	fmt.Println("AuraScript_1 Event:", evt)
 }
 

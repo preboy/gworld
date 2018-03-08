@@ -5,7 +5,7 @@ import (
 	"server/game/config"
 )
 
-type AuraBattle struct {
+type BattleAura struct {
 	owner       *BattleUnit
 	caster      *BattleUnit
 	proto       *config.AuraProto
@@ -16,33 +16,33 @@ type AuraBattle struct {
 	finish      bool  // 是否完成
 }
 
-func NewAuraBattle(id, lv uint32) *AuraBattle {
+func NewAuraBattle(id, lv uint32) *BattleAura {
 	proto := config.GetAuraProtoConf().GetAuraProto(id, lv)
 	if proto == nil {
 		log.Error("NewAuraBattle Failed:", id, lv)
 		return nil
 	}
-	ab := &AuraBattle{
+	ab := &BattleAura{
 		proto:  proto,
 		script: create_aura_script(proto),
 	}
 	return ab
 }
 
-func (self *AuraBattle) Init(caster, owner *BattleUnit) {
+func (self *BattleAura) Init(caster, owner *BattleUnit) {
 	self.owner = owner
 	self.caster = caster
 }
 
 // 每场战斗开始时调用
-func (self *AuraBattle) Reset() {
+func (self *BattleAura) Reset() {
 	self.start = false
 	self.finish = false
 	self.start_time = 0
 	self.update_time = 0
 }
 
-func (self *AuraBattle) Update(time int32) {
+func (self *BattleAura) Update(time int32) {
 	if self.finish {
 		return
 	}
@@ -65,29 +65,29 @@ func (self *AuraBattle) Update(time int32) {
 	}
 }
 
-func (self *AuraBattle) onStart() {
+func (self *BattleAura) onStart() {
 	if self.script != nil {
 		self.script.OnStart(self)
 	}
 }
 
-func (self *AuraBattle) onUpdate() {
+func (self *BattleAura) onUpdate() {
 	if self.script != nil {
 		self.script.OnUpdate(self)
 	}
 }
 
-func (self *AuraBattle) onFinish() {
+func (self *BattleAura) onFinish() {
 	if self.script != nil {
 		self.script.OnFinish(self)
 	}
 }
 
-func (self *AuraBattle) IsFinish() bool {
+func (self *BattleAura) IsFinish() bool {
 	return self.finish
 }
 
-func (self *AuraBattle) OnEvent(evt BattleEvent, ctx *SkillContext) {
+func (self *BattleAura) OnEvent(evt BattleEvent, ctx *SkillContext) {
 	if self.script != nil {
 		self.script.OnEvent(evt, self, ctx)
 	}

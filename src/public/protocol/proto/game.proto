@@ -75,3 +75,52 @@ message NoticeResponse {
     int32   flag                = 1;
     string  notice              = 2;
 }
+
+
+// ------------------------ Battle ------------------------
+
+message BattleSkill {
+    uint32  id                  = 1;
+    uint32  lv                  = 2;
+}
+
+message BattleAura {
+    uint32  id                  = 1;
+    uint32  lv                  = 2;
+}
+
+message BattleUnit {
+    uint32  type                = 1;    // 生物类型
+    uint32  id                  = 2;    // 英雄/怪物ID
+    uint32  lv                  = 3;    // 等级
+    uint32  pos                 = 4;    // 位置
+    uint32  atk                 = 5;    // 属性：攻击
+    uint32  def                 = 6;    // 防御
+    uint32  hp_cur              = 7;    // HP当前
+    uint32  hp_max              = 8;    // HP上限
+    uint32  crit                = 9;    // 暴击
+    uint32  crit_hurt           = 10;   // 暴伤
+    BattleSkill comm            = 11;   // 普攻
+    repeated BattleSkill skill  = 12;   // 技能
+    BattleSkill aux_s_chief     = 13;   // 主帅技能
+    BattleAura  aux_a_chief     = 14;   // 主帅光环
+    BattleAura  aux_a_guarder   = 15;   // 辅将光环
+}
+
+
+message BattleDetail {
+    uint32 a_pos                = 1;    // 攻击方出战者
+    uint32 d_pos                = 2;    // 防御方出战者
+    uint32 a_hp                 = 3;    // 攻击者当下的HP
+    uint32 d_hp                 = 4;    // 防御者当下的HP
+}
+
+message MakeBattleRequest {
+    uint32  id                  = 1;    // monster team ID
+}
+
+message MakeBattleResponse {
+    repeated BattleUnit uints   = 1;    // 所有参战人员
+    repeated BattleDetail cases = 2;    // 所有战斗战况
+    bool    win                 = 3;    // 攻击者是否获胜
+}
