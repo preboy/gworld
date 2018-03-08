@@ -107,12 +107,17 @@ message BattleUnit {
     BattleAura  aux_a_guarder   = 15;   // 辅将光环
 }
 
-
-message BattleDetail {
+message BattleStep {
     uint32 a_pos                = 1;    // 攻击方出战者
     uint32 d_pos                = 2;    // 防御方出战者
     uint32 a_hp                 = 3;    // 攻击者当下的HP
     uint32 d_hp                 = 4;    // 防御者当下的HP
+}
+
+message BattleResult {
+    repeated BattleUnit units   = 1;    // 所有参战人员
+    repeated BattleStep steps   = 2;    // 所有战斗战况
+    bool    win                 = 3;    // 攻击者是否获胜
 }
 
 message MakeBattleRequest {
@@ -120,7 +125,5 @@ message MakeBattleRequest {
 }
 
 message MakeBattleResponse {
-    repeated BattleUnit uints   = 1;    // 所有参战人员
-    repeated BattleDetail cases = 2;    // 所有战斗战况
-    bool    win                 = 3;    // 攻击者是否获胜
+    BattleResult    result      = 1;    // 战斗结果
 }

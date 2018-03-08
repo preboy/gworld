@@ -2,7 +2,7 @@ package battle
 
 import (
 	"fmt"
-	"msg"
+	"public/protocol/msg"
 )
 
 // ==================================================
@@ -242,6 +242,29 @@ func (self *BattleUnit) DelAura(id, lv uint32) {
 	}
 }
 
+func (self *BattleUnit) ToMsg() *msg.BattleUnit {
+	u := &msg.BattleUnit{}
+
+	u.Type = self.UnitType
+	u.Id = 0
+	u.Lv = 0
+	u.Pos = self.Pos
+	u.Atk = self.Prop.Atk
+	u.Def = self.Prop.Def
+	u.HpCur = self.Prop.Hp_cur
+	u.HpMax = self.Prop.Hp_max
+	u.Crit = self.Prop.Crit
+	u.CritHurt = self.Prop.Crit_hurt
+
+	// u.Comm
+	// u.Skill
+	// u.AuxSChief
+	// u.AuxAChief
+	// u.AuxAGuarder
+
+	return u
+}
+
 // ==================================================
 
 type BattleTroop struct {
@@ -291,7 +314,7 @@ func (self *BattleTroop) Lose() bool {
 
 // ==================================================
 
-type BattleDetail struct {
+type BattleStep struct {
 	a_pos uint32 // 攻击方出战者
 	d_pos uint32 // 防御方出战者
 	a_hp  uint32 // 攻击者当下的HP
@@ -299,11 +322,10 @@ type BattleDetail struct {
 }
 
 type Battle struct {
-	attacker  *BattleTroop
-	defender  *BattleTroop
-	campaigns int // 战斗次数
-	details   []*BattleDetail
-	R         uint32 // 0:attacker负  1:attacker胜
+	attacker *BattleTroop
+	defender *BattleTroop
+	steps    []*BattleStep
+	R        uint32 // 0:attacker负  1:attacker胜
 }
 
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
@@ -465,7 +487,7 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	u.init_campaign(r)
 	r.init_campaign(u)
 
-	self.campaigns++
+	fmt.Println("新的一场战斗开始了")
 
 	var time int32
 	var bout int32
@@ -473,7 +495,7 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	for {
 		// 打一轮
 		bout++
-		fmt.Println("场次 回合 时间:", self.campaigns, bout, time)
+		fmt.Println("场次 回合 时间:", bout, time)
 
 		u.Update(time)
 		r.Update(time)
@@ -496,7 +518,7 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	r.clear_campaign()
 
 	// 记录结果过程
-	self.result.Details = append(self.result.Details, &BattleDetail{
+	self.steps = append(self.steps, &BattleStep{
 		a_pos: u.Pos,
 		d_pos: r.Pos,
 		a_hp:  u.Prop.Hp_cur,
@@ -516,13 +538,13 @@ func (self *Battle) Calc() {
 		if l != nil && !l.Dead && self.GetWinner() == nil {
 			self.do_campaign(l)
 			if self.GetWinner() != nil {
-				return
+				break
 			}
 		}
 		if r != nil && !r.Dead && self.GetWinner() == nil {
 			self.do_campaign(r)
 			if self.GetWinner() != nil {
-				return
+				break
 			}
 		}
 	}
@@ -530,25 +552,83 @@ func (self *Battle) Calc() {
 	for !c.Dead && self.GetWinner() == nil {
 		self.do_campaign(c)
 		if self.GetWinner() != nil {
-			return
+			break
 		}
 	}
-}
-
-func (self *Battle) GetResult() *BattleResult {
-
-	// all unit
 
 	if self.GetWinner() == self.attacker {
-		self.result.R = 1
+		self.R = 1
 		fmt.Println("攻击者 胜 !!!")
 	} else {
-		self.result.R = 0
 		fmt.Println("防御者 胜 !!!")
+		self.R = 0
 	}
-	return &self.result
+
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
+func (self *Battle) GetResult() uint32 {
+	return self.R
+}
 
-// ==================================================
+func (self *Battle) ToMsg() *msg.BattleResult {
+	r := &msg.BattleResult{}
+
+	if self.R == 1 {
+		r.Win = true
+	} else {
+		r.Win = false
+	}
+
+	for _, v := range self.steps {
+		r.Steps = append(r.Steps, &msg.BattleStep{
+			APos: v.a_pos,
+			DPos: v.d_pos,
+			AHp:  v.a_hp,
+			DHp:  v.d_hp,
+		})
+	}
+
+	u := self.attacker.l_pioneer
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.attacker.r_pioneer
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.attacker.commander
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.attacker.l_guarder
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.attacker.r_guarder
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+
+	u = self.defender.l_pioneer
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.defender.r_pioneer
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.defender.commander
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.defender.l_guarder
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+	u = self.defender.r_guarder
+	if u != nil {
+		r.Units = append(r.Units, u.ToMsg())
+	}
+
+	return r
+}
