@@ -268,7 +268,7 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	for _, v := range self.Skill_exclusive {
 		u.Skill = append(u.Skill, &msg.BattleSkill{
 			Id: v.proto.Id,
-			Lv: v.proto.Id,
+			Lv: v.proto.Lv,
 		})
 	}
 
