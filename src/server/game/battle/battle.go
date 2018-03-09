@@ -351,10 +351,11 @@ type BattleStep struct {
 }
 
 type Battle struct {
-	attacker *BattleTroop
-	defender *BattleTroop
-	steps    []*BattleStep
-	R        uint32 // 0:attacker负  1:attacker胜
+	attacker  *BattleTroop
+	defender  *BattleTroop
+	steps     []*BattleStep
+	R         uint32 // 0:attacker负  1:attacker胜
+	campaigns uint32 // 战斗次数
 }
 
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
@@ -516,15 +517,14 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	u.init_campaign(r)
 	r.init_campaign(u)
 
-	fmt.Println("新的一场战斗开始了")
-
 	var time int32
 	var bout int32
 
+	self.campaigns++
+
 	for {
-		// 打一轮
 		bout++
-		fmt.Println("场次 回合 时间:", bout, time)
+		fmt.Println("场次 回合 时间:", self.campaigns, bout, time)
 
 		u.Update(time)
 		r.Update(time)
@@ -543,8 +543,12 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 		time += 100
 	}
 
-	u.clear_campaign()
-	r.clear_campaign()
+	fmt.Println("============== campaign ==============", self.campaigns)
+	if u.Dead {
+		fmt.Println(u.Name(), " 输给了 ", r.Name())
+	} else {
+		fmt.Println(u.Name(), " 战胜了 ", r.Name())
+	}
 
 	// 记录结果过程
 	self.steps = append(self.steps, &BattleStep{
@@ -553,6 +557,9 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 		a_hp:  u.Prop.Hp_cur,
 		d_hp:  r.Prop.Hp_cur,
 	})
+
+	u.clear_campaign()
+	r.clear_campaign()
 
 }
 
@@ -587,10 +594,10 @@ func (self *Battle) Calc() {
 
 	if self.GetWinner() == self.attacker {
 		self.R = 1
-		fmt.Println("攻击者 胜 !!!")
+		fmt.Println("攻击方 胜 !!!", self.campaigns)
 	} else {
-		fmt.Println("防御者 胜 !!!")
 		self.R = 0
+		fmt.Println("防御方 胜 !!!", self.campaigns)
 	}
 
 }
