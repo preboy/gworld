@@ -41,6 +41,8 @@ func (self *Creature) Name() string {
 func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
 		Base:       self,
+		Id:         self.proto.Id,
+		Lv:         self.proto.Level,
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
 		Dead:       false,

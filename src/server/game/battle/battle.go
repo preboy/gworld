@@ -30,6 +30,8 @@ type UnitBase interface {
 
 type BattleUnit struct {
 	Base     UnitBase     // 父类
+	Id       uint32       // ID
+	Lv       uint32       // 等级
 	Prop     *Property    // 战斗属性
 	Troop    *BattleTroop // 队伍
 	UnitType uint32       // 生物类型
@@ -246,8 +248,8 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	u := &msg.BattleUnit{}
 
 	u.Type = self.UnitType
-	u.Id = 0
-	u.Lv = 0
+	u.Id = self.Id
+	u.Lv = self.Lv
 	u.Pos = self.Pos
 	u.Atk = self.Prop.Atk
 	u.Def = self.Prop.Def
@@ -256,11 +258,38 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	u.Crit = self.Prop.Crit
 	u.CritHurt = self.Prop.Crit_hurt
 
-	// u.Comm
-	// u.Skill
-	// u.AuxSChief
-	// u.AuxAChief
-	// u.AuxAGuarder
+	if self.Skill_comm != nil {
+		u.Comm = &msg.BattleSkill{
+			Id: self.Skill_comm.proto.Id,
+			Lv: self.Skill_comm.proto.Lv,
+		}
+	}
+
+	for _, v := range self.Skill_exclusive {
+		u.Skill = append(u.Skill, &msg.BattleSkill{
+			Id: v.proto.Id,
+			Lv: v.proto.Id,
+		})
+	}
+
+	if self.Skill_commander != nil {
+		u.AuxSChief = &msg.BattleSkill{
+			Id: self.Skill_commander.Id,
+			Lv: self.Skill_commander.Lv,
+		}
+	}
+	if self.Aura_commander != nil {
+		u.AuxAChief = &msg.BattleAura{
+			Id: self.Aura_commander.Id,
+			Lv: self.Aura_commander.Lv,
+		}
+	}
+	if self.Aura_guarder != nil {
+		u.AuxAGuarder = &msg.BattleAura{
+			Id: self.Aura_guarder.Id,
+			Lv: self.Aura_guarder.Lv,
+		}
+	}
 
 	return u
 }

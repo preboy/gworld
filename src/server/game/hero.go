@@ -54,6 +54,8 @@ func (self *Hero) Name() string {
 func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
 		Base:       self,
+        Id:         self.Id,
+		Lv:         self.Level,
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
 		Dead:       false,
