@@ -8,7 +8,7 @@ import (
 
 type SkillProto struct {
 	Id     uint32      `json:"id"`
-	Lv     uint32      `json:"lv"`
+	Level  uint32      `json:"level"`
 	Name   string      `json:"name"`
 	Target uint32      `json:"target"`
 	Itv_t  int32       `json:"itv_t"`
@@ -49,7 +49,7 @@ func load_skill() {
 	_SkillProtoConf.items = make(map[uint64]*SkillProto)
 
 	for _, v := range arr {
-		key := MakeUint64(v.Id, v.Lv)
+		key := MakeUint64(v.Id, v.Level)
 		_SkillProtoConf.items[key] = v
 	}
 

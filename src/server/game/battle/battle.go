@@ -225,19 +225,19 @@ func (self *BattleUnit) AddAuraGuarder(caster *BattleUnit, id uint32, lv uint32)
 
 func (self *BattleUnit) DelAura(id, lv uint32) {
 	for k, aura := range self.Auras_basic {
-		if aura.proto.Id == id && aura.proto.Lv == lv {
+		if aura.proto.Id == id && aura.proto.Level == lv {
 			self.Auras_basic[k] = nil
 			return
 		}
 	}
 	for k, aura := range self.Auras_battle {
-		if aura.proto.Id == id && aura.proto.Lv == lv {
+		if aura.proto.Id == id && aura.proto.Level == lv {
 			self.Auras_battle[k] = nil
 			return
 		}
 	}
 	for k, aura := range self.Auras_guarder {
-		if aura.proto.Id == id && aura.proto.Lv == lv {
+		if aura.proto.Id == id && aura.proto.Level == lv {
 			self.Auras_guarder[k] = nil
 			return
 		}
@@ -261,14 +261,14 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	if self.Skill_comm != nil {
 		u.Comm = &msg.BattleSkill{
 			Id: self.Skill_comm.proto.Id,
-			Lv: self.Skill_comm.proto.Lv,
+			Lv: self.Skill_comm.proto.Level,
 		}
 	}
 
 	for _, v := range self.Skill_exclusive {
 		u.Skill = append(u.Skill, &msg.BattleSkill{
 			Id: v.proto.Id,
-			Lv: v.proto.Lv,
+			Lv: v.proto.Level,
 		})
 	}
 

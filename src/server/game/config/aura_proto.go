@@ -8,7 +8,7 @@ import (
 
 type AuraProto struct {
 	Id     uint32 `json:"id"`
-	Lv     uint32 `json:"level"`
+	Level  uint32 `json:"level"`
 	Name   string `json:"name"`
 	Last_t int32  `json:"last_t"`
 	Itv_t  int32  `json:"itv_t"`
@@ -48,7 +48,7 @@ func load_aura() {
 	_AuraProtoConf.items = make(map[uint64]*AuraProto)
 
 	for _, v := range arr {
-		key := MakeUint64(v.Id, v.Lv)
+		key := MakeUint64(v.Id, v.Level)
 		_AuraProtoConf.items[key] = v
 	}
 

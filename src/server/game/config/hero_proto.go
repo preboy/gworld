@@ -8,8 +8,8 @@ import (
 
 type HeroProto struct {
 	Id           uint32       `json:"id"`
-	Name         string       `json:"name"`
 	Level        uint32       `json:"level"`
+	Name         string       `json:"name"`
 	Atk          uint32       `json:"atk"`
 	Def          uint32       `json:"def"`
 	Hp           uint32       `json:"hp"`
