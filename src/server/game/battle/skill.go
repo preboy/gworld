@@ -65,7 +65,7 @@ func (self *BattleSkill) Cast(u *BattleUnit, time int32) {
 	self.start_time = time
 	self.update_time = time
 	self.onStart()
-	fmt.Println(u.Name(), "释放了技能", self.proto.Id)
+	fmt.Println(u.Name(), "释放了技能:", self.proto.Id, self.proto.Level)
 }
 
 func (self *BattleSkill) Update(time int32) {
@@ -195,7 +195,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 	ctx.damage.hurt = ctx.damage_recv.hurt - ctx.damage_sub.hurt
 	if ctx.damage.hurt < target.Prop.Hp_cur {
 		target.Prop.Hp_cur -= ctx.damage.hurt
-		fmt.Println(ctx.caster.Name(), " 伤害了 ", ctx.target.Name(), ctx.damage.hurt)
+		fmt.Println(ctx.caster.Name(), " <伤害了> ", ctx.target.Name(), ctx.damage.hurt)
 	} else {
 		target.Prop.Hp_cur = 0
 		target.Dead = true

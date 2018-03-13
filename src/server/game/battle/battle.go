@@ -478,7 +478,7 @@ func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
 		}
 	} else if u == ta.r_pioneer {
 		r := td.l_pioneer
-		if r != nil && r.Dead {
+		if r != nil && !r.Dead {
 			return r
 		}
 		r = td.l_guarder
@@ -522,6 +522,9 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 
 	self.campaigns++
 
+	fmt.Println("============== campaign start ==============", self.campaigns)
+	fmt.Println(u.Name(), " VS ", r.Name())
+
 	for {
 		bout++
 		fmt.Println("场次 回合 时间:", self.campaigns, bout, time)
@@ -543,12 +546,12 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 		time += 100
 	}
 
-	fmt.Println("============== campaign ==============", self.campaigns)
 	if u.Dead {
-		fmt.Println(u.Name(), " 输给了 ", r.Name())
+		fmt.Println(u.Name(), " [输给了] ", r.Name())
 	} else {
-		fmt.Println(u.Name(), " 战胜了 ", r.Name())
+		fmt.Println(u.Name(), " [战胜了] ", r.Name())
 	}
+	fmt.Println("============== campaign end ==============", self.campaigns)
 
 	// 记录结果过程
 	self.steps = append(self.steps, &BattleStep{
