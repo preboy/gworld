@@ -102,9 +102,9 @@ message BattleUnit {
     uint32  crit_hurt           = 10;   // 暴伤
     BattleSkill comm            = 11;   // 普攻
     repeated BattleSkill skill  = 12;   // 技能
-    BattleSkill aux_s_chief     = 13;   // 主帅技能
-    BattleAura  aux_a_chief     = 14;   // 主帅光环
-    BattleAura  aux_a_guarder   = 15;   // 辅将光环
+    BattleSkill career_general_skill    = 13;   // 主帅技能
+    BattleAura  career_general_aura     = 14;   // 主帅光环
+    BattleAura  career_guarder_aura     = 15;   // 辅将光环
 }
 
 message BattleStep {

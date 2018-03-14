@@ -221,19 +221,19 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	}
 
 	if self.career_general_skill != nil {
-		u.AuxSChief = &msg.BattleSkill{
+		u.CareerGeneralSkill = &msg.BattleSkill{
 			Id: self.career_general_skill.Id,
 			Lv: self.career_general_skill.Lv,
 		}
 	}
 	if self.career_general_aura != nil {
-		u.AuxAChief = &msg.BattleAura{
+		u.CareerGeneralAura = &msg.BattleAura{
 			Id: self.career_general_aura.Id,
 			Lv: self.career_general_aura.Lv,
 		}
 	}
 	if self.career_guarder_aura != nil {
-		u.AuxAGuarder = &msg.BattleAura{
+		u.CareerGuarderAura = &msg.BattleAura{
 			Id: self.career_guarder_aura.Id,
 			Lv: self.career_guarder_aura.Lv,
 		}
