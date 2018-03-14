@@ -58,7 +58,6 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		Lv:         self.Level,
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
-		Dead:       false,
 		Skill_curr: nil,
 	}
 
@@ -79,19 +78,19 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		}
 	}
 
-	// 被动技能加成
-	// TODO
-
-	u.Prop = &battle.Property{
-		Atk:       proto.Atk,
-		Def:       proto.Def,
-		Hp_cur:    proto.Hp,
-		Hp_max:    proto.Hp,
-		Crit:      proto.Crit,
-		Crit_hurt: proto.Crit_hurt,
+	// 可见属性计算
+	u.Prop_base = &battle.Property{
+		Hp:       proto.Hp,
+		Atk:      proto.Atk,
+		Def:      proto.Def,
+		Crit:     proto.Crit,
+		CritHurt: proto.Crit_hurt,
 	}
 
-	// TODO 装备、品质属性
+	// 加成属性计算 TODO
+	u.Prop_addi = &battle.Property{}
+
+	u.CalcProp()
 
 	return u
 }

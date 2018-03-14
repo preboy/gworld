@@ -32,13 +32,18 @@ type BattleUnit struct {
 	Base     UnitBase     // 父类
 	Id       uint32       // ID
 	Lv       uint32       // 等级
-	Prop     *Property    // 战斗属性(可见部分[等级基本、装备、被动技能]、加成部分[全局光环])，初始化时计算
 	Troop    *BattleTroop // 队伍
 	UnitType uint32       // 生物类型
 	Pos      uint32       // 位置
-	Dead     bool         // 是否死亡
 	Rival    *BattleUnit  // 战场对手
 
+	// 角色战斗属性
+	Prop_base *Property // 战斗属性(可见部分[等级、品质、装备、被动技能])	不可变
+	Prop_addi *Property // 战斗属性(附加部分[全局光环加攻防属性]，不可见)	-- 进入战斗之前计算一次
+	Prop      *Property // 战斗属性之和
+	Hp        uint32    // 当前HP
+
+	// 战斗技能、光环
 	Skill_curr      *BattleSkill   // 当前正在释放技能
 	Skill_comm      *BattleSkill   // 普攻
 	Skill_exclusive []*BattleSkill // 专有技能(比较猛的)
@@ -52,6 +57,20 @@ type BattleUnit struct {
 
 func (self *BattleUnit) Name() string {
 	return self.Troop.battle.get_unit_name(self)
+}
+
+func (self *BattleUnit) Dead() bool {
+	return self.Hp == 0
+}
+
+func (self *BattleUnit) CalcProp() {
+	self.Prop = &Property{}
+	self.Prop.Hp = self.Prop_base.Hp + self.Prop_addi.Hp
+	self.Prop.Atk = self.Prop_base.Atk + self.Prop_addi.Atk
+	self.Prop.Def = self.Prop_base.Def + self.Prop_addi.Def
+	self.Prop.Crit = self.Prop_base.Crit + self.Prop_addi.Crit
+	self.Prop.CritHurt = self.Prop_base.CritHurt + self.Prop_addi.CritHurt
+	self.Hp = self.Prop.Hp
 }
 
 func (self *BattleUnit) init_campaign(r *BattleUnit) {
@@ -79,7 +98,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 		{
 			// 右先锋接受主帅的祝福
 			u := troop.m_general
-			if u != nil && !u.Dead {
+			if u != nil && !u.Dead() {
 				a := u.career_general_aura
 				if a != nil && a.Id != 0 {
 					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
@@ -90,14 +109,14 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 		{
 			// 主帅接受两辅将以及自己的祝福
 			u := troop.l_guarder
-			if u != nil && !u.Dead {
+			if u != nil && !u.Dead() {
 				a := u.career_guarder_aura
 				if a != nil && a.Id != 0 {
 					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
 				}
 			}
 			u = troop.r_guarder
-			if u != nil && !u.Dead {
+			if u != nil && !u.Dead() {
 				a := u.career_guarder_aura
 				if a != nil && a.Id != 0 {
 					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
@@ -114,7 +133,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 		{
 			// 右辅将接受主将的祝福
 			u := troop.m_general
-			if u != nil && !u.Dead {
+			if u != nil && !u.Dead() {
 				a := u.career_general_aura
 				if a != nil && a.Id != 0 {
 					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
@@ -136,7 +155,7 @@ func (self *BattleUnit) clear_campaign() {
 }
 
 func (self *BattleUnit) Update(time int32) {
-	if self.Dead {
+	if self.Dead() {
 		return
 	}
 
@@ -198,13 +217,12 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	u.Type = self.UnitType
 	u.Id = self.Id
 	u.Lv = self.Lv
+	u.Hp = self.Hp
 	u.Pos = self.Pos
 	u.Atk = self.Prop.Atk
 	u.Def = self.Prop.Def
-	u.HpCur = self.Prop.Hp_cur
-	u.HpMax = self.Prop.Hp_max
 	u.Crit = self.Prop.Crit
-	u.CritHurt = self.Prop.Crit_hurt
+	u.CritHurt = self.Prop.CritHurt
 
 	if self.Skill_comm != nil {
 		u.Comm = &msg.BattleSkill{
@@ -286,7 +304,7 @@ func NewBattleTroop(l_pioneer, r_pioneer, l_guarder, m_general, r_guarder *Battl
 }
 
 func (self *BattleTroop) Lose() bool {
-	return self.m_general.Dead
+	return self.m_general.Dead()
 }
 
 // ==================================================
@@ -404,7 +422,7 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 
 // u: 只能为攻击方的单位
 func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
-	if u == nil || u.Dead {
+	if u == nil || u.Dead() {
 		return nil
 	}
 
@@ -413,41 +431,41 @@ func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
 
 	if u == ta.l_pioneer {
 		r := td.r_pioneer
-		if r != nil && !r.Dead {
+		if r != nil && !r.Dead() {
 			return r
 		}
 		r = td.r_guarder
-		if ta.is_massacre && r != nil && !r.Dead {
+		if ta.is_massacre && r != nil && !r.Dead() {
 			return r
 		}
 		r = td.m_general
-		if !r.Dead {
+		if !r.Dead() {
 			return r
 		}
 	} else if u == ta.r_pioneer {
 		r := td.l_pioneer
-		if r != nil && !r.Dead {
+		if r != nil && !r.Dead() {
 			return r
 		}
 		r = td.l_guarder
-		if ta.is_massacre && r != nil && !r.Dead {
+		if ta.is_massacre && r != nil && !r.Dead() {
 			return r
 		}
 		r = td.m_general
-		if !r.Dead {
+		if !r.Dead() {
 			return r
 		}
 	} else if u == ta.m_general {
 		r := td.l_pioneer
-		if r != nil && !r.Dead {
+		if r != nil && !r.Dead() {
 			return r
 		}
 		r = td.r_pioneer
-		if r != nil && !r.Dead {
+		if r != nil && !r.Dead() {
 			return r
 		}
 		r = td.m_general
-		if !r.Dead {
+		if !r.Dead() {
 			return r
 		}
 	}
@@ -480,21 +498,20 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 		u.Update(time)
 		r.Update(time)
 
-		if u.Dead || r.Dead {
+		if u.Dead() || r.Dead() {
 			break
 		}
 
 		// 超时(一分钟 600 = 60*1000/100)
 		if bout >= 600 {
 			fmt.Println("bout timeout !")
-			u.Dead = true
-			u.Prop.Hp_cur = 0
+			u.Hp = 0
 			break
 		}
 		time += 100
 	}
 
-	if u.Dead {
+	if u.Dead() {
 		fmt.Println(u.Name(), " [输给了] ", r.Name())
 	} else {
 		fmt.Println(u.Name(), " [战胜了] ", r.Name())
@@ -505,8 +522,8 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	self.steps = append(self.steps, &BattleStep{
 		a_pos: u.Pos,
 		d_pos: r.Pos,
-		a_hp:  u.Prop.Hp_cur,
-		d_hp:  r.Prop.Hp_cur,
+		a_hp:  u.Hp,
+		d_hp:  r.Hp,
 	})
 
 	u.clear_campaign()
@@ -523,14 +540,14 @@ func (self *Battle) Calc() {
 
 	for {
 		idle := true
-		if l != nil && !l.Dead && self.GetWinner() == nil {
+		if l != nil && !l.Dead() && self.GetWinner() == nil {
 			idle = false
 			self.do_campaign(l)
 			if self.GetWinner() != nil {
 				break
 			}
 		}
-		if r != nil && !r.Dead && self.GetWinner() == nil {
+		if r != nil && !r.Dead() && self.GetWinner() == nil {
 			idle = false
 			self.do_campaign(r)
 			if self.GetWinner() != nil {

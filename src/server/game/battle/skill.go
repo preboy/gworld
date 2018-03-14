@@ -154,7 +154,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 	ctx.damage_send.crit = false
 	if math.RandomHitn(int(crit), 100) {
 		ctx.damage_send.crit = true
-		ctx.damage_send.hurt = hurt * (ctx.caster_prop.Crit_hurt + ctx.prop_add.Crit_hurt)
+		ctx.damage_send.hurt = hurt * (ctx.caster_prop.CritHurt + ctx.prop_add.CritHurt)
 	}
 
 	// step 3: 计算防御
@@ -173,12 +173,11 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 
 	// step 5: 计算最终伤害
 	ctx.damage.hurt = ctx.damage_recv.hurt - ctx.damage_sub.hurt
-	if ctx.damage.hurt < target.Prop.Hp_cur {
-		target.Prop.Hp_cur -= ctx.damage.hurt
+	if ctx.damage.hurt < target.Hp {
+		target.Hp -= ctx.damage.hurt
 		fmt.Println(ctx.caster.Name(), " <伤害了> ", ctx.target.Name(), ctx.damage.hurt)
 	} else {
-		target.Prop.Hp_cur = 0
-		target.Dead = true
+		target.Hp = 0
 		fmt.Println(ctx.caster.Name(), " <击杀了> ", ctx.target.Name(), ctx.damage.hurt)
 	}
 

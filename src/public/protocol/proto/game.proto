@@ -96,15 +96,14 @@ message BattleUnit {
     uint32  pos                 = 4;    // 位置
     uint32  atk                 = 5;    // 属性：攻击
     uint32  def                 = 6;    // 防御
-    uint32  hp_cur              = 7;    // HP当前
-    uint32  hp_max              = 8;    // HP上限
-    uint32  crit                = 9;    // 暴击
-    uint32  crit_hurt           = 10;   // 暴伤
-    BattleSkill comm            = 11;   // 普攻
-    repeated BattleSkill skill  = 12;   // 技能
-    BattleSkill career_general_skill    = 13;   // 主帅技能
-    BattleAura  career_general_aura     = 14;   // 主帅光环
-    BattleAura  career_guarder_aura     = 15;   // 辅将光环
+    uint32  hp                  = 7;    // HP当前
+    uint32  crit                = 8;    // 暴击
+    uint32  crit_hurt           = 9;   // 暴伤
+    BattleSkill comm            = 10;   // 普攻
+    repeated BattleSkill skill  = 11;   // 技能
+    BattleSkill career_general_skill    = 12;   // 主帅技能
+    BattleAura  career_general_aura     = 13;   // 主帅光环
+    BattleAura  career_guarder_aura     = 14;   // 辅将光环
 }
 
 message BattleStep {
