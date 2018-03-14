@@ -15,7 +15,6 @@ type SkillProto struct {
 	Last_t int32       `json:"last_t"`
 	Cd_t   int32       `json:"cd_t"`
 	Type   uint32      `json:"type"`
-	Range  uint32      `json:"range"`
 	Auras  []*AuraConf `json:"aura"`
 	Attrs  []*AttrConf `json:"attr"`
 }
