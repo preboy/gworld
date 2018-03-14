@@ -3,12 +3,11 @@
 		"id" : 1001,
 		"level" : 1,
 		"name" : "技能一",
-		"target" : 0,
-		"itv_t" : 1000,
+		"target" : 1,
+		"itv_t" : 0,
 		"last_t" : 2000,
 		"cd_t" : 4000,
 		"type" : 1,
-		"range" : 0,
 		"aura" : [
 			{
 				"id" : 2001,
@@ -16,6 +15,202 @@
 			},
 			{
 				"id" : 2002,
+				"lv" : 1
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1001,
+		"level" : 2,
+		"name" : "技能一",
+		"target" : 1,
+		"itv_t" : 0,
+		"last_t" : 2000,
+		"cd_t" : 4000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2001,
+				"lv" : 2
+			},
+			{
+				"id" : 2002,
+				"lv" : 2
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1001,
+		"level" : 3,
+		"name" : "技能一",
+		"target" : 1,
+		"itv_t" : 0,
+		"last_t" : 2000,
+		"cd_t" : 4000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2001,
+				"lv" : 1
+			},
+			{
+				"id" : 2002,
+				"lv" : 4
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1001,
+		"level" : 4,
+		"name" : "技能一",
+		"target" : 1,
+		"itv_t" : 0,
+		"last_t" : 2000,
+		"cd_t" : 4000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2001,
+				"lv" : 1
+			},
+			{
+				"id" : 2002,
+				"lv" : 4
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1001,
+		"level" : 5,
+		"name" : "技能一",
+		"target" : 1,
+		"itv_t" : 0,
+		"last_t" : 2000,
+		"cd_t" : 4000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2001,
+				"lv" : 1
+			},
+			{
+				"id" : 2002,
+				"lv" : 5
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1002,
+		"level" : 1,
+		"name" : "技能二",
+		"target" : 2,
+		"itv_t" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2003,
+				"lv" : 1
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1002,
+		"level" : 2,
+		"name" : "技能二",
+		"target" : 2,
+		"itv_t" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2003,
+				"lv" : 2
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1002,
+		"level" : 3,
+		"name" : "技能二",
+		"target" : 2,
+		"itv_t" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2003,
+				"lv" : 3
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1002,
+		"level" : 4,
+		"name" : "技能二",
+		"target" : 2,
+		"itv_t" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2003,
+				"lv" : 4
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1002,
+		"level" : 5,
+		"name" : "技能二",
+		"target" : 2,
+		"itv_t" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 1,
+		"aura" : [
+			{
+				"id" : 2003,
+				"lv" : 5
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1003,
+		"level" : 1,
+		"name" : "技能3",
+		"target" : 2,
+		"itv_t" : 1000,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 2,
+		"aura" : [
+			{
+				"id" : 2003,
 				"lv" : 1
 			}
 		],
@@ -36,22 +231,17 @@
 	},
 
 	{
-		"id" : 1001,
+		"id" : 1003,
 		"level" : 2,
-		"name" : "技能一",
-		"target" : 0,
+		"name" : "技能3",
+		"target" : 2,
 		"itv_t" : 1000,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"range" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2001,
-				"lv" : 2
-			},
-			{
-				"id" : 2002,
+				"id" : 2003,
 				"lv" : 2
 			}
 		],
@@ -72,23 +262,18 @@
 	},
 
 	{
-		"id" : 1001,
+		"id" : 1003,
 		"level" : 3,
-		"name" : "技能一",
-		"target" : 0,
+		"name" : "技能3",
+		"target" : 2,
 		"itv_t" : 1000,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"range" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2001,
-				"lv" : 1
-			},
-			{
-				"id" : 2002,
-				"lv" : 4
+				"id" : 2003,
+				"lv" : 3
 			}
 		],
 		"attr" : [
@@ -108,22 +293,17 @@
 	},
 
 	{
-		"id" : 1001,
+		"id" : 1003,
 		"level" : 4,
-		"name" : "技能一",
-		"target" : 0,
+		"name" : "技能3",
+		"target" : 2,
 		"itv_t" : 1000,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"range" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2001,
-				"lv" : 1
-			},
-			{
-				"id" : 2002,
+				"id" : 2003,
 				"lv" : 4
 			}
 		],
@@ -144,22 +324,17 @@
 	},
 
 	{
-		"id" : 1001,
+		"id" : 1003,
 		"level" : 5,
-		"name" : "技能一",
-		"target" : 0,
+		"name" : "技能3",
+		"target" : 2,
 		"itv_t" : 1000,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"range" : 0,
+		"last_t" : 3000,
+		"cd_t" : 6000,
+		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2001,
-				"lv" : 1
-			},
-			{
-				"id" : 2002,
+				"id" : 2003,
 				"lv" : 5
 			}
 		],
@@ -180,205 +355,14 @@
 	},
 
 	{
-		"id" : 1002,
-		"level" : 1,
-		"name" : "技能二",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"range" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 1
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1002,
-		"level" : 2,
-		"name" : "技能二",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"range" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 2
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1002,
-		"level" : 3,
-		"name" : "技能二",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"range" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 3
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1002,
-		"level" : 4,
-		"name" : "技能二",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"range" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 4
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1002,
-		"level" : 5,
-		"name" : "技能二",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"range" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 5
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1003,
-		"level" : 1,
-		"name" : "技能3",
-		"target" : 0,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"range" : 2,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 1
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1003,
-		"level" : 2,
-		"name" : "技能3",
-		"target" : 0,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"range" : 2,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 2
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1003,
-		"level" : 3,
-		"name" : "技能3",
-		"target" : 0,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"range" : 2,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 3
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1003,
-		"level" : 4,
-		"name" : "技能3",
-		"target" : 0,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"range" : 2,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 4
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1003,
-		"level" : 5,
-		"name" : "技能3",
-		"target" : 0,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"range" : 2,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 5
-			}
-		],
-		"attr" : []
-	},
-
-	{
 		"id" : 1004,
 		"level" : 1,
 		"name" : "技能4",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -392,12 +376,11 @@
 		"id" : 1004,
 		"level" : 2,
 		"name" : "技能4",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -411,12 +394,11 @@
 		"id" : 1004,
 		"level" : 3,
 		"name" : "技能4",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -430,12 +412,11 @@
 		"id" : 1004,
 		"level" : 4,
 		"name" : "技能4",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -449,12 +430,11 @@
 		"id" : 1004,
 		"level" : 5,
 		"name" : "技能4",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -468,12 +448,11 @@
 		"id" : 1005,
 		"level" : 1,
 		"name" : "技能5",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -487,12 +466,11 @@
 		"id" : 1005,
 		"level" : 2,
 		"name" : "技能5",
-		"target" : 0,
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -505,13 +483,12 @@
 	{
 		"id" : 1005,
 		"level" : 3,
-		"name" : "技能6",
-		"target" : 0,
+		"name" : "技能5",
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -524,13 +501,12 @@
 	{
 		"id" : 1005,
 		"level" : 4,
-		"name" : "技能7",
-		"target" : 0,
+		"name" : "技能5",
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
@@ -543,13 +519,12 @@
 	{
 		"id" : 1005,
 		"level" : 5,
-		"name" : "技能8",
-		"target" : 0,
+		"name" : "技能5",
+		"target" : 2,
 		"itv_t" : 1000,
 		"last_t" : 3000,
 		"cd_t" : 6000,
 		"type" : 2,
-		"range" : 2,
 		"aura" : [
 			{
 				"id" : 2003,
