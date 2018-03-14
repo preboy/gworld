@@ -217,8 +217,8 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	u.Type = self.UnitType
 	u.Id = self.Id
 	u.Lv = self.Lv
-	u.Hp = self.Hp
 	u.Pos = self.Pos
+	u.Hp = self.Prop.Hp
 	u.Atk = self.Prop.Atk
 	u.Def = self.Prop.Def
 	u.Crit = self.Prop.Crit
@@ -520,6 +520,7 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	} else {
 		fmt.Println(u.Name(), " [战胜了] ", r.Name())
 	}
+
 	fmt.Println("============== campaign end ==============", self.campaigns)
 
 	// 记录结果过程
