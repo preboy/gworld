@@ -143,7 +143,7 @@ func (self *BattleUnit) Update(time int32) {
 	// skill update
 	if self.Skill_curr == nil {
 		for _, v := range self.Skill_exclusive {
-			if !v.IsFree(time) {
+			if v.IsFree(time) {
 				self.Skill_curr = v
 				break
 			}
@@ -519,28 +519,31 @@ func (self *Battle) Calc() {
 
 	l := self.attacker.l_pioneer
 	r := self.attacker.r_pioneer
-	c := self.attacker.m_general
+	g := self.attacker.m_general
 
 	for {
+		idle := true
 		if l != nil && !l.Dead && self.GetWinner() == nil {
+			idle = false
 			self.do_campaign(l)
 			if self.GetWinner() != nil {
 				break
 			}
 		}
 		if r != nil && !r.Dead && self.GetWinner() == nil {
+			idle = false
 			self.do_campaign(r)
 			if self.GetWinner() != nil {
 				break
 			}
 		}
-	}
-
-	for !c.Dead && self.GetWinner() == nil {
-		self.do_campaign(c)
-		if self.GetWinner() != nil {
+		if idle {
 			break
 		}
+	}
+
+	for self.GetWinner() == nil {
+		self.do_campaign(g)
 	}
 
 	if self.GetWinner() == self.attacker {
