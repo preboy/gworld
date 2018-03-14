@@ -374,6 +374,10 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	return b
 }
 
+func (self *Battle) InBattle() bool {
+	return self.GetWinner() == nil
+}
+
 func (self *Battle) GetWinner() *BattleTroop {
 	if self.attacker.Lose() {
 		return self.defender
@@ -540,17 +544,17 @@ func (self *Battle) Calc() {
 
 	for {
 		idle := true
-		if l != nil && !l.Dead() && self.GetWinner() == nil {
+		if l != nil && !l.Dead() && self.InBattle() {
 			idle = false
 			self.do_campaign(l)
-			if self.GetWinner() != nil {
+			if !self.InBattle() {
 				break
 			}
 		}
-		if r != nil && !r.Dead() && self.GetWinner() == nil {
+		if r != nil && !r.Dead() && self.InBattle() {
 			idle = false
 			self.do_campaign(r)
-			if self.GetWinner() != nil {
+			if !self.InBattle() {
 				break
 			}
 		}
@@ -559,7 +563,7 @@ func (self *Battle) Calc() {
 		}
 	}
 
-	for self.GetWinner() == nil {
+	for self.InBattle() {
 		self.do_campaign(g)
 	}
 
