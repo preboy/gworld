@@ -14,18 +14,23 @@ type BattleAura struct {
 	update_time int32 // 对于有update的技能，记录上次时间
 	start       bool  // 就否初始化完成
 	finish      bool  // 是否完成
+	once        bool  // 是否一次性光环(战斗结束就删除,辅助光环使用此功能)
 }
 
-func NewAuraBattle(id, lv uint32) *BattleAura {
+func NewAuraBattle(id, lv uint32, once bool) *BattleAura {
 	proto := config.GetAuraProtoConf().GetAuraProto(id, lv)
 	if proto == nil {
 		log.Error("NewAuraBattle Failed:", id, lv)
 		return nil
 	}
+
 	ab := &BattleAura{
 		proto:  proto,
 		script: create_aura_script(proto),
 	}
+
+	ab.once = once
+
 	return ab
 }
 

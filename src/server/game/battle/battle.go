@@ -83,12 +83,6 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 		self.Skill_comm.Reset(true)
 	}
 
-	for _, a := range self.Auras_battle {
-		if a != nil {
-			a.Reset()
-		}
-	}
-
 	// TODO 加辅将光环
 	troop := self.Troop
 	switch self {
@@ -101,7 +95,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 			if u != nil && !u.Dead() {
 				a := u.career_general_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv, true))
 				}
 			}
 		}
@@ -112,19 +106,19 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 			if u != nil && !u.Dead() {
 				a := u.career_guarder_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv, true))
 				}
 			}
 			u = troop.r_guarder
 			if u != nil && !u.Dead() {
 				a := u.career_guarder_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv, true))
 				}
 			}
 			a := self.career_general_aura
 			if a != nil && a.Id != 0 {
-				self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
+				self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv, true))
 			}
 		}
 	case troop.l_guarder:
@@ -136,7 +130,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 			if u != nil && !u.Dead() {
 				a := u.career_general_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv, true))
 				}
 			}
 		}
@@ -152,6 +146,11 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 
 func (self *BattleUnit) clear_campaign() {
 	self.Rival = nil
+	for i, a := range self.Auras_battle {
+		if a != nil && a.once {
+			self.Auras_battle[i] = nil
+		}
+	}
 }
 
 func (self *BattleUnit) Update(time int32) {
@@ -194,7 +193,7 @@ func (self *BattleUnit) Update(time int32) {
 }
 
 func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
-	aura := NewAuraBattle(id, lv)
+	aura := NewAuraBattle(id, lv, false)
 	if aura == nil {
 		return
 	}
