@@ -32,7 +32,7 @@ type BattleUnit struct {
 	Base     UnitBase     // 父类
 	Id       uint32       // ID
 	Lv       uint32       // 等级
-	Prop     *Property    // 战斗属性
+	Prop     *Property    // 战斗属性(可见部分[等级基本、装备、被动技能]、加成部分[全局光环])，初始化时计算
 	Troop    *BattleTroop // 队伍
 	UnitType uint32       // 生物类型
 	Pos      uint32       // 位置
@@ -42,13 +42,12 @@ type BattleUnit struct {
 	Skill_curr      *BattleSkill   // 当前正在释放技能
 	Skill_comm      *BattleSkill   // 普攻
 	Skill_exclusive []*BattleSkill // 专有技能(比较猛的)
-	Auras_basic     []*BattleAura  // 英雄技能、角色加成、等等
-	Auras_battle    []*BattleAura  // 战斗中产生的光环(战斗结束之后保留)
-	Auras_guarder   []*BattleAura  // 辅助光环(战斗之前加，战斗之后结束，包括辅助、主帅加的)
+	Auras_battle    []*BattleAura  // 战斗光环，可被清除(战斗加成部分[技能释放之后产生的，祝福、诅咒]、辅助[辅将、主帅为战斗单位加成的])
 
-	Skill_commander *SkillCfg // 主帅技能(自用，二选一)
-	Aura_commander  *AuraCfg  // 主帅光环(二选一)
-	Aura_guarder    *AuraCfg  // 辅将光环
+	// 职业技能、光环
+	career_general_skill *SkillCfg // 主帅技能(自用，二选一)
+	career_general_aura  *AuraCfg  // 主帅光环(二选一)
+	career_guarder_aura  *AuraCfg  // 辅将光环
 }
 
 func (self *BattleUnit) Name() string {
@@ -64,11 +63,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 	if self.Skill_comm != nil {
 		self.Skill_comm.Reset(true)
 	}
-	for _, a := range self.Auras_basic {
-		if a != nil {
-			a.Reset()
-		}
-	}
+
 	for _, a := range self.Auras_battle {
 		if a != nil {
 			a.Reset()
@@ -83,34 +78,34 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 	case troop.r_pioneer:
 		{
 			// 右先锋接受主帅的祝福
-			u := troop.commander
+			u := troop.m_general
 			if u != nil && !u.Dead {
-				a := u.Aura_commander
+				a := u.career_general_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
 				}
 			}
 		}
-	case troop.commander:
+	case troop.m_general:
 		{
 			// 主帅接受两辅将以及自己的祝福
 			u := troop.l_guarder
 			if u != nil && !u.Dead {
-				a := u.Aura_guarder
+				a := u.career_guarder_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
 				}
 			}
 			u = troop.r_guarder
 			if u != nil && !u.Dead {
-				a := u.Aura_guarder
+				a := u.career_guarder_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
 				}
 			}
-			a := self.Aura_commander
+			a := self.career_general_aura
 			if a != nil && a.Id != 0 {
-				self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+				self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
 			}
 		}
 	case troop.l_guarder:
@@ -118,18 +113,18 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 	case troop.r_guarder:
 		{
 			// 右辅将接受主将的祝福
-			u := troop.commander
+			u := troop.m_general
 			if u != nil && !u.Dead {
-				a := u.Aura_commander
+				a := u.career_general_aura
 				if a != nil && a.Id != 0 {
-					self.Auras_guarder = append(self.Auras_guarder, NewAuraBattle(a.Id, a.Lv))
+					self.Auras_battle = append(self.Auras_battle, NewAuraBattle(a.Id, a.Lv))
 				}
 			}
 		}
 	default:
 	}
 
-	for _, a := range self.Auras_guarder {
+	for _, a := range self.Auras_battle {
 		if a != nil {
 			a.Reset()
 		}
@@ -138,7 +133,6 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 
 func (self *BattleUnit) clear_campaign() {
 	self.Rival = nil
-	self.Auras_guarder = nil
 }
 
 func (self *BattleUnit) Update(time int32) {
@@ -169,15 +163,6 @@ func (self *BattleUnit) Update(time int32) {
 		}
 	}
 
-	// aura update
-	for k, aura := range self.Auras_basic {
-		if aura != nil {
-			aura.Update(time)
-			if aura.IsFinish() {
-				self.Auras_basic[k] = nil
-			}
-		}
-	}
 	for k, aura := range self.Auras_battle {
 		if aura != nil {
 			aura.Update(time)
@@ -186,26 +171,10 @@ func (self *BattleUnit) Update(time int32) {
 			}
 		}
 	}
-	for k, aura := range self.Auras_guarder {
-		if aura != nil {
-			aura.Update(time)
-			if aura.IsFinish() {
-				self.Auras_guarder[k] = nil
-			}
-		}
-	}
+
 }
 
-func (self *BattleUnit) AddAuraBasic(caster *BattleUnit, id uint32, lv uint32) {
-	aura := NewAuraBattle(id, lv)
-	if aura == nil {
-		return
-	}
-	aura.Init(caster, self)
-	self.Auras_basic = append(self.Auras_basic, aura)
-}
-
-func (self *BattleUnit) AddAuraBattle(caster *BattleUnit, id uint32, lv uint32) {
+func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
 	aura := NewAuraBattle(id, lv)
 	if aura == nil {
 		return
@@ -214,31 +183,10 @@ func (self *BattleUnit) AddAuraBattle(caster *BattleUnit, id uint32, lv uint32) 
 	self.Auras_battle = append(self.Auras_battle, aura)
 }
 
-func (self *BattleUnit) AddAuraGuarder(caster *BattleUnit, id uint32, lv uint32) {
-	aura := NewAuraBattle(id, lv)
-	if aura == nil {
-		return
-	}
-	aura.Init(caster, self)
-	self.Auras_guarder = append(self.Auras_guarder, aura)
-}
-
 func (self *BattleUnit) DelAura(id, lv uint32) {
-	for k, aura := range self.Auras_basic {
-		if aura.proto.Id == id && aura.proto.Level == lv {
-			self.Auras_basic[k] = nil
-			return
-		}
-	}
 	for k, aura := range self.Auras_battle {
 		if aura.proto.Id == id && aura.proto.Level == lv {
 			self.Auras_battle[k] = nil
-			return
-		}
-	}
-	for k, aura := range self.Auras_guarder {
-		if aura.proto.Id == id && aura.proto.Level == lv {
-			self.Auras_guarder[k] = nil
 			return
 		}
 	}
@@ -272,22 +220,22 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 		})
 	}
 
-	if self.Skill_commander != nil {
+	if self.career_general_skill != nil {
 		u.AuxSChief = &msg.BattleSkill{
-			Id: self.Skill_commander.Id,
-			Lv: self.Skill_commander.Lv,
+			Id: self.career_general_skill.Id,
+			Lv: self.career_general_skill.Lv,
 		}
 	}
-	if self.Aura_commander != nil {
+	if self.career_general_aura != nil {
 		u.AuxAChief = &msg.BattleAura{
-			Id: self.Aura_commander.Id,
-			Lv: self.Aura_commander.Lv,
+			Id: self.career_general_aura.Id,
+			Lv: self.career_general_aura.Lv,
 		}
 	}
-	if self.Aura_guarder != nil {
+	if self.career_guarder_aura != nil {
 		u.AuxAGuarder = &msg.BattleAura{
-			Id: self.Aura_guarder.Id,
-			Lv: self.Aura_guarder.Lv,
+			Id: self.career_guarder_aura.Id,
+			Lv: self.career_guarder_aura.Lv,
 		}
 	}
 
@@ -303,42 +251,42 @@ type BattleTroop struct {
 
 	l_pioneer *BattleUnit // 左先锋
 	r_pioneer *BattleUnit // 右先锋
-	commander *BattleUnit // 主帅
+	m_general *BattleUnit // 主帅
 	l_guarder *BattleUnit // 右辅助
 	r_guarder *BattleUnit // 右辅助
 }
 
-func NewBattleTroop(l_pioneer, r_pioneer, l_guarder, commander, r_guarder *BattleUnit) *BattleTroop {
-	if commander == nil {
+func NewBattleTroop(l_pioneer, r_pioneer, l_guarder, m_general, r_guarder *BattleUnit) *BattleTroop {
+	if m_general == nil {
 		return nil
 	}
 
 	troop := &BattleTroop{
-		commander: commander,
+		m_general: m_general,
 		l_pioneer: l_pioneer,
 		r_pioneer: r_pioneer,
 		l_guarder: l_guarder,
 		r_guarder: r_guarder,
 	}
 
-	commander.Troop = troop
+	m_general.Troop = troop
 	l_pioneer.Troop = troop
 	r_pioneer.Troop = troop
 	l_guarder.Troop = troop
 	r_guarder.Troop = troop
 
 	// 加主帅技能
-	s := troop.commander.Skill_commander
+	s := troop.m_general.career_general_skill
 	if s != nil {
 		skill := NewSkillBattle(s.Id, s.Lv)
-		troop.commander.Skill_exclusive = append(troop.commander.Skill_exclusive, skill)
+		troop.m_general.Skill_exclusive = append(troop.m_general.Skill_exclusive, skill)
 	}
 
 	return troop
 }
 
 func (self *BattleTroop) Lose() bool {
-	return self.commander.Dead
+	return self.m_general.Dead
 }
 
 // ==================================================
@@ -379,8 +327,8 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	if a.r_pioneer != nil {
 		a.r_pioneer.Pos = 2
 	}
-	if a.commander != nil {
-		a.commander.Pos = 3
+	if a.m_general != nil {
+		a.m_general.Pos = 3
 	}
 	if a.l_guarder != nil {
 		a.l_guarder.Pos = 4
@@ -395,8 +343,8 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	if d.r_pioneer != nil {
 		d.r_pioneer.Pos = 7
 	}
-	if d.commander != nil {
-		d.commander.Pos = 8
+	if d.m_general != nil {
+		d.m_general.Pos = 8
 	}
 	if d.l_guarder != nil {
 		d.l_guarder.Pos = 9
@@ -425,7 +373,7 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左先锋")
 		case troop.r_pioneer:
 			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "右先锋")
-		case troop.commander:
+		case troop.m_general:
 			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "主帅")
 		case troop.l_guarder:
 			return fmt.Sprintf("%s[攻-%s]", u.Base.Name(), "左辅助")
@@ -441,7 +389,7 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左先锋")
 		case troop.r_pioneer:
 			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "右先锋")
-		case troop.commander:
+		case troop.m_general:
 			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "主帅")
 		case troop.l_guarder:
 			return fmt.Sprintf("%s[防-%s]", u.Base.Name(), "左辅助")
@@ -472,7 +420,7 @@ func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
 		if ta.is_massacre && r != nil && !r.Dead {
 			return r
 		}
-		r = td.commander
+		r = td.m_general
 		if !r.Dead {
 			return r
 		}
@@ -485,11 +433,11 @@ func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
 		if ta.is_massacre && r != nil && !r.Dead {
 			return r
 		}
-		r = td.commander
+		r = td.m_general
 		if !r.Dead {
 			return r
 		}
-	} else if u == ta.commander {
+	} else if u == ta.m_general {
 		r := td.l_pioneer
 		if r != nil && !r.Dead {
 			return r
@@ -498,7 +446,7 @@ func (self *Battle) get_rival(u *BattleUnit) *BattleUnit {
 		if r != nil && !r.Dead {
 			return r
 		}
-		r = td.commander
+		r = td.m_general
 		if !r.Dead {
 			return r
 		}
@@ -571,7 +519,7 @@ func (self *Battle) Calc() {
 
 	l := self.attacker.l_pioneer
 	r := self.attacker.r_pioneer
-	c := self.attacker.commander
+	c := self.attacker.m_general
 
 	for {
 		if l != nil && !l.Dead && self.GetWinner() == nil {
@@ -635,7 +583,7 @@ func (self *Battle) ToMsg() *msg.BattleResult {
 	if u != nil {
 		r.Units = append(r.Units, u.ToMsg())
 	}
-	u = self.attacker.commander
+	u = self.attacker.m_general
 	if u != nil {
 		r.Units = append(r.Units, u.ToMsg())
 	}
@@ -656,7 +604,7 @@ func (self *Battle) ToMsg() *msg.BattleResult {
 	if u != nil {
 		r.Units = append(r.Units, u.ToMsg())
 	}
-	u = self.defender.commander
+	u = self.defender.m_general
 	if u != nil {
 		r.Units = append(r.Units, u.ToMsg())
 	}

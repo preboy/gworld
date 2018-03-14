@@ -63,13 +63,8 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		}
 	}
 
-	// 光环
-	for _, v := range self.proto.Auras {
-		aura := battle.NewAuraBattle(v.Id, v.Lv)
-		if aura != nil {
-			u.Auras_basic = append(u.Auras_basic, aura)
-		}
-	}
+	// 被动技能加成
+	// TODO
 
 	// 基本属性
 	u.Prop = &battle.Property{

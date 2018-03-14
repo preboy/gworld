@@ -54,7 +54,7 @@ func (self *Hero) Name() string {
 func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
 		Base:       self,
-        Id:         self.Id,
+		Id:         self.Id,
 		Lv:         self.Level,
 		UnitType:   uint32(self.UnitType()),
 		Troop:      nil,
@@ -79,14 +79,8 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		}
 	}
 
-	// 光环
-	for i := 0; i < 2; i++ {
-		v := &self.Auras[i]
-		aura := battle.NewAuraBattle(v.Id, v.Level)
-		if aura != nil {
-			u.Auras_basic = append(u.Auras_basic, aura)
-		}
-	}
+	// 被动技能加成
+	// TODO
 
 	u.Prop = &battle.Property{
 		Atk:       proto.Atk,

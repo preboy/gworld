@@ -116,7 +116,7 @@ func (self *BattleSkill) onUpdate() {
 	case 2: // 加光环
 		{
 			for _, a := range self.proto.Auras {
-				target.AddAuraBattle(self.owner, a.Id, a.Lv)
+				target.AddAura(self.owner, a.Id, a.Lv)
 			}
 		}
 	default:
@@ -141,17 +141,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 	ctx.target_prop = ctx.target.Prop
 
 	// step 1: 计算光环
-	for _, aura := range ctx.caster.Auras_basic {
-		if aura != nil {
-			aura.OnEvent(BattleEvent_PreAtk, ctx)
-		}
-	}
 	for _, aura := range ctx.caster.Auras_battle {
-		if aura != nil {
-			aura.OnEvent(BattleEvent_PreAtk, ctx)
-		}
-	}
-	for _, aura := range ctx.caster.Auras_guarder {
 		if aura != nil {
 			aura.OnEvent(BattleEvent_PreAtk, ctx)
 		}
@@ -175,17 +165,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 	ctx.damage_recv.hurt = hurt
 
 	// step 4: 计算光环
-	for _, aura := range target.Auras_basic {
-		if aura != nil {
-			aura.OnEvent(BattleEvent_AftDef, ctx)
-		}
-	}
 	for _, aura := range target.Auras_battle {
-		if aura != nil {
-			aura.OnEvent(BattleEvent_AftDef, ctx)
-		}
-	}
-	for _, aura := range target.Auras_guarder {
 		if aura != nil {
 			aura.OnEvent(BattleEvent_AftDef, ctx)
 		}
