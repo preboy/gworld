@@ -89,10 +89,7 @@ func (self *BattleSkill) Update(time int32) {
 // CD时间从技能释放结束开始计算
 // 普通技能的CD时间应配置为0
 func (self *BattleSkill) IsFree(time int32) bool {
-	if time-self.cd_time >= self.proto.Cd_t {
-		return true
-	}
-	return false
+	return time-self.cd_time >= self.proto.Cd_t
 }
 
 func (self *BattleSkill) IsFinish() bool {
@@ -110,6 +107,7 @@ func (self *BattleSkill) onUpdate() {
 		{
 			if target == self.owner {
 				fmt.Println("[WARNING]", self.owner.Name(), "要对自己造成伤害", self.proto.Id)
+				return
 			}
 			self.do_attack(target)
 		}
@@ -121,7 +119,7 @@ func (self *BattleSkill) onUpdate() {
 		}
 	default:
 		{
-			fmt.Println("unknown skill type", self.proto.Type)
+			fmt.Println("unknown skill type:", self.proto.Type)
 		}
 	}
 }
