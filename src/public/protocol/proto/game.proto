@@ -106,12 +106,26 @@ message BattleUnit {
     BattleAura  career_guarder_aura     = 14;   // 辅将光环
 }
 
-message BattleStep {
-    uint32 a_pos                = 1;    // 攻击方出战者
-    uint32 d_pos                = 2;    // 防御方出战者
-    uint32 a_hp                 = 3;    // 攻击者当下的HP
-    uint32 d_hp                 = 4;    // 防御者当下的HP
+
+message CamapignDetail {
+    uint32 host                 = 1;
+    uint32 flag                 = 2;
+    uint32 arg1                 = 3;
+    uint32 arg2                 = 4;
+    uint32 arg3                 = 5;
+    uint32 arg4                 = 6;
 }
+
+message BattleCamapign {
+    uint32 a_pos                        = 1;    // 攻击方出战者
+    uint32 d_pos                        = 2;    // 防御方出战者
+    uint32 a_hp_s                       = 3;    // 攻击者战斗前的HP
+    uint32 d_hp_s                       = 4;    // 防御者战斗前的HP
+    uint32 a_hp_e                       = 3;    // 攻击者战斗后的HP
+    uint32 d_hp_e                       = 4;    // 防御者战斗后的HP
+    repeated CamapignDetail details     = 5;    // 战斗细节
+}
+
 
 message BattleResult {
     repeated BattleUnit units   = 1;    // 所有参战人员

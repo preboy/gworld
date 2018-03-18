@@ -323,6 +323,26 @@ type Battle struct {
 	campaigns uint32 // 战斗次数
 }
 
+/*
+	每一次战斗细节
+	host: 事件的相关人
+	flag：事件标识
+		1：释放技能 	arg1 arg2分别表示技能id, lv
+		2：得到光环     ... id, lv
+		3：失去光环		... id, lv
+		4：受到伤害 	arg1: hurt  arg2:crit?
+		5：光环效果		arg1: type attr...
+	arg1 ~ arg4：参数，根据不同的flag表示不同的意思
+*/
+type BattleDetail struct {
+	host uint32
+	flag uint32
+	arg1 uint32
+	arg2 uint32
+	arg3 uint32
+	arg4 uint32
+}
+
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	if a == nil || d == nil {
 		return nil
