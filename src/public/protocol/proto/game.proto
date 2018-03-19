@@ -107,30 +107,31 @@ message BattleUnit {
 }
 
 
-message CamapignDetail {
+message CampaignDetail {
     uint32 host                 = 1;
-    uint32 flag                 = 2;
-    uint32 arg1                 = 3;
-    uint32 arg2                 = 4;
-    uint32 arg3                 = 5;
-    uint32 arg4                 = 6;
+    uint32 time                 = 2;
+    uint32 flag                 = 3;
+    uint32 arg1                 = 4;
+    uint32 arg2                 = 5;
+    uint32 arg3                 = 6;
+    uint32 arg4                 = 7;
 }
 
-message BattleCamapign {
+message BattleCampaign {
     uint32 a_pos                        = 1;    // 攻击方出战者
     uint32 d_pos                        = 2;    // 防御方出战者
     uint32 a_hp_s                       = 3;    // 攻击者战斗前的HP
     uint32 d_hp_s                       = 4;    // 防御者战斗前的HP
-    uint32 a_hp_e                       = 3;    // 攻击者战斗后的HP
-    uint32 d_hp_e                       = 4;    // 防御者战斗后的HP
-    repeated CamapignDetail details     = 5;    // 战斗细节
+    uint32 a_hp_e                       = 5;    // 攻击者战斗后的HP
+    uint32 d_hp_e                       = 6;    // 防御者战斗后的HP
+    repeated CampaignDetail details     = 7;    // 战斗细节
 }
 
 
 message BattleResult {
-    repeated BattleUnit units   = 1;    // 所有参战人员
-    repeated BattleStep steps   = 2;    // 所有战斗战况
-    bool    win                 = 3;    // 攻击者是否获胜
+    repeated BattleUnit units           = 1;    // 所有参战人员
+    repeated BattleCampaign camps       = 2;    // 所有战斗战况
+    bool    win                         = 3;    // 攻击者是否获胜
 }
 
 message MakeBattleRequest {

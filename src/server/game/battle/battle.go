@@ -63,6 +63,10 @@ func (self *BattleUnit) Dead() bool {
 	return self.Hp == 0
 }
 
+func (self *BattleUnit) AddCampaignDetail(flag uint32, arg1, arg2, arg3, arg4 uint32) {
+	self.Troop.battle.AddCampaignDetail(self, flag, arg1, arg2, arg3, arg4)
+}
+
 func (self *BattleUnit) CalcProp() {
 	self.Prop = &Property{}
 	self.Prop.Hp = self.Prop_base.Hp + self.Prop_addi.Hp
@@ -308,39 +312,13 @@ func (self *BattleTroop) Lose() bool {
 
 // ==================================================
 
-type BattleStep struct {
-	a_pos uint32 // 攻击方出战者
-	d_pos uint32 // 防御方出战者
-	a_hp  uint32 // 攻击者当下的HP
-	d_hp  uint32 // 防御者当下的HP
-}
-
 type Battle struct {
 	attacker  *BattleTroop
 	defender  *BattleTroop
-	steps     []*BattleStep
+	campaigns []*msg.BattleCampaign
+	campaign  *msg.BattleCampaign
 	R         uint32 // 0:attacker负  1:attacker胜
-	campaigns uint32 // 战斗次数
-}
-
-/*
-	每一次战斗细节
-	host: 事件的相关人
-	flag：事件标识
-		1：释放技能 	arg1 arg2分别表示技能id, lv
-		2：得到光环     ... id, lv
-		3：失去光环		... id, lv
-		4：受到伤害 	arg1: hurt  arg2:crit?
-		5：光环效果		arg1: type attr...
-	arg1 ~ arg4：参数，根据不同的flag表示不同的意思
-*/
-type BattleDetail struct {
-	host uint32
-	flag uint32
-	arg1 uint32
-	arg2 uint32
-	arg3 uint32
-	arg4 uint32
+	time      int32
 }
 
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
@@ -506,20 +484,27 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	u.init_campaign(r)
 	r.init_campaign(u)
 
-	var time int32
-	var bout int32
+	self.campaign = &msg.BattleCampaign{
+		APos: u.Pos,
+		DPos: r.Pos,
+		AHpS: u.Hp,
+		DHpS: r.Hp,
+	}
+	self.campaign.Details = make([]*msg.CampaignDetail, 0, 0x100)
+	self.campaigns = append(self.campaigns, self.campaign)
+	self.time = 0
 
-	self.campaigns++
-
-	fmt.Println("============== campaign start ==============", self.campaigns)
+	camp_index := len(self.campaigns)
+	fmt.Println("============== Campaign Begin ==============", camp_index)
 	fmt.Println(u.Name(), " VS ", r.Name())
 
+	var bout int32
 	for {
 		bout++
-		fmt.Println("场次 回合 时间:", self.campaigns, bout, time)
+		fmt.Println("场次 回合 时间:", camp_index, bout, self.time)
 
-		u.Update(time)
-		r.Update(time)
+		u.Update(self.time)
+		r.Update(self.time)
 
 		if u.Dead() || r.Dead() {
 			break
@@ -531,7 +516,7 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 			u.Hp = 0
 			break
 		}
-		time += 100
+		self.time += 100
 	}
 
 	if u.Dead() {
@@ -540,19 +525,17 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 		fmt.Println(u.Name(), " [战胜了] ", r.Name())
 	}
 
-	fmt.Println("============== campaign end ==============", self.campaigns)
+	fmt.Println("============== campaign end ==============", camp_index)
 
 	// 记录结果过程
-	self.steps = append(self.steps, &BattleStep{
-		a_pos: u.Pos,
-		d_pos: r.Pos,
-		a_hp:  u.Hp,
-		d_hp:  r.Hp,
-	})
+	self.campaign.AHpE = u.Hp
+	self.campaign.DHpE = r.Hp
 
 	u.clear_campaign()
 	r.clear_campaign()
 
+	self.time = 0
+	self.campaign = nil
 }
 
 // 计算战斗
@@ -597,6 +580,18 @@ func (self *Battle) Calc() {
 
 }
 
+func (self *Battle) AddCampaignDetail(u *BattleUnit, flag uint32, arg1, arg2, arg3, arg4 uint32) {
+	self.campaign.Details = append(self.campaign.Details, &msg.CampaignDetail{
+		Host: u.Pos,
+		Time: uint32(self.time),
+		Flag: flag,
+		Arg1: 0,
+		Arg2: 0,
+		Arg3: 0,
+		Arg4: 0,
+	})
+}
+
 func (self *Battle) GetResult() uint32 {
 	return self.R
 }
@@ -604,20 +599,9 @@ func (self *Battle) GetResult() uint32 {
 func (self *Battle) ToMsg() *msg.BattleResult {
 	r := &msg.BattleResult{}
 
-	if self.R == 1 {
-		r.Win = true
-	} else {
-		r.Win = false
-	}
-
-	for _, v := range self.steps {
-		r.Steps = append(r.Steps, &msg.BattleStep{
-			APos: v.a_pos,
-			DPos: v.d_pos,
-			AHp:  v.a_hp,
-			DHp:  v.d_hp,
-		})
-	}
+	r.Win = self.GetResult() == 1
+	r.Camps = self.campaigns
+	r.Units = make([]*msg.BattleUnit, 0, 10)
 
 	u := self.attacker.l_pioneer
 	if u != nil {
