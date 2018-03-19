@@ -12,7 +12,7 @@ type AuraScript interface {
 	OnStart(ab *BattleAura)
 	OnUpdate(ab *BattleAura)
 	OnFinish(ab *BattleAura)
-	OnEvent(evt BattleEvent, ab *BattleAura, ctx *SkillContext)
+	OnEvent(evt BattleEventType, ab *BattleAura, ctx *SkillContext)
 }
 
 type script_creator = func() AuraScript
@@ -66,7 +66,7 @@ func (self *AuraScript_1) OnFinish(ab *BattleAura) {
 	fmt.Println("AuraScript_1 OnFinish")
 }
 
-func (self *AuraScript_1) OnEvent(evt BattleEvent, ab *BattleAura, ctx *SkillContext) {
+func (self *AuraScript_1) OnEvent(evt BattleEventType, ab *BattleAura, ctx *SkillContext) {
 	fmt.Println("AuraScript_1 Event:", evt)
 }
 

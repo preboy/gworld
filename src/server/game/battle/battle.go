@@ -6,22 +6,22 @@ import (
 )
 
 // ==================================================
-type BattleEvent uint32
-type CampaignEvent uint32
+type BattleEventType uint32
+type CampaignEventType uint32
 
 const (
-	_                  BattleEvent = 1 + iota
-	BattleEvent_PreAtk             // 计算攻击之前 (累积光环的附加攻击)
-	BattleEvent_AftDef             // 计算防御之后 (抵挡伤害)
+	_                  BattleEventType = 0 + iota
+	BattleEvent_PreAtk                 // 计算攻击之前 (累积光环的附加攻击)
+	BattleEvent_AftDef                 // 计算防御之后 (抵挡伤害)
 )
 
 const (
-	_                        CampaignEvent = 1 + iota // 战斗中的事件
-	CampaignEvent_Cast                                // 释放技能
-	CampaignEvent_Hurt                                // 受到伤害
-	CampaignEvent_AuraGet                             // 得到光环
-	CampaignEvent_AuraLose                            // 失去光环
-	CampaignEvent_AuraEffect                          // 光环效果
+	_                        CampaignEventType = 0 + iota // 战斗中的事件
+	CampaignEvent_Cast                                    // 释放技能
+	CampaignEvent_Hurt                                    // 受到伤害
+	CampaignEvent_AuraGet                                 // 得到光环
+	CampaignEvent_AuraLose                                // 失去光环
+	CampaignEvent_AuraEffect                              // 光环效果
 )
 
 type SkillCfg struct {
@@ -73,7 +73,7 @@ func (self *BattleUnit) Dead() bool {
 	return self.Hp == 0
 }
 
-func (self *BattleUnit) AddCampaignDetail(flag CampaignEvent, arg1, arg2, arg3, arg4 uint32) {
+func (self *BattleUnit) AddCampaignDetail(flag CampaignEventType, arg1, arg2, arg3, arg4 uint32) {
 	self.Troop.battle.AddCampaignDetail(self, flag, arg1, arg2, arg3, arg4)
 }
 
@@ -593,7 +593,7 @@ func (self *Battle) Calc() {
 
 }
 
-func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEvent, arg1, arg2, arg3, arg4 uint32) {
+func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg1, arg2, arg3, arg4 uint32) {
 	self.campaign.Details = append(self.campaign.Details, &msg.CampaignDetail{
 		Host: u.Pos,
 		Time: uint32(self.time),

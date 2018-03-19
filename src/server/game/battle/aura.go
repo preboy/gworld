@@ -92,7 +92,7 @@ func (self *BattleAura) IsFinish() bool {
 	return self.finish
 }
 
-func (self *BattleAura) OnEvent(evt BattleEvent, ctx *SkillContext) {
+func (self *BattleAura) OnEvent(evt BattleEventType, ctx *SkillContext) {
 	if self.script != nil {
 		self.script.OnEvent(evt, self, ctx)
 	}
