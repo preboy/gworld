@@ -585,12 +585,12 @@ func (self *Battle) Calc() {
 
 	if self.GetWinner() == self.attacker {
 		self.R = 1
-		fmt.Println("攻击方 胜 !!!", self.campaigns)
+		fmt.Println("攻击方 胜 !!!")
 	} else {
 		self.R = 0
-		fmt.Println("防御方 胜 !!!", self.campaigns)
+		fmt.Println("防御方 胜 !!!")
 	}
-
+	fmt.Println(self.campaigns)
 }
 
 func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg1, arg2, arg3, arg4 uint32) {
@@ -598,10 +598,10 @@ func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg
 		Host: u.Pos,
 		Time: uint32(self.time),
 		Flag: uint32(flag),
-		Arg1: 0,
-		Arg2: 0,
-		Arg3: 0,
-		Arg4: 0,
+		Arg1: arg1,
+		Arg2: arg2,
+		Arg3: arg3,
+		Arg4: arg4,
 	})
 }
 
