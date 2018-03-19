@@ -154,6 +154,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 	for _, a := range self.Auras_battle {
 		if a != nil {
 			a.Reset()
+			self.AddCampaignDetail(CampaignEvent_AuraGet, a.proto.Id, a.proto.Level, 0, 0)
 		}
 	}
 }
@@ -493,9 +494,6 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 		return
 	}
 
-	u.init_campaign(r)
-	r.init_campaign(u)
-
 	self.campaign = &msg.BattleCampaign{
 		APos: u.Pos,
 		DPos: r.Pos,
@@ -505,6 +503,9 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	self.campaign.Details = make([]*msg.CampaignDetail, 0, 0x100)
 	self.campaigns = append(self.campaigns, self.campaign)
 	self.time = 0
+
+	u.init_campaign(r)
+	r.init_campaign(u)
 
 	camp_index := len(self.campaigns)
 	fmt.Println("============== Campaign Begin ==============", camp_index)
