@@ -94,11 +94,11 @@ message BattleUnit {
     uint32  id                  = 2;    // 英雄/怪物ID
     uint32  lv                  = 3;    // 等级
     uint32  pos                 = 4;    // 位置
-    uint32  atk                 = 5;    // 属性：攻击
+    uint32  atk                 = 5;    // 攻击
     uint32  def                 = 6;    // 防御
     uint32  hp                  = 7;    // HP当前
     uint32  crit                = 8;    // 暴击
-    uint32  crit_hurt           = 9;   // 暴伤
+    uint32  crit_hurt           = 9;    // 暴伤
     BattleSkill comm            = 10;   // 普攻
     repeated BattleSkill skill  = 11;   // 技能
     BattleSkill career_general_skill    = 12;   // 主帅技能

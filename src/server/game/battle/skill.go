@@ -65,6 +65,7 @@ func (self *BattleSkill) Cast(u *BattleUnit, time int32) {
 	self.start_time = time
 	self.update_time = time
 	self.onStart()
+	self.owner.AddCampaignDetail(CampaignEvent_Cast, self.proto.Id, self.proto.Level, 0, 0)
 	fmt.Println(u.Name(), "释放了技能:", self.proto.Id, self.proto.Level)
 }
 
@@ -178,5 +179,9 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 		target.Hp = 0
 		fmt.Println(ctx.caster.Name(), " <击杀了> ", ctx.target.Name(), ctx.damage.hurt)
 	}
-
+	var is_crit uint32
+	if ctx.damage.crit {
+		is_crit = 1
+	}
+	target.AddCampaignDetail(CampaignEvent_Hurt, ctx.damage.hurt, is_crit, 0, 0)
 }
