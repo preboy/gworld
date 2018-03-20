@@ -514,7 +514,7 @@ func (self *Battle) do_campaign(u *BattleUnit) {
 	var bout int32
 	for {
 		bout++
-		fmt.Println("场次 回合 时间:", camp_index, bout, self.time)
+		// fmt.Println("场次 回合 时间:", camp_index, bout, self.time)
 
 		u.Update(self.time)
 		r.Update(self.time)
@@ -590,7 +590,7 @@ func (self *Battle) Calc() {
 		self.R = 0
 		fmt.Println("防御方 胜 !!!")
 	}
-	fmt.Println(self.campaigns)
+	// fmt.Println(self.campaigns)
 }
 
 func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg1, arg2, arg3, arg4 uint32) {
