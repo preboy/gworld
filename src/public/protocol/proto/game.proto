@@ -111,10 +111,10 @@ message CampaignDetail {
     uint32 host                 = 1;
     uint32 time                 = 2;
     uint32 flag                 = 3;
-    uint32 arg1                 = 4;
-    uint32 arg2                 = 5;
-    uint32 arg3                 = 6;
-    uint32 arg4                 = 7;
+    int32 arg1                  = 4;
+    int32 arg2                  = 5;
+    int32 arg3                  = 6;
+    int32 arg4                  = 7;
 }
 
 message BattleCampaign {

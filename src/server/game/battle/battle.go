@@ -8,6 +8,7 @@ import (
 // ==================================================
 type BattleEventType uint32
 type CampaignEventType uint32
+type ProertyType int32
 
 const (
 	_                  BattleEventType = 0 + iota
@@ -22,6 +23,16 @@ const (
 	CampaignEvent_AuraGet                                 // 得到光环
 	CampaignEvent_AuraLose                                // 失去光环
 	CampaignEvent_AuraEffect                              // 光环效果
+)
+
+const (
+	_               ProertyType = 0 + iota // 属性类型
+	ProertyHP                              // HP
+	ProertyAtk                             // 攻击
+	ProertyDef                             // 防御
+	ProertyCrit                            // 暴击
+	ProertyCritHurt                        // 暴击伤害
+	ProertyHurtDec                         // 减免伤害
 )
 
 type SkillCfg struct {
@@ -73,7 +84,7 @@ func (self *BattleUnit) Dead() bool {
 	return self.Hp == 0
 }
 
-func (self *BattleUnit) AddCampaignDetail(flag CampaignEventType, arg1, arg2, arg3, arg4 uint32) {
+func (self *BattleUnit) AddCampaignDetail(flag CampaignEventType, arg1, arg2, arg3, arg4 int32) {
 	self.Troop.battle.AddCampaignDetail(self, flag, arg1, arg2, arg3, arg4)
 }
 
@@ -154,7 +165,7 @@ func (self *BattleUnit) init_campaign(r *BattleUnit) {
 	for _, a := range self.Auras_battle {
 		if a != nil {
 			a.Reset()
-			self.AddCampaignDetail(CampaignEvent_AuraGet, a.proto.Id, a.proto.Level, 0, 0)
+			self.AddCampaignDetail(CampaignEvent_AuraGet, int32(a.proto.Id), int32(a.proto.Level), 0, 0)
 		}
 	}
 }
@@ -214,14 +225,14 @@ func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
 	}
 	aura.Init(caster, self)
 	self.Auras_battle = append(self.Auras_battle, aura)
-	self.AddCampaignDetail(CampaignEvent_AuraGet, id, lv, 0, 0)
+	self.AddCampaignDetail(CampaignEvent_AuraGet, int32(id), int32(lv), 0, 0)
 }
 
 func (self *BattleUnit) DelAura(id, lv uint32) {
 	for k, aura := range self.Auras_battle {
 		if aura.proto.Id == id && aura.proto.Level == lv {
 			self.Auras_battle[k] = nil
-			self.AddCampaignDetail(CampaignEvent_AuraLose, id, lv, 0, 0)
+			self.AddCampaignDetail(CampaignEvent_AuraLose, int32(id), int32(lv), 0, 0)
 			return
 		}
 	}
@@ -593,7 +604,7 @@ func (self *Battle) Calc() {
 	// fmt.Println(self.campaigns)
 }
 
-func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg1, arg2, arg3, arg4 uint32) {
+func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg1, arg2, arg3, arg4 int32) {
 	self.campaign.Details = append(self.campaign.Details, &msg.CampaignDetail{
 		Host: u.Pos,
 		Time: uint32(self.time),
