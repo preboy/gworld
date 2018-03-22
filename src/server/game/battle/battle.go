@@ -13,6 +13,7 @@ type ProertyType int32
 const (
 	_                  BattleEventType = 0 + iota
 	BattleEvent_PreAtk                 // 计算攻击之前 (累积光环的附加攻击)
+	BattleEvent_Damage                 // 发出伤害
 	BattleEvent_AftDef                 // 计算防御之后 (抵挡伤害)
 )
 

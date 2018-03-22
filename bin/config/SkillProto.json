@@ -2,215 +2,113 @@
 	{
 		"id" : 1001,
 		"level" : 1,
-		"name" : "技能一",
-		"target" : 1,
+		"name" : "英雄之刃",
+		"passive" : 0,
+		"target" : 2,
+		"last_t" : 1000,
 		"itv_t" : 0,
-		"last_t" : 2000,
-		"cd_t" : 4000,
+		"cd_t" : 2000,
 		"type" : 1,
-		"aura" : [
+		"aura" : [],
+		"attr" : [
 			{
-				"id" : 2001,
-				"lv" : 1
+				"id" : 1,
+				"val" : 100
 			},
 			{
-				"id" : 2002,
-				"lv" : 1
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1001,
-		"level" : 2,
-		"name" : "技能一",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2001,
-				"lv" : 2
+				"id" : 6,
+				"val" : 20
 			},
 			{
-				"id" : 2002,
-				"lv" : 2
+				"id" : 7,
+				"val" : 20
 			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1001,
-		"level" : 3,
-		"name" : "技能一",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2001,
-				"lv" : 1
-			},
-			{
-				"id" : 2002,
-				"lv" : 4
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1001,
-		"level" : 4,
-		"name" : "技能一",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2001,
-				"lv" : 1
-			},
-			{
-				"id" : 2002,
-				"lv" : 4
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1001,
-		"level" : 5,
-		"name" : "技能一",
-		"target" : 1,
-		"itv_t" : 0,
-		"last_t" : 2000,
-		"cd_t" : 4000,
-		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2001,
-				"lv" : 1
-			},
-			{
-				"id" : 2002,
-				"lv" : 5
-			}
-		],
-		"attr" : []
+		]
 	},
 
 	{
 		"id" : 1002,
 		"level" : 1,
-		"name" : "技能二",
+		"name" : "美人斩",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 0,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 1000,
+		"cd_t" : 4000,
 		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 1
-			}
-		],
+		"aura" : [],
 		"attr" : []
 	},
 
 	{
 		"id" : 1002,
 		"level" : 2,
-		"name" : "技能二",
+		"name" : "美人斩",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 0,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 1000,
+		"cd_t" : 4000,
 		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 2
-			}
-		],
+		"aura" : [],
 		"attr" : []
 	},
 
 	{
 		"id" : 1002,
 		"level" : 3,
-		"name" : "技能二",
+		"name" : "美人斩",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 0,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 1000,
+		"cd_t" : 4000,
 		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 3
-			}
-		],
+		"aura" : [],
 		"attr" : []
 	},
 
 	{
 		"id" : 1002,
 		"level" : 4,
-		"name" : "技能二",
+		"name" : "美人斩",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 0,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 1000,
+		"cd_t" : 4000,
 		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 4
-			}
-		],
+		"aura" : [],
 		"attr" : []
 	},
 
 	{
 		"id" : 1002,
 		"level" : 5,
-		"name" : "技能二",
+		"name" : "美人斩",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 0,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 1000,
+		"cd_t" : 4000,
 		"type" : 1,
-		"aura" : [
-			{
-				"id" : 2003,
-				"lv" : 5
-			}
-		],
+		"aura" : [],
 		"attr" : []
 	},
 
 	{
 		"id" : 1003,
 		"level" : 1,
-		"name" : "技能3",
+		"name" : "蛇蝎心",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 1000,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 0,
+		"cd_t" : 5000,
 		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2005,
 				"lv" : 1
 			}
 		],
@@ -233,15 +131,16 @@
 	{
 		"id" : 1003,
 		"level" : 2,
-		"name" : "技能3",
+		"name" : "蛇蝎心",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 1000,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 0,
+		"cd_t" : 5000,
 		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2005,
 				"lv" : 2
 			}
 		],
@@ -264,15 +163,16 @@
 	{
 		"id" : 1003,
 		"level" : 3,
-		"name" : "技能3",
+		"name" : "蛇蝎心",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 1000,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 0,
+		"cd_t" : 5000,
 		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2005,
 				"lv" : 3
 			}
 		],
@@ -295,15 +195,16 @@
 	{
 		"id" : 1003,
 		"level" : 4,
-		"name" : "技能3",
+		"name" : "蛇蝎心",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 1000,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 0,
+		"cd_t" : 5000,
 		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2005,
 				"lv" : 4
 			}
 		],
@@ -326,15 +227,16 @@
 	{
 		"id" : 1003,
 		"level" : 5,
-		"name" : "技能3",
+		"name" : "蛇蝎心",
+		"passive" : 0,
 		"target" : 2,
-		"itv_t" : 1000,
 		"last_t" : 3000,
-		"cd_t" : 6000,
+		"itv_t" : 0,
+		"cd_t" : 5000,
 		"type" : 2,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2005,
 				"lv" : 5
 			}
 		],
@@ -357,15 +259,16 @@
 	{
 		"id" : 1004,
 		"level" : 1,
-		"name" : "技能4",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
 		"cd_t" : 6000,
 		"type" : 1,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2004,
 				"lv" : 1
 			}
 		],
@@ -375,15 +278,16 @@
 	{
 		"id" : 1004,
 		"level" : 2,
-		"name" : "技能4",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
 		"cd_t" : 6000,
 		"type" : 1,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2004,
 				"lv" : 2
 			}
 		],
@@ -393,15 +297,16 @@
 	{
 		"id" : 1004,
 		"level" : 3,
-		"name" : "技能4",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
 		"cd_t" : 6000,
 		"type" : 1,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2004,
 				"lv" : 3
 			}
 		],
@@ -411,15 +316,16 @@
 	{
 		"id" : 1004,
 		"level" : 4,
-		"name" : "技能4",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
 		"cd_t" : 6000,
 		"type" : 1,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2004,
 				"lv" : 4
 			}
 		],
@@ -429,15 +335,16 @@
 	{
 		"id" : 1004,
 		"level" : 5,
-		"name" : "技能4",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
 		"cd_t" : 6000,
 		"type" : 1,
 		"aura" : [
 			{
-				"id" : 2003,
+				"id" : 2004,
 				"lv" : 5
 			}
 		],
@@ -447,91 +354,136 @@
 	{
 		"id" : 1005,
 		"level" : 1,
-		"name" : "技能5",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"aura" : [
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"type" : 0,
+		"aura" : [],
+		"attr" : [
 			{
-				"id" : 2003,
-				"lv" : 1
+				"id" : 1,
+				"val" : 100
+			},
+			{
+				"id" : 6,
+				"val" : 20
+			},
+			{
+				"id" : 7,
+				"val" : 20
 			}
-		],
-		"attr" : []
+		]
 	},
 
 	{
 		"id" : 1005,
 		"level" : 2,
-		"name" : "技能5",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 1,
-		"aura" : [
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"type" : 0,
+		"aura" : [],
+		"attr" : [
 			{
-				"id" : 2003,
-				"lv" : 2
+				"id" : 1,
+				"val" : 100
+			},
+			{
+				"id" : 6,
+				"val" : 20
+			},
+			{
+				"id" : 7,
+				"val" : 21
 			}
-		],
-		"attr" : []
+		]
 	},
 
 	{
 		"id" : 1005,
 		"level" : 3,
-		"name" : "技能5",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"aura" : [
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"type" : 0,
+		"aura" : [],
+		"attr" : [
 			{
-				"id" : 2003,
-				"lv" : 3
+				"id" : 1,
+				"val" : 100
+			},
+			{
+				"id" : 6,
+				"val" : 20
+			},
+			{
+				"id" : 7,
+				"val" : 22
 			}
-		],
-		"attr" : []
+		]
 	},
 
 	{
 		"id" : 1005,
 		"level" : 4,
-		"name" : "技能5",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"aura" : [
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"type" : 0,
+		"aura" : [],
+		"attr" : [
 			{
-				"id" : 2003,
-				"lv" : 4
+				"id" : 1,
+				"val" : 100
+			},
+			{
+				"id" : 6,
+				"val" : 20
+			},
+			{
+				"id" : 7,
+				"val" : 23
 			}
-		],
-		"attr" : []
+		]
 	},
 
 	{
 		"id" : 1005,
 		"level" : 5,
-		"name" : "技能5",
-		"target" : 2,
-		"itv_t" : 1000,
-		"last_t" : 3000,
-		"cd_t" : 6000,
-		"type" : 2,
-		"aura" : [
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"type" : 0,
+		"aura" : [],
+		"attr" : [
 			{
-				"id" : 2003,
-				"lv" : 5
+				"id" : 1,
+				"val" : 100
+			},
+			{
+				"id" : 6,
+				"val" : 20
+			},
+			{
+				"id" : 7,
+				"val" : 23
 			}
-		],
-		"attr" : []
+		]
 	}
 
 ]

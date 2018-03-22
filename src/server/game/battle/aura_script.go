@@ -35,8 +35,11 @@ func RegisterAuraScripts() {
 
 	// 一行一行往下累积
 	register_aura_script(2001, NewAuraScript_2001) // 回春
-	register_aura_script(2002, NewAuraScript_2002) // 回春
-	register_aura_script(2003, NewAuraScript_2003) // 回春
+	register_aura_script(2002, NewAuraScript_2002) // 狂燥
+	register_aura_script(2003, NewAuraScript_2003) // 合欢
+	register_aura_script(2004, NewAuraScript_2004) // 吸血
+	register_aura_script(2005, NewAuraScript_2005) // 掉防
+
 }
 
 func create_aura_script(proto *config.AuraProto) AuraScript {
@@ -153,4 +156,71 @@ func (self *AuraScript_2003) OnEvent(evt BattleEventType, aura *BattleAura, ctx 
 
 func NewAuraScript_2003() AuraScript {
 	return &AuraScript_2003{}
+}
+
+// ============================================================
+/*
+   吸血光环
+*/
+type AuraScript_2004 struct {
+	// 在这里存储每个光环自身的数据
+}
+
+func (self *AuraScript_2004) OnStart(aura *BattleAura) {
+	fmt.Println("AuraScript_2004 OnStart")
+}
+
+func (self *AuraScript_2004) OnUpdate(aura *BattleAura) {
+	fmt.Println("AuraScript_2004 OnUpdate")
+}
+
+func (self *AuraScript_2004) OnFinish(aura *BattleAura) {
+	fmt.Println("AuraScript_2004 OnFinish")
+}
+
+func (self *AuraScript_2004) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+	fmt.Println("AuraScript_2004 Event:", evt)
+	if evt == BattleEvent_Damage {
+		aura.owner.Hp += uint32(aura.proto.Param1)
+		if aura.owner.Hp > aura.owner.Prop.Hp {
+			aura.owner.Hp = aura.owner.Prop.Hp
+		}
+	}
+	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(ProertyHP), aura.proto.Param1, 0, 0)
+}
+
+func NewAuraScript_2004() AuraScript {
+	return &AuraScript_2004{}
+}
+
+// ============================================================
+/*
+   掉防
+*/
+type AuraScript_2005 struct {
+	// 在这里存储每个光环自身的数据
+}
+
+func (self *AuraScript_2005) OnStart(aura *BattleAura) {
+	fmt.Println("AuraScript_2005 OnStart")
+	aura.owner.Prop_addi.Def -= uint32(aura.proto.Param1)
+	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(ProertyDef), -aura.proto.Param1, 0, 0)
+}
+
+func (self *AuraScript_2005) OnUpdate(aura *BattleAura) {
+	fmt.Println("AuraScript_2005 OnUpdate")
+}
+
+func (self *AuraScript_2005) OnFinish(aura *BattleAura) {
+	fmt.Println("AuraScript_2005 OnFinish")
+	aura.owner.Prop_addi.Def += uint32(aura.proto.Param1)
+	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(ProertyDef), +aura.proto.Param1, 0, 0)
+}
+
+func (self *AuraScript_2005) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+	fmt.Println("AuraScript_2005 Event:", evt)
+}
+
+func NewAuraScript_2005() AuraScript {
+	return &AuraScript_2005{}
 }

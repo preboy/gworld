@@ -12,7 +12,6 @@ type AuraProto struct {
 	Name   string `json:"name"`
 	Last_t int32  `json:"last_t"`
 	Itv_t  int32  `json:"itv_t"`
-	Sid    uint32 `json:"sid"`
 	Param1 int32  `json:"param1"`
 	Param2 int32  `json:"param2"`
 	Param3 int32  `json:"param3"`

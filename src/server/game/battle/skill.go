@@ -156,6 +156,13 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 		ctx.damage_send.hurt = hurt * (ctx.caster_prop.CritHurt + ctx.prop_add.CritHurt)
 	}
 
+	// step 2.5: 计算光环
+	for _, aura := range ctx.caster.Auras_battle {
+		if aura != nil {
+			aura.OnEvent(BattleEvent_Damage, ctx)
+		}
+	}
+
 	// step 3: 计算防御
 	hurt = ctx.damage_send.hurt - ctx.target_prop.Def
 	if hurt < 0 {
