@@ -43,10 +43,10 @@ func (self *Player) Go() {
 	go func() {
 		self.run = true
 		self.w.Add(1)        
-        _plrs_live[self.data.Name] = self
+        _plrs_live[self.data.Acct] = self
 
 		defer func() {
-            _plrs_live[self.data.Name] = nil
+            _plrs_live[self.data.Acct] = nil
 			self.w.Done()
 		}()
 
