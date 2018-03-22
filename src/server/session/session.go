@@ -144,6 +144,7 @@ func (self *Session) on_login(packet *tcp.Packet) {
 			res.ErrorCode = err_code.ERR_OK
 		}
 	}
+
 	self.SendPacket(protocol.MSG_SC_LOGIN, &res)
 	if res.ErrorCode == err_code.ERR_OK {
 		self.account = req.Acct

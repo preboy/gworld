@@ -4,6 +4,7 @@ import (
 	"core/db"
 	"core/log"
 	"core/utils"
+	"gopkg.in/mgo.v2"
 	"server/db_mgr"
 	"server/game"
 	"time"
@@ -13,9 +14,12 @@ type TItemTimed map[uint32]uint64 // "20180226" => cnt 表示2018-02-26之后过
 
 type PlayerData struct {
 	// 这里的数据就是要存入DB的数据
-	Name string `bson:nName"`
-	Acct string `bson:"acct"`
-	Pid  uint64 `bson:"pid"`
+	Pid      uint64 `bson:"pid"`
+	Acct     string `bson:"acct"`
+	Name     string `bson:"name"`
+	ShowName string `bson:"show_name"`
+	PlatName string `bson:"plat_name"`
+	ServerID uint32 `bson:"sid"`
 
 	// remark:  map的键必要是字符串  加载之后，写入之前需要特别处理
 	Heros_bson      map[string]*game.Hero `bson:"heros"`       // 英雄
@@ -33,6 +37,11 @@ type PlayerData struct {
 
 func (self *Player) GetData() *PlayerData {
 	return self.data
+}
+
+func (self *PlayerData) SetName(name string) {
+	self.ShowName = name
+	self.Name = utils.U32toa(self.ServerID) + "." + self.Name
 }
 
 func (self *Player) Save() {
@@ -97,34 +106,41 @@ func (self *Player) on_before_save() {
 
 // ------------------ global ------------------
 
-func LoadPlayerData(acct string) (bool, *PlayerData) {
-	var data PlayerData
-	err := db_mgr.GetDB().GetObjectByCond(
+func LoadData() {
+	// 加载DB中所有的玩家
+	arr := []*PlayerData{}
+	err := db_mgr.GetDB().GetAllObjects(
 		db_mgr.Table_name_players,
-		db.Condition{
-			"acct": acct,
-		},
-		&data,
+		&arr,
 	)
-
-	if err == nil {
-		return true, &data
+	if err != nil && err != mgo.ErrNotFound {
+		log.Error("load all PlayerData err :", err)
+		return
 	}
 
-	return false, nil
+	for _, data := range arr {
+		plr := NewPlayer()
+		plr.AssociateData(data)
+	}
+
+	log.Info("[%d] player loaded !", len(arr))
+}
+
+func SaveData() {
+	// 所有玩家存盘
+	// TODO
 }
 
 func CreatePlayerData(acct string) *PlayerData {
-
 	pid := game.GeneralPlayerID()
 	nam := game.GeneralPlayerName(pid)
 
 	data := &PlayerData{
 		Acct:        acct,
 		Pid:         pid,
-		Name:        nam,
 		Last_update: time.Now().Unix() * 1000,
 	}
+	data.SetName(nam)
 
 	return data
 }

@@ -18,6 +18,7 @@ import (
 	"server/game"
 	"server/game/config"
 	"server/net_mgr"
+	"server/player"
 	"server/server"
 )
 
@@ -54,6 +55,8 @@ func main() {
 
 	config.Load()
 
+	player.LoadData()
+
 	main_thread := server.NewServer()
 	main_thread.Start()
 
@@ -82,11 +85,15 @@ func main() {
 	<-quit
 
 	log.Info("server stopping ...")
-
 	main_thread.Stop()
 
+	log.Info("save all player ...")
+	player.SaveData()
+
+	log.Info("save server data ...")
 	game.SaveServerData()
 
+	log.Info("net stopping ...")
 	net_mgr.Stop()
 	schedule.Stop()
 	timer.Stop()
