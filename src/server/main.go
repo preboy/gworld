@@ -85,22 +85,28 @@ func main() {
 	<-quit
 
 	log.Info("server stopping ...")
+
+	log.Info("net_mgr stopping ...")
+	net_mgr.Stop()
+
+	log.Info("main_thread stopping ...")
 	main_thread.Stop()
 
-	log.Info("save all player ...")
+	log.Info("player stopping ...")
 	player.SaveData()
 
 	log.Info("save server data ...")
 	game.SaveServerData()
 
-	log.Info("net stopping ...")
-	net_mgr.Stop()
+	log.Info("schedule stopping ...")
 	schedule.Stop()
+
+	log.Info("timer stopping ...")
 	timer.Stop()
 
+	log.Info("db_mgr stopping ...")
 	db_mgr.Close()
 
 	fmt.Println("server closed")
-
 	log.Stop()
 }
