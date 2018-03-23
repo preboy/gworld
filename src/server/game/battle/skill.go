@@ -191,13 +191,15 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 
 	// step 5: 计算最终伤害
 	ctx.damage.hurt = ctx.damage_recv.hurt - ctx.damage_sub.hurt
+	text := " <伤害了> "
 	if ctx.damage.hurt < target.Hp {
 		target.Hp -= ctx.damage.hurt
-		fmt.Println(ctx.caster.Name(), " <伤害了> ", ctx.target.Name(), ctx.damage.hurt)
 	} else {
 		target.Hp = 0
-		fmt.Println(ctx.caster.Name(), " <击杀了> ", ctx.target.Name(), ctx.damage.hurt)
+		text = " <击杀了> "
 	}
+	fmt.Println(ctx.caster.Name(), text, ctx.target.Name(), ctx.damage.hurt, "[", ctx.caster.Skill_curr.proto.Name, "]")
+
 	var is_crit uint32
 	if ctx.damage.crit {
 		is_crit = 1
