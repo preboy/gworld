@@ -5,10 +5,10 @@
 		"name" : "英雄之刃",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 1,
 		"last_t" : 1000,
 		"itv_t" : 0,
 		"cd_t" : 2000,
-		"type" : 1,
 		"aura" : [],
 		"attr" : [
 			{
@@ -32,10 +32,10 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
 		"cd_t" : 4000,
-		"type" : 1,
 		"aura" : [],
 		"attr" : []
 	},
@@ -46,10 +46,10 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
 		"cd_t" : 4000,
-		"type" : 1,
 		"aura" : [],
 		"attr" : []
 	},
@@ -60,10 +60,10 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
 		"cd_t" : 4000,
-		"type" : 1,
 		"aura" : [],
 		"attr" : []
 	},
@@ -74,10 +74,10 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
 		"cd_t" : 4000,
-		"type" : 1,
 		"aura" : [],
 		"attr" : []
 	},
@@ -88,10 +88,10 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
 		"cd_t" : 4000,
-		"type" : 1,
 		"aura" : [],
 		"attr" : []
 	},
@@ -102,10 +102,10 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
 		"cd_t" : 5000,
-		"type" : 2,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -134,10 +134,10 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
 		"cd_t" : 5000,
-		"type" : 2,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -166,10 +166,10 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
 		"cd_t" : 5000,
-		"type" : 2,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -198,10 +198,10 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
 		"cd_t" : 5000,
-		"type" : 2,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -230,10 +230,10 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
+		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
 		"cd_t" : 5000,
-		"type" : 2,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -262,10 +262,10 @@
 		"name" : "貂蝉之吻",
 		"passive" : 0,
 		"target" : 1,
+		"action" : 1,
 		"last_t" : 2000,
 		"itv_t" : 0,
 		"cd_t" : 6000,
-		"type" : 1,
 		"aura" : [
 			{
 				"id" : 2004,
@@ -281,10 +281,10 @@
 		"name" : "貂蝉之吻",
 		"passive" : 0,
 		"target" : 1,
+		"action" : 1,
 		"last_t" : 2000,
 		"itv_t" : 0,
 		"cd_t" : 6000,
-		"type" : 1,
 		"aura" : [
 			{
 				"id" : 2004,
@@ -300,10 +300,10 @@
 		"name" : "貂蝉之吻",
 		"passive" : 0,
 		"target" : 1,
+		"action" : 1,
 		"last_t" : 2000,
 		"itv_t" : 0,
 		"cd_t" : 6000,
-		"type" : 1,
 		"aura" : [
 			{
 				"id" : 2004,
@@ -319,10 +319,10 @@
 		"name" : "貂蝉之吻",
 		"passive" : 0,
 		"target" : 1,
+		"action" : 1,
 		"last_t" : 2000,
 		"itv_t" : 0,
 		"cd_t" : 6000,
-		"type" : 1,
 		"aura" : [
 			{
 				"id" : 2004,
@@ -338,10 +338,10 @@
 		"name" : "貂蝉之吻",
 		"passive" : 0,
 		"target" : 1,
+		"action" : 1,
 		"last_t" : 2000,
 		"itv_t" : 0,
 		"cd_t" : 6000,
-		"type" : 1,
 		"aura" : [
 			{
 				"id" : 2004,
@@ -357,10 +357,10 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
+		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
-		"type" : 0,
 		"aura" : [],
 		"attr" : [
 			{
@@ -384,10 +384,10 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
+		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
-		"type" : 0,
 		"aura" : [],
 		"attr" : [
 			{
@@ -411,10 +411,10 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
+		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
-		"type" : 0,
 		"aura" : [],
 		"attr" : [
 			{
@@ -438,10 +438,10 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
+		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
-		"type" : 0,
 		"aura" : [],
 		"attr" : [
 			{
@@ -465,10 +465,10 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
+		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
-		"type" : 0,
 		"aura" : [],
 		"attr" : [
 			{

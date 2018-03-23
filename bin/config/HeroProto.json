@@ -1,9 +1,8 @@
 [
 	{
 		"id" : 5001,
-		"name" : "曹操",
 		"level" : 1,
-		"apm" : 20,
+		"name" : "曹操",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -13,16 +12,14 @@
 		"atk" : 100,
 		"def" : 80,
 		"hp" : 1000,
-		"apm" : 6,
 		"crit" : 5,
 		"crit_hurt" : 40
 	},
 
 	{
 		"id" : 5001,
-		"name" : "曹操",
 		"level" : 2,
-		"apm" : 20,
+		"name" : "曹操",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -32,16 +29,14 @@
 		"atk" : 120,
 		"def" : 90,
 		"hp" : 1100,
-		"apm" : 8,
 		"crit" : 5,
 		"crit_hurt" : 45
 	},
 
 	{
 		"id" : 5001,
-		"name" : "曹操",
 		"level" : 3,
-		"apm" : 20,
+		"name" : "曹操",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -51,16 +46,14 @@
 		"atk" : 140,
 		"def" : 100,
 		"hp" : 1200,
-		"apm" : 10,
 		"crit" : 5,
 		"crit_hurt" : 50
 	},
 
 	{
 		"id" : 5001,
-		"name" : "曹操",
 		"level" : 4,
-		"apm" : 20,
+		"name" : "曹操",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -70,16 +63,14 @@
 		"atk" : 160,
 		"def" : 110,
 		"hp" : 1300,
-		"apm" : 12,
 		"crit" : 5,
 		"crit_hurt" : 55
 	},
 
 	{
 		"id" : 5001,
+		"level" : 5,
 		"name" : "曹操",
-		"level" : 5,
-		"apm" : 20,
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -89,16 +80,14 @@
 		"atk" : 180,
 		"def" : 120,
 		"hp" : 1400,
-		"apm" : 14,
 		"crit" : 5,
 		"crit_hurt" : 60
 	},
 
 	{
 		"id" : 5002,
-		"name" : "孙权",
 		"level" : 1,
-		"apm" : 20,
+		"name" : "孙权",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -108,16 +97,14 @@
 		"atk" : 100,
 		"def" : 80,
 		"hp" : 1000,
-		"apm" : 6,
 		"crit" : 5,
 		"crit_hurt" : 40
 	},
 
 	{
 		"id" : 5002,
-		"name" : "孙权",
 		"level" : 2,
-		"apm" : 20,
+		"name" : "孙权",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -127,16 +114,14 @@
 		"atk" : 120,
 		"def" : 90,
 		"hp" : 1100,
-		"apm" : 8,
 		"crit" : 5,
 		"crit_hurt" : 45
 	},
 
 	{
 		"id" : 5002,
-		"name" : "孙权",
 		"level" : 3,
-		"apm" : 20,
+		"name" : "孙权",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -146,16 +131,14 @@
 		"atk" : 140,
 		"def" : 100,
 		"hp" : 1200,
-		"apm" : 10,
 		"crit" : 5,
 		"crit_hurt" : 50
 	},
 
 	{
 		"id" : 5002,
-		"name" : "孙权",
 		"level" : 4,
-		"apm" : 20,
+		"name" : "孙权",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -165,16 +148,14 @@
 		"atk" : 160,
 		"def" : 110,
 		"hp" : 1300,
-		"apm" : 12,
 		"crit" : 5,
 		"crit_hurt" : 55
 	},
 
 	{
 		"id" : 5002,
-		"name" : "孙权",
 		"level" : 5,
-		"apm" : 20,
+		"name" : "孙权",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -184,16 +165,14 @@
 		"atk" : 180,
 		"def" : 120,
 		"hp" : 1400,
-		"apm" : 14,
 		"crit" : 5,
 		"crit_hurt" : 60
 	},
 
 	{
 		"id" : 5003,
-		"name" : "关羽",
 		"level" : 1,
-		"apm" : 20,
+		"name" : "关羽",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -203,16 +182,14 @@
 		"atk" : 100,
 		"def" : 80,
 		"hp" : 1000,
-		"apm" : 6,
 		"crit" : 5,
 		"crit_hurt" : 40
 	},
 
 	{
 		"id" : 5003,
-		"name" : "关羽",
 		"level" : 2,
-		"apm" : 20,
+		"name" : "关羽",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -222,16 +199,14 @@
 		"atk" : 120,
 		"def" : 90,
 		"hp" : 1100,
-		"apm" : 8,
 		"crit" : 5,
 		"crit_hurt" : 45
 	},
 
 	{
 		"id" : 5003,
-		"name" : "关羽",
 		"level" : 3,
-		"apm" : 20,
+		"name" : "关羽",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -241,16 +216,14 @@
 		"atk" : 140,
 		"def" : 100,
 		"hp" : 1200,
-		"apm" : 10,
 		"crit" : 5,
 		"crit_hurt" : 50
 	},
 
 	{
 		"id" : 5003,
-		"name" : "关羽",
 		"level" : 4,
-		"apm" : 20,
+		"name" : "关羽",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -260,16 +233,14 @@
 		"atk" : 160,
 		"def" : 110,
 		"hp" : 1300,
-		"apm" : 12,
 		"crit" : 5,
 		"crit_hurt" : 55
 	},
 
 	{
 		"id" : 5003,
-		"name" : "关羽",
 		"level" : 5,
-		"apm" : 20,
+		"name" : "关羽",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -279,16 +250,14 @@
 		"atk" : 180,
 		"def" : 120,
 		"hp" : 1400,
-		"apm" : 14,
 		"crit" : 5,
 		"crit_hurt" : 60
 	},
 
 	{
 		"id" : 5004,
-		"name" : "魏延",
 		"level" : 1,
-		"apm" : 20,
+		"name" : "魏延",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -298,16 +267,14 @@
 		"atk" : 100,
 		"def" : 80,
 		"hp" : 1000,
-		"apm" : 6,
 		"crit" : 5,
 		"crit_hurt" : 40
 	},
 
 	{
 		"id" : 5004,
-		"name" : "魏延",
 		"level" : 2,
-		"apm" : 20,
+		"name" : "魏延",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -317,16 +284,14 @@
 		"atk" : 120,
 		"def" : 90,
 		"hp" : 1100,
-		"apm" : 8,
 		"crit" : 5,
 		"crit_hurt" : 45
 	},
 
 	{
 		"id" : 5004,
-		"name" : "魏延",
 		"level" : 3,
-		"apm" : 20,
+		"name" : "魏延",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -336,16 +301,14 @@
 		"atk" : 140,
 		"def" : 100,
 		"hp" : 1200,
-		"apm" : 10,
 		"crit" : 5,
 		"crit_hurt" : 50
 	},
 
 	{
 		"id" : 5004,
-		"name" : "魏延",
 		"level" : 4,
-		"apm" : 20,
+		"name" : "魏延",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -355,16 +318,14 @@
 		"atk" : 160,
 		"def" : 110,
 		"hp" : 1300,
-		"apm" : 12,
 		"crit" : 5,
 		"crit_hurt" : 55
 	},
 
 	{
 		"id" : 5004,
-		"name" : "魏延",
 		"level" : 5,
-		"apm" : 20,
+		"name" : "魏延",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -374,16 +335,14 @@
 		"atk" : 180,
 		"def" : 120,
 		"hp" : 1400,
-		"apm" : 14,
 		"crit" : 5,
 		"crit_hurt" : 60
 	},
 
 	{
 		"id" : 5005,
-		"name" : "周瑜",
 		"level" : 1,
-		"apm" : 20,
+		"name" : "周瑜",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -393,16 +352,14 @@
 		"atk" : 100,
 		"def" : 80,
 		"hp" : 1000,
-		"apm" : 6,
 		"crit" : 5,
 		"crit_hurt" : 40
 	},
 
 	{
 		"id" : 5005,
-		"name" : "周瑜",
 		"level" : 2,
-		"apm" : 20,
+		"name" : "周瑜",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -412,16 +369,14 @@
 		"atk" : 120,
 		"def" : 90,
 		"hp" : 1100,
-		"apm" : 8,
 		"crit" : 5,
 		"crit_hurt" : 45
 	},
 
 	{
 		"id" : 5005,
-		"name" : "周瑜",
 		"level" : 3,
-		"apm" : 20,
+		"name" : "周瑜",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -431,16 +386,14 @@
 		"atk" : 140,
 		"def" : 100,
 		"hp" : 1200,
-		"apm" : 10,
 		"crit" : 5,
 		"crit_hurt" : 50
 	},
 
 	{
 		"id" : 5005,
-		"name" : "周瑜",
 		"level" : 4,
-		"apm" : 20,
+		"name" : "周瑜",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -450,16 +403,14 @@
 		"atk" : 160,
 		"def" : 110,
 		"hp" : 1300,
-		"apm" : 12,
 		"crit" : 5,
 		"crit_hurt" : 55
 	},
 
 	{
 		"id" : 5005,
-		"name" : "周瑜",
 		"level" : 5,
-		"apm" : 20,
+		"name" : "周瑜",
 		"skill_common" : [
 			{
 				"id" : 1001,
@@ -469,7 +420,6 @@
 		"atk" : 180,
 		"def" : 120,
 		"hp" : 1400,
-		"apm" : 14,
 		"crit" : 5,
 		"crit_hurt" : 60
 	}

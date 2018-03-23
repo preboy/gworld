@@ -103,24 +103,36 @@ func (self *BattleSkill) onStart() {
 
 func (self *BattleSkill) onUpdate() {
 	target := self.owner.Rival
-	switch self.proto.Type {
-	case 1: // 攻击目标
+
+	switch self.proto.Target {
+	case 1: // 自己
 		{
-			if target == self.owner {
-				fmt.Println("[WARNING]", self.owner.Name(), "要对自己造成伤害", self.proto.Id)
-				return
-			}
-			self.do_attack(target)
-		}
-	case 2: // 加光环
-		{
-			for _, a := range self.proto.Auras {
-				target.AddAura(self.owner, a.Id, a.Lv)
+			if self.proto.Action == 2 {
+				// 给自己加光环
+				for _, a := range self.proto.Auras {
+					self.owner.AddAura(target, a.Id, a.Lv)
+				}
+			} else {
+				fmt.Println("对自己释放的技能配置错误", self.proto)
 			}
 		}
-	default:
+	case 2: // 敌人
 		{
-			fmt.Println("unknown skill type:", self.proto.Type)
+			if self.proto.Action == 1 {
+				// 攻击目标
+				self.do_attack(target)
+			} else if self.proto.Action == 2 {
+				// 给敌人加光环
+				for _, a := range self.proto.Auras {
+					target.AddAura(self.owner, a.Id, a.Lv)
+				}
+			} else {
+				fmt.Println("对敌人释放的技能配置错误", self.proto)
+			}
+		}
+	default: // 未知的对象
+		{
+			fmt.Println("unknown skill target:", self.proto)
 		}
 	}
 }
