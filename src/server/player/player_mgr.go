@@ -22,12 +22,20 @@ var (
 */
 var (
 	// 在内存中的玩家，包括主动上线、从DB中被拉上线的
-	_plrs_sid  = [MAX_PLAYER_COUNT]*Player{} // 运行中的玩家
-	_plrs_pid  = make(map[uint64]*Player)    // pid
-	_plrs_name = make(map[string]*Player)    // name
-	_plrs_acct = make(map[string]*Player)    // acct
-	_plrs_live = make(map[string]*Player)    // 已登录的玩家
+	_plrs_sid  [MAX_PLAYER_COUNT]*Player // 运行中的玩家
+	_plrs_pid  map[uint64]*Player        // pid
+	_plrs_name map[string]*Player        // name
+	_plrs_acct map[string]*Player        // acct
+	_plrs_live map[string]*Player        // 已登录的玩家
 )
+
+func init() {
+	_plrs_sid = [MAX_PLAYER_COUNT]*Player{}
+	_plrs_pid = make(map[uint64]*Player)
+	_plrs_name = make(map[string]*Player)
+	_plrs_acct = make(map[string]*Player)
+	_plrs_live = make(map[string]*Player)
+}
 
 func (self *Player) SetName(name string) {
 	old_name := self.data.Name
