@@ -127,4 +127,5 @@ func EachPlayer(f func(*Player)) {
 	for _, plr := range _plrs_live {
 		f(plr)
 	}
+	_plrs_live = nil
 }

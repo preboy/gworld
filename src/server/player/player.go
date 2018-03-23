@@ -42,11 +42,10 @@ func (self *Player) Go() {
 
 	go func() {
 		self.run = true
-		self.w.Add(1)        
-        _plrs_live[self.data.Acct] = self
+		self.w.Add(1)
+		_plrs_live[self.data.Acct] = self
 
 		defer func() {
-            _plrs_live[self.data.Acct] = nil
 			self.w.Done()
 		}()
 
@@ -71,6 +70,7 @@ func (self *Player) Go() {
 
 		self.on_logout()
 		self.Save()
+		delete(_plrs_live, self.data.Acct)
 
 		println("player.Go exited:", self.data.Name)
 	}()
