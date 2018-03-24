@@ -18,7 +18,7 @@ type ServerData struct {
 	ServerSaveTime int64  `bson:"server_save_time"` // 数据最近保存时间
 	IdSeq          uint32 `bson:"id_seq"`           // 玩家ID序列索引
 	NewFlag        bool   `bson:"-"`                // 新服标识
-	ServerId       uint32 `bson:"server_id"`        // 服务器ID
+	ServerId       uint32 `bson:"server_id"`        // 创建角色的服务器ID
 }
 
 // 加载服务器全局数据
