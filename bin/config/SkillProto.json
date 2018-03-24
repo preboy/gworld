@@ -5,22 +5,21 @@
 		"name" : "英雄之刃",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 1,
 		"last_t" : 1000,
 		"itv_t" : 0,
-		"cd_t" : 2000,
+		"cd_t" : 1000,
 		"aura" : [],
 		"attr" : [
 			{
-				"id" : 1,
+				"id" : 2,
 				"val" : 100
 			},
 			{
-				"id" : 6,
-				"val" : 20
+				"id" : 4,
+				"val" : 10
 			},
 			{
-				"id" : 7,
+				"id" : 5,
 				"val" : 20
 			}
 		]
@@ -32,10 +31,9 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
-		"cd_t" : 4000,
+		"cd_t" : 3000,
 		"aura" : [],
 		"attr" : []
 	},
@@ -46,10 +44,9 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
-		"cd_t" : 4000,
+		"cd_t" : 3000,
 		"aura" : [],
 		"attr" : []
 	},
@@ -60,10 +57,9 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
-		"cd_t" : 4000,
+		"cd_t" : 3000,
 		"aura" : [],
 		"attr" : []
 	},
@@ -74,10 +70,9 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
-		"cd_t" : 4000,
+		"cd_t" : 3000,
 		"aura" : [],
 		"attr" : []
 	},
@@ -88,10 +83,9 @@
 		"name" : "美人斩",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 1,
 		"last_t" : 3000,
 		"itv_t" : 1000,
-		"cd_t" : 4000,
+		"cd_t" : 3000,
 		"aura" : [],
 		"attr" : []
 	},
@@ -102,10 +96,9 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
-		"cd_t" : 5000,
+		"cd_t" : 3000,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -114,15 +107,15 @@
 		],
 		"attr" : [
 			{
-				"id" : 1,
+				"id" : 2,
 				"val" : 100
 			},
 			{
-				"id" : 6,
-				"val" : 20
+				"id" : 4,
+				"val" : 10
 			},
 			{
-				"id" : 7,
+				"id" : 5,
 				"val" : 20
 			}
 		]
@@ -134,10 +127,9 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
-		"cd_t" : 5000,
+		"cd_t" : 3000,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -146,16 +138,16 @@
 		],
 		"attr" : [
 			{
-				"id" : 1,
-				"val" : 100
+				"id" : 2,
+				"val" : 110
 			},
 			{
-				"id" : 6,
-				"val" : 20
+				"id" : 4,
+				"val" : 15
 			},
 			{
-				"id" : 7,
-				"val" : 21
+				"id" : 5,
+				"val" : 25
 			}
 		]
 	},
@@ -166,10 +158,9 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
-		"cd_t" : 5000,
+		"cd_t" : 3000,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -178,16 +169,16 @@
 		],
 		"attr" : [
 			{
-				"id" : 1,
-				"val" : 100
+				"id" : 2,
+				"val" : 120
 			},
 			{
-				"id" : 6,
+				"id" : 4,
 				"val" : 20
 			},
 			{
-				"id" : 7,
-				"val" : 22
+				"id" : 5,
+				"val" : 30
 			}
 		]
 	},
@@ -198,10 +189,9 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
-		"cd_t" : 5000,
+		"cd_t" : 3000,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -210,16 +200,16 @@
 		],
 		"attr" : [
 			{
-				"id" : 1,
-				"val" : 100
+				"id" : 2,
+				"val" : 130
 			},
 			{
-				"id" : 6,
-				"val" : 20
+				"id" : 4,
+				"val" : 25
 			},
 			{
-				"id" : 7,
-				"val" : 23
+				"id" : 5,
+				"val" : 35
 			}
 		]
 	},
@@ -230,10 +220,9 @@
 		"name" : "蛇蝎心",
 		"passive" : 0,
 		"target" : 2,
-		"action" : 2,
 		"last_t" : 3000,
 		"itv_t" : 0,
-		"cd_t" : 5000,
+		"cd_t" : 3000,
 		"aura" : [
 			{
 				"id" : 2005,
@@ -242,192 +231,208 @@
 		],
 		"attr" : [
 			{
-				"id" : 1,
-				"val" : 100
+				"id" : 2,
+				"val" : 140
 			},
 			{
-				"id" : 6,
+				"id" : 4,
+				"val" : 30
+			},
+			{
+				"id" : 5,
+				"val" : 40
+			}
+		]
+	},
+
+	{
+		"id" : 1004,
+		"level" : 1,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
+		"cd_t" : 3000,
+		"aura" : [
+			{
+				"id" : 2004,
+				"lv" : 1
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1004,
+		"level" : 2,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
+		"cd_t" : 3000,
+		"aura" : [
+			{
+				"id" : 2004,
+				"lv" : 2
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1004,
+		"level" : 3,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
+		"cd_t" : 3000,
+		"aura" : [
+			{
+				"id" : 2004,
+				"lv" : 3
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1004,
+		"level" : 4,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
+		"cd_t" : 3000,
+		"aura" : [
+			{
+				"id" : 2004,
+				"lv" : 4
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1004,
+		"level" : 5,
+		"name" : "貂蝉之吻",
+		"passive" : 0,
+		"target" : 1,
+		"last_t" : 2000,
+		"itv_t" : 0,
+		"cd_t" : 3000,
+		"aura" : [
+			{
+				"id" : 2004,
+				"lv" : 5
+			}
+		],
+		"attr" : []
+	},
+
+	{
+		"id" : 1005,
+		"level" : 1,
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"aura" : [],
+		"attr" : [
+			{
+				"id" : 1,
+				"val" : 10
+			},
+			{
+				"id" : 2,
 				"val" : 20
 			},
 			{
-				"id" : 7,
+				"id" : 3,
+				"val" : 30
+			},
+			{
+				"id" : 4,
+				"val" : 4
+			},
+			{
+				"id" : 5,
+				"val" : 5
+			}
+		]
+	},
+
+	{
+		"id" : 1005,
+		"level" : 2,
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"aura" : [],
+		"attr" : [
+			{
+				"id" : 1,
+				"val" : 20
+			},
+			{
+				"id" : 2,
+				"val" : 22
+			},
+			{
+				"id" : 3,
+				"val" : 40
+			},
+			{
+				"id" : 4,
+				"val" : 6
+			},
+			{
+				"id" : 5,
+				"val" : 10
+			}
+		]
+	},
+
+	{
+		"id" : 1005,
+		"level" : 3,
+		"name" : "天使圣光",
+		"passive" : 1,
+		"target" : 0,
+		"last_t" : 0,
+		"itv_t" : 0,
+		"cd_t" : 0,
+		"aura" : [],
+		"attr" : [
+			{
+				"id" : 1,
+				"val" : 30
+			},
+			{
+				"id" : 2,
 				"val" : 24
-			}
-		]
-	},
-
-	{
-		"id" : 1004,
-		"level" : 1,
-		"name" : "貂蝉之吻",
-		"passive" : 0,
-		"target" : 1,
-		"action" : 1,
-		"last_t" : 2000,
-		"itv_t" : 0,
-		"cd_t" : 6000,
-		"aura" : [
-			{
-				"id" : 2004,
-				"lv" : 1
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1004,
-		"level" : 2,
-		"name" : "貂蝉之吻",
-		"passive" : 0,
-		"target" : 1,
-		"action" : 1,
-		"last_t" : 2000,
-		"itv_t" : 0,
-		"cd_t" : 6000,
-		"aura" : [
-			{
-				"id" : 2004,
-				"lv" : 2
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1004,
-		"level" : 3,
-		"name" : "貂蝉之吻",
-		"passive" : 0,
-		"target" : 1,
-		"action" : 1,
-		"last_t" : 2000,
-		"itv_t" : 0,
-		"cd_t" : 6000,
-		"aura" : [
-			{
-				"id" : 2004,
-				"lv" : 3
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1004,
-		"level" : 4,
-		"name" : "貂蝉之吻",
-		"passive" : 0,
-		"target" : 1,
-		"action" : 1,
-		"last_t" : 2000,
-		"itv_t" : 0,
-		"cd_t" : 6000,
-		"aura" : [
-			{
-				"id" : 2004,
-				"lv" : 4
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1004,
-		"level" : 5,
-		"name" : "貂蝉之吻",
-		"passive" : 0,
-		"target" : 1,
-		"action" : 1,
-		"last_t" : 2000,
-		"itv_t" : 0,
-		"cd_t" : 6000,
-		"aura" : [
-			{
-				"id" : 2004,
-				"lv" : 5
-			}
-		],
-		"attr" : []
-	},
-
-	{
-		"id" : 1005,
-		"level" : 1,
-		"name" : "天使圣光",
-		"passive" : 1,
-		"target" : 0,
-		"action" : 0,
-		"last_t" : 0,
-		"itv_t" : 0,
-		"cd_t" : 0,
-		"aura" : [],
-		"attr" : [
-			{
-				"id" : 1,
-				"val" : 100
 			},
 			{
-				"id" : 6,
-				"val" : 20
+				"id" : 3,
+				"val" : 50
 			},
 			{
-				"id" : 7,
-				"val" : 20
-			}
-		]
-	},
-
-	{
-		"id" : 1005,
-		"level" : 2,
-		"name" : "天使圣光",
-		"passive" : 1,
-		"target" : 0,
-		"action" : 0,
-		"last_t" : 0,
-		"itv_t" : 0,
-		"cd_t" : 0,
-		"aura" : [],
-		"attr" : [
-			{
-				"id" : 1,
-				"val" : 100
+				"id" : 4,
+				"val" : 8
 			},
 			{
-				"id" : 6,
-				"val" : 20
-			},
-			{
-				"id" : 7,
-				"val" : 21
-			}
-		]
-	},
-
-	{
-		"id" : 1005,
-		"level" : 3,
-		"name" : "天使圣光",
-		"passive" : 1,
-		"target" : 0,
-		"action" : 0,
-		"last_t" : 0,
-		"itv_t" : 0,
-		"cd_t" : 0,
-		"aura" : [],
-		"attr" : [
-			{
-				"id" : 1,
-				"val" : 100
-			},
-			{
-				"id" : 6,
-				"val" : 20
-			},
-			{
-				"id" : 7,
-				"val" : 22
+				"id" : 5,
+				"val" : 15
 			}
 		]
 	},
@@ -438,7 +443,6 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
-		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
@@ -446,15 +450,23 @@
 		"attr" : [
 			{
 				"id" : 1,
-				"val" : 100
+				"val" : 40
 			},
 			{
-				"id" : 6,
+				"id" : 2,
+				"val" : 25
+			},
+			{
+				"id" : 3,
+				"val" : 60
+			},
+			{
+				"id" : 4,
+				"val" : 10
+			},
+			{
+				"id" : 5,
 				"val" : 20
-			},
-			{
-				"id" : 7,
-				"val" : 23
 			}
 		]
 	},
@@ -465,7 +477,6 @@
 		"name" : "天使圣光",
 		"passive" : 1,
 		"target" : 0,
-		"action" : 0,
 		"last_t" : 0,
 		"itv_t" : 0,
 		"cd_t" : 0,
@@ -473,15 +484,23 @@
 		"attr" : [
 			{
 				"id" : 1,
-				"val" : 100
+				"val" : 50
 			},
 			{
-				"id" : 6,
-				"val" : 20
+				"id" : 2,
+				"val" : 26
 			},
 			{
-				"id" : 7,
-				"val" : 23
+				"id" : 3,
+				"val" : 70
+			},
+			{
+				"id" : 4,
+				"val" : 12
+			},
+			{
+				"id" : 5,
+				"val" : 25
 			}
 		]
 	}

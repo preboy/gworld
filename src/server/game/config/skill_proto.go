@@ -12,7 +12,6 @@ type SkillProto struct {
 	Name    string      `json:"name"`
 	Passive int32       `json:"passive"`
 	Target  uint32      `json:"target"`
-	Action  uint32      `json:"action"`
 	Last_t  int32       `json:"last_t"`
 	Itv_t   int32       `json:"itv_t"`
 	Cd_t    int32       `json:"cd_t"`

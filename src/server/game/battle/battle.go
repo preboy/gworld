@@ -302,29 +302,29 @@ type BattleTroop struct {
 	r_guarder *BattleUnit // 右辅助
 }
 
-func NewBattleTroop(l_pioneer, r_pioneer, l_guarder, m_general, r_guarder *BattleUnit) *BattleTroop {
+func NewBattleTroop(l_pioneer, r_pioneer, m_general, l_guarder, r_guarder *BattleUnit) *BattleTroop {
 	if m_general == nil {
 		return nil
 	}
 
 	troop := &BattleTroop{
-		m_general: m_general,
 		l_pioneer: l_pioneer,
 		r_pioneer: r_pioneer,
+		m_general: m_general,
 		l_guarder: l_guarder,
 		r_guarder: r_guarder,
 	}
 
-	m_general.Troop = troop
 	l_pioneer.Troop = troop
 	r_pioneer.Troop = troop
+	m_general.Troop = troop
 	l_guarder.Troop = troop
 	r_guarder.Troop = troop
 
 	// 加主帅技能
 	s := troop.m_general.career_general_skill
 	if s != nil {
-		skill := NewSkillBattle(s.Id, s.Lv)
+		skill := NewBattleSkill(s.Id, s.Lv)
 		troop.m_general.Skill_exclusive = append(troop.m_general.Skill_exclusive, skill)
 	}
 
@@ -602,6 +602,7 @@ func (self *Battle) Calc() {
 		self.R = 0
 		fmt.Println("防御方 胜 !!!")
 	}
+
 	// fmt.Println(self.campaigns)
 }
 

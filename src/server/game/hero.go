@@ -66,13 +66,13 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	// 普攻
 	if len(proto.Skill_common) > 0 {
 		sc := proto.Skill_common[0]
-		u.Skill_comm = battle.NewSkillBattle(sc.Id, sc.Lv)
+		u.Skill_comm = battle.NewBattleSkill(sc.Id, sc.Lv)
 	}
 
 	// 技能
 	for i := 0; i < 2; i++ {
 		v := &self.Skills[i]
-		skill := battle.NewSkillBattle(v.Id, v.Level)
+		skill := battle.NewBattleSkill(v.Id, v.Level)
 		if skill != nil {
 			u.Skill_exclusive = append(u.Skill_exclusive, skill)
 		}

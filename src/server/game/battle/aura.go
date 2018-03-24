@@ -59,7 +59,7 @@ func (self *BattleAura) Update(time int32) {
 		self.onStart()
 	}
 	if self.proto.Itv_t != 0 {
-		if time-self.update_time > self.proto.Itv_t {
+		if time-self.update_time >= self.proto.Itv_t {
 			self.onUpdate()
 			self.update_time = time
 		}
