@@ -70,7 +70,7 @@ func (self *Player) Go() {
 
 		self.on_logout()
 		self.Save()
-		delete(_plrs_live, self.data.Acct)
+		_plrs_live[self.data.Acct] = nil
 
 		println("player.Go exited:", self.data.Name)
 	}()

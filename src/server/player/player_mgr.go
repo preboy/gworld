@@ -104,8 +104,11 @@ func GetPlayerByAcct(acct string) *Player {
 }
 
 func IsLogin(acct string) bool {
-	_, ok := _plrs_live[acct]
-	return ok
+	plr, ok := _plrs_live[acct]
+	if ok {
+		return plr != nil
+	}
+	return false
 }
 
 func EnterGame(acct string, s ISession) bool {
@@ -133,7 +136,9 @@ func EnterGame(acct string, s ISession) bool {
 
 func EachPlayer(f func(*Player)) {
 	for _, plr := range _plrs_live {
-		f(plr)
+		if plr != nil {
+			f(plr)
+		}
 	}
 	_plrs_live = nil
 }
