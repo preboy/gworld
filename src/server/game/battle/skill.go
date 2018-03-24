@@ -165,7 +165,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit) {
 	ctx.damage_send.crit = false
 	if math.RandomHitn(int(crit), 100) {
 		ctx.damage_send.crit = true
-		ctx.damage_send.hurt = hurt * (ctx.caster_prop.CritHurt + ctx.prop_add.CritHurt)
+		ctx.damage_send.hurt = hurt * (1 + (ctx.caster_prop.CritHurt+ctx.prop_add.CritHurt)/100)
 	}
 
 	// step 2.5: 计算光环
