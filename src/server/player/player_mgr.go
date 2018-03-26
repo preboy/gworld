@@ -32,10 +32,10 @@ var (
 
 func init() {
 	_plrs_sid = [MAX_PLAYER_COUNT]*Player{}
-	_plrs_pid = make(map[uint64]*Player)
-	_plrs_name = make(map[string]*Player)
-	_plrs_acct = make(map[string]*Player)
-	_plrs_live = make(map[string]*Player)
+	_plrs_pid = make(map[uint64]*Player, MAX_PLAYER_COUNT)
+	_plrs_name = make(map[string]*Player, MAX_PLAYER_COUNT)
+	_plrs_acct = make(map[string]*Player, MAX_PLAYER_COUNT)
+	_plrs_live = make(map[string]*Player, MAX_PLAYER_COUNT)
 }
 
 func (self *Player) SetName(name string) {
@@ -143,5 +143,4 @@ func EachPlayer(f func(*Player)) {
 			f(plr)
 		}
 	}
-	_plrs_live = nil
 }
