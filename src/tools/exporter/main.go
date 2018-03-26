@@ -66,7 +66,7 @@ func expand_json_array(field, text string) (string, string) {
 		return field, "[]"
 	}
 
-	str := "[ "
+	str := "["
 	for k, val := range vals {
 		str += val
 		if k != len(vals)-1 {
@@ -235,9 +235,30 @@ func main() {
 
 		for i := 4; i < rows; i++ {
 			row := sheet.Rows[i]
+			esc := false
+			for k, cell := range row.Cells {
+				if k == 0 {
+					first_col := cell.String()
+					if len(first_col) == 0 || first_col[0] == '#' {
+						esc = true
+						break
+					}
+				}
+			}
+			if esc {
+				continue
+			}
+
 			f.WriteString("\t{\n")
 			idx := 0
-			for k, cell := range row.Cells {
+
+			// for k, cell := range row.Cells {
+			for k := 0; k < cols; k++ {
+				cell := ""
+				if k < len(row.Cells) {
+					cell = row.Cells[k].String()
+				}
+
 				if !strings.Contains(sides[k], "j") {
 					continue
 				}
@@ -245,11 +266,11 @@ func main() {
 				idx++
 				var key, text string
 				if types[k] == "map" {
-					key, text = expand_json_map(field[k], cell.String())
+					key, text = expand_json_map(field[k], cell)
 				} else if types[k] == "array" {
-					key, text = expand_json_array(field[k], cell.String())
+					key, text = expand_json_array(field[k], cell)
 				} else {
-					key, text = expand_json_normal(field[k], cell.String())
+					key, text = expand_json_normal(field[k], cell)
 				}
 
 				f.WriteString("\t\t\"" + key + "\" : ")
@@ -287,7 +308,7 @@ func main() {
 		} else {
 			e := err.(*json.SyntaxError)
 			if e != nil {
-				fmt.Printf("%v: hecking Invalid: %v [offset: %v]\n", file_name, e.Error(), e.Offset)
+				fmt.Printf("%v: Checking Invalid: %v [offset: %v]\n", file_name, e.Error(), e.Offset)
 			} else {
 				fmt.Println(file_name+" Checking Invalid: ", err)
 			}
@@ -318,21 +339,41 @@ func main() {
 		for i := 4; i < rows; i++ {
 			row := sheet.Rows[i]
 			key := fmt.Sprintf("\t[%d] = {\n", idx)
+			esc := false
+			for k, cell := range row.Cells {
+				if k == 0 {
+					first_col := cell.String()
+					if len(first_col) == 0 || first_col[0] == '#' {
+						esc = true
+						break
+					}
+				}
+			}
+			if esc {
+				continue
+			}
+
 			idx++
 			f.WriteString(key)
 
-			for k, cell := range row.Cells {
+			// for k, cell := range row.Cells {
+			for k := 0; k < cols; k++ {
+				cell := ""
+				if k < len(row.Cells) {
+					cell = row.Cells[k].String()
+				}
+
 				if !strings.Contains(sides[k], "l") {
 					continue
 				}
 
 				var key, text string
 				if types[k] == "map" {
-					key, text = expand_lua_map(field[k], cell.String())
+					key, text = expand_lua_map(field[k], cell)
 				} else if types[k] == "array" {
-					key, text = expand_lua_array(field[k], cell.String())
+					key, text = expand_lua_array(field[k], cell)
 				} else {
-					key, text = expand_lua_normal(field[k], cell.String())
+					key, text = expand_lua_normal(field[k], cell)
 				}
 
 				f.WriteString("\t\t" + key + " = ")
