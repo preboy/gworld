@@ -55,7 +55,7 @@ func load_item() {
 	log.Info("[ItemProtoConf] load OK")
 }
 
-func (self *ItemProtoConf) ItemProto(id uint32) *ItemProto {
+func (self *ItemProtoConf) GetItemProto(id uint32) *ItemProto {
 	if self.items == nil {
 		return nil
 	}

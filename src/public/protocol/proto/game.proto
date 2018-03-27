@@ -141,3 +141,24 @@ message MakeBattleRequest {
 message MakeBattleResponse {
     BattleResult    result      = 1;    // 战斗结果
 }
+
+// 使用道具
+message UseItemRequest {
+    uint32  id                  = 1;    // 道具ID
+    uint32  cnt                 = 2;    // 数量
+}
+
+message UseItemResponse {
+    uint32    result            = 1;    // 结果
+}
+
+
+message ItemCntInfo {
+    uint32  add                 = 1;    // 0:总量 1:增加 2:减少
+    uint32  id                  = 2;
+    uint64  cnt                 = 3;
+}
+
+message ItemCntChangedNotice {
+    repeated ItemCntInfo info   = 1;
+}

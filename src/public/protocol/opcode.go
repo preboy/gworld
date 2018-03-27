@@ -25,9 +25,14 @@ const (
 
     MSG_CS_Notice           uint16 = 0x000B
     MSG_SC_Notice           uint16 = 0x000C
-    
+
     MSG_CS_MakeBattle       uint16 = 0x000D
     MSG_SC_MakeBattle       uint16 = 0x000E
+    
+    MSG_SC_ItemCntChanged   uint16 = 0x000F
+
+    MSG_CS_UseItem          uint16 = 0x0010
+    MSG_SC_UseItem          uint16 = 0x0011
 
 
     MSG_OTHER               uint16 = iota + 0x1000

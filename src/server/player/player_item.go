@@ -2,18 +2,22 @@ package player
 
 import (
 	_ "core/log"
-	"server/game/config"
+	"public/protocol"
+	"public/protocol/msg"
 )
 
 // 道具是否存在
 
 type ItemProxy struct {
+	msg uint16
 	add map[uint32]uint64
 	sub map[uint32]uint64
 }
 
-func NewItemProxy() *ItemProxy {
-	ib := &ItemProxy{}
+func NewItemProxy(msg uint16) *ItemProxy {
+	ib := &ItemProxy{
+		msg: msg,
+	}
 	ib.add = make(map[uint32]uint64)
 	ib.sub = make(map[uint32]uint64)
 	return ib
@@ -39,40 +43,37 @@ func (self *ItemProxy) Enough(plr *Player) bool {
 }
 
 func (self *ItemProxy) Apply(plr *Player) {
+	res := msg.ItemCntChangedNotice{}
 	Items := plr.data.Items
 	for id, cnt := range self.add {
 		Items[id] += cnt
+		res.Info = append(res.Info, &msg.ItemCntInfo{
+			Add: 1,
+			Id:  id,
+			Cnt: cnt,
+		})
 	}
 	for id, cnt := range self.sub {
 		if Items[id] >= cnt {
 			Items[id] -= cnt
+			res.Info = append(res.Info, &msg.ItemCntInfo{
+				Add: 2,
+				Id:  id,
+				Cnt: cnt,
+			})
 		} else {
 			Items[id] = 0
+			res.Info = append(res.Info, &msg.ItemCntInfo{
+				Add: 2,
+				Id:  id,
+				Cnt: 0,
+			})
 		}
 	}
+
+	plr.SendPacket(protocol.MSG_SC_ItemCntChanged, &res)
 }
 
 func (self *Player) GetItemCnt(id uint32) uint64 {
 	return self.data.Items[id]
-}
-
-// 玩家使用道具(常规道具)
-func (self *Player) DoItem(id uint32, cnt uint64) bool {
-	ip := config.GetItemProtoConf().ItemProto(id)
-	if ip == nil || ip.ScriptID == 0 {
-		return false
-	}
-
-	goods := NewItemProxy()
-	goods.Sub(id, cnt)
-	if !goods.Enough(self) {
-		return false
-	}
-	goods.Apply(self)
-
-	if script, ok := _item_scripts[ip.ScriptID]; ok {
-		script(self, ip.Param1, ip.Param2, ip.Param3, ip.Param4)
-	}
-
-	return true
 }

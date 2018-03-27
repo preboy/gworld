@@ -50,7 +50,7 @@ func (self *Player) on_gm_command(args []string) int32 {
 		}
 	case "item":
 		for i := 1; i < len(args); i++ {
-			ip := NewItemProxy()
+			ip := NewItemProxy(protocol.MSG_CS_GMCommand)
 			item := strings.Split(args[i], "|")
 			id := utils.Atou32(item[0])
 			ct := utils.Atou32(item[1])
