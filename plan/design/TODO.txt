@@ -35,8 +35,5 @@
 	方便测试，人多热闹
 
 
-
-Market
-
 Hero Detail Panel
 
