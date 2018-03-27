@@ -71,7 +71,7 @@
 
 	{
 		"id" : 4106,
-		"name" : "道具名称",
+		"name" : "印度神油",
 		"qulity" : 3,
 		"type_p" : 1,
 		"type_s" : 0,
@@ -85,7 +85,7 @@
 
 	{
 		"id" : 4107,
-		"name" : "道具名称",
+		"name" : "诛仙令",
 		"qulity" : 4,
 		"type_p" : 1,
 		"type_s" : 0,
@@ -99,7 +99,7 @@
 
 	{
 		"id" : 4108,
-		"name" : "道具名称",
+		"name" : "兑换钥匙",
 		"qulity" : 4,
 		"type_p" : 1,
 		"type_s" : 0,
@@ -113,7 +113,7 @@
 
 	{
 		"id" : 4109,
-		"name" : "道具名称",
+		"name" : "请假条",
 		"qulity" : 5,
 		"type_p" : 1,
 		"type_s" : 0,
@@ -127,35 +127,7 @@
 
 	{
 		"id" : 4110,
-		"name" : "道具名称",
-		"qulity" : 5,
-		"type_p" : 1,
-		"type_s" : 0,
-		"usable" : 0,
-		"script_id" : 0,
-		"param1" : 0,
-		"param2" : 0,
-		"param3" : [0],
-		"param4" : ""
-	},
-
-	{
-		"id" : 4111,
-		"name" : "道具名称",
-		"qulity" : 5,
-		"type_p" : 1,
-		"type_s" : 0,
-		"usable" : 0,
-		"script_id" : 0,
-		"param1" : 0,
-		"param2" : 0,
-		"param3" : [0],
-		"param4" : ""
-	},
-
-	{
-		"id" : 4112,
-		"name" : "道具名称",
+		"name" : "减免券",
 		"qulity" : 5,
 		"type_p" : 1,
 		"type_s" : 0,
