@@ -34,6 +34,9 @@ const (
     MSG_CS_UseItem          uint16 = 0x0010
     MSG_SC_UseItem          uint16 = 0x0011
 
+    MSG_CS_MarketBuy        uint16 = 0x0012
+    MSG_SC_MarketBuy        uint16 = 0x0013
+
 
 
     // ---------------------------------------------------------

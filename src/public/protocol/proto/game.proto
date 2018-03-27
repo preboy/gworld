@@ -162,3 +162,13 @@ message ItemCntInfo {
 message ItemCntChangedNotice {
     repeated ItemCntInfo info   = 1;
 }
+
+
+message MarketBuyRequest {
+    uint32  index               = 1;    // 购买的索引
+    uint64  count               = 2;    // 数量
+}
+
+message MarketBuyResponse {
+    uint32 error_code           = 1;
+}
