@@ -7,11 +7,11 @@ import (
 )
 
 type GlobalConf struct {
-	Name  string   `json:"name"`
-	GID   uint32   `json:"gID"`
-	Rate  float64  `json:"rate"`
-	Enc   []*ENC   `json:"enc"`
-	Level []uint32 `json:"level"`
+	Name  string      `json:"name"`
+	GID   uint32      `json:"gID"`
+	Rate  float64     `json:"rate"`
+	Enc   []*ItemConf `json:"enc"`
+	Level []uint32    `json:"level"`
 }
 
 var _GlobalConf *GlobalConf

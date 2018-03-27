@@ -14,6 +14,7 @@ func Load() {
 	load_skill()
 	load_item()
 	load_creature_team()
+	load_market_conf()
 
 	log.Info("Loading Config COMPLETE !!!")
 }

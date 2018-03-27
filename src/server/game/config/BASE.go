@@ -1,8 +1,8 @@
 package config
 
-type ENC struct {
-	ItemId uint32 `json:"Id"`
-	ItemCt uint32 `json:"Cnt"`
+type ItemConf struct {
+	Id  uint32 `json:"id"`
+	Cnt uint32 `json:"cnt"`
 }
 
 type SkillConf struct {
