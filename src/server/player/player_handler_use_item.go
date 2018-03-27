@@ -35,7 +35,7 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 		// 无可用脚本ID
 		script, ok := _item_scripts[ip.ScriptID]
 		if !ok {
-			res.Result = err_code.ERR_ITEM_INVALID_SCRIPTID
+			res.Result = err_code.ERR_ITEM_INVALID_SCRIPT_ID
 			return
 		}
 		// 道具数量是否足够
