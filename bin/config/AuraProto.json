@@ -5,10 +5,11 @@
 		"name" : "回春",
 		"last_t" : 3000,
 		"itv_t" : 1000,
+		"script_id" : 1,
 		"param1" : 20,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -17,10 +18,11 @@
 		"name" : "回春",
 		"last_t" : 4000,
 		"itv_t" : 1000,
+		"script_id" : 1,
 		"param1" : 40,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -29,10 +31,11 @@
 		"name" : "回春",
 		"last_t" : 5000,
 		"itv_t" : 1000,
+		"script_id" : 1,
 		"param1" : 60,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -41,10 +44,11 @@
 		"name" : "回春",
 		"last_t" : 6000,
 		"itv_t" : 1000,
+		"script_id" : 1,
 		"param1" : 80,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -53,10 +57,11 @@
 		"name" : "回春",
 		"last_t" : 7000,
 		"itv_t" : 1000,
+		"script_id" : 1,
 		"param1" : 100,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -65,10 +70,11 @@
 		"name" : "狂燥",
 		"last_t" : 4500,
 		"itv_t" : 0,
+		"script_id" : 2,
 		"param1" : 10,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -77,10 +83,11 @@
 		"name" : "狂燥",
 		"last_t" : 4500,
 		"itv_t" : 0,
+		"script_id" : 2,
 		"param1" : 20,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -89,10 +96,11 @@
 		"name" : "狂燥",
 		"last_t" : 4500,
 		"itv_t" : 0,
+		"script_id" : 2,
 		"param1" : 30,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -101,10 +109,11 @@
 		"name" : "狂燥",
 		"last_t" : 4500,
 		"itv_t" : 0,
+		"script_id" : 2,
 		"param1" : 40,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -113,10 +122,11 @@
 		"name" : "狂燥",
 		"last_t" : 4500,
 		"itv_t" : 0,
+		"script_id" : 2,
 		"param1" : 50,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -125,10 +135,11 @@
 		"name" : "合欢散",
 		"last_t" : 5000,
 		"itv_t" : 0,
+		"script_id" : 3,
 		"param1" : 2,
 		"param2" : 10,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -137,10 +148,11 @@
 		"name" : "合欢散",
 		"last_t" : 6000,
 		"itv_t" : 0,
+		"script_id" : 3,
 		"param1" : 3,
 		"param2" : 15,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -149,10 +161,11 @@
 		"name" : "合欢散",
 		"last_t" : 7000,
 		"itv_t" : 0,
+		"script_id" : 3,
 		"param1" : 4,
 		"param2" : 20,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -161,10 +174,11 @@
 		"name" : "合欢散",
 		"last_t" : 8000,
 		"itv_t" : 0,
+		"script_id" : 3,
 		"param1" : 5,
 		"param2" : 25,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -173,10 +187,11 @@
 		"name" : "合欢散",
 		"last_t" : 9000,
 		"itv_t" : 0,
+		"script_id" : 3,
 		"param1" : 6,
 		"param2" : 30,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -185,10 +200,11 @@
 		"name" : "吸血光环",
 		"last_t" : 4000,
 		"itv_t" : 0,
+		"script_id" : 4,
 		"param1" : 10,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -197,10 +213,11 @@
 		"name" : "吸血光环",
 		"last_t" : 4000,
 		"itv_t" : 0,
+		"script_id" : 4,
 		"param1" : 20,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -209,10 +226,11 @@
 		"name" : "吸血光环",
 		"last_t" : 4000,
 		"itv_t" : 0,
+		"script_id" : 4,
 		"param1" : 30,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -221,10 +239,11 @@
 		"name" : "吸血光环",
 		"last_t" : 4000,
 		"itv_t" : 0,
+		"script_id" : 4,
 		"param1" : 40,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -233,10 +252,11 @@
 		"name" : "吸血光环",
 		"last_t" : 4000,
 		"itv_t" : 0,
+		"script_id" : 4,
 		"param1" : 50,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -245,10 +265,11 @@
 		"name" : "掉防光环",
 		"last_t" : 3000,
 		"itv_t" : 0,
+		"script_id" : 5,
 		"param1" : 7,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -257,10 +278,11 @@
 		"name" : "掉防光环",
 		"last_t" : 3000,
 		"itv_t" : 0,
+		"script_id" : 5,
 		"param1" : 9,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -269,10 +291,11 @@
 		"name" : "掉防光环",
 		"last_t" : 3000,
 		"itv_t" : 0,
+		"script_id" : 5,
 		"param1" : 11,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -281,10 +304,11 @@
 		"name" : "掉防光环",
 		"last_t" : 3000,
 		"itv_t" : 0,
+		"script_id" : 5,
 		"param1" : 13,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
@@ -293,10 +317,11 @@
 		"name" : "掉防光环",
 		"last_t" : 3000,
 		"itv_t" : 0,
+		"script_id" : 5,
 		"param1" : 15,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	}
 
 ]

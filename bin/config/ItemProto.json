@@ -1,158 +1,170 @@
 [
 	{
 		"id" : 4001,
-		"name" : "石头",
+		"name" : "元宝",
 		"qulity" : 1,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 1,
+		"usable" : 0,
+		"script_id" : 1,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0, 0],
+		"param4" : ""
 	},
 
 	{
 		"id" : 4002,
-		"name" : "木材",
+		"name" : "黄金",
 		"qulity" : 1,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 2,
+		"usable" : 0,
+		"script_id" : 2,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4003,
-		"name" : "食物",
+		"id" : 4103,
+		"name" : "英雄经验丹",
 		"qulity" : 2,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 3,
+		"usable" : 0,
+		"script_id" : 3,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4004,
-		"name" : "水",
+		"id" : 4104,
+		"name" : "VIP经验丹",
 		"qulity" : 2,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 1,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4005,
-		"name" : "矿",
+		"id" : 4105,
+		"name" : "黄金大礼包",
 		"qulity" : 3,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 1,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4006,
+		"id" : 4106,
 		"name" : "道具名称",
 		"qulity" : 3,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4007,
+		"id" : 4107,
 		"name" : "道具名称",
 		"qulity" : 4,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4008,
+		"id" : 4108,
 		"name" : "道具名称",
 		"qulity" : 4,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4009,
+		"id" : 4109,
 		"name" : "道具名称",
 		"qulity" : 5,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4010,
+		"id" : 4110,
 		"name" : "道具名称",
 		"qulity" : 5,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4011,
+		"id" : 4111,
 		"name" : "道具名称",
 		"qulity" : 5,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	},
 
 	{
-		"id" : 4012,
+		"id" : 4112,
 		"name" : "道具名称",
 		"qulity" : 5,
 		"type_p" : 1,
 		"type_s" : 0,
-		"sid" : 0,
+		"usable" : 0,
+		"script_id" : 0,
 		"param1" : 0,
 		"param2" : 0,
-		"param3" : 0,
-		"param4" : 0
+		"param3" : [0],
+		"param4" : ""
 	}
 
 ]

@@ -59,7 +59,7 @@ func (self *Player) GetItemCnt(id uint32) uint64 {
 // 玩家使用道具(常规道具)
 func (self *Player) DoItem(id uint32, cnt uint64) bool {
 	ip := config.GetItemProtoConf().ItemProto(id)
-	if ip == nil || ip.Sid == 0 {
+	if ip == nil || ip.ScriptID == 0 {
 		return false
 	}
 
@@ -70,7 +70,7 @@ func (self *Player) DoItem(id uint32, cnt uint64) bool {
 	}
 	goods.Apply(self)
 
-	if script, ok := _item_scripts[ip.Sid]; ok {
+	if script, ok := _item_scripts[ip.ScriptID]; ok {
 		script(self, ip.Param1, ip.Param2, ip.Param3, ip.Param4)
 	}
 

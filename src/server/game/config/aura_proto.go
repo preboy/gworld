@@ -7,15 +7,16 @@ import (
 )
 
 type AuraProto struct {
-	Id     uint32 `json:"id"`
-	Level  uint32 `json:"level"`
-	Name   string `json:"name"`
-	Last_t int32  `json:"last_t"`
-	Itv_t  int32  `json:"itv_t"`
-	Param1 int32  `json:"param1"`
-	Param2 int32  `json:"param2"`
-	Param3 int32  `json:"param3"`
-	Param4 int32  `json:"param4"`
+	Id       uint32  `json:"id"`
+	Level    uint32  `json:"level"`
+	Name     string  `json:"name"`
+	Last_t   int32   `json:"last_t"`
+	Itv_t    int32   `json:"itv_t"`
+	ScriptID uint32  `json:"script_id"`
+	Param1   int32   `json:"param1"`
+	Param2   int32   `json:"param2"`
+	Param3   []int32 `json:"param3"`
+	Param4   string  `json:"param4"`
 }
 
 type AuraProtoConf struct {
