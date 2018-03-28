@@ -1,5 +1,9 @@
 package battle
 
+import (
+	"server/game/config"
+)
+
 type Property struct {
 	Hp       uint32 // HP上限
 	Atk      uint32 // 攻击
@@ -18,3 +22,39 @@ const (
 	AttrType_Crit                         // 4 暴击
 	AttrType_CritHurt                     // 5 暴击伤害
 )
+
+func (self *Property) AddAttrs(attrs []*config.AttrConf) {
+	for _, v := range attrs {
+		switch AttrType(v.Id) {
+		case AttrType_HP:
+			{
+				self.Hp += v.Val
+			}
+		case AttrType_Atk:
+			{
+				self.Atk += v.Val
+			}
+		case AttrType_Def:
+			{
+				self.Def += v.Val
+			}
+		case AttrType_Crit:
+			{
+				self.Crit += v.Val
+			}
+		case AttrType_CritHurt:
+			{
+				self.CritHurt += v.Val
+			}
+		default:
+		}
+	}
+}
+
+func (self *Property) AddProperty(p *Property) {
+	self.Hp += p.Hp
+	self.Atk += p.Atk
+	self.Def += p.Def
+	self.Crit += p.Crit
+	self.CritHurt += p.CritHurt
+}

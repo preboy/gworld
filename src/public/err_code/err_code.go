@@ -1,6 +1,7 @@
 package err_code
 
 const (
+	// 通用
 	ERR_OK                     uint32 = iota // 无错误
 	ERR_FAILED                               // 操作失败
 	ERR_LOGIN_FAILED                         // 用户名、密码不正确
@@ -11,5 +12,7 @@ const (
 	ERR_ITEM_UNUSABLE                        // 不可使用的道具
 	ERR_ITEM_INVALID_SCRIPT_ID               // 脚本ID不可用
 	ERR_ITEM_INVALID_CONFIG                  // 未找到配置
+
+	// 功能错误码
 	ERR_END
 )

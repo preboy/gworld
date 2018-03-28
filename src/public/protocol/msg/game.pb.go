@@ -10,7 +10,6 @@
 	It has these top-level messages:
 		PlayerDataRequest
 		Item
-		Equipment
 		Skill
 		Aura
 		Hero
@@ -101,40 +100,15 @@ func (m *Item) GetCnt() int64 {
 	return 0
 }
 
-type Equipment struct {
-	Quality uint32 `protobuf:"varint,1,opt,name=quality,proto3" json:"quality,omitempty"`
-	Level   uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
-}
-
-func (m *Equipment) Reset()                    { *m = Equipment{} }
-func (m *Equipment) String() string            { return proto.CompactTextString(m) }
-func (*Equipment) ProtoMessage()               {}
-func (*Equipment) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{2} }
-
-func (m *Equipment) GetQuality() uint32 {
-	if m != nil {
-		return m.Quality
-	}
-	return 0
-}
-
-func (m *Equipment) GetLevel() uint32 {
-	if m != nil {
-		return m.Level
-	}
-	return 0
-}
-
 type Skill struct {
-	Id       uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Level    uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
-	EffectId uint32 `protobuf:"varint,3,opt,name=effectId,proto3" json:"effectId,omitempty"`
+	Id    uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Level uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
 }
 
 func (m *Skill) Reset()                    { *m = Skill{} }
 func (m *Skill) String() string            { return proto.CompactTextString(m) }
 func (*Skill) ProtoMessage()               {}
-func (*Skill) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{3} }
+func (*Skill) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{2} }
 
 func (m *Skill) GetId() uint32 {
 	if m != nil {
@@ -150,13 +124,6 @@ func (m *Skill) GetLevel() uint32 {
 	return 0
 }
 
-func (m *Skill) GetEffectId() uint32 {
-	if m != nil {
-		return m.EffectId
-	}
-	return 0
-}
-
 type Aura struct {
 	Id    uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Level uint32 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
@@ -165,7 +132,7 @@ type Aura struct {
 func (m *Aura) Reset()                    { *m = Aura{} }
 func (m *Aura) String() string            { return proto.CompactTextString(m) }
 func (*Aura) ProtoMessage()               {}
-func (*Aura) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{4} }
+func (*Aura) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{3} }
 
 func (m *Aura) GetId() uint32 {
 	if m != nil {
@@ -182,22 +149,24 @@ func (m *Aura) GetLevel() uint32 {
 }
 
 type Hero struct {
-	Id         uint32       `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Level      uint32       `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
-	Quality    uint32       `protobuf:"varint,3,opt,name=quality,proto3" json:"quality,omitempty"`
-	Power      uint32       `protobuf:"varint,4,opt,name=power,proto3" json:"power,omitempty"`
-	Equips     []*Equipment `protobuf:"bytes,5,rep,name=equips" json:"equips,omitempty"`
-	Skills     []*Skill     `protobuf:"bytes,6,rep,name=skills" json:"skills,omitempty"`
-	Auras      []*Aura      `protobuf:"bytes,7,rep,name=auras" json:"auras,omitempty"`
-	Status     uint32       `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
-	StatusData uint32       `protobuf:"varint,9,opt,name=statusData,proto3" json:"statusData,omitempty"`
-	Dead       bool         `protobuf:"varint,10,opt,name=dead,proto3" json:"dead,omitempty"`
+	Id           uint32   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Level        uint32   `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+	Exp          uint32   `protobuf:"varint,3,opt,name=exp,proto3" json:"exp,omitempty"`
+	Refine       uint32   `protobuf:"varint,4,opt,name=refine,proto3" json:"refine,omitempty"`
+	RefineTimes  uint32   `protobuf:"varint,5,opt,name=refineTimes,proto3" json:"refineTimes,omitempty"`
+	RefineSuper  bool     `protobuf:"varint,6,opt,name=refineSuper,proto3" json:"refineSuper,omitempty"`
+	Active       []*Skill `protobuf:"bytes,7,rep,name=active" json:"active,omitempty"`
+	Passive      []*Skill `protobuf:"bytes,8,rep,name=passive" json:"passive,omitempty"`
+	Power        uint32   `protobuf:"varint,9,opt,name=power,proto3" json:"power,omitempty"`
+	Status       uint32   `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
+	LifePoint    uint32   `protobuf:"varint,11,opt,name=lifePoint,proto3" json:"lifePoint,omitempty"`
+	LifePointMax uint32   `protobuf:"varint,12,opt,name=lifePointMax,proto3" json:"lifePointMax,omitempty"`
 }
 
 func (m *Hero) Reset()                    { *m = Hero{} }
 func (m *Hero) String() string            { return proto.CompactTextString(m) }
 func (*Hero) ProtoMessage()               {}
-func (*Hero) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{5} }
+func (*Hero) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{4} }
 
 func (m *Hero) GetId() uint32 {
 	if m != nil {
@@ -213,11 +182,46 @@ func (m *Hero) GetLevel() uint32 {
 	return 0
 }
 
-func (m *Hero) GetQuality() uint32 {
+func (m *Hero) GetExp() uint32 {
 	if m != nil {
-		return m.Quality
+		return m.Exp
 	}
 	return 0
+}
+
+func (m *Hero) GetRefine() uint32 {
+	if m != nil {
+		return m.Refine
+	}
+	return 0
+}
+
+func (m *Hero) GetRefineTimes() uint32 {
+	if m != nil {
+		return m.RefineTimes
+	}
+	return 0
+}
+
+func (m *Hero) GetRefineSuper() bool {
+	if m != nil {
+		return m.RefineSuper
+	}
+	return false
+}
+
+func (m *Hero) GetActive() []*Skill {
+	if m != nil {
+		return m.Active
+	}
+	return nil
+}
+
+func (m *Hero) GetPassive() []*Skill {
+	if m != nil {
+		return m.Passive
+	}
+	return nil
 }
 
 func (m *Hero) GetPower() uint32 {
@@ -227,27 +231,6 @@ func (m *Hero) GetPower() uint32 {
 	return 0
 }
 
-func (m *Hero) GetEquips() []*Equipment {
-	if m != nil {
-		return m.Equips
-	}
-	return nil
-}
-
-func (m *Hero) GetSkills() []*Skill {
-	if m != nil {
-		return m.Skills
-	}
-	return nil
-}
-
-func (m *Hero) GetAuras() []*Aura {
-	if m != nil {
-		return m.Auras
-	}
-	return nil
-}
-
 func (m *Hero) GetStatus() uint32 {
 	if m != nil {
 		return m.Status
@@ -255,18 +238,18 @@ func (m *Hero) GetStatus() uint32 {
 	return 0
 }
 
-func (m *Hero) GetStatusData() uint32 {
+func (m *Hero) GetLifePoint() uint32 {
 	if m != nil {
-		return m.StatusData
+		return m.LifePoint
 	}
 	return 0
 }
 
-func (m *Hero) GetDead() bool {
+func (m *Hero) GetLifePointMax() uint32 {
 	if m != nil {
-		return m.Dead
+		return m.LifePointMax
 	}
-	return false
+	return 0
 }
 
 type PlayerDataResponse struct {
@@ -286,7 +269,7 @@ type PlayerDataResponse struct {
 func (m *PlayerDataResponse) Reset()                    { *m = PlayerDataResponse{} }
 func (m *PlayerDataResponse) String() string            { return proto.CompactTextString(m) }
 func (*PlayerDataResponse) ProtoMessage()               {}
-func (*PlayerDataResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{6} }
+func (*PlayerDataResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{5} }
 
 func (m *PlayerDataResponse) GetAcct() string {
 	if m != nil {
@@ -372,7 +355,7 @@ type GMCommandRequest struct {
 func (m *GMCommandRequest) Reset()                    { *m = GMCommandRequest{} }
 func (m *GMCommandRequest) String() string            { return proto.CompactTextString(m) }
 func (*GMCommandRequest) ProtoMessage()               {}
-func (*GMCommandRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{7} }
+func (*GMCommandRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{6} }
 
 func (m *GMCommandRequest) GetCommand() string {
 	if m != nil {
@@ -388,7 +371,7 @@ type GMCommandResponse struct {
 func (m *GMCommandResponse) Reset()                    { *m = GMCommandResponse{} }
 func (m *GMCommandResponse) String() string            { return proto.CompactTextString(m) }
 func (*GMCommandResponse) ProtoMessage()               {}
-func (*GMCommandResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{8} }
+func (*GMCommandResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{7} }
 
 func (m *GMCommandResponse) GetResult() int32 {
 	if m != nil {
@@ -405,7 +388,7 @@ type NoticeRequest struct {
 func (m *NoticeRequest) Reset()                    { *m = NoticeRequest{} }
 func (m *NoticeRequest) String() string            { return proto.CompactTextString(m) }
 func (*NoticeRequest) ProtoMessage()               {}
-func (*NoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{9} }
+func (*NoticeRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{8} }
 
 func (m *NoticeRequest) GetFlag() int32 {
 	if m != nil {
@@ -429,7 +412,7 @@ type NoticeResponse struct {
 func (m *NoticeResponse) Reset()                    { *m = NoticeResponse{} }
 func (m *NoticeResponse) String() string            { return proto.CompactTextString(m) }
 func (*NoticeResponse) ProtoMessage()               {}
-func (*NoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{10} }
+func (*NoticeResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{9} }
 
 func (m *NoticeResponse) GetFlag() int32 {
 	if m != nil {
@@ -453,7 +436,7 @@ type BattleSkill struct {
 func (m *BattleSkill) Reset()                    { *m = BattleSkill{} }
 func (m *BattleSkill) String() string            { return proto.CompactTextString(m) }
 func (*BattleSkill) ProtoMessage()               {}
-func (*BattleSkill) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{11} }
+func (*BattleSkill) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{10} }
 
 func (m *BattleSkill) GetId() uint32 {
 	if m != nil {
@@ -477,7 +460,7 @@ type BattleAura struct {
 func (m *BattleAura) Reset()                    { *m = BattleAura{} }
 func (m *BattleAura) String() string            { return proto.CompactTextString(m) }
 func (*BattleAura) ProtoMessage()               {}
-func (*BattleAura) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{12} }
+func (*BattleAura) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{11} }
 
 func (m *BattleAura) GetId() uint32 {
 	if m != nil {
@@ -513,7 +496,7 @@ type BattleUnit struct {
 func (m *BattleUnit) Reset()                    { *m = BattleUnit{} }
 func (m *BattleUnit) String() string            { return proto.CompactTextString(m) }
 func (*BattleUnit) ProtoMessage()               {}
-func (*BattleUnit) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{13} }
+func (*BattleUnit) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{12} }
 
 func (m *BattleUnit) GetType() uint32 {
 	if m != nil {
@@ -626,7 +609,7 @@ type CampaignDetail struct {
 func (m *CampaignDetail) Reset()                    { *m = CampaignDetail{} }
 func (m *CampaignDetail) String() string            { return proto.CompactTextString(m) }
 func (*CampaignDetail) ProtoMessage()               {}
-func (*CampaignDetail) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{14} }
+func (*CampaignDetail) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{13} }
 
 func (m *CampaignDetail) GetHost() uint32 {
 	if m != nil {
@@ -690,7 +673,7 @@ type BattleCampaign struct {
 func (m *BattleCampaign) Reset()                    { *m = BattleCampaign{} }
 func (m *BattleCampaign) String() string            { return proto.CompactTextString(m) }
 func (*BattleCampaign) ProtoMessage()               {}
-func (*BattleCampaign) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{15} }
+func (*BattleCampaign) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{14} }
 
 func (m *BattleCampaign) GetAPos() uint32 {
 	if m != nil {
@@ -750,7 +733,7 @@ type BattleResult struct {
 func (m *BattleResult) Reset()                    { *m = BattleResult{} }
 func (m *BattleResult) String() string            { return proto.CompactTextString(m) }
 func (*BattleResult) ProtoMessage()               {}
-func (*BattleResult) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{16} }
+func (*BattleResult) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{15} }
 
 func (m *BattleResult) GetUnits() []*BattleUnit {
 	if m != nil {
@@ -780,7 +763,7 @@ type MakeBattleRequest struct {
 func (m *MakeBattleRequest) Reset()                    { *m = MakeBattleRequest{} }
 func (m *MakeBattleRequest) String() string            { return proto.CompactTextString(m) }
 func (*MakeBattleRequest) ProtoMessage()               {}
-func (*MakeBattleRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{17} }
+func (*MakeBattleRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{16} }
 
 func (m *MakeBattleRequest) GetId() uint32 {
 	if m != nil {
@@ -796,7 +779,7 @@ type MakeBattleResponse struct {
 func (m *MakeBattleResponse) Reset()                    { *m = MakeBattleResponse{} }
 func (m *MakeBattleResponse) String() string            { return proto.CompactTextString(m) }
 func (*MakeBattleResponse) ProtoMessage()               {}
-func (*MakeBattleResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{18} }
+func (*MakeBattleResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{17} }
 
 func (m *MakeBattleResponse) GetResult() *BattleResult {
 	if m != nil {
@@ -814,7 +797,7 @@ type UseItemRequest struct {
 func (m *UseItemRequest) Reset()                    { *m = UseItemRequest{} }
 func (m *UseItemRequest) String() string            { return proto.CompactTextString(m) }
 func (*UseItemRequest) ProtoMessage()               {}
-func (*UseItemRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{19} }
+func (*UseItemRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{18} }
 
 func (m *UseItemRequest) GetId() uint32 {
 	if m != nil {
@@ -837,7 +820,7 @@ type UseItemResponse struct {
 func (m *UseItemResponse) Reset()                    { *m = UseItemResponse{} }
 func (m *UseItemResponse) String() string            { return proto.CompactTextString(m) }
 func (*UseItemResponse) ProtoMessage()               {}
-func (*UseItemResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{20} }
+func (*UseItemResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{19} }
 
 func (m *UseItemResponse) GetResult() uint32 {
 	if m != nil {
@@ -855,7 +838,7 @@ type ItemCntInfo struct {
 func (m *ItemCntInfo) Reset()                    { *m = ItemCntInfo{} }
 func (m *ItemCntInfo) String() string            { return proto.CompactTextString(m) }
 func (*ItemCntInfo) ProtoMessage()               {}
-func (*ItemCntInfo) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{21} }
+func (*ItemCntInfo) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{20} }
 
 func (m *ItemCntInfo) GetAdd() uint32 {
 	if m != nil {
@@ -885,7 +868,7 @@ type ItemCntChangedNotice struct {
 func (m *ItemCntChangedNotice) Reset()                    { *m = ItemCntChangedNotice{} }
 func (m *ItemCntChangedNotice) String() string            { return proto.CompactTextString(m) }
 func (*ItemCntChangedNotice) ProtoMessage()               {}
-func (*ItemCntChangedNotice) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{22} }
+func (*ItemCntChangedNotice) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{21} }
 
 func (m *ItemCntChangedNotice) GetInfo() []*ItemCntInfo {
 	if m != nil {
@@ -902,7 +885,7 @@ type MarketBuyRequest struct {
 func (m *MarketBuyRequest) Reset()                    { *m = MarketBuyRequest{} }
 func (m *MarketBuyRequest) String() string            { return proto.CompactTextString(m) }
 func (*MarketBuyRequest) ProtoMessage()               {}
-func (*MarketBuyRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{23} }
+func (*MarketBuyRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{22} }
 
 func (m *MarketBuyRequest) GetIndex() uint32 {
 	if m != nil {
@@ -925,7 +908,7 @@ type MarketBuyResponse struct {
 func (m *MarketBuyResponse) Reset()                    { *m = MarketBuyResponse{} }
 func (m *MarketBuyResponse) String() string            { return proto.CompactTextString(m) }
 func (*MarketBuyResponse) ProtoMessage()               {}
-func (*MarketBuyResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{24} }
+func (*MarketBuyResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{23} }
 
 func (m *MarketBuyResponse) GetErrorCode() uint32 {
 	if m != nil {
@@ -937,7 +920,6 @@ func (m *MarketBuyResponse) GetErrorCode() uint32 {
 func init() {
 	proto.RegisterType((*PlayerDataRequest)(nil), "msg.PlayerDataRequest")
 	proto.RegisterType((*Item)(nil), "msg.Item")
-	proto.RegisterType((*Equipment)(nil), "msg.Equipment")
 	proto.RegisterType((*Skill)(nil), "msg.Skill")
 	proto.RegisterType((*Aura)(nil), "msg.Aura")
 	proto.RegisterType((*Hero)(nil), "msg.Hero")
@@ -1017,34 +999,6 @@ func (m *Item) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
-func (m *Equipment) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *Equipment) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.Quality != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.Quality))
-	}
-	if m.Level != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.Level))
-	}
-	return i, nil
-}
-
 func (m *Skill) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1069,11 +1023,6 @@ func (m *Skill) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0x10
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Level))
-	}
-	if m.EffectId != 0 {
-		dAtA[i] = 0x18
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.EffectId))
 	}
 	return i, nil
 }
@@ -1131,42 +1080,33 @@ func (m *Hero) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Level))
 	}
-	if m.Quality != 0 {
+	if m.Exp != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.Quality))
+		i = encodeVarintGame(dAtA, i, uint64(m.Exp))
 	}
-	if m.Power != 0 {
+	if m.Refine != 0 {
 		dAtA[i] = 0x20
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.Power))
+		i = encodeVarintGame(dAtA, i, uint64(m.Refine))
 	}
-	if len(m.Equips) > 0 {
-		for _, msg := range m.Equips {
-			dAtA[i] = 0x2a
-			i++
-			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
+	if m.RefineTimes != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.RefineTimes))
+	}
+	if m.RefineSuper {
+		dAtA[i] = 0x30
+		i++
+		if m.RefineSuper {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
 		}
+		i++
 	}
-	if len(m.Skills) > 0 {
-		for _, msg := range m.Skills {
-			dAtA[i] = 0x32
-			i++
-			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	if len(m.Auras) > 0 {
-		for _, msg := range m.Auras {
+	if len(m.Active) > 0 {
+		for _, msg := range m.Active {
 			dAtA[i] = 0x3a
 			i++
 			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
@@ -1177,25 +1117,37 @@ func (m *Hero) MarshalTo(dAtA []byte) (int, error) {
 			i += n
 		}
 	}
+	if len(m.Passive) > 0 {
+		for _, msg := range m.Passive {
+			dAtA[i] = 0x42
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if m.Power != 0 {
+		dAtA[i] = 0x48
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Power))
+	}
 	if m.Status != 0 {
-		dAtA[i] = 0x40
+		dAtA[i] = 0x50
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Status))
 	}
-	if m.StatusData != 0 {
-		dAtA[i] = 0x48
+	if m.LifePoint != 0 {
+		dAtA[i] = 0x58
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.StatusData))
+		i = encodeVarintGame(dAtA, i, uint64(m.LifePoint))
 	}
-	if m.Dead {
-		dAtA[i] = 0x50
+	if m.LifePointMax != 0 {
+		dAtA[i] = 0x60
 		i++
-		if m.Dead {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.LifePointMax))
 	}
 	return i, nil
 }
@@ -1991,18 +1943,6 @@ func (m *Item) Size() (n int) {
 	return n
 }
 
-func (m *Equipment) Size() (n int) {
-	var l int
-	_ = l
-	if m.Quality != 0 {
-		n += 1 + sovGame(uint64(m.Quality))
-	}
-	if m.Level != 0 {
-		n += 1 + sovGame(uint64(m.Level))
-	}
-	return n
-}
-
 func (m *Skill) Size() (n int) {
 	var l int
 	_ = l
@@ -2011,9 +1951,6 @@ func (m *Skill) Size() (n int) {
 	}
 	if m.Level != 0 {
 		n += 1 + sovGame(uint64(m.Level))
-	}
-	if m.EffectId != 0 {
-		n += 1 + sovGame(uint64(m.EffectId))
 	}
 	return n
 }
@@ -2039,38 +1976,41 @@ func (m *Hero) Size() (n int) {
 	if m.Level != 0 {
 		n += 1 + sovGame(uint64(m.Level))
 	}
-	if m.Quality != 0 {
-		n += 1 + sovGame(uint64(m.Quality))
+	if m.Exp != 0 {
+		n += 1 + sovGame(uint64(m.Exp))
+	}
+	if m.Refine != 0 {
+		n += 1 + sovGame(uint64(m.Refine))
+	}
+	if m.RefineTimes != 0 {
+		n += 1 + sovGame(uint64(m.RefineTimes))
+	}
+	if m.RefineSuper {
+		n += 2
+	}
+	if len(m.Active) > 0 {
+		for _, e := range m.Active {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if len(m.Passive) > 0 {
+		for _, e := range m.Passive {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
 	}
 	if m.Power != 0 {
 		n += 1 + sovGame(uint64(m.Power))
 	}
-	if len(m.Equips) > 0 {
-		for _, e := range m.Equips {
-			l = e.Size()
-			n += 1 + l + sovGame(uint64(l))
-		}
-	}
-	if len(m.Skills) > 0 {
-		for _, e := range m.Skills {
-			l = e.Size()
-			n += 1 + l + sovGame(uint64(l))
-		}
-	}
-	if len(m.Auras) > 0 {
-		for _, e := range m.Auras {
-			l = e.Size()
-			n += 1 + l + sovGame(uint64(l))
-		}
-	}
 	if m.Status != 0 {
 		n += 1 + sovGame(uint64(m.Status))
 	}
-	if m.StatusData != 0 {
-		n += 1 + sovGame(uint64(m.StatusData))
+	if m.LifePoint != 0 {
+		n += 1 + sovGame(uint64(m.LifePoint))
 	}
-	if m.Dead {
-		n += 2
+	if m.LifePointMax != 0 {
+		n += 1 + sovGame(uint64(m.LifePointMax))
 	}
 	return n
 }
@@ -2604,94 +2544,6 @@ func (m *Item) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *Equipment) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGame
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: Equipment: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Equipment: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Quality", wireType)
-			}
-			m.Quality = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Quality |= (uint32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
-			}
-			m.Level = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Level |= (uint32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGame(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLengthGame
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *Skill) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2755,25 +2607,6 @@ func (m *Skill) Unmarshal(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.Level |= (uint32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field EffectId", wireType)
-			}
-			m.EffectId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.EffectId |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2956,9 +2789,9 @@ func (m *Hero) Unmarshal(dAtA []byte) error {
 			}
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Quality", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Exp", wireType)
 			}
-			m.Quality = 0
+			m.Exp = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -2968,12 +2801,132 @@ func (m *Hero) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Quality |= (uint32(b) & 0x7F) << shift
+				m.Exp |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Refine", wireType)
+			}
+			m.Refine = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Refine |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RefineTimes", wireType)
+			}
+			m.RefineTimes = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.RefineTimes |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RefineSuper", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.RefineSuper = bool(v != 0)
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Active", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Active = append(m.Active, &Skill{})
+			if err := m.Active[len(m.Active)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Passive", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Passive = append(m.Passive, &Skill{})
+			if err := m.Passive[len(m.Passive)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Power", wireType)
 			}
@@ -2992,100 +2945,7 @@ func (m *Hero) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Equips", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Equips = append(m.Equips, &Equipment{})
-			if err := m.Equips[len(m.Equips)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Skills", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Skills = append(m.Skills, &Skill{})
-			if err := m.Skills[len(m.Skills)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 7:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Auras", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Auras = append(m.Auras, &Aura{})
-			if err := m.Auras[len(m.Auras)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 8:
+		case 10:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -3104,11 +2964,11 @@ func (m *Hero) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 9:
+		case 11:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field StatusData", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LifePoint", wireType)
 			}
-			m.StatusData = 0
+			m.LifePoint = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -3118,16 +2978,16 @@ func (m *Hero) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.StatusData |= (uint32(b) & 0x7F) << shift
+				m.LifePoint |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 10:
+		case 12:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Dead", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LifePointMax", wireType)
 			}
-			var v int
+			m.LifePointMax = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -3137,12 +2997,11 @@ func (m *Hero) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int(b) & 0x7F) << shift
+				m.LifePointMax |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Dead = bool(v != 0)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGame(dAtA[iNdEx:])
@@ -5656,74 +5515,74 @@ var (
 func init() { proto.RegisterFile("game.proto", fileDescriptorGame) }
 
 var fileDescriptorGame = []byte{
-	// 1099 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0xcf, 0x6e, 0x1b, 0xb7,
-	0x13, 0xfe, 0x49, 0xda, 0x95, 0xa5, 0x51, 0xa4, 0xc8, 0x8c, 0x11, 0x2c, 0x7e, 0x45, 0x5d, 0x63,
-	0xdb, 0x06, 0x36, 0xea, 0x18, 0xa8, 0x9c, 0x5b, 0x8c, 0x06, 0xb1, 0x63, 0xc4, 0x06, 0xea, 0x22,
-	0x60, 0x90, 0xb3, 0xc0, 0xee, 0x52, 0xd2, 0xc2, 0xfb, 0xcf, 0x5c, 0xae, 0x53, 0xbf, 0x45, 0x2f,
-	0x3d, 0x14, 0xe8, 0xcb, 0xf4, 0x56, 0xa0, 0x97, 0x3e, 0x42, 0xe1, 0xbe, 0x48, 0x31, 0x43, 0x52,
-	0x5e, 0xdb, 0x6a, 0xe0, 0x93, 0x86, 0x1f, 0xbf, 0x1d, 0x72, 0xbe, 0xf9, 0x23, 0x02, 0xcc, 0x45,
-	0x26, 0xf7, 0x4a, 0x55, 0xe8, 0x82, 0x75, 0xb2, 0x6a, 0x1e, 0x7e, 0x09, 0xeb, 0xef, 0x52, 0x71,
-	0x25, 0xd5, 0x1b, 0xa1, 0x05, 0x97, 0x17, 0xb5, 0xac, 0x34, 0x1b, 0x41, 0x3b, 0x89, 0x83, 0xd6,
-	0x56, 0x6b, 0xdb, 0xe3, 0xed, 0x24, 0x0e, 0x0f, 0xc0, 0x3b, 0xd5, 0x32, 0x63, 0x0c, 0xbc, 0x59,
-	0x2a, 0xe6, 0xb4, 0x33, 0xe4, 0x64, 0x5b, 0x6e, 0x9b, 0x90, 0x76, 0x12, 0xb3, 0x31, 0x74, 0xa2,
-	0x5c, 0x07, 0x9d, 0xad, 0xd6, 0x76, 0x87, 0xa3, 0x19, 0xbe, 0x84, 0xfe, 0xf1, 0x45, 0x9d, 0x94,
-	0x99, 0xcc, 0x35, 0x0b, 0x60, 0xed, 0xa2, 0x16, 0x69, 0xa2, 0xaf, 0xac, 0x17, 0xb7, 0x64, 0x1b,
-	0xe0, 0xa7, 0xf2, 0x52, 0xa6, 0xd6, 0x97, 0x59, 0x84, 0xa7, 0xe0, 0xbf, 0x3f, 0x4f, 0xd2, 0xb4,
-	0x71, 0x27, 0x73, 0xce, 0x4a, 0x3a, 0xfb, 0x3f, 0xf4, 0xe4, 0x6c, 0x26, 0x23, 0x7d, 0x1a, 0xd3,
-	0x15, 0x86, 0x7c, 0xb9, 0x0e, 0x77, 0xc1, 0x7b, 0x5d, 0x2b, 0xf1, 0x30, 0x4f, 0xe1, 0x2f, 0x6d,
-	0xf0, 0x4e, 0xa4, 0x2a, 0x1e, 0x78, 0x70, 0x23, 0xae, 0xce, 0xbd, 0xb8, 0xca, 0xe2, 0xa3, 0x54,
-	0x81, 0x67, 0xf8, 0xb4, 0x60, 0xcf, 0xa0, 0x2b, 0x51, 0x94, 0x2a, 0xf0, 0xb7, 0x3a, 0xdb, 0x83,
-	0xc9, 0x68, 0x2f, 0xab, 0xe6, 0x7b, 0x4b, 0x9d, 0xb8, 0xdd, 0x65, 0x21, 0x74, 0x2b, 0x8c, 0xbf,
-	0x0a, 0xba, 0xc4, 0x03, 0xe2, 0x91, 0x24, 0xdc, 0xee, 0xb0, 0x2f, 0xc0, 0x17, 0xb5, 0x12, 0x55,
-	0xb0, 0x46, 0x94, 0x3e, 0x51, 0x30, 0x54, 0x6e, 0x70, 0xf6, 0x14, 0xba, 0x95, 0x16, 0xba, 0xae,
-	0x82, 0x1e, 0xdd, 0xc1, 0xae, 0xd8, 0x26, 0x80, 0xb1, 0x30, 0xf9, 0x41, 0x9f, 0xf6, 0x1a, 0x08,
-	0xe6, 0x3b, 0x96, 0x22, 0x0e, 0x60, 0xab, 0xb5, 0xdd, 0xe3, 0x64, 0x87, 0xbf, 0xb6, 0x81, 0x35,
-	0x2b, 0xa6, 0x2a, 0x8b, 0xbc, 0x92, 0x48, 0x15, 0x51, 0xa4, 0x49, 0xa7, 0x3e, 0x27, 0x1b, 0xb1,
-	0x5c, 0x64, 0x92, 0x84, 0xea, 0x73, 0xb2, 0xb1, 0x3c, 0xca, 0xc4, 0xe4, 0xc6, 0xe3, 0x68, 0x22,
-	0x52, 0x25, 0xb1, 0x55, 0x07, 0x4d, 0xab, 0xb8, 0xef, 0xca, 0xef, 0x46, 0xf1, 0xee, 0x9d, 0x54,
-	0x5f, 0x26, 0xe5, 0xf7, 0xb4, 0xb1, 0x66, 0x52, 0xed, 0xd6, 0x78, 0x72, 0x26, 0x52, 0x49, 0xe1,
-	0xf6, 0x38, 0xd9, 0xa8, 0x52, 0xa2, 0x65, 0x56, 0x05, 0xfd, 0x86, 0x4a, 0x58, 0xd6, 0xdc, 0xe0,
-	0x48, 0x58, 0x48, 0x55, 0x54, 0x01, 0x34, 0x08, 0x58, 0x02, 0xdc, 0xe0, 0x37, 0x3a, 0x0f, 0x56,
-	0xeb, 0x1c, 0xee, 0xc2, 0xf8, 0xed, 0xd9, 0x51, 0x91, 0x65, 0x22, 0x8f, 0x5d, 0x2f, 0x05, 0xb0,
-	0x16, 0x19, 0xc4, 0x6a, 0xe3, 0x96, 0xe1, 0x37, 0xb0, 0xde, 0x60, 0x5b, 0x1d, 0x9f, 0x42, 0x57,
-	0xc9, 0xaa, 0x4e, 0x8d, 0x92, 0x3e, 0xb7, 0xab, 0xf0, 0x25, 0x0c, 0x7f, 0x28, 0x74, 0x12, 0x49,
-	0xe7, 0xb7, 0xd9, 0x8b, 0xbe, 0xed, 0xc5, 0xa7, 0xd0, 0xcd, 0x89, 0x64, 0x25, 0xb7, 0xab, 0xf0,
-	0x00, 0x46, 0xee, 0xe3, 0x9b, 0x74, 0x3d, 0xf8, 0xeb, 0xe7, 0x30, 0x38, 0x14, 0x5a, 0xa7, 0x72,
-	0x75, 0x23, 0x8e, 0xa0, 0x9d, 0x5e, 0xba, 0x01, 0x90, 0x5e, 0x86, 0xbb, 0x00, 0x86, 0xbe, 0xb2,
-	0xd9, 0xee, 0xb2, 0xff, 0xec, 0x38, 0xfa, 0x87, 0x3c, 0xa1, 0xa8, 0xf4, 0x55, 0x29, 0xdd, 0x84,
-	0x41, 0xfb, 0xde, 0x84, 0x31, 0x2e, 0x3a, 0xce, 0x05, 0x95, 0x54, 0x51, 0xb9, 0x02, 0x2a, 0x8b,
-	0x0a, 0x11, 0xa1, 0xcf, 0xa9, 0x82, 0x86, 0x1c, 0x4d, 0x44, 0x62, 0x39, 0xb3, 0x05, 0x84, 0x26,
-	0x7a, 0x59, 0x94, 0xb6, 0x70, 0xda, 0x8b, 0x12, 0x4f, 0x8e, 0x54, 0xa2, 0x6d, 0x87, 0x90, 0xcd,
-	0x3e, 0x83, 0x3e, 0xfe, 0x4e, 0x17, 0xb5, 0xd2, 0xb6, 0x3d, 0x7a, 0x08, 0x9c, 0xd4, 0x4a, 0xb3,
-	0xaf, 0xc0, 0xc3, 0x4c, 0x52, 0x73, 0x0c, 0x26, 0x63, 0x2a, 0x86, 0x86, 0x4e, 0x9c, 0x76, 0xd9,
-	0x33, 0xf0, 0xa9, 0x4b, 0x6d, 0xcd, 0xdc, 0xa7, 0x99, 0x6d, 0x76, 0x08, 0x1b, 0x91, 0x50, 0x52,
-	0xaa, 0xe9, 0x5c, 0xe6, 0x52, 0x89, 0x74, 0x6a, 0x3e, 0x7b, 0xf4, 0x1f, 0xde, 0x99, 0x61, 0xbf,
-	0x35, 0x64, 0x93, 0x99, 0x57, 0xf0, 0xe4, 0x8e, 0x0f, 0x2c, 0xcb, 0x60, 0x48, 0x2e, 0x1e, 0x37,
-	0x5c, 0x50, 0xcd, 0xae, 0xdf, 0xf2, 0x40, 0xc9, 0x6a, 0x38, 0xa8, 0x85, 0x8a, 0xa5, 0x32, 0x0e,
-	0x46, 0x9f, 0x76, 0x60, 0xa8, 0x08, 0x85, 0xbf, 0xb5, 0x60, 0x74, 0x24, 0xb2, 0x52, 0x24, 0xf3,
-	0xfc, 0x8d, 0xd4, 0x22, 0xa1, 0x56, 0x5c, 0x14, 0x95, 0x76, 0x19, 0x45, 0x9b, 0xb2, 0x9c, 0xd8,
-	0xc1, 0x80, 0x59, 0x4e, 0xb2, 0x9b, 0x8a, 0xec, 0x34, 0xfe, 0x5b, 0x70, 0xa8, 0xa8, 0xf9, 0xb7,
-	0x94, 0x5a, 0x9f, 0x93, 0x6d, 0xb1, 0x09, 0x25, 0xd7, 0x60, 0x13, 0x8b, 0xed, 0x53, 0x7a, 0x0d,
-	0xb6, 0x6f, 0xb1, 0x17, 0x94, 0x61, 0x83, 0xbd, 0x08, 0x7f, 0x6f, 0xc1, 0xc8, 0x04, 0xe0, 0x2e,
-	0xc9, 0x9e, 0x80, 0x2f, 0xa6, 0x58, 0x3e, 0xf6, 0x7e, 0xe2, 0x5d, 0x51, 0x21, 0x18, 0x13, 0x68,
-	0x2f, 0x18, 0x23, 0xb8, 0x01, 0x5d, 0x31, 0x5d, 0x94, 0xd3, 0xca, 0x5d, 0x51, 0x9c, 0x94, 0xef,
-	0x11, 0x8d, 0x0d, 0xea, 0x59, 0xae, 0x45, 0x89, 0x2b, 0x6d, 0x0d, 0x22, 0xf7, 0x78, 0xc9, 0x95,
-	0xb6, 0x0e, 0x91, 0x7b, 0xcc, 0x9e, 0xc3, 0x5a, 0x4c, 0x52, 0xb9, 0xf9, 0xfd, 0x84, 0x84, 0xbe,
-	0x2d, 0x23, 0x77, 0x9c, 0x50, 0xc1, 0x23, 0x13, 0x02, 0xa7, 0xc1, 0xc0, 0xbe, 0x06, 0xbf, 0xce,
-	0x13, 0x8d, 0x01, 0x74, 0xee, 0x64, 0x09, 0x3b, 0x8a, 0x9b, 0x5d, 0xb6, 0x03, 0x7e, 0x24, 0xb2,
-	0x12, 0x43, 0xba, 0x39, 0xe3, 0xb6, 0x16, 0xdc, 0x30, 0xb0, 0x57, 0x3e, 0x26, 0x39, 0x45, 0xd9,
-	0xe3, 0x68, 0xe2, 0x23, 0xe1, 0x4c, 0x9c, 0x4b, 0x77, 0xee, 0xdd, 0x47, 0x02, 0xb5, 0x65, 0xf8,
-	0x0a, 0x58, 0x93, 0x64, 0x07, 0xcd, 0xce, 0xad, 0x79, 0x36, 0x98, 0xac, 0x37, 0x0e, 0x36, 0x11,
-	0x2c, 0x47, 0xdc, 0x04, 0x46, 0x1f, 0x2a, 0x49, 0x13, 0x79, 0xf5, 0x11, 0xee, 0x6d, 0x61, 0xb2,
-	0x42, 0x6f, 0x8b, 0x1d, 0x78, 0xbc, 0xfc, 0x66, 0xe5, 0x04, 0x1d, 0x2e, 0xdd, 0xbf, 0x86, 0x01,
-	0xf2, 0x8e, 0x72, 0x7d, 0x9a, 0xcf, 0x0a, 0x9a, 0x11, 0xb1, 0x73, 0x8e, 0xe6, 0xa7, 0x5e, 0x32,
-	0x9e, 0x39, 0xed, 0x00, 0x36, 0xac, 0x8b, 0xa3, 0x85, 0xc8, 0xe7, 0x32, 0x36, 0x53, 0x15, 0x47,
-	0x41, 0x92, 0xcf, 0x0a, 0x9b, 0x82, 0xf1, 0xf2, 0x9f, 0xc5, 0x9e, 0xc5, 0x69, 0x37, 0xfc, 0x0e,
-	0xc6, 0x67, 0x42, 0x9d, 0x4b, 0x7d, 0x58, 0x5f, 0xb9, 0x08, 0x37, 0xc0, 0x4f, 0xf2, 0x58, 0xfe,
-	0x64, 0xef, 0x61, 0x16, 0x88, 0x46, 0x45, 0x6d, 0x23, 0xf5, 0xb8, 0x59, 0x84, 0x13, 0xcc, 0xc2,
-	0xf2, 0x7b, 0x1b, 0xed, 0xe7, 0x00, 0x52, 0xa9, 0x42, 0x4d, 0xa3, 0x22, 0x76, 0x63, 0xb3, 0x4f,
-	0xc8, 0x51, 0x11, 0xcb, 0xc3, 0xf1, 0x1f, 0xd7, 0x9b, 0xad, 0xbf, 0xae, 0x37, 0x5b, 0x7f, 0x5f,
-	0x6f, 0xb6, 0x7e, 0xfe, 0x67, 0xf3, 0x7f, 0x3f, 0x76, 0xe9, 0xf1, 0xb7, 0xff, 0x6f, 0x00, 0x00,
-	0x00, 0xff, 0xff, 0x8f, 0x37, 0xb5, 0xcf, 0x0a, 0x0a, 0x00, 0x00,
+	// 1095 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0x4b, 0x6f, 0x1b, 0x37,
+	0x10, 0xae, 0x1e, 0x2b, 0x5b, 0x23, 0x4b, 0x91, 0x19, 0x23, 0x58, 0xf4, 0xe1, 0x1a, 0xdb, 0xb4,
+	0x70, 0x50, 0xdb, 0x40, 0xe5, 0xdc, 0x6a, 0x34, 0x88, 0x9d, 0x20, 0x0e, 0x50, 0x17, 0x06, 0xdd,
+	0x9c, 0x05, 0x56, 0x4b, 0x49, 0x84, 0xf7, 0x55, 0x92, 0xeb, 0xd8, 0xff, 0xa2, 0xd7, 0x02, 0xfd,
+	0x33, 0xbd, 0x15, 0xe8, 0xa5, 0x87, 0xfe, 0x80, 0xc2, 0xfd, 0x23, 0xc5, 0x0c, 0xb9, 0xd2, 0xfa,
+	0xd1, 0xc0, 0x27, 0xcd, 0x7c, 0xf3, 0xed, 0x90, 0xf3, 0x14, 0x01, 0x66, 0x22, 0x95, 0x7b, 0x85,
+	0xce, 0x6d, 0xce, 0x5a, 0xa9, 0x99, 0x45, 0x5f, 0xc0, 0xfa, 0x69, 0x22, 0xae, 0xa4, 0x7e, 0x25,
+	0xac, 0xe0, 0xf2, 0xe7, 0x52, 0x1a, 0xcb, 0x06, 0xd0, 0x54, 0x71, 0xd8, 0xd8, 0x6a, 0x6c, 0xb7,
+	0x79, 0x53, 0xc5, 0xd1, 0x01, 0xb4, 0xdf, 0x5a, 0x99, 0x32, 0x06, 0xed, 0x69, 0x22, 0x66, 0x64,
+	0xe9, 0x73, 0x92, 0x3d, 0xb7, 0x49, 0x48, 0x53, 0xc5, 0x6c, 0x08, 0xad, 0x49, 0x66, 0xc3, 0xd6,
+	0x56, 0x63, 0xbb, 0xc5, 0x51, 0x8c, 0x76, 0x21, 0x38, 0x3b, 0x57, 0x49, 0x52, 0x73, 0xeb, 0xa8,
+	0x1b, 0x10, 0x24, 0xf2, 0x42, 0x26, 0xfe, 0x6b, 0xa7, 0x44, 0x3b, 0xd0, 0x7e, 0x59, 0x6a, 0xf1,
+	0x40, 0xf6, 0xdf, 0x4d, 0x68, 0x1f, 0x4b, 0x9d, 0x3f, 0x8c, 0x8e, 0xb7, 0x93, 0x97, 0x05, 0xdd,
+	0xae, 0xcf, 0x51, 0x64, 0x4f, 0xa0, 0xa3, 0xe5, 0x54, 0x65, 0x32, 0x6c, 0x13, 0xe8, 0x35, 0xb6,
+	0x05, 0x3d, 0x27, 0xfd, 0xa8, 0x52, 0x69, 0xc2, 0x80, 0x8c, 0x75, 0x68, 0xc9, 0x38, 0x2b, 0x0b,
+	0xa9, 0xc3, 0xce, 0x56, 0x63, 0x7b, 0x95, 0xd7, 0x21, 0x16, 0x41, 0x47, 0x4c, 0xac, 0xba, 0x90,
+	0xe1, 0xca, 0x56, 0x6b, 0xbb, 0x37, 0x82, 0xbd, 0xd4, 0xcc, 0xf6, 0x28, 0x19, 0xdc, 0x5b, 0xd8,
+	0x53, 0x58, 0x29, 0x84, 0x31, 0x48, 0x5a, 0xbd, 0x43, 0xaa, 0x4c, 0x18, 0x4d, 0x91, 0xbf, 0x97,
+	0x3a, 0xec, 0xba, 0x68, 0x48, 0xc1, 0xbb, 0x1b, 0x2b, 0x6c, 0x69, 0x42, 0x70, 0x77, 0x77, 0x1a,
+	0xfb, 0x14, 0xba, 0x89, 0x9a, 0xca, 0xd3, 0x5c, 0x65, 0x36, 0xec, 0x91, 0x69, 0x09, 0xb0, 0x08,
+	0xd6, 0x16, 0xca, 0x89, 0xb8, 0x0c, 0xd7, 0x88, 0x70, 0x03, 0x8b, 0x7e, 0x6d, 0x02, 0xab, 0xf7,
+	0x85, 0x29, 0xf2, 0xcc, 0x48, 0x6c, 0x00, 0x31, 0x99, 0x58, 0x4a, 0x73, 0x97, 0x93, 0x8c, 0x58,
+	0x26, 0x52, 0x49, 0x79, 0xee, 0x72, 0x92, 0x31, 0xcd, 0x85, 0x8a, 0x29, 0xcd, 0x6d, 0x8e, 0x22,
+	0x22, 0x46, 0xc5, 0x3e, 0xc7, 0x28, 0xfa, 0x82, 0x05, 0x55, 0x93, 0x2d, 0x0b, 0xd6, 0xa9, 0x17,
+	0xec, 0x63, 0x58, 0xbd, 0x50, 0xc5, 0xf7, 0x64, 0x58, 0x21, 0xc3, 0x42, 0xc7, 0x93, 0x53, 0x91,
+	0x60, 0xde, 0x30, 0xf3, 0x24, 0xb3, 0xcf, 0x21, 0x50, 0x56, 0xa6, 0x26, 0xec, 0x52, 0x32, 0xbb,
+	0x94, 0x4c, 0x6c, 0x5e, 0xee, 0x70, 0x24, 0xcc, 0xa5, 0xce, 0x31, 0x65, 0x4b, 0x02, 0x76, 0x10,
+	0x77, 0x38, 0x12, 0x44, 0xa9, 0x85, 0x09, 0x7b, 0x35, 0x02, 0x76, 0x24, 0x77, 0x78, 0xb4, 0x03,
+	0xc3, 0x37, 0x27, 0x47, 0x79, 0x9a, 0x8a, 0x2c, 0xae, 0x26, 0x26, 0x84, 0x95, 0x89, 0x43, 0x7c,
+	0x6e, 0x2a, 0x35, 0xfa, 0x1a, 0xd6, 0x6b, 0x6c, 0x9f, 0x47, 0x6a, 0x3a, 0x53, 0x26, 0x2e, 0x93,
+	0x01, 0xf7, 0x5a, 0xf4, 0x2d, 0xf4, 0x7f, 0xc8, 0xad, 0x9a, 0xc8, 0xca, 0x6f, 0x7d, 0xe2, 0x02,
+	0x3f, 0x71, 0x4f, 0xa0, 0x93, 0x11, 0xc9, 0xa7, 0xdc, 0x6b, 0xd1, 0x01, 0x0c, 0xaa, 0x8f, 0x97,
+	0xe5, 0x7a, 0xf0, 0xd7, 0xbb, 0xd0, 0x3b, 0x14, 0xd6, 0x26, 0xf2, 0xfe, 0x59, 0x1d, 0x40, 0x33,
+	0xb9, 0xa8, 0xc6, 0x3c, 0xb9, 0x88, 0x76, 0x00, 0x1c, 0xfd, 0xde, 0x59, 0xbd, 0xcd, 0xfe, 0xb3,
+	0x55, 0xd1, 0xdf, 0x65, 0x8a, 0xa2, 0xb2, 0x57, 0x85, 0xac, 0xf6, 0x08, 0xca, 0x77, 0xf6, 0x88,
+	0x73, 0xd1, 0xaa, 0x5c, 0x50, 0x4b, 0xe5, 0xa6, 0x6a, 0xa0, 0x22, 0x37, 0x88, 0x08, 0x7b, 0xee,
+	0x27, 0x13, 0x45, 0x44, 0x62, 0x39, 0xf5, 0x0d, 0x84, 0x22, 0x7a, 0x99, 0x17, 0xbe, 0x71, 0x9a,
+	0xf3, 0x02, 0x4f, 0x9e, 0x68, 0x65, 0xa9, 0x65, 0xfa, 0x9c, 0x64, 0xf6, 0x09, 0x74, 0xf1, 0x77,
+	0x3c, 0x2f, 0xb5, 0xf5, 0xf3, 0xb5, 0x8a, 0xc0, 0x71, 0xa9, 0x2d, 0x7b, 0x0a, 0x6d, 0xac, 0x24,
+	0x0d, 0x58, 0x6f, 0x34, 0xa4, 0x66, 0xa8, 0xe5, 0x89, 0x93, 0x95, 0x7d, 0x05, 0x81, 0x41, 0xd5,
+	0xf7, 0xcc, 0x5d, 0x9a, 0x33, 0xb3, 0x43, 0xd8, 0x98, 0x08, 0x2d, 0xa5, 0x1e, 0xcf, 0x64, 0x26,
+	0xb5, 0x48, 0xc6, 0xee, 0xb3, 0xb5, 0xff, 0xf1, 0xce, 0x1c, 0xfb, 0x8d, 0x23, 0xbb, 0xca, 0xbc,
+	0x80, 0xc7, 0xb7, 0x7c, 0x60, 0x5b, 0x86, 0x7d, 0x72, 0xf1, 0xa8, 0xe6, 0x82, 0x7a, 0x76, 0xfd,
+	0x86, 0x07, 0x2a, 0x56, 0xcd, 0x41, 0x29, 0x74, 0x2c, 0xb5, 0x73, 0x30, 0xf8, 0xb0, 0x03, 0x47,
+	0x45, 0x28, 0xfa, 0xad, 0x01, 0x83, 0x23, 0x91, 0x16, 0x42, 0xcd, 0xb2, 0x57, 0xd2, 0x0a, 0x45,
+	0xa3, 0x38, 0xcf, 0x8d, 0xad, 0x2a, 0x8a, 0x32, 0x55, 0x59, 0xf9, 0xc5, 0x80, 0x55, 0x56, 0xe9,
+	0xb2, 0x23, 0x5b, 0xb5, 0x7f, 0x10, 0x5c, 0x2a, 0x7a, 0xf6, 0x0d, 0x95, 0x36, 0xe0, 0x24, 0x7b,
+	0x6c, 0x44, 0xc5, 0x75, 0xd8, 0xc8, 0x63, 0xfb, 0x54, 0x5e, 0x87, 0xed, 0x7b, 0xec, 0x39, 0x55,
+	0xd8, 0x61, 0xcf, 0xa3, 0xdf, 0x1b, 0x30, 0x70, 0x01, 0x54, 0x97, 0x64, 0x8f, 0x21, 0x10, 0x63,
+	0x6c, 0x1f, 0x7f, 0x3f, 0x71, 0x9a, 0x1b, 0x04, 0x63, 0x02, 0xfd, 0x05, 0x63, 0x04, 0x37, 0xa0,
+	0x23, 0xc6, 0xf3, 0x62, 0x6c, 0xaa, 0x2b, 0x8a, 0xe3, 0xe2, 0x0c, 0xd1, 0xd8, 0xa1, 0x6d, 0xcf,
+	0xf5, 0x28, 0x71, 0xa5, 0xef, 0x41, 0xe4, 0xbe, 0x5e, 0x70, 0xa5, 0xef, 0x43, 0xe4, 0xbe, 0x66,
+	0xbb, 0xb0, 0x12, 0x53, 0xaa, 0x8c, 0xff, 0x2f, 0x78, 0x4c, 0x89, 0xbe, 0x99, 0x46, 0x5e, 0x71,
+	0x22, 0x0d, 0x6b, 0x2e, 0x04, 0x4e, 0x8b, 0x81, 0x7d, 0x09, 0x41, 0x99, 0x29, 0x8b, 0x01, 0xb4,
+	0x6e, 0x55, 0x09, 0x27, 0x8a, 0x3b, 0x2b, 0x7b, 0x06, 0xc1, 0x44, 0xa4, 0x05, 0x86, 0xb4, 0x3c,
+	0xe3, 0x66, 0x2e, 0xb8, 0x63, 0xe0, 0xac, 0xbc, 0x57, 0x19, 0x45, 0xb9, 0xca, 0x51, 0xc4, 0xa7,
+	0xc0, 0x89, 0x38, 0x97, 0xd5, 0xb9, 0xb7, 0x9f, 0x02, 0x34, 0x96, 0xd1, 0x0b, 0x60, 0x75, 0x92,
+	0x5f, 0x34, 0xcf, 0x6e, 0xec, 0xb3, 0xde, 0x68, 0xbd, 0x76, 0xb0, 0x8b, 0x60, 0xb1, 0xe2, 0x46,
+	0x30, 0x78, 0x67, 0x24, 0x6d, 0xe4, 0xfb, 0x8f, 0xa8, 0x5e, 0x10, 0xae, 0x2a, 0xf4, 0x82, 0x78,
+	0x06, 0x8f, 0x16, 0xdf, 0xdc, 0xbb, 0x41, 0xfb, 0x0b, 0xf7, 0x2f, 0xa1, 0x87, 0xbc, 0xa3, 0xcc,
+	0xbe, 0xcd, 0xa6, 0x39, 0xed, 0x88, 0xb8, 0x72, 0x8e, 0xe2, 0x87, 0xde, 0x2b, 0x6d, 0x77, 0xda,
+	0x01, 0x6c, 0x78, 0x17, 0x47, 0x73, 0x91, 0xcd, 0x64, 0xec, 0xb6, 0x2a, 0xae, 0x02, 0x95, 0x4d,
+	0x73, 0x5f, 0x82, 0xe1, 0xe2, 0x9f, 0xc5, 0x9f, 0xc5, 0xc9, 0x1a, 0x7d, 0x07, 0xc3, 0x13, 0xa1,
+	0xcf, 0xa5, 0x3d, 0x2c, 0xaf, 0xaa, 0x08, 0x37, 0x20, 0x50, 0x59, 0x2c, 0x2f, 0xfd, 0x3d, 0x9c,
+	0x82, 0xe8, 0x24, 0x2f, 0x7d, 0xa4, 0x6d, 0xee, 0x94, 0x68, 0x84, 0x55, 0x58, 0x7c, 0xef, 0xa3,
+	0xfd, 0x0c, 0x40, 0x6a, 0x9d, 0xeb, 0xf1, 0x24, 0x8f, 0xab, 0xb5, 0xd9, 0x25, 0xe4, 0x28, 0x8f,
+	0xe5, 0xe1, 0xf0, 0x8f, 0xeb, 0xcd, 0xc6, 0x5f, 0xd7, 0x9b, 0x8d, 0x7f, 0xae, 0x37, 0x1b, 0xbf,
+	0xfc, 0xbb, 0xf9, 0xd1, 0x4f, 0x1d, 0x7a, 0xe2, 0xed, 0xff, 0x17, 0x00, 0x00, 0xff, 0xff, 0xaf,
+	0x35, 0x68, 0x0a, 0xf0, 0x09, 0x00, 0x00,
 }

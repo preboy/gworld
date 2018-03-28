@@ -91,11 +91,8 @@ func (self *BattleUnit) AddCampaignDetail(flag CampaignEventType, arg1, arg2, ar
 
 func (self *BattleUnit) CalcProp() {
 	self.Prop = &Property{}
-	self.Prop.Hp = self.Prop_base.Hp + self.Prop_addi.Hp
-	self.Prop.Atk = self.Prop_base.Atk + self.Prop_addi.Atk
-	self.Prop.Def = self.Prop_base.Def + self.Prop_addi.Def
-	self.Prop.Crit = self.Prop_base.Crit + self.Prop_addi.Crit
-	self.Prop.CritHurt = self.Prop_base.CritHurt + self.Prop_addi.CritHurt
+	self.Prop.AddProperty(self.Prop_base)
+	self.Prop.AddProperty(self.Prop_addi)
 	self.Hp = self.Prop.Hp
 }
 

@@ -38,34 +38,32 @@ func handler_player_data(plr *Player, packet *tcp.Packet) {
 
 	for id, hero := range data.Heros {
 		_hero := &msg.Hero{
-			Id:         id,
-			Level:      hero.Level,
-			Quality:    hero.Quality,
-			Power:      hero.Power,
-			Status:     hero.Status,
-			StatusData: hero.StatusData,
-			Dead:       hero.Dead,
+			Id:           id,
+			Level:        hero.Level,
+			Exp:          hero.Exp,
+			Refine:       hero.Refine,
+			RefineTimes:  hero.RefineTimes,
+			RefineSuper:  hero.RefineSuper,
+			Power:        hero.Power,
+			Status:       hero.Status,
+			LifePoint:    hero.LifePoint,
+			LifePointMax: hero.LifePointMax,
+		}
+
+		//	Active
+		//	Passive
+
+		for i := 0; i < 2; i++ {
+			_hero.Active = append(_hero.Active, &msg.Skill{
+				Id:    hero.Active[i].Id,
+				Level: hero.Active[i].Level,
+			})
 		}
 
 		for i := 0; i < 4; i++ {
-			_hero.Equips = append(_hero.Equips, &msg.Equipment{
-				Quality: hero.Equips[i].Quality,
-				Level:   hero.Equips[i].Level,
-			})
-		}
-
-		for i := 0; i < 2; i++ {
-			_hero.Skills = append(_hero.Skills, &msg.Skill{
-				Id:       hero.Skills[i].Id,
-				Level:    hero.Skills[i].Level,
-				EffectId: hero.Skills[i].EffectId,
-			})
-		}
-
-		for i := 0; i < 2; i++ {
-			_hero.Auras = append(_hero.Auras, &msg.Aura{
-				Id:    hero.Auras[i].Id,
-				Level: hero.Auras[i].Level,
+			_hero.Passive = append(_hero.Passive, &msg.Skill{
+				Id:    hero.Passive[i].Id,
+				Level: hero.Passive[i].Level,
 			})
 		}
 

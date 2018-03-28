@@ -7,16 +7,18 @@ import (
 
 type Hero struct {
 	// 这里的数据就是要存入DB的数据
-	Id         uint32       `bson:id"`           // 配置表ID
-	Level      uint32       `bson:"level"`       // 等级
-	Quality    uint32       `bson:"quality"`     // 品质
-	Power      uint32       `bson:"power"`       // 战斗力
-	Equips     [4]Equipment `bson:"equip"`       // 武器、护甲、血玉、手套
-	Skills     [2]Skill     `bson:"skills"`      // 技能(主动)
-	Auras      [2]Aura      `bson:"auras"`       // 光环技能(被动)
-	Status     uint32       `bson:"status"`      // 当前状态：0:闲置军营 1:战舰出征
-	StatusData uint32       `bson:"status_data"` // 与当前状态相关的数据
-	Dead       bool         `bson:"dead"`        // 是否死亡
+	Id           uint32   `bson:id"`              // 配置表ID
+	Level        uint32   `bson:"level"`          // 等级(决定基础属性)
+	Exp          uint32   `bson:"exp"`            // 当前经验
+	Refine       uint32   `bson:"refine_lv"`      // 精炼等级(额外提升属性)
+	RefineTimes  uint32   `bson:"refine_times"`   // 普通精炼失败次数
+	RefineSuper  bool     `bson:"refine_super"`   // 是否超级精炼(超级精炼失败则精炼等级归0，且失败无次数累计，但属性更强)
+	Active       [2]Skill `bson:"skill_active"`   // 技能(主动)
+	Passive      [4]Skill `bson:"skill_passive"`  // 技能(主动)
+	Power        uint32   `bson:"power"`          // 战斗力
+	Status       uint32   `bson:"status"`         // 当前状态：0:闲置军营 1:战舰出征
+	LifePoint    uint32   `bson:"life_point"`     // 生命点数(外战中每死一回掉点，为0时无法再出战)
+	LifePointMax uint32   `bson:"life_point_max"` // 生命点数上限
 }
 
 func NewHero(id uint32) *Hero {
@@ -63,21 +65,6 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 
 	proto := config.GetHeroProtoConf().GetHeroProto(self.Id, self.Level)
 
-	// 普攻
-	if len(proto.Skill_common) > 0 {
-		sc := proto.Skill_common[0]
-		u.Skill_comm = battle.NewBattleSkill(sc.Id, sc.Lv)
-	}
-
-	// 技能
-	for i := 0; i < 2; i++ {
-		v := &self.Skills[i]
-		skill := battle.NewBattleSkill(v.Id, v.Level)
-		if skill != nil {
-			u.Skill_exclusive = append(u.Skill_exclusive, skill)
-		}
-	}
-
 	// 可见属性计算
 	u.Prop_base = &battle.Property{
 		Hp:       proto.Hp,
@@ -87,7 +74,41 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		CritHurt: proto.Crit_hurt,
 	}
 
-	// 加成属性计算 TODO
+	// 普攻
+	if len(proto.Skill_common) > 0 {
+		sc := proto.Skill_common[0]
+		u.Skill_comm = battle.NewBattleSkill(sc.Id, sc.Lv)
+	}
+
+	// 主动技能
+	for i := 0; i < 2; i++ {
+		v := &self.Active[i]
+		skill := battle.NewBattleSkill(v.Id, v.Level)
+		if skill != nil {
+			u.Skill_exclusive = append(u.Skill_exclusive, skill)
+		}
+	}
+
+	// 被动技能
+	for i := 0; i < 4; i++ {
+		v := &self.Passive[i]
+		proto := config.GetSkillProtoConf().GetSkillProto(v.Id, v.Level)
+		if proto != nil {
+			if proto.Passive == 1 {
+				u.Prop_base.AddAttrs(proto.Attrs)
+			} else {
+				skill := battle.NewBattleSkill(v.Id, v.Level)
+				if skill != nil {
+					u.Skill_exclusive = append(u.Skill_exclusive, skill)
+				}
+			}
+		}
+	}
+
+	// 装备精炼
+	// 英雄专精
+
+	// 加成属性计算
 	u.Prop_addi = &battle.Property{}
 
 	u.CalcProp()
