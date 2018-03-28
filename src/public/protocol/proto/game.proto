@@ -29,12 +29,12 @@ message Hero {
     uint32  refine              = 4;
     uint32  refineTimes         = 5;
     bool    refineSuper         = 6;
-    repeated Skill active       = 7;
-    repeated Skill passive      = 8;
+    repeated Skill  active      = 7;
+    repeated Skill  passive     = 8;
     uint32  power               = 9;
     uint32  status              = 10;
-    uint32 lifePoint            = 11;
-    uint32 lifePointMax         = 12;
+    uint32  lifePoint           = 11;
+    uint32  lifePointMax        = 12;
 
 }
 
