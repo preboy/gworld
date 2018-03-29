@@ -50,9 +50,6 @@ func handler_player_data(plr *Player, packet *tcp.Packet) {
 			LifePointMax: hero.LifePointMax,
 		}
 
-		//	Active
-		//	Passive
-
 		for i := 0; i < 2; i++ {
 			_hero.Active = append(_hero.Active, &msg.Skill{
 				Id:    hero.Active[i].Id,
