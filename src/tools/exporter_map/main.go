@@ -234,11 +234,15 @@ func main() {
 		if err == nil {
 			fmt.Println(file_name + " Checking: OK")
 		} else {
-			e := err.(*json.SyntaxError)
-			if e != nil {
-				fmt.Printf("%v: Checking Invalid: %v [offset: %v]\n", file_name, e.Error(), e.Offset)
-			} else {
-				fmt.Println(file_name+" Checking Invalid: ", err)
+			switch err.(type) {
+			case *json.SyntaxError:
+				e := err.(*json.SyntaxError)
+				s := fmt.Sprintf("SyntaxError: %s. /Offset: %d(0x%X)", e.Error(), e.Offset, e.Offset)
+				fmt.Println(s)
+			case *json.UnmarshalTypeError:
+				fmt.Println("Unsurpported format", err)
+			default:
+				fmt.Println("Untreated err:", err)
 			}
 		}
 	}()
