@@ -55,11 +55,11 @@ func load_aura() {
 	log.Info("[AuraProtoConf] load OK")
 }
 
-func (self *AuraProtoConf) GetAuraProto(id, lv uint32) *AuraProto {
-	if self.items == nil {
+func GetAuraProto(id, lv uint32) *AuraProto {
+	if _AuraProtoConf.items == nil {
 		return nil
 	}
 
 	key := MakeUint64(id, lv)
-	return self.items[key]
+	return _AuraProtoConf.items[key]
 }

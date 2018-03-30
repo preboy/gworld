@@ -55,11 +55,11 @@ func load_skill() {
 	log.Info("[SkillProtoConf] load OK")
 }
 
-func (self *SkillProtoConf) GetSkillProto(id, lv uint32) *SkillProto {
-	if self.items == nil {
+func GetSkillProto(id, lv uint32) *SkillProto {
+	if _SkillProtoConf.items == nil {
 		return nil
 	}
 
 	key := MakeUint64(id, lv)
-	return self.items[key]
+	return _SkillProtoConf.items[key]
 }

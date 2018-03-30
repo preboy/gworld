@@ -48,9 +48,9 @@ func load_market_conf() {
 	log.Info("[MarketConf] load OK")
 }
 
-func (self *MarketConf) GetMarketItem(index uint32) *MarketItem {
-	if self.items == nil {
+func GetMarketItem(index uint32) *MarketItem {
+	if _MarketConf.items == nil {
 		return nil
 	}
-	return self.items[index]
+	return _MarketConf.items[index]
 }

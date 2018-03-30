@@ -22,7 +22,7 @@ type Hero struct {
 }
 
 func NewHero(id uint32) *Hero {
-	proto := config.GetHeroProtoConf().GetHeroProto(id, 1)
+	proto := config.GetHeroProto(id, 1)
 	if proto == nil {
 		return nil
 	}
@@ -49,7 +49,7 @@ func (self *Hero) UnitType() UnitType {
 }
 
 func (self *Hero) Name() string {
-	proto := config.GetHeroProtoConf().GetHeroProto(self.Id, self.Level)
+	proto := config.GetHeroProto(self.Id, self.Level)
 	return proto.Name
 }
 
@@ -63,7 +63,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		Skill_curr: nil,
 	}
 
-	proto := config.GetHeroProtoConf().GetHeroProto(self.Id, self.Level)
+	proto := config.GetHeroProto(self.Id, self.Level)
 
 	// 可见属性计算
 	u.Prop_base = &battle.Property{
@@ -92,7 +92,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	// 被动技能
 	for i := 0; i < 4; i++ {
 		v := &self.Passive[i]
-		proto := config.GetSkillProtoConf().GetSkillProto(v.Id, v.Level)
+		proto := config.GetSkillProto(v.Id, v.Level)
 		if proto != nil {
 			if proto.Passive == 1 {
 				u.Prop_base.AddAttrs(proto.Attrs)

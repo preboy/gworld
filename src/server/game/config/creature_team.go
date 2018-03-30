@@ -56,10 +56,10 @@ func load_creature_team() {
 	log.Info("[CreatureTeamConf] load OK")
 }
 
-func (self *CreatureTeamConf) GetCreatureTeam(id uint32) *CreatureTeam {
-	if self.items == nil {
+func GetCreatureTeam(id uint32) *CreatureTeam {
+	if _CreatureTeamConf.items == nil {
 		return nil
 	}
 
-	return self.items[id]
+	return _CreatureTeamConf.items[id]
 }

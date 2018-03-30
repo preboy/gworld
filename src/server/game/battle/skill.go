@@ -37,7 +37,7 @@ type BattleSkill struct {
 }
 
 func NewBattleSkill(id, lv uint32) *BattleSkill {
-	proto := config.GetSkillProtoConf().GetSkillProto(id, lv)
+	proto := config.GetSkillProto(id, lv)
 	if proto == nil {
 		return nil
 	}

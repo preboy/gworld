@@ -18,7 +18,7 @@ type BattleAura struct {
 }
 
 func NewAuraBattle(id, lv uint32, once bool) *BattleAura {
-	proto := config.GetAuraProtoConf().GetAuraProto(id, lv)
+	proto := config.GetAuraProto(id, lv)
 	if proto == nil {
 		log.Error("NewAuraBattle Failed:", id, lv)
 		return nil

@@ -22,7 +22,7 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 
 	func() {
 		// 是否存在此种道具
-		ip := config.GetItemProtoConf().GetItemProto(req.Id)
+		ip := config.GetItemProto(req.Id)
 		if ip == nil {
 			res.Result = err_code.ERR_UNKNOWN_ITEM
 			return

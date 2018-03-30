@@ -11,7 +11,7 @@ type Creature struct {
 }
 
 func NewCreature(id, lv uint32) *Creature {
-	proto := config.GetCreatureProtoConf().GetCreatureProto(id, lv)
+	proto := config.GetCreatureProto(id, lv)
 	if proto != nil {
 		return &Creature{
 			proto: proto,
@@ -82,7 +82,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 // ==================================================
 
 func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
-	team := config.GetCreatureTeamConf().GetCreatureTeam(id)
+	team := config.GetCreatureTeam(id)
 	if team == nil {
 		return nil
 	}

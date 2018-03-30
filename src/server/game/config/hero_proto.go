@@ -54,11 +54,11 @@ func load_hero() {
 	log.Info("[HeroProtoConf] load OK")
 }
 
-func (self *HeroProtoConf) GetHeroProto(id, lv uint32) *HeroProto {
-	if self.items == nil {
+func GetHeroProto(id, lv uint32) *HeroProto {
+	if _HeroProtoConf.items == nil {
 		return nil
 	}
 
 	key := MakeUint64(id, lv)
-	return self.items[key]
+	return _HeroProtoConf.items[key]
 }

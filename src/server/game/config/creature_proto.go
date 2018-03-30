@@ -56,11 +56,11 @@ func load_creature() {
 	log.Info("[CreatureProtoConf] load OK")
 }
 
-func (self *CreatureProtoConf) GetCreatureProto(id, lv uint32) *CreatureProto {
-	if self.items == nil {
+func GetCreatureProto(id, lv uint32) *CreatureProto {
+	if _CreatureProtoConf.items == nil {
 		return nil
 	}
 
 	key := MakeUint64(id, lv)
-	return self.items[key]
+	return _CreatureProtoConf.items[key]
 }
