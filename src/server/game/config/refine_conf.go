@@ -13,6 +13,9 @@ type RefineSuper struct {
 	Hp       uint32 `json:"hp"`
 	Crit     uint32 `json:"crit"`
 	CritHurt uint32 `json:"crit_hurt"`
+	Count    uint32 `json:"count"`
+	Prob     uint32 `json:"prob"`
+	Insure   uint32 `json:"insure"`
 }
 
 type RefineNormal struct {
@@ -22,6 +25,8 @@ type RefineNormal struct {
 	Hp       uint32 `json:"hp"`
 	Crit     uint32 `json:"crit"`
 	CritHurt uint32 `json:"crit_hurt"`
+	Count    uint32 `json:"count"`
+	Prob     uint32 `json:"prob"`
 }
 
 type RefineSuperConf struct {
