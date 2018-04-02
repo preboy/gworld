@@ -49,13 +49,13 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	}
 
 	// 普攻
-	if len(self.proto.Skill_common) > 0 {
-		s := self.proto.Skill_common[0]
+	if len(self.proto.SkillCommon) > 0 {
+		s := self.proto.SkillCommon[0]
 		u.Skill_comm = battle.NewBattleSkill(s.Id, s.Lv)
 	}
 
 	// 技能
-	for _, v := range self.proto.Skill_extra {
+	for _, v := range self.proto.SkillExtra {
 		s := battle.NewBattleSkill(v.Id, v.Lv)
 		if s != nil {
 			u.Skill_exclusive = append(u.Skill_exclusive, s)
@@ -68,7 +68,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		Atk:      self.proto.Atk,
 		Def:      self.proto.Def,
 		Crit:     self.proto.Crit,
-		CritHurt: self.proto.Crit_hurt,
+		CritHurt: self.proto.CritHurt,
 	}
 
 	// 加成属性计算 TODO

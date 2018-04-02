@@ -15,6 +15,8 @@ func Load() {
 	load_item()
 	load_creature_team()
 	load_market_conf()
+	load_refine_super()
+	load_refine_normal()
 
 	log.Info("Loading Config COMPLETE !!!")
 }

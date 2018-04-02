@@ -71,12 +71,12 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		Atk:      proto.Atk,
 		Def:      proto.Def,
 		Crit:     proto.Crit,
-		CritHurt: proto.Crit_hurt,
+		CritHurt: proto.CritHurt,
 	}
 
 	// 普攻
-	if len(proto.Skill_common) > 0 {
-		sc := proto.Skill_common[0]
+	if len(proto.SkillCommon) > 0 {
+		sc := proto.SkillCommon[0]
 		u.Skill_comm = battle.NewBattleSkill(sc.Id, sc.Lv)
 	}
 

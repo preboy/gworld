@@ -14,9 +14,9 @@ type CreatureProto struct {
 	Def          uint32       `json:"def"`
 	Hp           uint32       `json:"hp"`
 	Crit         uint32       `json:"crit"`
-	Crit_hurt    uint32       `json:"crit_hurt"`
-	Skill_extra  []*SkillConf `json:"skill_extra"`
-	Skill_common []*SkillConf `json:"skill_common"`
+	CritHurt     uint32       `json:"crit_hurt"`
+	SkillExtra   []*SkillConf `json:"skill_extra"`
+	SkillCommon  []*SkillConf `json:"skill_common"`
 	Auras        []*AuraConf  `json:"aura"`
 }
 
