@@ -165,6 +165,20 @@
 		"param2" : 0,
 		"param3" : [0],
 		"param4" : ""
+	},
+
+	{
+		"id" : 4113,
+		"name" : "经验丹",
+		"qulity" : 5,
+		"type_p" : 1,
+		"type_s" : 0,
+		"usable" : 0,
+		"script_id" : 0,
+		"param1" : 1000,
+		"param2" : 0,
+		"param3" : [0],
+		"param4" : ""
 	}
 
 ]
