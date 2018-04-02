@@ -26,7 +26,7 @@ message Hero {
     uint32  id                  = 1;
     uint32  level               = 2;
     uint32  exp                 = 3;
-    uint32  refine              = 4;
+    uint32  refineLv            = 4;
     uint32  refineTimes         = 5;
     bool    refineSuper         = 6;
     repeated Skill  active      = 7;

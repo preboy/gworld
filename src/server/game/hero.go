@@ -10,7 +10,7 @@ type Hero struct {
 	Id           uint32   `bson:id"`              // 配置表ID
 	Level        uint32   `bson:"level"`          // 等级(决定基础属性)
 	Exp          uint32   `bson:"exp"`            // 当前经验
-	Refine       uint32   `bson:"refine_lv"`      // 精炼等级(额外提升属性)
+	RefineLv     uint32   `bson:"refine_lv"`      // 精炼等级(额外提升属性)
 	RefineTimes  uint32   `bson:"refine_times"`   // 普通精炼失败次数
 	RefineSuper  bool     `bson:"refine_super"`   // 是否超级精炼(超级精炼失败则精炼等级归0，且失败无次数累计，但属性更强)
 	Active       [2]Skill `bson:"skill_active"`   // 技能(主动)
@@ -105,7 +105,29 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		}
 	}
 
-	// 装备精炼
+	// 英雄精炼
+	if self.RefineLv > 0 {
+		if self.RefineSuper {
+			conf := config.GetRefineSuper(self.RefineLv)
+			if conf != nil {
+				u.Prop_base.Hp += conf.Hp
+				u.Prop_base.Atk += conf.Atk
+				u.Prop_base.Def += conf.Def
+				u.Prop_base.Crit += conf.Crit
+				u.Prop_base.CritHurt += conf.CritHurt
+			}
+		} else {
+			conf := config.GetRefineNormal(self.RefineLv)
+			if conf != nil {
+				u.Prop_base.Hp += conf.Hp
+				u.Prop_base.Atk += conf.Atk
+				u.Prop_base.Def += conf.Def
+				u.Prop_base.Crit += conf.Crit
+				u.Prop_base.CritHurt += conf.CritHurt
+			}
+		}
+	}
+
 	// 英雄专精
 
 	// 加成属性计算

@@ -41,7 +41,7 @@ func handler_player_data(plr *Player, packet *tcp.Packet) {
 			Id:           id,
 			Level:        hero.Level,
 			Exp:          hero.Exp,
-			Refine:       hero.Refine,
+			RefineLv:     hero.RefineLv,
 			RefineTimes:  hero.RefineTimes,
 			RefineSuper:  hero.RefineSuper,
 			Power:        hero.Power,
