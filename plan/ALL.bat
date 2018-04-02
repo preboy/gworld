@@ -14,6 +14,9 @@ exporter jl excel/item_道具表.xlsx  ItemProto
 exporter jl excel/creature_team_怪物队伍表.xlsx  CreatureTeam
 exporter jl excel/market_集市表.xlsx    MarketConf
 
+exporter jl excel/refine_精炼表.xlsx    RefineNormal
+exporter jl excel/refine_精炼表.xlsx    RefineSuper
+
 
 
 rem: map export
