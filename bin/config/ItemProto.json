@@ -137,6 +137,34 @@
 		"param2" : 0,
 		"param3" : [0],
 		"param4" : ""
+	},
+
+	{
+		"id" : 4111,
+		"name" : "精炼符",
+		"qulity" : 5,
+		"type_p" : 1,
+		"type_s" : 0,
+		"usable" : 0,
+		"script_id" : 0,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : [0],
+		"param4" : ""
+	},
+
+	{
+		"id" : 4112,
+		"name" : "超级精炼符",
+		"qulity" : 5,
+		"type_p" : 1,
+		"type_s" : 0,
+		"usable" : 0,
+		"script_id" : 0,
+		"param1" : 0,
+		"param2" : 0,
+		"param3" : [0],
+		"param4" : ""
 	}
 
 ]
