@@ -143,6 +143,8 @@ message MakeBattleResponse {
 message UseItemRequest {
     uint32  id                  = 1;    // 道具ID
     uint32  cnt                 = 2;    // 数量
+    int32   arg1                = 3;    // 参数
+    int32   arg2                = 4;    // 参数
 }
 
 message UseItemResponse {

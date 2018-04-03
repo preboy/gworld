@@ -7,17 +7,16 @@ import (
 )
 
 type ItemProto struct {
-	Id       uint32  `json:"id"`
-	Name     string  `json:"name"`
-	Qulity   uint32  `json:"qulity"`
-	Type_p   uint32  `json:"type_p"`
-	Type_s   uint32  `json:"type_s"`
-	Usable   uint32  `json:"usable"`
-	ScriptID uint32  `json:"script_id"`
-	Param1   int32   `json:"param1"`
-	Param2   int32   `json:"param2"`
-	Param3   []int32 `json:"param3"`
-	Param4   string  `json:"param4"`
+	Id      uint32  `json:"id"`
+	Name    string  `json:"name"`
+	Qulity  uint32  `json:"qulity"`
+	Type_p  uint32  `json:"type_p"`
+	Type_s  uint32  `json:"type_s"`
+	UseType uint32  `json:"use_type"`
+	Param1  int32   `json:"param1"`
+	Param2  int32   `json:"param2"`
+	Param3  []int32 `json:"param3"`
+	Param4  string  `json:"param4"`
 }
 
 type ItemProtoConf struct {

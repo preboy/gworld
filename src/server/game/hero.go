@@ -137,3 +137,6 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 
 	return u
 }
+
+func (self *Hero) AddExp(exp uint32) {
+}
