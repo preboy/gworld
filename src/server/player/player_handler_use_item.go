@@ -54,16 +54,6 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 					goods.Add(uint32(ip.Param1), uint64(uint32(ip.Param2)*ItemCt))
 				}
 			}
-		case 2: // 给英雄使用经验丹
-			{
-				HeroID := uint32(req.Arg1)
-				hero := plr.GetHero(HeroID)
-				if hero == nil {
-					res.Result = err_code.ERR_ITEM_INVALID_HERO
-					return
-				}
-				hero.AddExp(uint32(ip.Param1) * ItemCt)
-			}
 		default:
 			log.Warning("Invalid ITEM UseType: %v-%v", ItemID, ip.UseType)
 		}

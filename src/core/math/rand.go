@@ -4,10 +4,10 @@ import (
 	"math/rand"
 )
 
-// returns true if x < prob where x is a random number in [0, n)
+// returns true if x <= prob where x is a random number in [0, n)
 func RandomHitn(prob, n int) bool {
 	r := rand.Intn(n)
-	if r < prob {
+	if r <= prob {
 		return true
 	}
 	return false

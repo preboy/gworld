@@ -9,7 +9,6 @@ type Hero struct {
 	// 这里的数据就是要存入DB的数据
 	Id           uint32   `bson:id"`              // 配置表ID
 	Level        uint32   `bson:"level"`          // 等级(决定基础属性)
-	Exp          uint32   `bson:"exp"`            // 当前经验
 	RefineLv     uint32   `bson:"refine_lv"`      // 精炼等级(额外提升属性)
 	RefineTimes  uint32   `bson:"refine_times"`   // 普通精炼失败次数
 	RefineSuper  bool     `bson:"refine_super"`   // 是否超级精炼(超级精炼失败则精炼等级归0，且失败无次数累计，但属性更强)
@@ -136,7 +135,4 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u.CalcProp()
 
 	return u
-}
-
-func (self *Hero) AddExp(exp uint32) {
 }

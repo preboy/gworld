@@ -25,17 +25,15 @@ message Aura {
 message Hero {
     uint32  id                  = 1;
     uint32  level               = 2;
-    uint32  exp                 = 3;
-    uint32  refineLv            = 4;
-    uint32  refineTimes         = 5;
-    bool    refineSuper         = 6;
-    repeated Skill  active      = 7;
-    repeated Skill  passive     = 8;
-    uint32  power               = 9;
-    uint32  status              = 10;
-    uint32  lifePoint           = 11;
-    uint32  lifePointMax        = 12;
-
+    uint32  refineLv            = 3;
+    uint32  refineTimes         = 4;
+    bool    refineSuper         = 5;
+    repeated Skill  active      = 6;
+    repeated Skill  passive     = 7;
+    uint32  power               = 8;
+    uint32  status              = 9;
+    uint32  lifePoint           = 10;
+    uint32  lifePointMax        = 11;
 }
 
 
@@ -170,4 +168,24 @@ message MarketBuyRequest {
 
 message MarketBuyResponse {
     uint32 error_code           = 1;
+}
+
+
+message HeroLevelupRequest {
+    uint32  hero_id             = 1;
+}
+
+message HeroLevelupResponse {
+    uint32 error_code           = 1;
+}
+
+
+message HeroRefineRequest {
+    uint32  hero_id             = 1;
+    uint32  super               = 2;    // 1:普通精炼  0:超级精炼
+}
+
+message HeroRefineResponse {
+    uint32 error_code           = 1;
+    uint32 result               = 2;    // error_code为0时，操作是否成功
 }

@@ -37,6 +37,11 @@ const (
     MSG_CS_MarketBuy        uint16 = 0x0012
     MSG_SC_MarketBuy        uint16 = 0x0013
 
+    MSG_CS_HeroLevelup      uint16 = 0x0014
+    MSG_SC_HeroLevelup      uint16 = 0x0015
+
+    MSG_CS_HeroRefine       uint16 = 0x0016
+    MSG_SC_HeroRefine       uint16 = 0x0017
 
 
     // ---------------------------------------------------------

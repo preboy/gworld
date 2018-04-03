@@ -13,7 +13,13 @@
 		"def" : 80,
 		"hp" : 1000,
 		"crit" : 5,
-		"crit_hurt" : 40
+		"crit_hurt" : 40,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 1
+			}
+		]
 	},
 
 	{
@@ -30,7 +36,13 @@
 		"def" : 90,
 		"hp" : 1100,
 		"crit" : 5,
-		"crit_hurt" : 45
+		"crit_hurt" : 45,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 2
+			}
+		]
 	},
 
 	{
@@ -47,7 +59,13 @@
 		"def" : 100,
 		"hp" : 1200,
 		"crit" : 5,
-		"crit_hurt" : 50
+		"crit_hurt" : 50,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 3
+			}
+		]
 	},
 
 	{
@@ -64,7 +82,13 @@
 		"def" : 110,
 		"hp" : 1300,
 		"crit" : 5,
-		"crit_hurt" : 55
+		"crit_hurt" : 55,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 4
+			}
+		]
 	},
 
 	{
@@ -81,7 +105,13 @@
 		"def" : 120,
 		"hp" : 1400,
 		"crit" : 5,
-		"crit_hurt" : 60
+		"crit_hurt" : 60,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 5
+			}
+		]
 	},
 
 	{
@@ -98,7 +128,13 @@
 		"def" : 80,
 		"hp" : 1000,
 		"crit" : 5,
-		"crit_hurt" : 40
+		"crit_hurt" : 40,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 1
+			}
+		]
 	},
 
 	{
@@ -115,7 +151,13 @@
 		"def" : 90,
 		"hp" : 1100,
 		"crit" : 5,
-		"crit_hurt" : 45
+		"crit_hurt" : 45,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 2
+			}
+		]
 	},
 
 	{
@@ -132,7 +174,13 @@
 		"def" : 100,
 		"hp" : 1200,
 		"crit" : 5,
-		"crit_hurt" : 50
+		"crit_hurt" : 50,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 3
+			}
+		]
 	},
 
 	{
@@ -149,7 +197,13 @@
 		"def" : 110,
 		"hp" : 1300,
 		"crit" : 5,
-		"crit_hurt" : 55
+		"crit_hurt" : 55,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 4
+			}
+		]
 	},
 
 	{
@@ -166,7 +220,13 @@
 		"def" : 120,
 		"hp" : 1400,
 		"crit" : 5,
-		"crit_hurt" : 60
+		"crit_hurt" : 60,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 5
+			}
+		]
 	},
 
 	{
@@ -183,7 +243,13 @@
 		"def" : 80,
 		"hp" : 1000,
 		"crit" : 5,
-		"crit_hurt" : 40
+		"crit_hurt" : 40,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 1
+			}
+		]
 	},
 
 	{
@@ -200,7 +266,13 @@
 		"def" : 90,
 		"hp" : 1100,
 		"crit" : 5,
-		"crit_hurt" : 45
+		"crit_hurt" : 45,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 2
+			}
+		]
 	},
 
 	{
@@ -217,7 +289,13 @@
 		"def" : 100,
 		"hp" : 1200,
 		"crit" : 5,
-		"crit_hurt" : 50
+		"crit_hurt" : 50,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 3
+			}
+		]
 	},
 
 	{
@@ -234,7 +312,13 @@
 		"def" : 110,
 		"hp" : 1300,
 		"crit" : 5,
-		"crit_hurt" : 55
+		"crit_hurt" : 55,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 4
+			}
+		]
 	},
 
 	{
@@ -251,7 +335,13 @@
 		"def" : 120,
 		"hp" : 1400,
 		"crit" : 5,
-		"crit_hurt" : 60
+		"crit_hurt" : 60,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 5
+			}
+		]
 	},
 
 	{
@@ -268,7 +358,13 @@
 		"def" : 80,
 		"hp" : 1000,
 		"crit" : 5,
-		"crit_hurt" : 40
+		"crit_hurt" : 40,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 1
+			}
+		]
 	},
 
 	{
@@ -285,7 +381,13 @@
 		"def" : 90,
 		"hp" : 1100,
 		"crit" : 5,
-		"crit_hurt" : 45
+		"crit_hurt" : 45,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 2
+			}
+		]
 	},
 
 	{
@@ -302,7 +404,13 @@
 		"def" : 100,
 		"hp" : 1200,
 		"crit" : 5,
-		"crit_hurt" : 50
+		"crit_hurt" : 50,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 3
+			}
+		]
 	},
 
 	{
@@ -319,7 +427,13 @@
 		"def" : 110,
 		"hp" : 1300,
 		"crit" : 5,
-		"crit_hurt" : 55
+		"crit_hurt" : 55,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 4
+			}
+		]
 	},
 
 	{
@@ -336,7 +450,13 @@
 		"def" : 120,
 		"hp" : 1400,
 		"crit" : 5,
-		"crit_hurt" : 60
+		"crit_hurt" : 60,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 5
+			}
+		]
 	},
 
 	{
@@ -353,7 +473,13 @@
 		"def" : 80,
 		"hp" : 1000,
 		"crit" : 5,
-		"crit_hurt" : 40
+		"crit_hurt" : 40,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 1
+			}
+		]
 	},
 
 	{
@@ -370,7 +496,13 @@
 		"def" : 90,
 		"hp" : 1100,
 		"crit" : 5,
-		"crit_hurt" : 45
+		"crit_hurt" : 45,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 2
+			}
+		]
 	},
 
 	{
@@ -387,7 +519,13 @@
 		"def" : 100,
 		"hp" : 1200,
 		"crit" : 5,
-		"crit_hurt" : 50
+		"crit_hurt" : 50,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 3
+			}
+		]
 	},
 
 	{
@@ -404,7 +542,13 @@
 		"def" : 110,
 		"hp" : 1300,
 		"crit" : 5,
-		"crit_hurt" : 55
+		"crit_hurt" : 55,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 4
+			}
+		]
 	},
 
 	{
@@ -421,7 +565,13 @@
 		"def" : 120,
 		"hp" : 1400,
 		"crit" : 5,
-		"crit_hurt" : 60
+		"crit_hurt" : 60,
+		"needs" : [
+			{
+				"id" : 4113,
+				"cnt" : 5
+			}
+		]
 	}
 
 ]
