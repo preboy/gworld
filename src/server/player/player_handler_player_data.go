@@ -36,34 +36,8 @@ func handler_player_data(plr *Player, packet *tcp.Packet) {
 		})
 	}
 
-	for id, hero := range data.Heros {
-		_hero := &msg.Hero{
-			Id:           id,
-			Level:        hero.Level,
-			RefineLv:     hero.RefineLv,
-			RefineTimes:  hero.RefineTimes,
-			RefineSuper:  hero.RefineSuper,
-			Power:        hero.Power,
-			Status:       hero.Status,
-			LifePoint:    hero.LifePoint,
-			LifePointMax: hero.LifePointMax,
-		}
-
-		for i := 0; i < 2; i++ {
-			_hero.Active = append(_hero.Active, &msg.Skill{
-				Id:    hero.Active[i].Id,
-				Level: hero.Active[i].Level,
-			})
-		}
-
-		for i := 0; i < 4; i++ {
-			_hero.Passive = append(_hero.Passive, &msg.Skill{
-				Id:    hero.Passive[i].Id,
-				Level: hero.Passive[i].Level,
-			})
-		}
-
-		res.Heros = append(res.Heros, _hero)
+	for _, hero := range data.Heros {
+		res.Heros = append(res.Heros, hero.ToMsg())
 	}
 
 	plr.SendPacket(protocol.MSG_SC_PlayerData, &res)

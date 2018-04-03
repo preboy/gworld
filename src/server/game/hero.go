@@ -1,6 +1,7 @@
 package game
 
 import (
+	"public/protocol/msg"
 	"server/game/battle"
 	"server/game/config"
 )
@@ -135,4 +136,34 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u.CalcProp()
 
 	return u
+}
+
+func (self *Hero) ToMsg() *msg.Hero {
+	_hero := &msg.Hero{
+		Id:           self.Id,
+		Level:        self.Level,
+		RefineLv:     self.RefineLv,
+		RefineTimes:  self.RefineTimes,
+		RefineSuper:  self.RefineSuper,
+		Power:        self.Power,
+		Status:       self.Status,
+		LifePoint:    self.LifePoint,
+		LifePointMax: self.LifePointMax,
+	}
+
+	for i := 0; i < 2; i++ {
+		_hero.Active = append(_hero.Active, &msg.Skill{
+			Id:    self.Active[i].Id,
+			Level: self.Active[i].Level,
+		})
+	}
+
+	for i := 0; i < 4; i++ {
+		_hero.Passive = append(_hero.Passive, &msg.Skill{
+			Id:    self.Passive[i].Id,
+			Level: self.Passive[i].Level,
+		})
+	}
+
+	return _hero
 }

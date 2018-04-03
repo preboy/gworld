@@ -45,6 +45,7 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 		}
 
 		hero.Level++
+		res.Hero = hero.ToMsg()
 		goods.Apply(plr)
 	}()
 
