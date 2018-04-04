@@ -48,7 +48,6 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 				if math.RandomHitn(int(conf.Prob), 100) {
 					hero.RefineLv++
 					res.Result = 1
-					res.Hero = hero.ToMsg()
 				} else {
 					hero.RefineLv = 0
 				}
@@ -70,7 +69,6 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					hero.RefineLv++
 					hero.RefineTimes = 0
 					res.Result = 1
-					res.Hero = hero.ToMsg()
 				} else {
 					hero.RefineTimes++
 				}
@@ -93,7 +91,6 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 				if math.RandomHitn(int(conf.Prob), 100) {
 					hero.RefineLv++
 					res.Result = 1
-					res.Hero = hero.ToMsg()
 				} else {
 					hero.RefineLv = 0
 				}
@@ -113,7 +110,6 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					hero.RefineLv++
 					hero.RefineTimes = 0
 					res.Result = 1
-					res.Hero = hero.ToMsg()
 				} else {
 					hero.RefineTimes++
 				}
@@ -121,5 +117,8 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 		}
 	}()
 
+	if res.Result == 1 {
+		plr.UpdateHeroToClient(req.HeroId)
+	}
 	plr.SendPacket(protocol.MSG_SC_HeroRefine, &res)
 }

@@ -43,6 +43,8 @@ const (
     MSG_CS_HeroRefine       uint16 = 0x0016
     MSG_SC_HeroRefine       uint16 = 0x0017
 
+    MSG_SC_HeroInfoUpdate   uint16 = 0x0018
+
 
     // ---------------------------------------------------------
 

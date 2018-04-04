@@ -177,7 +177,6 @@ message HeroLevelupRequest {
 
 message HeroLevelupResponse {
     uint32 error_code           = 1;
-    Hero   hero                 = 2;
 }
 
 
@@ -189,5 +188,9 @@ message HeroRefineRequest {
 message HeroRefineResponse {
     uint32 error_code           = 1;
     uint32 result               = 2;    // error_code为0时，操作是否成功
-    Hero   hero                 = 3;
+}
+
+
+message HeroInfoUpdateResponse {
+    Hero   hero                 = 1;
 }

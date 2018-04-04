@@ -1,6 +1,8 @@
 package player
 
 import (
+	"public/protocol"
+	"public/protocol/msg"
 	"server/game"
 )
 
@@ -23,4 +25,10 @@ func (self *Player) AddHero(id uint32) bool {
 
 	self.data.Heros[id] = hero
 	return true
+}
+
+func (self *Player) UpdateHeroToClient(id uint32) {
+	res := msg.HeroInfoUpdateResponse{}
+	res.Hero = self.GetHero(id).ToMsg()
+	self.SendPacket(protocol.MSG_SC_HeroInfoUpdate, &res)
 }
