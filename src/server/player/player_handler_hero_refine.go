@@ -117,7 +117,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 		}
 	}()
 
-	if res.Result == 1 {
+	if res.ErrorCode == err_code.ERR_OK {
 		plr.UpdateHeroToClient(req.HeroId)
 	}
 	plr.SendPacket(protocol.MSG_SC_HeroRefine, &res)
