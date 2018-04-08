@@ -20,6 +20,8 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 
 	res.ErrorCode = err_code.ERR_OK
 
+	var lv_old, lv_new uint32
+
 	func() {
 		hero := plr.GetHero(req.HeroId)
 		if hero == nil {
@@ -44,10 +46,17 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 			return
 		}
 
+		lv_old = hero.Level
 		hero.Level++
+		lv_new = hero.Level
 		goods.Apply(plr)
 		plr.UpdateHeroToClient(req.HeroId)
+
 	}()
 
 	plr.SendPacket(protocol.MSG_SC_HeroLevelup, &res)
+
+	if lv_old != lv_new {
+		plr.OnPlayerLevelup(lv_old, lv_new)
+	}
 }

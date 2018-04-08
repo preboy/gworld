@@ -31,6 +31,20 @@ func NewHero(id uint32) *Hero {
 		Id:    id,
 		Level: 1,
 	}
+
+	if proto.Skill1 != 0 {
+		hero.Active[0] = Skill{
+			Id:    proto.Skill1,
+			Level: 1,
+		}
+	}
+	if proto.Skill2 != 0 {
+		hero.Active[1] = Skill{
+			Id:    proto.Skill2,
+			Level: 1,
+		}
+	}
+
 	return hero
 }
 

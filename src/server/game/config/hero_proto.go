@@ -17,6 +17,8 @@ type HeroProto struct {
 	CritHurt    uint32       `json:"crit_hurt"`
 	SkillCommon []*SkillConf `json:"skill_common"`
 	Needs       []*ItemConf  `json:"needs"`
+	Skill1      uint32       `json:"skill_1"`
+	Skill2      uint32       `json:"skill_2"`
 }
 
 type HeroProtoConf struct {
