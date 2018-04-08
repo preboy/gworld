@@ -10,3 +10,5 @@
 /src/test
 /plan/json
 /plan/lua
+/plan/exporter.exe
+/plan/exporter_map.exe
