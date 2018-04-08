@@ -254,7 +254,7 @@ func main() {
 
 			// for k, cell := range row.Cells {
 			for k := 0; k < cols; k++ {
-				cell := ""
+				var cell string
 				if k < len(row.Cells) {
 					cell = row.Cells[k].String()
 				}
@@ -269,6 +269,11 @@ func main() {
 					key, text = expand_json_map(field[k], cell)
 				} else if types[k] == "array" {
 					key, text = expand_json_array(field[k], cell)
+				} else if types[k] == "number" {
+					key, text = expand_json_normal(field[k], cell)
+					if text == "" {
+						text = "0"
+					}
 				} else {
 					key, text = expand_json_normal(field[k], cell)
 				}
@@ -309,7 +314,7 @@ func main() {
 			switch err.(type) {
 			case *json.SyntaxError:
 				e := err.(*json.SyntaxError)
-				s := fmt.Sprintf("SyntaxError: %s. /Offset: %d(0x%X)", e.Error(), e.Offset, e.Offset)
+				s := fmt.Sprintf("[%s] SyntaxError: %s. /Offset: %d(0x%X)", file_name, e.Error(), e.Offset, e.Offset)
 				fmt.Println(s)
 			case *json.UnmarshalTypeError:
 				fmt.Println("Unsurpported format", err)
@@ -376,6 +381,11 @@ func main() {
 					key, text = expand_lua_map(field[k], cell)
 				} else if types[k] == "array" {
 					key, text = expand_lua_array(field[k], cell)
+				} else if types[k] == "number" {
+					key, text = expand_json_normal(field[k], cell)
+					if text == "" {
+						text = "0"
+					}
 				} else {
 					key, text = expand_lua_normal(field[k], cell)
 				}

@@ -237,7 +237,7 @@ func main() {
 			switch err.(type) {
 			case *json.SyntaxError:
 				e := err.(*json.SyntaxError)
-				s := fmt.Sprintf("SyntaxError: %s. /Offset: %d(0x%X)", e.Error(), e.Offset, e.Offset)
+				s := fmt.Sprintf("[%s] SyntaxError: %s. /Offset: %d(0x%X)", file_name, e.Error(), e.Offset, e.Offset)
 				fmt.Println(s)
 			case *json.UnmarshalTypeError:
 				fmt.Println("Unsurpported format", err)
