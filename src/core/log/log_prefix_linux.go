@@ -1,5 +1,10 @@
 package log
 
+import (
+	"fmt"
+	"runtime"
+)
+
 func log_prefix(ty int) string {
 	switch ty {
 	case 1:
@@ -17,5 +22,12 @@ func log_prefix(ty int) string {
 }
 
 func log_suffix() string {
-	return "\033[m\n"
+	_, file, line, _ := runtime.Caller(3)
+	for i := len(file) - 1; i > 0; i-- {
+		if file[i] == '/' {
+			file = file[i+1:]
+			break
+		}
+	}
+	return fmt.Sprintf("\033[m [%v:%v]", file, line)
 }
