@@ -51,7 +51,7 @@ func (self *Logger) Go() {
 			for {
 				select {
 				case s := <-self.q:
-					self.f.WriteString(s)
+					self.f.WriteString(s + "\n")
 				default:
 					break E
 				}
@@ -65,7 +65,7 @@ func (self *Logger) Go() {
 		for {
 			select {
 			case s := <-self.q:
-				self.f.WriteString(s)
+				self.f.WriteString(s + "\n")
 				if self.screen {
 					fmt.Println(s)
 				}
