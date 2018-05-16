@@ -13,6 +13,7 @@ import (
 	"core/schedule"
 	"core/timer"
 	"core/utils"
+	"core/work_service"
 	"server/cmd"
 	"server/db_mgr"
 	"server/game"
@@ -52,6 +53,7 @@ func main() {
 	timer.Start()
 	schedule.Start()
 	net_mgr.Start()
+	work_service.Start(4)
 
 	config.Load()
 
@@ -91,6 +93,9 @@ func main() {
 
 	log.Info("main_thread stopping ...")
 	main_thread.Stop()
+
+	log.Info("work_service stopping ...")
+	work_service.Stop()
 
 	log.Info("player stopping ...")
 	player.SaveData()
