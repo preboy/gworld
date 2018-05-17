@@ -1,7 +1,6 @@
 package work_service
 
 import (
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -41,6 +40,7 @@ func (self *WorkService) Start(n int) bool {
 		atomic.AddInt32(&self.n, 1)
 
 		go func(i int) {
+
 			defer func() {
 				self.w.Done()
 				atomic.AddInt32(&self.n, -1)
@@ -68,7 +68,6 @@ func (self *WorkService) Start(n int) bool {
 				default:
 					self.c.L.Unlock()
 				}
-
 			}
 
 		}(i)
@@ -104,8 +103,6 @@ func (self *WorkService) Stop() {
 	self.c.Broadcast()
 	self.w.Wait()
 
-	fmt.Println("Closeing..........")
-
 	// No orphan func
 	for f := range self.q {
 		f()
@@ -119,9 +116,9 @@ func (self *WorkService) Queue(f func()) {
 	}
 }
 
-func Start(n int) {
+func Start(n int) bool {
 	__WorkService = NewWorkService()
-	__WorkService.Start(n)
+	return __WorkService.Start(n)
 }
 
 func Stop() {
@@ -131,23 +128,3 @@ func Stop() {
 func Queue(f func()) {
 	__WorkService.Queue(f)
 }
-
-// func main() {
-
-// 	s := NewWorkService()
-// 	s.Start(10)
-
-// 	for i := 0; i < 70; i++ {
-// 		i := i
-// 		s.Queue(func() {
-// 			fmt.Println(i, "start")
-// 			time.Sleep(1 * time.Second)
-// 			fmt.Println(i, "end")
-// 		})
-// 	}
-
-// 	time.Sleep(6 * time.Second)
-// 	fmt.Println("read to end ----------------")
-
-// 	s.Close()
-// }
