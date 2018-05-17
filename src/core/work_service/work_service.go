@@ -3,6 +3,7 @@ package work_service
 import (
 	"fmt"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -11,7 +12,7 @@ var (
 )
 
 type WorkService struct {
-	n       int
+	n       int32
 	w       *sync.WaitGroup
 	l       *sync.Mutex
 	c       *sync.Cond
@@ -34,13 +35,17 @@ func (self *WorkService) Start(n int) bool {
 		return false
 	}
 
-	self.n = n
 	self.running = true
-
-	for i := 0; i < self.n; i++ {
+	for i := 0; i < n; i++ {
 		i := i
+		atomic.AddInt32(&self.n, 1)
+
 		go func(i int) {
-			defer self.w.Done()
+			defer func() {
+				self.w.Done()
+				atomic.AddInt32(&self.n, -1)
+			}()
+
 			self.w.Add(1)
 
 			for {
@@ -73,8 +78,9 @@ func (self *WorkService) Start(n int) bool {
 	go func() {
 		defer self.w.Done()
 		self.w.Add(1)
+
 		for {
-			if !self.running {
+			if atomic.LoadInt32(&self.n) == 0 {
 				return
 			}
 			if len(self.q) > 0 {
