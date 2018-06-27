@@ -7,26 +7,28 @@ import (
 )
 
 type RefineSuper struct {
-	Level    uint32 `json:"level"`
-	Atk      uint32 `json:"atk"`
-	Def      uint32 `json:"def"`
-	Hp       uint32 `json:"hp"`
-	Crit     uint32 `json:"crit"`
-	CritHurt uint32 `json:"crit_hurt"`
-	Count    uint32 `json:"count"`
-	Prob     uint32 `json:"prob"`
-	Insure   uint32 `json:"insure"`
+	Level  uint32 `json:"level"`
+	Apm    uint32 `json:"apm"`
+	Atk    uint32 `json:"atk"`
+	Def    uint32 `json:"def"`
+	Hp     uint32 `json:"hp"`
+	Crit   uint32 `json:"crit"`
+	Hurt   uint32 `json:"crit_hurt"`
+	Count  uint32 `json:"count"`
+	Prob   uint32 `json:"prob"`
+	Insure uint32 `json:"insure"`
 }
 
 type RefineNormal struct {
-	Level    uint32 `json:"level"`
-	Atk      uint32 `json:"atk"`
-	Def      uint32 `json:"def"`
-	Hp       uint32 `json:"hp"`
-	Crit     uint32 `json:"crit"`
-	CritHurt uint32 `json:"crit_hurt"`
-	Count    uint32 `json:"count"`
-	Prob     uint32 `json:"prob"`
+	Level uint32 `json:"level"`
+	Apm   uint32 `json:"apm"`
+	Atk   uint32 `json:"atk"`
+	Def   uint32 `json:"def"`
+	Hp    uint32 `json:"hp"`
+	Crit  uint32 `json:"crit"`
+	Hurt  uint32 `json:"crit_hurt"`
+	Count uint32 `json:"count"`
+	Prob  uint32 `json:"prob"`
 }
 
 type RefineSuperConf struct {

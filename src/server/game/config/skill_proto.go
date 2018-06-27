@@ -7,16 +7,21 @@ import (
 )
 
 type SkillProto struct {
-	Id      uint32      `json:"id"`
-	Level   uint32      `json:"level"`
-	Name    string      `json:"name"`
-	Passive int32       `json:"passive"`
-	Target  uint32      `json:"target"`
-	Last_t  int32       `json:"last_t"`
-	Itv_t   int32       `json:"itv_t"`
-	Cd_t    int32       `json:"cd_t"`
-	Auras   []*AuraConf `json:"aura"`
-	Attrs   []*AttrConf `json:"attr"`
+	Id           uint32          `json:"id"`
+	Level        uint32          `json:"level"`
+	Name         string          `json:"name"`
+	Prepare_t    int32           `json:"prepare_t"`
+	Effect_t     int32           `json:"effect_t"`
+	Itv_t        int32           `json:"itv_t"`
+	Cd_t         int32           `json:"cd_t"`
+	Type         int32           `json:"type"`
+	Target_major []int32         `json:"target_major"`
+	Target_minor []int32         `json:"target_minor"`
+	Aura_major   []*ProbAuraConf `json:"aura_major"`
+	Aura_minor   []*ProbAuraConf `json:"aura_minor"`
+	Prop_major   []*PropConf     `json:"prop_major"`
+	Prop_minor   []*PropConf     `json:"prop_minor"`
+	Prop_passive []*PropConf     `json:"prop_passive"`
 }
 
 type SkillProtoConf struct {

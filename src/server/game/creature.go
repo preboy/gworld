@@ -40,12 +40,10 @@ func (self *Creature) Name() string {
 
 func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
-		Base:       self,
-		Id:         self.proto.Id,
-		Lv:         self.proto.Level,
-		UnitType:   uint32(self.UnitType()),
-		Troop:      nil,
-		Skill_curr: nil,
+		Base:     self,
+		Id:       self.proto.Id,
+		Lv:       self.proto.Level,
+		UnitType: uint32(self.UnitType()),
 	}
 
 	// 普攻
@@ -58,23 +56,22 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	for _, v := range self.proto.SkillExtra {
 		s := battle.NewBattleSkill(v.Id, v.Lv)
 		if s != nil {
-			u.Skill_exclusive = append(u.Skill_exclusive, s)
+			u.Skill_battle = append(u.Skill_battle, s)
 		}
 	}
 
 	// 可见属性计算
 	u.Prop_base = &battle.Property{
-		Hp:       self.proto.Hp,
-		Atk:      self.proto.Atk,
-		Def:      self.proto.Def,
-		Crit:     self.proto.Crit,
-		CritHurt: self.proto.CritHurt,
+		Hp:   float64(self.proto.Hp),
+		Apm:  float64(self.proto.Apm),
+		Atk:  float64(self.proto.Atk),
+		Def:  float64(self.proto.Def),
+		Crit: float64(self.proto.Crit),
+		Hurt: float64(self.proto.Hurt),
 	}
 
 	// 加成属性计算 TODO
 	u.Prop_addi = &battle.Property{}
-
-	u.CalcProp()
 
 	return u
 }

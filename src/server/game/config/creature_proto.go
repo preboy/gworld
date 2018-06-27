@@ -7,17 +7,18 @@ import (
 )
 
 type CreatureProto struct {
-	Id           uint32       `json:"id"`
-	Level        uint32       `json:"level"`
-	Name         string       `json:"name"`
-	Atk          uint32       `json:"atk"`
-	Def          uint32       `json:"def"`
-	Hp           uint32       `json:"hp"`
-	Crit         uint32       `json:"crit"`
-	CritHurt     uint32       `json:"crit_hurt"`
-	SkillExtra   []*SkillConf `json:"skill_extra"`
-	SkillCommon  []*SkillConf `json:"skill_common"`
-	Auras        []*AuraConf  `json:"aura"`
+	Id          uint32       `json:"id"`
+	Level       uint32       `json:"level"`
+	Name        string       `json:"name"`
+	Apm         uint32       `json:"apm"`
+	Atk         uint32       `json:"atk"`
+	Def         uint32       `json:"def"`
+	Hp          uint32       `json:"hp"`
+	Crit        uint32       `json:"crit"`
+	Hurt        uint32       `json:"crit_hurt"`
+	SkillExtra  []*SkillConf `json:"skill_extra"`
+	SkillCommon []*SkillConf `json:"skill_common"`
+	Auras       []*AuraConf  `json:"aura"`
 }
 
 type CreatureProtoConf struct {

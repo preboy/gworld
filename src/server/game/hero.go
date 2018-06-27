@@ -69,24 +69,23 @@ func (self *Hero) Name() string {
 
 func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
-		Base:       self,
-		Id:         self.Id,
-		Lv:         self.Level,
-		UnitType:   uint32(self.UnitType()),
-		Troop:      nil,
-		Skill_curr: nil,
+		Base:     self,
+		Id:       self.Id,
+		Lv:       self.Level,
+		UnitType: uint32(self.UnitType()),
 	}
+
+	u.Prop_addi = &battle.Property{}
+	u.Prop_base = &battle.Property{}
 
 	proto := config.GetHeroProto(self.Id, self.Level)
 
-	// 可见属性计算
-	u.Prop_base = &battle.Property{
-		Hp:       proto.Hp,
-		Atk:      proto.Atk,
-		Def:      proto.Def,
-		Crit:     proto.Crit,
-		CritHurt: proto.CritHurt,
-	}
+	u.Prop_base.Hp += float64(proto.Hp)
+	u.Prop_base.Apm += float64(proto.Apm)
+	u.Prop_base.Atk += float64(proto.Atk)
+	u.Prop_base.Def += float64(proto.Def)
+	u.Prop_base.Crit += float64(proto.Crit)
+	u.Prop_base.Hurt += float64(proto.Hurt)
 
 	// 普攻
 	if len(proto.SkillCommon) > 0 {
@@ -99,23 +98,16 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		v := &self.Active[i]
 		skill := battle.NewBattleSkill(v.Id, v.Level)
 		if skill != nil {
-			u.Skill_exclusive = append(u.Skill_exclusive, skill)
+			u.Skill_battle = append(u.Skill_battle, skill)
 		}
 	}
 
 	// 被动技能
 	for i := 0; i < 4; i++ {
 		v := &self.Passive[i]
-		proto := config.GetSkillProto(v.Id, v.Level)
-		if proto != nil {
-			if proto.Passive == 1 {
-				u.Prop_base.AddAttrs(proto.Attrs)
-			} else {
-				skill := battle.NewBattleSkill(v.Id, v.Level)
-				if skill != nil {
-					u.Skill_exclusive = append(u.Skill_exclusive, skill)
-				}
-			}
+		skill := config.GetSkillProto(v.Id, v.Level)
+		if skill != nil {
+			u.Prop_base.AddConf(skill.Prop_passive)
 		}
 	}
 
@@ -124,30 +116,27 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		if self.RefineSuper {
 			conf := config.GetRefineSuper(self.RefineLv)
 			if conf != nil {
-				u.Prop_base.Hp += conf.Hp
-				u.Prop_base.Atk += conf.Atk
-				u.Prop_base.Def += conf.Def
-				u.Prop_base.Crit += conf.Crit
-				u.Prop_base.CritHurt += conf.CritHurt
+				u.Prop_base.Hp += float64(conf.Hp)
+				u.Prop_base.Apm += float64(conf.Apm)
+				u.Prop_base.Atk += float64(conf.Atk)
+				u.Prop_base.Def += float64(conf.Def)
+				u.Prop_base.Crit += float64(conf.Crit)
+				u.Prop_base.Hurt += float64(conf.Hurt)
 			}
 		} else {
 			conf := config.GetRefineNormal(self.RefineLv)
 			if conf != nil {
-				u.Prop_base.Hp += conf.Hp
-				u.Prop_base.Atk += conf.Atk
-				u.Prop_base.Def += conf.Def
-				u.Prop_base.Crit += conf.Crit
-				u.Prop_base.CritHurt += conf.CritHurt
+				u.Prop_base.Hp += float64(conf.Hp)
+				u.Prop_base.Apm += float64(conf.Apm)
+				u.Prop_base.Atk += float64(conf.Atk)
+				u.Prop_base.Def += float64(conf.Def)
+				u.Prop_base.Crit += float64(conf.Crit)
+				u.Prop_base.Hurt += float64(conf.Hurt)
 			}
 		}
 	}
 
 	// 英雄专精
-
-	// 加成属性计算
-	u.Prop_addi = &battle.Property{}
-
-	u.CalcProp()
 
 	return u
 }

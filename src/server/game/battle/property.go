@@ -5,56 +5,78 @@ import (
 )
 
 type Property struct {
-	Hp       uint32 // HP上限
-	Atk      uint32 // 攻击
-	Def      uint32 // 防御
-	Crit     uint32 // 暴击
-	CritHurt uint32 // 暴击伤害
+	Hp   float64 // HP上限
+	Apm  float64 // 速度
+	Atk  float64 // 攻击
+	Def  float64 // 防御
+	Crit float64 // 暴击
+	Hurt float64 // 暴伤
 }
 
-type AttrType uint32
+type PropType uint32
 
 const (
-	_                 AttrType = 0 + iota // 角色属性类型
-	AttrType_HP                           // 1 HP
-	AttrType_Atk                          // 2 攻击
-	AttrType_Def                          // 3 防御
-	AttrType_Crit                         // 4 暴击
-	AttrType_CritHurt                     // 5 暴击伤害
+	_                PropType = 0 + iota // 角色属性类型
+	PropType_HP                          // 1 HP
+	PropType_Apm                         // 2 速度
+	PropType_Atk                         // 3 攻击
+	PropType_Def                         // 4 防御
+	PropType_Crit                        // 5 暴击
+	PropType_Hurt                        // 6 暴伤
+	PropType_PctHP                       // 7  HP加成
+	PropType_PctApm                      // 8  速度加成
+	PropType_PctAtk                      // 9  攻击加成
+	PropType_PctDef                      // 10 防御加成
+	PropType_PctCrit                     // 11 暴击加成
+	PropType_PctHurt                     // 12 暴伤加成
 )
 
-func (self *Property) AddAttrs(attrs []*config.AttrConf) {
-	for _, v := range attrs {
-		switch AttrType(v.Id) {
-		case AttrType_HP:
+func (self *Property) Clear() {
+	self.Hp = 0
+	self.Apm = 0
+	self.Atk = 0
+	self.Def = 0
+	self.Crit = 0
+	self.Hurt = 0
+}
+
+func (self *Property) AddConf(props []*config.PropConf) {
+	for _, v := range props {
+		switch PropType(v.Id) {
+		case PropType_HP:
 			{
 				self.Hp += v.Val
 			}
-		case AttrType_Atk:
+		case PropType_Apm:
+			{
+				self.Apm += v.Val
+			}
+		case PropType_Atk:
 			{
 				self.Atk += v.Val
 			}
-		case AttrType_Def:
+		case PropType_Def:
 			{
 				self.Def += v.Val
 			}
-		case AttrType_Crit:
+		case PropType_Crit:
 			{
 				self.Crit += v.Val
 			}
-		case AttrType_CritHurt:
+		case PropType_Hurt:
 			{
-				self.CritHurt += v.Val
+				self.Hurt += v.Val
 			}
 		default:
 		}
 	}
 }
 
-func (self *Property) AddProperty(p *Property) {
-	self.Hp += p.Hp
-	self.Atk += p.Atk
-	self.Def += p.Def
-	self.Crit += p.Crit
-	self.CritHurt += p.CritHurt
+func (self *Property) AddProperty(prop *Property) {
+	self.Hp += prop.Hp
+	self.Apm += prop.Apm
+	self.Atk += prop.Atk
+	self.Def += prop.Def
+	self.Crit += prop.Crit
+	self.Hurt += prop.Hurt
 }

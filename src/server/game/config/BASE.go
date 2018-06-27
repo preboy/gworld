@@ -15,9 +15,15 @@ type AuraConf struct {
 	Lv uint32 `json:"lv"`
 }
 
-type AttrConf struct {
-	Id  uint32 `json:"id"`
-	Val uint32 `json:"val"`
+type ProbAuraConf struct {
+	Prob uint32 `json:"prob"`
+	Id   uint32 `json:"id"`
+	Lv   uint32 `json:"lv"`
+}
+
+type PropConf struct {
+	Id  uint32  `json:"id"`
+	Val float64 `json:"val"`
 }
 
 func MakeUint64(l uint32, r uint32) uint64 {

@@ -1,7 +1,6 @@
 package battle
 
 import (
-	"core/log"
 	"server/game/config"
 )
 
@@ -14,24 +13,14 @@ type BattleAura struct {
 	update_time int32 // 对于有update的技能，记录上次时间
 	start       bool  // 就否初始化完成
 	finish      bool  // 是否完成
-	once        bool  // 是否一次性光环(战斗结束就删除,辅助光环使用此功能)
 }
 
-func NewAuraBattle(id, lv uint32, once bool) *BattleAura {
+func NewAuraBattle(id, lv uint32) *BattleAura {
 	proto := config.GetAuraProto(id, lv)
-	if proto == nil {
-		log.Error("NewAuraBattle Failed:", id, lv)
-		return nil
-	}
-
-	ab := &BattleAura{
+	return &BattleAura{
 		proto:  proto,
-		script: create_aura_script(proto),
+		script: create_script_object(proto),
 	}
-
-	ab.once = once
-
-	return ab
 }
 
 func (self *BattleAura) Init(caster, owner *BattleUnit) {
@@ -39,12 +28,8 @@ func (self *BattleAura) Init(caster, owner *BattleUnit) {
 	self.caster = caster
 }
 
-// 每场战斗开始时调用
-func (self *BattleAura) Reset() {
-	self.start = false
-	self.finish = false
-	self.start_time = 0
-	self.update_time = 0
+func (self *BattleAura) IsFinish() bool {
+	return self.finish
 }
 
 func (self *BattleAura) Update(time int32) {
@@ -82,18 +67,14 @@ func (self *BattleAura) onUpdate() {
 	}
 }
 
-func (self *BattleAura) onFinish() {
-	if self.script != nil {
-		self.script.OnFinish(self)
-	}
-}
-
-func (self *BattleAura) IsFinish() bool {
-	return self.finish
-}
-
 func (self *BattleAura) OnEvent(evt BattleEventType, ctx *SkillContext) {
 	if self.script != nil {
 		self.script.OnEvent(evt, self, ctx)
+	}
+}
+
+func (self *BattleAura) onFinish() {
+	if self.script != nil {
+		self.script.OnFinish(self)
 	}
 }

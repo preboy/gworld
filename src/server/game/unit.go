@@ -11,7 +11,7 @@ type Unit interface {
 	GetPower() uint32
 	ToCreature() *Creature
 	ToPlayer() *Hero
-	UnitType() int
+	UnitType() UnitType
 	Name() string
 }
 
