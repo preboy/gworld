@@ -10,10 +10,10 @@ type SkillProto struct {
 	Id           uint32          `json:"id"`
 	Level        uint32          `json:"level"`
 	Name         string          `json:"name"`
-	Prepare_t    int32           `json:"prepare_t"`
-	Effect_t     int32           `json:"effect_t"`
-	Itv_t        int32           `json:"itv_t"`
-	Cd_t         int32           `json:"cd_t"`
+	Prepare_t    uint32          `json:"prepare_t"`
+	Effect_t     uint32          `json:"effect_t"`
+	Itv_t        uint32          `json:"itv_t"`
+	Cd_t         uint32          `json:"cd_t"`
 	Type         int32           `json:"type"`
 	Target_major []int32         `json:"target_major"`
 	Target_minor []int32         `json:"target_minor"`

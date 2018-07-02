@@ -8,10 +8,17 @@ import (
 
 // ============================================================
 
+type AuraEffectType uint32
+
+const (
+	_               AuraEffectType = 0 + iota // 光环效果类型
+	AET_PropChanged                           // 属性变化： arg1:属性类型  arg2: 属性变化量
+)
+
 type AuraScript interface {
 	OnStart(ab *BattleAura)
+	OnEvent(ab *BattleAura, evt BattleCalcEvent, ctx *SkillContext)
 	OnUpdate(ab *BattleAura)
-	OnEvent(evt BattleEventType, ab *BattleAura, ctx *SkillContext)
 	OnFinish(ab *BattleAura)
 }
 
@@ -56,10 +63,11 @@ func (self *AuraScript_1) OnStart(aura *BattleAura) {
 func (self *AuraScript_1) OnUpdate(aura *BattleAura) {
 	fmt.Println("AuraScript_1 OnUpdate")
 	aura.owner.Hp += int(aura.proto.Param1)
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_HP), aura.proto.Param1, 0, 0)
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(aura.proto.Param1), 0, 0)
 }
 
-func (self *AuraScript_1) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+func (self *AuraScript_1) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_1 Event:", evt)
 }
 
@@ -82,21 +90,23 @@ func NewAuraScript_2() AuraScript {
 func (self *AuraScript_2) OnStart(aura *BattleAura) {
 	fmt.Println("AuraScript_2 OnStart")
 	aura.owner.Prop_addi.Atk += float64(aura.proto.Param1)
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_Atk), aura.proto.Param1, 0, 0)
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Atk), int32(aura.proto.Param1), 0, 0)
 }
 
 func (self *AuraScript_2) OnUpdate(aura *BattleAura) {
 	fmt.Println("AuraScript_2 OnUpdate")
 }
 
-func (self *AuraScript_2) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+func (self *AuraScript_2) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_2 Event:", evt)
 }
 
 func (self *AuraScript_2) OnFinish(aura *BattleAura) {
 	fmt.Println("AuraScript_2 OnFinish")
 	aura.owner.Prop_addi.Atk -= float64(aura.proto.Param1)
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_Atk), -aura.proto.Param1, 0, 0)
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Atk), -int32(aura.proto.Param1), 0, 0)
 }
 
 // ============================================================
@@ -120,9 +130,9 @@ func (self *AuraScript_3) OnUpdate(aura *BattleAura) {
 	fmt.Println("AuraScript_3 OnUpdate")
 }
 
-func (self *AuraScript_3) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+func (self *AuraScript_3) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_3 Event:", evt)
-	if evt == BattleEvent_AftDef {
+	if evt == BCE_AftDef {
 		if self.times >= aura.proto.Param1 {
 			return
 		}
@@ -137,7 +147,8 @@ func (self *AuraScript_3) OnEvent(evt BattleEventType, aura *BattleAura, ctx *Sk
 			return
 		}
 	}
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_Hurt), aura.proto.Param2, 0, 0)
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Hurt), -int32(aura.proto.Param1), 0, 0)
 }
 
 func (self *AuraScript_3) OnFinish(aura *BattleAura) {
@@ -164,15 +175,17 @@ func (self *AuraScript_4) OnUpdate(aura *BattleAura) {
 	fmt.Println("AuraScript_4 OnUpdate")
 }
 
-func (self *AuraScript_4) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+func (self *AuraScript_4) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_4 Event:", evt)
-	if evt == BattleEvent_Damage {
+	if evt == BCE_Damage {
 		aura.owner.Hp += int(aura.proto.Param1)
 		if aura.owner.Hp > int(aura.owner.Prop.Hp) {
 			aura.owner.Hp = int(aura.owner.Prop.Hp)
 		}
 	}
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_HP), aura.proto.Param1, 0, 0)
+
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(aura.proto.Param1), 0, 0)
 }
 
 func (self *AuraScript_4) OnFinish(aura *BattleAura) {
@@ -194,19 +207,23 @@ func NewAuraScript_5() AuraScript {
 func (self *AuraScript_5) OnStart(aura *BattleAura) {
 	fmt.Println("AuraScript_5 OnStart")
 	aura.owner.Prop_addi.Def -= float64(aura.proto.Param1)
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_Def), -aura.proto.Param1, 0, 0)
+
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Def), -int32(aura.proto.Param1), 0, 0)
 }
 
 func (self *AuraScript_5) OnUpdate(aura *BattleAura) {
 	fmt.Println("AuraScript_5 OnUpdate")
 }
 
-func (self *AuraScript_5) OnEvent(evt BattleEventType, aura *BattleAura, ctx *SkillContext) {
+func (self *AuraScript_5) OnEvent(ab *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_5 Event:", evt)
 }
 
 func (self *AuraScript_5) OnFinish(aura *BattleAura) {
 	fmt.Println("AuraScript_5 OnFinish")
 	aura.owner.Prop_addi.Def += float64(aura.proto.Param1)
-	aura.owner.AddCampaignDetail(CampaignEvent_AuraEffect, int32(PropType_Def), +aura.proto.Param1, 0, 0)
+
+	aura.owner.GetBattle().BattlePlayEvent_Effect(
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Def), int32(aura.proto.Param1), 0, 0)
 }

@@ -21,8 +21,10 @@
 		BattleSkill
 		BattleAura
 		BattleUnit
-		CampaignDetail
-		BattleCampaign
+		BattleEventSkill
+		BattleEventAura
+		BattleEventHurt
+		BattleEventAuraEffect
 		BattleResult
 		MakeBattleRequest
 		MakeBattleResponse
@@ -474,20 +476,18 @@ func (m *BattleAura) GetLv() uint32 {
 }
 
 type BattleUnit struct {
-	Type               uint32         `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`
-	Id                 uint32         `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
-	Lv                 uint32         `protobuf:"varint,3,opt,name=lv,proto3" json:"lv,omitempty"`
-	Pos                uint32         `protobuf:"varint,4,opt,name=pos,proto3" json:"pos,omitempty"`
-	Atk                uint32         `protobuf:"varint,5,opt,name=atk,proto3" json:"atk,omitempty"`
-	Def                uint32         `protobuf:"varint,6,opt,name=def,proto3" json:"def,omitempty"`
-	Hp                 uint32         `protobuf:"varint,7,opt,name=hp,proto3" json:"hp,omitempty"`
-	Crit               uint32         `protobuf:"varint,8,opt,name=crit,proto3" json:"crit,omitempty"`
-	CritHurt           uint32         `protobuf:"varint,9,opt,name=crit_hurt,json=critHurt,proto3" json:"crit_hurt,omitempty"`
-	Comm               *BattleSkill   `protobuf:"bytes,10,opt,name=comm" json:"comm,omitempty"`
-	Skill              []*BattleSkill `protobuf:"bytes,11,rep,name=skill" json:"skill,omitempty"`
-	CareerGeneralSkill *BattleSkill   `protobuf:"bytes,12,opt,name=career_general_skill,json=careerGeneralSkill" json:"career_general_skill,omitempty"`
-	CareerGeneralAura  *BattleAura    `protobuf:"bytes,13,opt,name=career_general_aura,json=careerGeneralAura" json:"career_general_aura,omitempty"`
-	CareerGuarderAura  *BattleAura    `protobuf:"bytes,14,opt,name=career_guarder_aura,json=careerGuarderAura" json:"career_guarder_aura,omitempty"`
+	Type  uint32         `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`
+	Id    uint32         `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Lv    uint32         `protobuf:"varint,3,opt,name=lv,proto3" json:"lv,omitempty"`
+	Pos   uint32         `protobuf:"varint,4,opt,name=pos,proto3" json:"pos,omitempty"`
+	Apm   uint32         `protobuf:"varint,5,opt,name=apm,proto3" json:"apm,omitempty"`
+	Atk   uint32         `protobuf:"varint,6,opt,name=atk,proto3" json:"atk,omitempty"`
+	Def   uint32         `protobuf:"varint,7,opt,name=def,proto3" json:"def,omitempty"`
+	Hp    uint32         `protobuf:"varint,8,opt,name=hp,proto3" json:"hp,omitempty"`
+	Crit  uint32         `protobuf:"varint,9,opt,name=crit,proto3" json:"crit,omitempty"`
+	Hurt  uint32         `protobuf:"varint,10,opt,name=hurt,proto3" json:"hurt,omitempty"`
+	Comm  *BattleSkill   `protobuf:"bytes,11,opt,name=comm" json:"comm,omitempty"`
+	Skill []*BattleSkill `protobuf:"bytes,12,rep,name=skill" json:"skill,omitempty"`
 }
 
 func (m *BattleUnit) Reset()                    { *m = BattleUnit{} }
@@ -523,6 +523,13 @@ func (m *BattleUnit) GetPos() uint32 {
 	return 0
 }
 
+func (m *BattleUnit) GetApm() uint32 {
+	if m != nil {
+		return m.Apm
+	}
+	return 0
+}
+
 func (m *BattleUnit) GetAtk() uint32 {
 	if m != nil {
 		return m.Atk
@@ -551,9 +558,9 @@ func (m *BattleUnit) GetCrit() uint32 {
 	return 0
 }
 
-func (m *BattleUnit) GetCritHurt() uint32 {
+func (m *BattleUnit) GetHurt() uint32 {
 	if m != nil {
-		return m.CritHurt
+		return m.Hurt
 	}
 	return 0
 }
@@ -572,165 +579,246 @@ func (m *BattleUnit) GetSkill() []*BattleSkill {
 	return nil
 }
 
-func (m *BattleUnit) GetCareerGeneralSkill() *BattleSkill {
-	if m != nil {
-		return m.CareerGeneralSkill
-	}
-	return nil
+// 技能释放事件
+type BattleEventSkill struct {
+	Time    uint32       `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	Caster  uint32       `protobuf:"varint,2,opt,name=caster,proto3" json:"caster,omitempty"`
+	Skill   *BattleSkill `protobuf:"bytes,3,opt,name=skill" json:"skill,omitempty"`
+	Targets []uint32     `protobuf:"varint,4,rep,packed,name=targets" json:"targets,omitempty"`
 }
 
-func (m *BattleUnit) GetCareerGeneralAura() *BattleAura {
-	if m != nil {
-		return m.CareerGeneralAura
-	}
-	return nil
-}
+func (m *BattleEventSkill) Reset()                    { *m = BattleEventSkill{} }
+func (m *BattleEventSkill) String() string            { return proto.CompactTextString(m) }
+func (*BattleEventSkill) ProtoMessage()               {}
+func (*BattleEventSkill) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{13} }
 
-func (m *BattleUnit) GetCareerGuarderAura() *BattleAura {
-	if m != nil {
-		return m.CareerGuarderAura
-	}
-	return nil
-}
-
-type CampaignDetail struct {
-	Host uint32 `protobuf:"varint,1,opt,name=host,proto3" json:"host,omitempty"`
-	Time uint32 `protobuf:"varint,2,opt,name=time,proto3" json:"time,omitempty"`
-	Flag uint32 `protobuf:"varint,3,opt,name=flag,proto3" json:"flag,omitempty"`
-	Arg1 int32  `protobuf:"varint,4,opt,name=arg1,proto3" json:"arg1,omitempty"`
-	Arg2 int32  `protobuf:"varint,5,opt,name=arg2,proto3" json:"arg2,omitempty"`
-	Arg3 int32  `protobuf:"varint,6,opt,name=arg3,proto3" json:"arg3,omitempty"`
-	Arg4 int32  `protobuf:"varint,7,opt,name=arg4,proto3" json:"arg4,omitempty"`
-}
-
-func (m *CampaignDetail) Reset()                    { *m = CampaignDetail{} }
-func (m *CampaignDetail) String() string            { return proto.CompactTextString(m) }
-func (*CampaignDetail) ProtoMessage()               {}
-func (*CampaignDetail) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{13} }
-
-func (m *CampaignDetail) GetHost() uint32 {
-	if m != nil {
-		return m.Host
-	}
-	return 0
-}
-
-func (m *CampaignDetail) GetTime() uint32 {
+func (m *BattleEventSkill) GetTime() uint32 {
 	if m != nil {
 		return m.Time
 	}
 	return 0
 }
 
-func (m *CampaignDetail) GetFlag() uint32 {
+func (m *BattleEventSkill) GetCaster() uint32 {
 	if m != nil {
-		return m.Flag
+		return m.Caster
 	}
 	return 0
 }
 
-func (m *CampaignDetail) GetArg1() int32 {
+func (m *BattleEventSkill) GetSkill() *BattleSkill {
+	if m != nil {
+		return m.Skill
+	}
+	return nil
+}
+
+func (m *BattleEventSkill) GetTargets() []uint32 {
+	if m != nil {
+		return m.Targets
+	}
+	return nil
+}
+
+// 光环事件
+type BattleEventAura struct {
+	Time   uint32      `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	Owner  uint32      `protobuf:"varint,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	Caster uint32      `protobuf:"varint,3,opt,name=caster,proto3" json:"caster,omitempty"`
+	Aura   *BattleAura `protobuf:"bytes,4,opt,name=aura" json:"aura,omitempty"`
+	Obtain bool        `protobuf:"varint,5,opt,name=obtain,proto3" json:"obtain,omitempty"`
+}
+
+func (m *BattleEventAura) Reset()                    { *m = BattleEventAura{} }
+func (m *BattleEventAura) String() string            { return proto.CompactTextString(m) }
+func (*BattleEventAura) ProtoMessage()               {}
+func (*BattleEventAura) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{14} }
+
+func (m *BattleEventAura) GetTime() uint32 {
+	if m != nil {
+		return m.Time
+	}
+	return 0
+}
+
+func (m *BattleEventAura) GetOwner() uint32 {
+	if m != nil {
+		return m.Owner
+	}
+	return 0
+}
+
+func (m *BattleEventAura) GetCaster() uint32 {
+	if m != nil {
+		return m.Caster
+	}
+	return 0
+}
+
+func (m *BattleEventAura) GetAura() *BattleAura {
+	if m != nil {
+		return m.Aura
+	}
+	return nil
+}
+
+func (m *BattleEventAura) GetObtain() bool {
+	if m != nil {
+		return m.Obtain
+	}
+	return false
+}
+
+// 伤害事件
+type BattleEventHurt struct {
+	Time   uint32 `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	Caster uint32 `protobuf:"varint,2,opt,name=caster,proto3" json:"caster,omitempty"`
+	Target uint32 `protobuf:"varint,3,opt,name=target,proto3" json:"target,omitempty"`
+	Hurt   uint32 `protobuf:"varint,4,opt,name=hurt,proto3" json:"hurt,omitempty"`
+	Crit   uint32 `protobuf:"varint,5,opt,name=crit,proto3" json:"crit,omitempty"`
+	Type   uint32 `protobuf:"varint,6,opt,name=type,proto3" json:"type,omitempty"`
+}
+
+func (m *BattleEventHurt) Reset()                    { *m = BattleEventHurt{} }
+func (m *BattleEventHurt) String() string            { return proto.CompactTextString(m) }
+func (*BattleEventHurt) ProtoMessage()               {}
+func (*BattleEventHurt) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{15} }
+
+func (m *BattleEventHurt) GetTime() uint32 {
+	if m != nil {
+		return m.Time
+	}
+	return 0
+}
+
+func (m *BattleEventHurt) GetCaster() uint32 {
+	if m != nil {
+		return m.Caster
+	}
+	return 0
+}
+
+func (m *BattleEventHurt) GetTarget() uint32 {
+	if m != nil {
+		return m.Target
+	}
+	return 0
+}
+
+func (m *BattleEventHurt) GetHurt() uint32 {
+	if m != nil {
+		return m.Hurt
+	}
+	return 0
+}
+
+func (m *BattleEventHurt) GetCrit() uint32 {
+	if m != nil {
+		return m.Crit
+	}
+	return 0
+}
+
+func (m *BattleEventHurt) GetType() uint32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
+// 光环效果事件
+type BattleEventAuraEffect struct {
+	Time   uint32 `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	Owner  uint32 `protobuf:"varint,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	Caster uint32 `protobuf:"varint,3,opt,name=caster,proto3" json:"caster,omitempty"`
+	Type   uint32 `protobuf:"varint,4,opt,name=type,proto3" json:"type,omitempty"`
+	Arg1   int32  `protobuf:"varint,5,opt,name=arg1,proto3" json:"arg1,omitempty"`
+	Arg2   int32  `protobuf:"varint,6,opt,name=arg2,proto3" json:"arg2,omitempty"`
+	Arg3   int32  `protobuf:"varint,7,opt,name=arg3,proto3" json:"arg3,omitempty"`
+	Arg4   int32  `protobuf:"varint,8,opt,name=arg4,proto3" json:"arg4,omitempty"`
+}
+
+func (m *BattleEventAuraEffect) Reset()                    { *m = BattleEventAuraEffect{} }
+func (m *BattleEventAuraEffect) String() string            { return proto.CompactTextString(m) }
+func (*BattleEventAuraEffect) ProtoMessage()               {}
+func (*BattleEventAuraEffect) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{16} }
+
+func (m *BattleEventAuraEffect) GetTime() uint32 {
+	if m != nil {
+		return m.Time
+	}
+	return 0
+}
+
+func (m *BattleEventAuraEffect) GetOwner() uint32 {
+	if m != nil {
+		return m.Owner
+	}
+	return 0
+}
+
+func (m *BattleEventAuraEffect) GetCaster() uint32 {
+	if m != nil {
+		return m.Caster
+	}
+	return 0
+}
+
+func (m *BattleEventAuraEffect) GetType() uint32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
+func (m *BattleEventAuraEffect) GetArg1() int32 {
 	if m != nil {
 		return m.Arg1
 	}
 	return 0
 }
 
-func (m *CampaignDetail) GetArg2() int32 {
+func (m *BattleEventAuraEffect) GetArg2() int32 {
 	if m != nil {
 		return m.Arg2
 	}
 	return 0
 }
 
-func (m *CampaignDetail) GetArg3() int32 {
+func (m *BattleEventAuraEffect) GetArg3() int32 {
 	if m != nil {
 		return m.Arg3
 	}
 	return 0
 }
 
-func (m *CampaignDetail) GetArg4() int32 {
+func (m *BattleEventAuraEffect) GetArg4() int32 {
 	if m != nil {
 		return m.Arg4
 	}
 	return 0
 }
 
-type BattleCampaign struct {
-	APos    uint32            `protobuf:"varint,1,opt,name=a_pos,json=aPos,proto3" json:"a_pos,omitempty"`
-	DPos    uint32            `protobuf:"varint,2,opt,name=d_pos,json=dPos,proto3" json:"d_pos,omitempty"`
-	AHpS    uint32            `protobuf:"varint,3,opt,name=a_hp_s,json=aHpS,proto3" json:"a_hp_s,omitempty"`
-	DHpS    uint32            `protobuf:"varint,4,opt,name=d_hp_s,json=dHpS,proto3" json:"d_hp_s,omitempty"`
-	AHpE    uint32            `protobuf:"varint,5,opt,name=a_hp_e,json=aHpE,proto3" json:"a_hp_e,omitempty"`
-	DHpE    uint32            `protobuf:"varint,6,opt,name=d_hp_e,json=dHpE,proto3" json:"d_hp_e,omitempty"`
-	Details []*CampaignDetail `protobuf:"bytes,7,rep,name=details" json:"details,omitempty"`
-}
-
-func (m *BattleCampaign) Reset()                    { *m = BattleCampaign{} }
-func (m *BattleCampaign) String() string            { return proto.CompactTextString(m) }
-func (*BattleCampaign) ProtoMessage()               {}
-func (*BattleCampaign) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{14} }
-
-func (m *BattleCampaign) GetAPos() uint32 {
-	if m != nil {
-		return m.APos
-	}
-	return 0
-}
-
-func (m *BattleCampaign) GetDPos() uint32 {
-	if m != nil {
-		return m.DPos
-	}
-	return 0
-}
-
-func (m *BattleCampaign) GetAHpS() uint32 {
-	if m != nil {
-		return m.AHpS
-	}
-	return 0
-}
-
-func (m *BattleCampaign) GetDHpS() uint32 {
-	if m != nil {
-		return m.DHpS
-	}
-	return 0
-}
-
-func (m *BattleCampaign) GetAHpE() uint32 {
-	if m != nil {
-		return m.AHpE
-	}
-	return 0
-}
-
-func (m *BattleCampaign) GetDHpE() uint32 {
-	if m != nil {
-		return m.DHpE
-	}
-	return 0
-}
-
-func (m *BattleCampaign) GetDetails() []*CampaignDetail {
-	if m != nil {
-		return m.Details
-	}
-	return nil
-}
-
 type BattleResult struct {
-	Units []*BattleUnit     `protobuf:"bytes,1,rep,name=units" json:"units,omitempty"`
-	Camps []*BattleCampaign `protobuf:"bytes,2,rep,name=camps" json:"camps,omitempty"`
-	Win   bool              `protobuf:"varint,3,opt,name=win,proto3" json:"win,omitempty"`
+	Win    bool                     `protobuf:"varint,1,opt,name=win,proto3" json:"win,omitempty"`
+	Units  []*BattleUnit            `protobuf:"bytes,2,rep,name=units" json:"units,omitempty"`
+	Skill  []*BattleEventSkill      `protobuf:"bytes,3,rep,name=skill" json:"skill,omitempty"`
+	Aura   []*BattleEventAura       `protobuf:"bytes,4,rep,name=aura" json:"aura,omitempty"`
+	Hurt   []*BattleEventHurt       `protobuf:"bytes,5,rep,name=hurt" json:"hurt,omitempty"`
+	Effect []*BattleEventAuraEffect `protobuf:"bytes,6,rep,name=effect" json:"effect,omitempty"`
 }
 
 func (m *BattleResult) Reset()                    { *m = BattleResult{} }
 func (m *BattleResult) String() string            { return proto.CompactTextString(m) }
 func (*BattleResult) ProtoMessage()               {}
-func (*BattleResult) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{15} }
+func (*BattleResult) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{17} }
+
+func (m *BattleResult) GetWin() bool {
+	if m != nil {
+		return m.Win
+	}
+	return false
+}
 
 func (m *BattleResult) GetUnits() []*BattleUnit {
 	if m != nil {
@@ -739,18 +827,32 @@ func (m *BattleResult) GetUnits() []*BattleUnit {
 	return nil
 }
 
-func (m *BattleResult) GetCamps() []*BattleCampaign {
+func (m *BattleResult) GetSkill() []*BattleEventSkill {
 	if m != nil {
-		return m.Camps
+		return m.Skill
 	}
 	return nil
 }
 
-func (m *BattleResult) GetWin() bool {
+func (m *BattleResult) GetAura() []*BattleEventAura {
 	if m != nil {
-		return m.Win
+		return m.Aura
 	}
-	return false
+	return nil
+}
+
+func (m *BattleResult) GetHurt() []*BattleEventHurt {
+	if m != nil {
+		return m.Hurt
+	}
+	return nil
+}
+
+func (m *BattleResult) GetEffect() []*BattleEventAuraEffect {
+	if m != nil {
+		return m.Effect
+	}
+	return nil
 }
 
 type MakeBattleRequest struct {
@@ -760,7 +862,7 @@ type MakeBattleRequest struct {
 func (m *MakeBattleRequest) Reset()                    { *m = MakeBattleRequest{} }
 func (m *MakeBattleRequest) String() string            { return proto.CompactTextString(m) }
 func (*MakeBattleRequest) ProtoMessage()               {}
-func (*MakeBattleRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{16} }
+func (*MakeBattleRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{18} }
 
 func (m *MakeBattleRequest) GetId() uint32 {
 	if m != nil {
@@ -776,7 +878,7 @@ type MakeBattleResponse struct {
 func (m *MakeBattleResponse) Reset()                    { *m = MakeBattleResponse{} }
 func (m *MakeBattleResponse) String() string            { return proto.CompactTextString(m) }
 func (*MakeBattleResponse) ProtoMessage()               {}
-func (*MakeBattleResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{17} }
+func (*MakeBattleResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{19} }
 
 func (m *MakeBattleResponse) GetResult() *BattleResult {
 	if m != nil {
@@ -796,7 +898,7 @@ type UseItemRequest struct {
 func (m *UseItemRequest) Reset()                    { *m = UseItemRequest{} }
 func (m *UseItemRequest) String() string            { return proto.CompactTextString(m) }
 func (*UseItemRequest) ProtoMessage()               {}
-func (*UseItemRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{18} }
+func (*UseItemRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{20} }
 
 func (m *UseItemRequest) GetId() uint32 {
 	if m != nil {
@@ -833,7 +935,7 @@ type UseItemResponse struct {
 func (m *UseItemResponse) Reset()                    { *m = UseItemResponse{} }
 func (m *UseItemResponse) String() string            { return proto.CompactTextString(m) }
 func (*UseItemResponse) ProtoMessage()               {}
-func (*UseItemResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{19} }
+func (*UseItemResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{21} }
 
 func (m *UseItemResponse) GetResult() uint32 {
 	if m != nil {
@@ -851,7 +953,7 @@ type ItemCntInfo struct {
 func (m *ItemCntInfo) Reset()                    { *m = ItemCntInfo{} }
 func (m *ItemCntInfo) String() string            { return proto.CompactTextString(m) }
 func (*ItemCntInfo) ProtoMessage()               {}
-func (*ItemCntInfo) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{20} }
+func (*ItemCntInfo) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{22} }
 
 func (m *ItemCntInfo) GetAdd() uint32 {
 	if m != nil {
@@ -881,7 +983,7 @@ type ItemCntChangedNotice struct {
 func (m *ItemCntChangedNotice) Reset()                    { *m = ItemCntChangedNotice{} }
 func (m *ItemCntChangedNotice) String() string            { return proto.CompactTextString(m) }
 func (*ItemCntChangedNotice) ProtoMessage()               {}
-func (*ItemCntChangedNotice) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{21} }
+func (*ItemCntChangedNotice) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{23} }
 
 func (m *ItemCntChangedNotice) GetInfo() []*ItemCntInfo {
 	if m != nil {
@@ -898,7 +1000,7 @@ type MarketBuyRequest struct {
 func (m *MarketBuyRequest) Reset()                    { *m = MarketBuyRequest{} }
 func (m *MarketBuyRequest) String() string            { return proto.CompactTextString(m) }
 func (*MarketBuyRequest) ProtoMessage()               {}
-func (*MarketBuyRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{22} }
+func (*MarketBuyRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{24} }
 
 func (m *MarketBuyRequest) GetIndex() uint32 {
 	if m != nil {
@@ -921,7 +1023,7 @@ type MarketBuyResponse struct {
 func (m *MarketBuyResponse) Reset()                    { *m = MarketBuyResponse{} }
 func (m *MarketBuyResponse) String() string            { return proto.CompactTextString(m) }
 func (*MarketBuyResponse) ProtoMessage()               {}
-func (*MarketBuyResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{23} }
+func (*MarketBuyResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{25} }
 
 func (m *MarketBuyResponse) GetErrorCode() uint32 {
 	if m != nil {
@@ -937,7 +1039,7 @@ type HeroLevelupRequest struct {
 func (m *HeroLevelupRequest) Reset()                    { *m = HeroLevelupRequest{} }
 func (m *HeroLevelupRequest) String() string            { return proto.CompactTextString(m) }
 func (*HeroLevelupRequest) ProtoMessage()               {}
-func (*HeroLevelupRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{24} }
+func (*HeroLevelupRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{26} }
 
 func (m *HeroLevelupRequest) GetHeroId() uint32 {
 	if m != nil {
@@ -953,7 +1055,7 @@ type HeroLevelupResponse struct {
 func (m *HeroLevelupResponse) Reset()                    { *m = HeroLevelupResponse{} }
 func (m *HeroLevelupResponse) String() string            { return proto.CompactTextString(m) }
 func (*HeroLevelupResponse) ProtoMessage()               {}
-func (*HeroLevelupResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{25} }
+func (*HeroLevelupResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{27} }
 
 func (m *HeroLevelupResponse) GetErrorCode() uint32 {
 	if m != nil {
@@ -970,7 +1072,7 @@ type HeroRefineRequest struct {
 func (m *HeroRefineRequest) Reset()                    { *m = HeroRefineRequest{} }
 func (m *HeroRefineRequest) String() string            { return proto.CompactTextString(m) }
 func (*HeroRefineRequest) ProtoMessage()               {}
-func (*HeroRefineRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{26} }
+func (*HeroRefineRequest) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{28} }
 
 func (m *HeroRefineRequest) GetHeroId() uint32 {
 	if m != nil {
@@ -994,7 +1096,7 @@ type HeroRefineResponse struct {
 func (m *HeroRefineResponse) Reset()                    { *m = HeroRefineResponse{} }
 func (m *HeroRefineResponse) String() string            { return proto.CompactTextString(m) }
 func (*HeroRefineResponse) ProtoMessage()               {}
-func (*HeroRefineResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{27} }
+func (*HeroRefineResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{29} }
 
 func (m *HeroRefineResponse) GetErrorCode() uint32 {
 	if m != nil {
@@ -1017,7 +1119,7 @@ type HeroInfoUpdateResponse struct {
 func (m *HeroInfoUpdateResponse) Reset()                    { *m = HeroInfoUpdateResponse{} }
 func (m *HeroInfoUpdateResponse) String() string            { return proto.CompactTextString(m) }
 func (*HeroInfoUpdateResponse) ProtoMessage()               {}
-func (*HeroInfoUpdateResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{28} }
+func (*HeroInfoUpdateResponse) Descriptor() ([]byte, []int) { return fileDescriptorGame, []int{30} }
 
 func (m *HeroInfoUpdateResponse) GetHero() *Hero {
 	if m != nil {
@@ -1040,8 +1142,10 @@ func init() {
 	proto.RegisterType((*BattleSkill)(nil), "msg.BattleSkill")
 	proto.RegisterType((*BattleAura)(nil), "msg.BattleAura")
 	proto.RegisterType((*BattleUnit)(nil), "msg.BattleUnit")
-	proto.RegisterType((*CampaignDetail)(nil), "msg.CampaignDetail")
-	proto.RegisterType((*BattleCampaign)(nil), "msg.BattleCampaign")
+	proto.RegisterType((*BattleEventSkill)(nil), "msg.BattleEventSkill")
+	proto.RegisterType((*BattleEventAura)(nil), "msg.BattleEventAura")
+	proto.RegisterType((*BattleEventHurt)(nil), "msg.BattleEventHurt")
+	proto.RegisterType((*BattleEventAuraEffect)(nil), "msg.BattleEventAuraEffect")
 	proto.RegisterType((*BattleResult)(nil), "msg.BattleResult")
 	proto.RegisterType((*MakeBattleRequest)(nil), "msg.MakeBattleRequest")
 	proto.RegisterType((*MakeBattleResponse)(nil), "msg.MakeBattleResponse")
@@ -1558,33 +1662,38 @@ func (m *BattleUnit) MarshalTo(dAtA []byte) (int, error) {
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Pos))
 	}
-	if m.Atk != 0 {
+	if m.Apm != 0 {
 		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Apm))
+	}
+	if m.Atk != 0 {
+		dAtA[i] = 0x30
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Atk))
 	}
 	if m.Def != 0 {
-		dAtA[i] = 0x30
+		dAtA[i] = 0x38
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Def))
 	}
 	if m.Hp != 0 {
-		dAtA[i] = 0x38
+		dAtA[i] = 0x40
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Hp))
 	}
 	if m.Crit != 0 {
-		dAtA[i] = 0x40
+		dAtA[i] = 0x48
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Crit))
 	}
-	if m.CritHurt != 0 {
-		dAtA[i] = 0x48
+	if m.Hurt != 0 {
+		dAtA[i] = 0x50
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.CritHurt))
+		i = encodeVarintGame(dAtA, i, uint64(m.Hurt))
 	}
 	if m.Comm != nil {
-		dAtA[i] = 0x52
+		dAtA[i] = 0x5a
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Comm.Size()))
 		n1, err := m.Comm.MarshalTo(dAtA[i:])
@@ -1595,7 +1704,7 @@ func (m *BattleUnit) MarshalTo(dAtA []byte) (int, error) {
 	}
 	if len(m.Skill) > 0 {
 		for _, msg := range m.Skill {
-			dAtA[i] = 0x5a
+			dAtA[i] = 0x62
 			i++
 			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
 			n, err := msg.MarshalTo(dAtA[i:])
@@ -1605,40 +1714,65 @@ func (m *BattleUnit) MarshalTo(dAtA []byte) (int, error) {
 			i += n
 		}
 	}
-	if m.CareerGeneralSkill != nil {
-		dAtA[i] = 0x62
+	return i, nil
+}
+
+func (m *BattleEventSkill) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BattleEventSkill) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Time != 0 {
+		dAtA[i] = 0x8
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.CareerGeneralSkill.Size()))
-		n2, err := m.CareerGeneralSkill.MarshalTo(dAtA[i:])
+		i = encodeVarintGame(dAtA, i, uint64(m.Time))
+	}
+	if m.Caster != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Caster))
+	}
+	if m.Skill != nil {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Skill.Size()))
+		n2, err := m.Skill.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
 		i += n2
 	}
-	if m.CareerGeneralAura != nil {
-		dAtA[i] = 0x6a
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.CareerGeneralAura.Size()))
-		n3, err := m.CareerGeneralAura.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
+	if len(m.Targets) > 0 {
+		dAtA4 := make([]byte, len(m.Targets)*10)
+		var j3 int
+		for _, num := range m.Targets {
+			for num >= 1<<7 {
+				dAtA4[j3] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j3++
+			}
+			dAtA4[j3] = uint8(num)
+			j3++
 		}
-		i += n3
-	}
-	if m.CareerGuarderAura != nil {
-		dAtA[i] = 0x72
+		dAtA[i] = 0x22
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.CareerGuarderAura.Size()))
-		n4, err := m.CareerGuarderAura.MarshalTo(dAtA[i:])
-		if err != nil {
-			return 0, err
-		}
-		i += n4
+		i = encodeVarintGame(dAtA, i, uint64(j3))
+		i += copy(dAtA[i:], dAtA4[:j3])
 	}
 	return i, nil
 }
 
-func (m *CampaignDetail) Marshal() (dAtA []byte, err error) {
+func (m *BattleEventAura) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1648,105 +1782,151 @@ func (m *CampaignDetail) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *CampaignDetail) MarshalTo(dAtA []byte) (int, error) {
+func (m *BattleEventAura) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
 	_ = l
-	if m.Host != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.Host))
-	}
 	if m.Time != 0 {
-		dAtA[i] = 0x10
+		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Time))
 	}
-	if m.Flag != 0 {
+	if m.Owner != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Owner))
+	}
+	if m.Caster != 0 {
 		dAtA[i] = 0x18
 		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.Flag))
+		i = encodeVarintGame(dAtA, i, uint64(m.Caster))
+	}
+	if m.Aura != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Aura.Size()))
+		n5, err := m.Aura.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n5
+	}
+	if m.Obtain {
+		dAtA[i] = 0x28
+		i++
+		if m.Obtain {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
+	return i, nil
+}
+
+func (m *BattleEventHurt) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BattleEventHurt) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Time != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Time))
+	}
+	if m.Caster != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Caster))
+	}
+	if m.Target != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Target))
+	}
+	if m.Hurt != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Hurt))
+	}
+	if m.Crit != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Crit))
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x30
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Type))
+	}
+	return i, nil
+}
+
+func (m *BattleEventAuraEffect) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BattleEventAuraEffect) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Time != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Time))
+	}
+	if m.Owner != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Owner))
+	}
+	if m.Caster != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Caster))
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintGame(dAtA, i, uint64(m.Type))
 	}
 	if m.Arg1 != 0 {
-		dAtA[i] = 0x20
+		dAtA[i] = 0x28
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Arg1))
 	}
 	if m.Arg2 != 0 {
-		dAtA[i] = 0x28
+		dAtA[i] = 0x30
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Arg2))
 	}
 	if m.Arg3 != 0 {
-		dAtA[i] = 0x30
+		dAtA[i] = 0x38
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Arg3))
 	}
 	if m.Arg4 != 0 {
-		dAtA[i] = 0x38
+		dAtA[i] = 0x40
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Arg4))
-	}
-	return i, nil
-}
-
-func (m *BattleCampaign) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *BattleCampaign) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.APos != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.APos))
-	}
-	if m.DPos != 0 {
-		dAtA[i] = 0x10
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.DPos))
-	}
-	if m.AHpS != 0 {
-		dAtA[i] = 0x18
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.AHpS))
-	}
-	if m.DHpS != 0 {
-		dAtA[i] = 0x20
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.DHpS))
-	}
-	if m.AHpE != 0 {
-		dAtA[i] = 0x28
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.AHpE))
-	}
-	if m.DHpE != 0 {
-		dAtA[i] = 0x30
-		i++
-		i = encodeVarintGame(dAtA, i, uint64(m.DHpE))
-	}
-	if len(m.Details) > 0 {
-		for _, msg := range m.Details {
-			dAtA[i] = 0x3a
-			i++
-			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
 	}
 	return i, nil
 }
@@ -1766,20 +1946,18 @@ func (m *BattleResult) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if m.Win {
+		dAtA[i] = 0x8
+		i++
+		if m.Win {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i++
+	}
 	if len(m.Units) > 0 {
 		for _, msg := range m.Units {
-			dAtA[i] = 0xa
-			i++
-			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
-			}
-			i += n
-		}
-	}
-	if len(m.Camps) > 0 {
-		for _, msg := range m.Camps {
 			dAtA[i] = 0x12
 			i++
 			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
@@ -1790,15 +1968,53 @@ func (m *BattleResult) MarshalTo(dAtA []byte) (int, error) {
 			i += n
 		}
 	}
-	if m.Win {
-		dAtA[i] = 0x18
-		i++
-		if m.Win {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
+	if len(m.Skill) > 0 {
+		for _, msg := range m.Skill {
+			dAtA[i] = 0x1a
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
 		}
-		i++
+	}
+	if len(m.Aura) > 0 {
+		for _, msg := range m.Aura {
+			dAtA[i] = 0x22
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if len(m.Hurt) > 0 {
+		for _, msg := range m.Hurt {
+			dAtA[i] = 0x2a
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	if len(m.Effect) > 0 {
+		for _, msg := range m.Effect {
+			dAtA[i] = 0x32
+			i++
+			i = encodeVarintGame(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
 	}
 	return i, nil
 }
@@ -1845,11 +2061,11 @@ func (m *MakeBattleResponse) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Result.Size()))
-		n5, err := m.Result.MarshalTo(dAtA[i:])
+		n6, err := m.Result.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n5
+		i += n6
 	}
 	return i, nil
 }
@@ -2150,11 +2366,11 @@ func (m *HeroInfoUpdateResponse) MarshalTo(dAtA []byte) (int, error) {
 		dAtA[i] = 0xa
 		i++
 		i = encodeVarintGame(dAtA, i, uint64(m.Hero.Size()))
-		n6, err := m.Hero.MarshalTo(dAtA[i:])
+		n7, err := m.Hero.MarshalTo(dAtA[i:])
 		if err != nil {
 			return 0, err
 		}
-		i += n6
+		i += n7
 	}
 	return i, nil
 }
@@ -2395,6 +2611,9 @@ func (m *BattleUnit) Size() (n int) {
 	if m.Pos != 0 {
 		n += 1 + sovGame(uint64(m.Pos))
 	}
+	if m.Apm != 0 {
+		n += 1 + sovGame(uint64(m.Apm))
+	}
 	if m.Atk != 0 {
 		n += 1 + sovGame(uint64(m.Atk))
 	}
@@ -2407,8 +2626,8 @@ func (m *BattleUnit) Size() (n int) {
 	if m.Crit != 0 {
 		n += 1 + sovGame(uint64(m.Crit))
 	}
-	if m.CritHurt != 0 {
-		n += 1 + sovGame(uint64(m.CritHurt))
+	if m.Hurt != 0 {
+		n += 1 + sovGame(uint64(m.Hurt))
 	}
 	if m.Comm != nil {
 		l = m.Comm.Size()
@@ -2420,32 +2639,92 @@ func (m *BattleUnit) Size() (n int) {
 			n += 1 + l + sovGame(uint64(l))
 		}
 	}
-	if m.CareerGeneralSkill != nil {
-		l = m.CareerGeneralSkill.Size()
+	return n
+}
+
+func (m *BattleEventSkill) Size() (n int) {
+	var l int
+	_ = l
+	if m.Time != 0 {
+		n += 1 + sovGame(uint64(m.Time))
+	}
+	if m.Caster != 0 {
+		n += 1 + sovGame(uint64(m.Caster))
+	}
+	if m.Skill != nil {
+		l = m.Skill.Size()
 		n += 1 + l + sovGame(uint64(l))
 	}
-	if m.CareerGeneralAura != nil {
-		l = m.CareerGeneralAura.Size()
-		n += 1 + l + sovGame(uint64(l))
-	}
-	if m.CareerGuarderAura != nil {
-		l = m.CareerGuarderAura.Size()
-		n += 1 + l + sovGame(uint64(l))
+	if len(m.Targets) > 0 {
+		l = 0
+		for _, e := range m.Targets {
+			l += sovGame(uint64(e))
+		}
+		n += 1 + sovGame(uint64(l)) + l
 	}
 	return n
 }
 
-func (m *CampaignDetail) Size() (n int) {
+func (m *BattleEventAura) Size() (n int) {
 	var l int
 	_ = l
-	if m.Host != 0 {
-		n += 1 + sovGame(uint64(m.Host))
-	}
 	if m.Time != 0 {
 		n += 1 + sovGame(uint64(m.Time))
 	}
-	if m.Flag != 0 {
-		n += 1 + sovGame(uint64(m.Flag))
+	if m.Owner != 0 {
+		n += 1 + sovGame(uint64(m.Owner))
+	}
+	if m.Caster != 0 {
+		n += 1 + sovGame(uint64(m.Caster))
+	}
+	if m.Aura != nil {
+		l = m.Aura.Size()
+		n += 1 + l + sovGame(uint64(l))
+	}
+	if m.Obtain {
+		n += 2
+	}
+	return n
+}
+
+func (m *BattleEventHurt) Size() (n int) {
+	var l int
+	_ = l
+	if m.Time != 0 {
+		n += 1 + sovGame(uint64(m.Time))
+	}
+	if m.Caster != 0 {
+		n += 1 + sovGame(uint64(m.Caster))
+	}
+	if m.Target != 0 {
+		n += 1 + sovGame(uint64(m.Target))
+	}
+	if m.Hurt != 0 {
+		n += 1 + sovGame(uint64(m.Hurt))
+	}
+	if m.Crit != 0 {
+		n += 1 + sovGame(uint64(m.Crit))
+	}
+	if m.Type != 0 {
+		n += 1 + sovGame(uint64(m.Type))
+	}
+	return n
+}
+
+func (m *BattleEventAuraEffect) Size() (n int) {
+	var l int
+	_ = l
+	if m.Time != 0 {
+		n += 1 + sovGame(uint64(m.Time))
+	}
+	if m.Owner != 0 {
+		n += 1 + sovGame(uint64(m.Owner))
+	}
+	if m.Caster != 0 {
+		n += 1 + sovGame(uint64(m.Caster))
+	}
+	if m.Type != 0 {
+		n += 1 + sovGame(uint64(m.Type))
 	}
 	if m.Arg1 != 0 {
 		n += 1 + sovGame(uint64(m.Arg1))
@@ -2462,53 +2741,41 @@ func (m *CampaignDetail) Size() (n int) {
 	return n
 }
 
-func (m *BattleCampaign) Size() (n int) {
-	var l int
-	_ = l
-	if m.APos != 0 {
-		n += 1 + sovGame(uint64(m.APos))
-	}
-	if m.DPos != 0 {
-		n += 1 + sovGame(uint64(m.DPos))
-	}
-	if m.AHpS != 0 {
-		n += 1 + sovGame(uint64(m.AHpS))
-	}
-	if m.DHpS != 0 {
-		n += 1 + sovGame(uint64(m.DHpS))
-	}
-	if m.AHpE != 0 {
-		n += 1 + sovGame(uint64(m.AHpE))
-	}
-	if m.DHpE != 0 {
-		n += 1 + sovGame(uint64(m.DHpE))
-	}
-	if len(m.Details) > 0 {
-		for _, e := range m.Details {
-			l = e.Size()
-			n += 1 + l + sovGame(uint64(l))
-		}
-	}
-	return n
-}
-
 func (m *BattleResult) Size() (n int) {
 	var l int
 	_ = l
+	if m.Win {
+		n += 2
+	}
 	if len(m.Units) > 0 {
 		for _, e := range m.Units {
 			l = e.Size()
 			n += 1 + l + sovGame(uint64(l))
 		}
 	}
-	if len(m.Camps) > 0 {
-		for _, e := range m.Camps {
+	if len(m.Skill) > 0 {
+		for _, e := range m.Skill {
 			l = e.Size()
 			n += 1 + l + sovGame(uint64(l))
 		}
 	}
-	if m.Win {
-		n += 2
+	if len(m.Aura) > 0 {
+		for _, e := range m.Aura {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if len(m.Hurt) > 0 {
+		for _, e := range m.Hurt {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
+	}
+	if len(m.Effect) > 0 {
+		for _, e := range m.Effect {
+			l = e.Size()
+			n += 1 + l + sovGame(uint64(l))
+		}
 	}
 	return n
 }
@@ -4251,6 +4518,25 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 			}
 		case 5:
 			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Apm", wireType)
+			}
+			m.Apm = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Apm |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Atk", wireType)
 			}
 			m.Atk = 0
@@ -4268,7 +4554,7 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 6:
+		case 7:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Def", wireType)
 			}
@@ -4287,7 +4573,7 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 7:
+		case 8:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Hp", wireType)
 			}
@@ -4306,7 +4592,7 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 8:
+		case 9:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Crit", wireType)
 			}
@@ -4325,11 +4611,11 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 9:
+		case 10:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CritHurt", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Hurt", wireType)
 			}
-			m.CritHurt = 0
+			m.Hurt = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4339,12 +4625,12 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CritHurt |= (uint32(b) & 0x7F) << shift
+				m.Hurt |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 10:
+		case 11:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Comm", wireType)
 			}
@@ -4377,7 +4663,7 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 11:
+		case 12:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Skill", wireType)
 			}
@@ -4408,105 +4694,6 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 12:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CareerGeneralSkill", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.CareerGeneralSkill == nil {
-				m.CareerGeneralSkill = &BattleSkill{}
-			}
-			if err := m.CareerGeneralSkill.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 13:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CareerGeneralAura", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.CareerGeneralAura == nil {
-				m.CareerGeneralAura = &BattleAura{}
-			}
-			if err := m.CareerGeneralAura.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 14:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CareerGuarderAura", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
-			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.CareerGuarderAura == nil {
-				m.CareerGuarderAura = &BattleAura{}
-			}
-			if err := m.CareerGuarderAura.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGame(dAtA[iNdEx:])
@@ -4528,7 +4715,7 @@ func (m *BattleUnit) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
+func (m *BattleEventSkill) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4551,32 +4738,13 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: CampaignDetail: wiretype end group for non-group")
+			return fmt.Errorf("proto: BattleEventSkill: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: CampaignDetail: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: BattleEventSkill: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Host", wireType)
-			}
-			m.Host = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Host |= (uint32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
 			}
@@ -4595,11 +4763,11 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 3:
+		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Flag", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Caster", wireType)
 			}
-			m.Flag = 0
+			m.Caster = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4609,16 +4777,378 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Flag |= (uint32(b) & 0x7F) << shift
+				m.Caster |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Skill", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Skill == nil {
+				m.Skill = &BattleSkill{}
+			}
+			if err := m.Skill.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType == 0 {
+				var v uint32
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowGame
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= (uint32(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Targets = append(m.Targets, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowGame
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= (int(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthGame
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				for iNdEx < postIndex {
+					var v uint32
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowGame
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= (uint32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Targets = append(m.Targets, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Targets", wireType)
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BattleEventAura) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BattleEventAura: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BattleEventAura: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
+			}
+			m.Time = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Time |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			m.Owner = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Owner |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Caster", wireType)
+			}
+			m.Caster = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Caster |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Aura", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Aura == nil {
+				m.Aura = &BattleAura{}
+			}
+			if err := m.Aura.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Obtain", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Obtain = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipGame(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthGame
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BattleEventHurt) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowGame
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BattleEventHurt: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BattleEventHurt: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
+			}
+			m.Time = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Time |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Caster", wireType)
+			}
+			m.Caster = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Caster |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Target", wireType)
+			}
+			m.Target = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Target |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 4:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Arg1", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Hurt", wireType)
 			}
-			m.Arg1 = 0
+			m.Hurt = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4628,16 +5158,16 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Arg1 |= (int32(b) & 0x7F) << shift
+				m.Hurt |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Arg2", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Crit", wireType)
 			}
-			m.Arg2 = 0
+			m.Crit = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4647,16 +5177,16 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Arg2 |= (int32(b) & 0x7F) << shift
+				m.Crit |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Arg3", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
-			m.Arg3 = 0
+			m.Type = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4666,26 +5196,7 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Arg3 |= (int32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 7:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Arg4", wireType)
-			}
-			m.Arg4 = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGame
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Arg4 |= (int32(b) & 0x7F) << shift
+				m.Type |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -4711,7 +5222,7 @@ func (m *CampaignDetail) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
+func (m *BattleEventAuraEffect) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4734,17 +5245,17 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: BattleCampaign: wiretype end group for non-group")
+			return fmt.Errorf("proto: BattleEventAuraEffect: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: BattleCampaign: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: BattleEventAuraEffect: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field APos", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Time", wireType)
 			}
-			m.APos = 0
+			m.Time = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4754,16 +5265,16 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.APos |= (uint32(b) & 0x7F) << shift
+				m.Time |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DPos", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
 			}
-			m.DPos = 0
+			m.Owner = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4773,16 +5284,16 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DPos |= (uint32(b) & 0x7F) << shift
+				m.Owner |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field AHpS", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Caster", wireType)
 			}
-			m.AHpS = 0
+			m.Caster = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4792,16 +5303,16 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.AHpS |= (uint32(b) & 0x7F) << shift
+				m.Caster |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 4:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DHpS", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
 			}
-			m.DHpS = 0
+			m.Type = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4811,16 +5322,16 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DHpS |= (uint32(b) & 0x7F) << shift
+				m.Type |= (uint32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field AHpE", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Arg1", wireType)
 			}
-			m.AHpE = 0
+			m.Arg1 = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4830,16 +5341,16 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.AHpE |= (uint32(b) & 0x7F) << shift
+				m.Arg1 |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DHpE", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Arg2", wireType)
 			}
-			m.DHpE = 0
+			m.Arg2 = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4849,16 +5360,16 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.DHpE |= (uint32(b) & 0x7F) << shift
+				m.Arg2 |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 7:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Details", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Arg3", wireType)
 			}
-			var msglen int
+			m.Arg3 = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -4868,23 +5379,30 @@ func (m *BattleCampaign) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= (int(b) & 0x7F) << shift
+				m.Arg3 |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
-				return ErrInvalidLengthGame
+		case 8:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Arg4", wireType)
 			}
-			postIndex := iNdEx + msglen
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
+			m.Arg4 = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Arg4 |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
 			}
-			m.Details = append(m.Details, &CampaignDetail{})
-			if err := m.Details[len(m.Details)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGame(dAtA[iNdEx:])
@@ -4936,6 +5454,26 @@ func (m *BattleResult) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Win", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Win = bool(v != 0)
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Units", wireType)
 			}
@@ -4966,9 +5504,9 @@ func (m *BattleResult) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
+		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Camps", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Skill", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4992,16 +5530,16 @@ func (m *BattleResult) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Camps = append(m.Camps, &BattleCampaign{})
-			if err := m.Camps[len(m.Camps)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Skill = append(m.Skill, &BattleEventSkill{})
+			if err := m.Skill[len(m.Skill)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Win", wireType)
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Aura", wireType)
 			}
-			var v int
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowGame
@@ -5011,12 +5549,85 @@ func (m *BattleResult) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= (int(b) & 0x7F) << shift
+				msglen |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Win = bool(v != 0)
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Aura = append(m.Aura, &BattleEventAura{})
+			if err := m.Aura[len(m.Aura)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hurt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Hurt = append(m.Hurt, &BattleEventHurt{})
+			if err := m.Hurt[len(m.Hurt)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Effect", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGame
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGame
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Effect = append(m.Effect, &BattleEventAuraEffect{})
+			if err := m.Effect[len(m.Effect)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGame(dAtA[iNdEx:])
@@ -6235,80 +6846,80 @@ var (
 func init() { proto.RegisterFile("game.proto", fileDescriptorGame) }
 
 var fileDescriptorGame = []byte{
-	// 1185 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0xdd, 0x6e, 0x1b, 0x45,
-	0x14, 0xc6, 0xf6, 0xae, 0x7f, 0x8e, 0x6b, 0xd7, 0x99, 0x44, 0x61, 0xc5, 0x4f, 0x88, 0x96, 0x82,
-	0x52, 0xd1, 0x56, 0xc2, 0xad, 0xc4, 0x05, 0x15, 0x55, 0x93, 0x56, 0x6d, 0x45, 0x83, 0xaa, 0x29,
-	0xb9, 0xe1, 0xc6, 0x1a, 0xbc, 0x63, 0x7b, 0x94, 0xfd, 0x63, 0x76, 0xd6, 0x6d, 0xde, 0x82, 0x5b,
-	0x24, 0x5e, 0x86, 0x1b, 0x84, 0xc4, 0x0d, 0x8f, 0x80, 0xc2, 0x8b, 0xa0, 0x73, 0x66, 0xd6, 0x5e,
-	0x27, 0xa1, 0xe4, 0x6a, 0xcf, 0xf9, 0xe6, 0xdb, 0x33, 0x67, 0xce, 0xdf, 0x0c, 0xc0, 0x5c, 0x24,
-	0xf2, 0x5e, 0xae, 0x33, 0x93, 0xb1, 0x56, 0x52, 0xcc, 0xc3, 0x4f, 0x61, 0xeb, 0x55, 0x2c, 0xce,
-	0xa4, 0x7e, 0x22, 0x8c, 0xe0, 0xf2, 0xa7, 0x52, 0x16, 0x86, 0x0d, 0xa1, 0xa9, 0xa2, 0xa0, 0xb1,
-	0xdf, 0x38, 0xf0, 0x78, 0x53, 0x45, 0xe1, 0x43, 0xf0, 0x5e, 0x18, 0x99, 0x30, 0x06, 0xde, 0x2c,
-	0x16, 0x73, 0x5a, 0x19, 0x70, 0x92, 0x1d, 0xb7, 0x49, 0x48, 0x53, 0x45, 0x6c, 0x04, 0xad, 0x69,
-	0x6a, 0x82, 0xd6, 0x7e, 0xe3, 0xa0, 0xc5, 0x51, 0x0c, 0xef, 0x82, 0xff, 0xfa, 0x54, 0xc5, 0x71,
-	0xcd, 0xac, 0xa5, 0xee, 0x80, 0x1f, 0xcb, 0xa5, 0x8c, 0xdd, 0xdf, 0x56, 0x09, 0xef, 0x80, 0xf7,
-	0xb8, 0xd4, 0xe2, 0x9a, 0xec, 0xdf, 0x9b, 0xe0, 0x3d, 0x97, 0x3a, 0xbb, 0x1e, 0x9d, 0x7d, 0x00,
-	0x5d, 0x2d, 0x67, 0x2a, 0x95, 0x2f, 0x97, 0xe4, 0xe2, 0x80, 0xaf, 0x74, 0xb6, 0x0f, 0x7d, 0x2b,
-	0x7f, 0xaf, 0x12, 0x59, 0x04, 0x1e, 0x2d, 0xd7, 0xa1, 0x35, 0xe3, 0x75, 0x99, 0x4b, 0x1d, 0xf8,
-	0xfb, 0x8d, 0x83, 0x2e, 0xaf, 0x43, 0x2c, 0x84, 0xb6, 0x98, 0x1a, 0xb5, 0x94, 0x41, 0x7b, 0xbf,
-	0x75, 0xd0, 0x1f, 0xc3, 0xbd, 0xa4, 0x98, 0xdf, 0xa3, 0xe3, 0x73, 0xb7, 0xc2, 0x6e, 0x41, 0x27,
-	0x17, 0x45, 0x81, 0xa4, 0xce, 0x25, 0x52, 0xb5, 0x84, 0xfe, 0xe7, 0xd9, 0x1b, 0xa9, 0x83, 0xae,
-	0xf5, 0x9f, 0x14, 0xb6, 0x0b, 0xed, 0xc2, 0x08, 0x53, 0x16, 0x41, 0x8f, 0x60, 0xa7, 0xb1, 0x8f,
-	0xa0, 0x17, 0xab, 0x99, 0x7c, 0x95, 0xa9, 0xd4, 0x04, 0x40, 0x4b, 0x6b, 0x80, 0x85, 0x70, 0x63,
-	0xa5, 0x1c, 0x8b, 0xb7, 0x41, 0x9f, 0x08, 0x1b, 0x58, 0xf8, 0x4b, 0x13, 0x58, 0xbd, 0x12, 0x8a,
-	0x3c, 0x4b, 0x0b, 0x89, 0x29, 0x17, 0xd3, 0xa9, 0xa1, 0xc0, 0xf6, 0x38, 0xc9, 0x88, 0xa5, 0x22,
-	0x91, 0x14, 0xd9, 0x1e, 0x27, 0x19, 0xd3, 0x9e, 0xab, 0x88, 0x62, 0xea, 0x71, 0x14, 0x11, 0x29,
-	0x54, 0xe4, 0xc2, 0x88, 0xa2, 0x4b, 0x91, 0x5f, 0x95, 0xd5, 0x3a, 0x45, 0xed, 0x0b, 0x29, 0x5a,
-	0xaa, 0xfc, 0x25, 0x2d, 0x74, 0x6c, 0x8a, 0x2a, 0x1d, 0x77, 0x4e, 0x44, 0x2c, 0x29, 0x26, 0x5d,
-	0x4e, 0x32, 0xfb, 0x04, 0x7c, 0x65, 0x64, 0x82, 0x11, 0xc1, 0x60, 0xf6, 0x28, 0x98, 0x58, 0xae,
-	0xdc, 0xe2, 0x48, 0x58, 0x48, 0x9d, 0x15, 0x01, 0xd4, 0x08, 0x58, 0x33, 0xdc, 0xe2, 0x48, 0x10,
-	0xa5, 0x16, 0x45, 0xd0, 0xaf, 0x11, 0xb0, 0x06, 0xb9, 0xc5, 0xc3, 0x3b, 0x30, 0x7a, 0x76, 0x7c,
-	0x94, 0x25, 0x89, 0x48, 0xa3, 0xaa, 0x47, 0x02, 0xe8, 0x4c, 0x2d, 0xe2, 0x62, 0x53, 0xa9, 0xe1,
-	0x17, 0xb0, 0x55, 0x63, 0xbb, 0x38, 0xee, 0x42, 0x5b, 0xcb, 0xa2, 0x8c, 0x6d, 0x24, 0x7d, 0xee,
-	0xb4, 0xf0, 0x6b, 0x18, 0x7c, 0x97, 0x19, 0x35, 0x95, 0x95, 0xdd, 0x7a, 0x8f, 0xf9, 0xae, 0xc7,
-	0x76, 0xa1, 0x9d, 0x12, 0xc9, 0x85, 0xdc, 0x69, 0xe1, 0x43, 0x18, 0x56, 0x3f, 0xaf, 0xd3, 0x75,
-	0xed, 0xbf, 0xef, 0x42, 0xff, 0x50, 0x18, 0x13, 0xcb, 0xab, 0xbb, 0x73, 0x08, 0xcd, 0x78, 0x59,
-	0x35, 0x76, 0xbc, 0x0c, 0xef, 0x00, 0x58, 0xfa, 0x95, 0xdd, 0x79, 0x91, 0xfd, 0x67, 0xab, 0xa2,
-	0x9f, 0xa4, 0x8a, 0x4e, 0x65, 0xce, 0x72, 0x59, 0x4d, 0x0e, 0x94, 0x2f, 0x4d, 0x0e, 0x6b, 0xa2,
-	0x55, 0x99, 0xa0, 0x92, 0xca, 0xaa, 0x3e, 0x44, 0x11, 0x11, 0x61, 0x4e, 0xa9, 0x82, 0x06, 0x1c,
-	0x45, 0x44, 0x22, 0x39, 0x73, 0x05, 0x84, 0x22, 0x5a, 0x59, 0xe4, 0xae, 0x70, 0x9a, 0x8b, 0x1c,
-	0x77, 0x9e, 0x6a, 0x65, 0x5c, 0x1b, 0x91, 0xcc, 0x3e, 0x84, 0x1e, 0x7e, 0x27, 0x8b, 0x52, 0x1b,
-	0xd7, 0x48, 0x5d, 0x04, 0x9e, 0x97, 0xda, 0xb0, 0x5b, 0xe0, 0x61, 0x26, 0xa9, 0x8b, 0xfa, 0xe3,
-	0x11, 0x15, 0x43, 0x2d, 0x4e, 0x9c, 0x56, 0xd9, 0xe7, 0xe0, 0x17, 0xa8, 0xba, 0x9a, 0xb9, 0x4c,
-	0xb3, 0xcb, 0xec, 0x10, 0x76, 0xa6, 0x42, 0x4b, 0xa9, 0x27, 0x73, 0x99, 0x4a, 0x2d, 0xe2, 0x89,
-	0xfd, 0xed, 0xc6, 0x7f, 0x58, 0x67, 0x96, 0xfd, 0xcc, 0x92, 0x6d, 0x66, 0x1e, 0xc1, 0xf6, 0x05,
-	0x1b, 0x58, 0x96, 0xc1, 0x80, 0x4c, 0xdc, 0xac, 0x99, 0xa0, 0x9a, 0xdd, 0xda, 0xb0, 0x40, 0xc9,
-	0xaa, 0x19, 0x28, 0x85, 0x8e, 0xa4, 0xb6, 0x06, 0x86, 0xef, 0x36, 0x60, 0xa9, 0x08, 0x85, 0xbf,
-	0x36, 0x60, 0x78, 0x24, 0x92, 0x5c, 0xa8, 0x79, 0xfa, 0x44, 0x1a, 0xa1, 0xa8, 0x15, 0x17, 0x59,
-	0x61, 0xaa, 0x8c, 0xa2, 0x4c, 0x59, 0x56, 0x6e, 0x30, 0x60, 0x96, 0x55, 0xb2, 0xae, 0xc8, 0x56,
-	0xed, 0xce, 0xc0, 0xa1, 0xa2, 0xe7, 0x5f, 0x52, 0x6a, 0x7d, 0x4e, 0xb2, 0xc3, 0xc6, 0x94, 0x5c,
-	0x8b, 0x8d, 0x1d, 0x76, 0x9f, 0xd2, 0x6b, 0xb1, 0xfb, 0x0e, 0x7b, 0x40, 0x19, 0xb6, 0xd8, 0x83,
-	0xf0, 0xb7, 0x06, 0x0c, 0xed, 0x01, 0x2a, 0x27, 0xd9, 0x36, 0xf8, 0x62, 0x82, 0xe5, 0xe3, 0xfc,
-	0x13, 0xaf, 0xb2, 0x02, 0xc1, 0x88, 0x40, 0xe7, 0x60, 0x84, 0xe0, 0x0e, 0xb4, 0xc5, 0x64, 0x91,
-	0x4f, 0x8a, 0xca, 0x45, 0xf1, 0x3c, 0x7f, 0x8d, 0x68, 0x64, 0x51, 0xcf, 0x71, 0x1d, 0x4a, 0x5c,
-	0xe9, 0x6a, 0x10, 0xb9, 0x4f, 0x57, 0x5c, 0xe9, 0xea, 0x10, 0xb9, 0x4f, 0xd9, 0x5d, 0xe8, 0x44,
-	0x14, 0xaa, 0xc2, 0x8d, 0xf9, 0x6d, 0x0a, 0xf4, 0x66, 0x18, 0x79, 0xc5, 0x09, 0x35, 0xdc, 0xb0,
-	0x47, 0xe0, 0x34, 0x18, 0xd8, 0x67, 0xe0, 0x97, 0xa9, 0x32, 0x78, 0x80, 0xd6, 0x85, 0x2c, 0x61,
-	0x47, 0x71, 0xbb, 0xca, 0x6e, 0x83, 0x3f, 0x15, 0x49, 0x8e, 0x47, 0x5a, 0xef, 0xb1, 0x19, 0x0b,
-	0x6e, 0x19, 0xd8, 0x2b, 0x6f, 0x54, 0x4a, 0xa7, 0xec, 0x72, 0x14, 0xf1, 0xf2, 0x3f, 0x16, 0xa7,
-	0xb2, 0xda, 0xf7, 0xe2, 0xe5, 0x4f, 0x6d, 0x19, 0x3e, 0x02, 0x56, 0x27, 0xb9, 0x41, 0x73, 0x7b,
-	0x63, 0x9e, 0xf5, 0xc7, 0x5b, 0xb5, 0x8d, 0xed, 0x09, 0x56, 0x23, 0xee, 0x07, 0x18, 0x9e, 0x14,
-	0x92, 0x26, 0xf2, 0xd5, 0x5b, 0x54, 0x6f, 0x06, 0x9b, 0x15, 0x14, 0x57, 0x15, 0xd2, 0xba, 0xa2,
-	0x42, 0xd6, 0x55, 0x33, 0x0e, 0x6f, 0xc3, 0xcd, 0x95, 0xed, 0x2b, 0x27, 0xed, 0x60, 0xe5, 0xc6,
-	0x63, 0xe8, 0x23, 0xef, 0x28, 0x35, 0x2f, 0xd2, 0x59, 0x46, 0xb3, 0x24, 0xaa, 0x9c, 0x40, 0xf1,
-	0x5d, 0x2f, 0x19, 0xcf, 0xbe, 0x64, 0x1e, 0xc2, 0x8e, 0x33, 0x71, 0xb4, 0x10, 0xe9, 0x5c, 0x46,
-	0x76, 0xfa, 0xe2, 0xc8, 0x50, 0xe9, 0x2c, 0x73, 0xa9, 0x1a, 0xad, 0x6e, 0x20, 0xb7, 0x17, 0xa7,
-	0xd5, 0xf0, 0x1b, 0x18, 0x1d, 0x0b, 0x7d, 0x2a, 0xcd, 0x61, 0x79, 0x56, 0x45, 0x62, 0x07, 0x7c,
-	0x95, 0x46, 0xf2, 0xad, 0xf3, 0xc3, 0x2a, 0x88, 0x4e, 0xb3, 0xd2, 0x45, 0xc4, 0xe3, 0x56, 0x09,
-	0xc7, 0x98, 0xad, 0xd5, 0xff, 0xee, 0xb4, 0x1f, 0x03, 0x48, 0xad, 0x33, 0x3d, 0x99, 0x66, 0x51,
-	0x35, 0x5e, 0x7b, 0x84, 0x1c, 0x65, 0x11, 0xce, 0x78, 0x86, 0x37, 0x1d, 0xdd, 0x9e, 0x65, 0x5e,
-	0xed, 0xfa, 0x3e, 0x74, 0xf0, 0xe6, 0x9b, 0xac, 0x92, 0xd0, 0x46, 0xf5, 0x45, 0x14, 0x3e, 0x80,
-	0xed, 0x0d, 0xfa, 0xf5, 0x36, 0x39, 0x84, 0x2d, 0xba, 0x4e, 0xe9, 0x1d, 0xf4, 0x7f, 0x7b, 0xe0,
-	0xe1, 0x0a, 0x7a, 0x3e, 0xb9, 0x87, 0x19, 0x29, 0xe1, 0xb7, 0xd6, 0xd1, 0xca, 0xc6, 0xb5, 0x36,
-	0xae, 0xa5, 0xba, 0xb9, 0x91, 0xea, 0xaf, 0x60, 0x17, 0x8d, 0x61, 0xec, 0x4f, 0xf2, 0x48, 0x98,
-	0xba, 0x41, 0x0f, 0xdd, 0x70, 0x45, 0x5b, 0x7b, 0x0a, 0x10, 0x7c, 0x38, 0xfa, 0xe3, 0x7c, 0xaf,
-	0xf1, 0xd7, 0xf9, 0x5e, 0xe3, 0xef, 0xf3, 0xbd, 0xc6, 0xcf, 0xff, 0xec, 0xbd, 0xf7, 0x63, 0x9b,
-	0xde, 0xca, 0xf7, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x8b, 0x42, 0xee, 0x59, 0x39, 0x0b, 0x00,
-	0x00,
+	// 1200 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xdf, 0x6e, 0x1b, 0xc5,
+	0x17, 0xfe, 0xad, 0xbd, 0xeb, 0xc4, 0xc7, 0x75, 0xea, 0xec, 0x2f, 0x0d, 0xab, 0x0a, 0x42, 0xb4,
+	0x2d, 0xc8, 0x55, 0xdb, 0x48, 0x38, 0x91, 0xb8, 0x20, 0x02, 0x35, 0xa1, 0xa2, 0x11, 0x0d, 0xaa,
+	0xa6, 0xe4, 0x86, 0x9b, 0x6a, 0xea, 0x1d, 0x3b, 0xa3, 0xec, 0x3f, 0x76, 0xc7, 0x4e, 0x73, 0xc7,
+	0x13, 0xa0, 0x72, 0xc9, 0xc3, 0x70, 0x8b, 0xb8, 0xe4, 0x11, 0x50, 0x78, 0x0d, 0x2e, 0xd0, 0x39,
+	0x33, 0x63, 0x8f, 0x13, 0x03, 0x41, 0xe2, 0xee, 0x9c, 0x33, 0x9f, 0x67, 0xce, 0x7e, 0xe7, 0x3b,
+	0x67, 0xc6, 0x00, 0x63, 0x9e, 0x89, 0x9d, 0xb2, 0x2a, 0x54, 0x11, 0x36, 0xb3, 0x7a, 0x1c, 0xdf,
+	0x83, 0xf5, 0x17, 0x29, 0xbf, 0x10, 0xd5, 0xe7, 0x5c, 0x71, 0x26, 0xbe, 0x9d, 0x88, 0x5a, 0x85,
+	0x6b, 0xd0, 0x90, 0x49, 0xe4, 0x6d, 0x7b, 0x7d, 0x9f, 0x35, 0x64, 0x12, 0xef, 0x83, 0x7f, 0xa4,
+	0x44, 0x16, 0x86, 0xe0, 0x8f, 0x52, 0x3e, 0xa6, 0x95, 0x2e, 0x23, 0xdb, 0x60, 0x1b, 0x14, 0x69,
+	0xc8, 0x24, 0xec, 0x41, 0x73, 0x98, 0xab, 0xa8, 0xb9, 0xed, 0xf5, 0x9b, 0x0c, 0xcd, 0xf8, 0x31,
+	0x04, 0x2f, 0xcf, 0x64, 0x9a, 0x3a, 0xdb, 0x6a, 0xe8, 0x06, 0x04, 0xa9, 0x98, 0x8a, 0xd4, 0xfc,
+	0x5a, 0x3b, 0xf1, 0x23, 0xf0, 0x9f, 0x4c, 0x2a, 0x7e, 0x43, 0xf4, 0xcf, 0x0d, 0xf0, 0x9f, 0x89,
+	0xaa, 0xb8, 0x19, 0x3c, 0xbc, 0x0b, 0xab, 0x95, 0x18, 0xc9, 0x5c, 0x3c, 0x9f, 0x52, 0x8a, 0x5d,
+	0x36, 0xf3, 0xc3, 0x6d, 0xe8, 0x68, 0xfb, 0x6b, 0x99, 0x89, 0x3a, 0xf2, 0x69, 0xd9, 0x0d, 0xcd,
+	0x11, 0x2f, 0x27, 0xa5, 0xa8, 0xa2, 0x60, 0xdb, 0xeb, 0xaf, 0x32, 0x37, 0x14, 0xc6, 0xd0, 0xe2,
+	0x43, 0x25, 0xa7, 0x22, 0x6a, 0x6d, 0x37, 0xfb, 0x9d, 0x01, 0xec, 0x64, 0xf5, 0x78, 0x87, 0x3e,
+	0x9f, 0x99, 0x95, 0xf0, 0x3e, 0xac, 0x94, 0xbc, 0xae, 0x11, 0xb4, 0x72, 0x0d, 0x64, 0x97, 0x30,
+	0xff, 0xb2, 0x38, 0x17, 0x55, 0xb4, 0xaa, 0xf3, 0x27, 0x27, 0xdc, 0x84, 0x56, 0xad, 0xb8, 0x9a,
+	0xd4, 0x51, 0x9b, 0xc2, 0xc6, 0x0b, 0xdf, 0x85, 0x76, 0x2a, 0x47, 0xe2, 0x45, 0x21, 0x73, 0x15,
+	0x01, 0x2d, 0xcd, 0x03, 0x61, 0x0c, 0xb7, 0x66, 0xce, 0x31, 0x7f, 0x13, 0x75, 0x08, 0xb0, 0x10,
+	0x8b, 0x7f, 0x6c, 0x40, 0xe8, 0x2a, 0xa1, 0x2e, 0x8b, 0xbc, 0x16, 0x58, 0x72, 0x3e, 0x1c, 0x2a,
+	0x22, 0xb6, 0xcd, 0xc8, 0xc6, 0x58, 0xce, 0x33, 0x41, 0xcc, 0xb6, 0x19, 0xd9, 0x58, 0xf6, 0x52,
+	0x26, 0xc4, 0xa9, 0xcf, 0xd0, 0xc4, 0x48, 0x2d, 0x13, 0x43, 0x23, 0x9a, 0xa6, 0x44, 0x81, 0x95,
+	0xd5, 0xbc, 0x44, 0xad, 0x2b, 0x25, 0x9a, 0xca, 0xf2, 0x39, 0x2d, 0xac, 0xe8, 0x12, 0x59, 0x1f,
+	0x4f, 0xce, 0x78, 0x2a, 0x88, 0x93, 0x55, 0x46, 0x76, 0xf8, 0x3e, 0x04, 0x52, 0x89, 0x0c, 0x19,
+	0x41, 0x32, 0xdb, 0x44, 0x26, 0xca, 0x95, 0xe9, 0x38, 0x02, 0x4e, 0x45, 0x55, 0xd4, 0x11, 0x38,
+	0x00, 0xd4, 0x0c, 0xd3, 0x71, 0x04, 0xf0, 0x49, 0xc5, 0xeb, 0xa8, 0xe3, 0x00, 0x50, 0x83, 0x4c,
+	0xc7, 0xe3, 0x47, 0xd0, 0xfb, 0xe2, 0xf8, 0xb0, 0xc8, 0x32, 0x9e, 0x27, 0xb6, 0x47, 0x22, 0x58,
+	0x19, 0xea, 0x88, 0xe1, 0xc6, 0xba, 0xf1, 0x43, 0x58, 0x77, 0xd0, 0x86, 0xc7, 0x4d, 0x68, 0x55,
+	0xa2, 0x9e, 0xa4, 0x9a, 0xc9, 0x80, 0x19, 0x2f, 0xfe, 0x04, 0xba, 0x5f, 0x15, 0x4a, 0x0e, 0x85,
+	0xdd, 0xd7, 0xed, 0xb1, 0xc0, 0xf4, 0xd8, 0x26, 0xb4, 0x72, 0x02, 0x19, 0xca, 0x8d, 0x17, 0xef,
+	0xc3, 0x9a, 0xfd, 0xf1, 0xbc, 0x5c, 0x37, 0xfe, 0xf5, 0x63, 0xe8, 0x1c, 0x70, 0xa5, 0x52, 0xb1,
+	0xbc, 0x3b, 0xd7, 0xa0, 0x91, 0x4e, 0x6d, 0x63, 0xa7, 0xd3, 0xf8, 0x11, 0x80, 0x86, 0x2f, 0xed,
+	0xce, 0xab, 0xe8, 0xef, 0x1b, 0x16, 0x7e, 0x92, 0x4b, 0xfa, 0x2a, 0x75, 0x51, 0x0a, 0x3b, 0x39,
+	0xd0, 0xbe, 0x36, 0x39, 0xf4, 0x16, 0x4d, 0xbb, 0x05, 0x49, 0xaa, 0xb0, 0x7d, 0x88, 0x26, 0x46,
+	0x78, 0x99, 0x91, 0x82, 0xba, 0x0c, 0x4d, 0x8a, 0xa8, 0x33, 0x23, 0x20, 0x34, 0x31, 0x92, 0x88,
+	0x91, 0x51, 0x0e, 0x9a, 0xb8, 0xef, 0x69, 0x69, 0xda, 0xa8, 0x71, 0x5a, 0x62, 0x2e, 0xc3, 0x4a,
+	0x2a, 0xd3, 0x41, 0x64, 0x63, 0xec, 0x74, 0x52, 0xd9, 0xd6, 0x21, 0x3b, 0xbc, 0x0f, 0x3e, 0x96,
+	0x94, 0xba, 0xa5, 0x33, 0xe8, 0x91, 0x2a, 0x1c, 0xc2, 0x18, 0xad, 0x86, 0x1f, 0x42, 0x50, 0xa3,
+	0x1b, 0xdd, 0x22, 0xf1, 0x5c, 0x87, 0xe9, 0xe5, 0xf8, 0x3b, 0x0f, 0x7a, 0x3a, 0xfc, 0x74, 0x2a,
+	0x72, 0xa5, 0x39, 0x47, 0x5a, 0x64, 0x36, 0xa7, 0x45, 0x66, 0xa4, 0x94, 0x21, 0xaf, 0x95, 0xa8,
+	0x0c, 0x35, 0xc6, 0x9b, 0x1f, 0xd4, 0xfc, 0x8b, 0x7c, 0xf4, 0x32, 0x0a, 0x53, 0xf1, 0x6a, 0x2c,
+	0x14, 0x52, 0xd7, 0xec, 0x77, 0x99, 0x75, 0xe3, 0xb7, 0x1e, 0xdc, 0x76, 0x52, 0xa0, 0x3a, 0x2e,
+	0xcb, 0x60, 0x03, 0x82, 0xe2, 0x3c, 0x9f, 0x25, 0xa0, 0x1d, 0x27, 0xaf, 0xe6, 0x42, 0x5e, 0xf7,
+	0xc0, 0xc7, 0x2e, 0xa1, 0x3a, 0x75, 0x06, 0xb7, 0x9d, 0xb4, 0xa8, 0x85, 0x68, 0x11, 0x7f, 0x5c,
+	0xbc, 0x56, 0x5c, 0xe6, 0x66, 0x68, 0x1a, 0x2f, 0xfe, 0x61, 0x31, 0xa5, 0x67, 0xc8, 0xfb, 0xbf,
+	0x21, 0x65, 0x13, 0x5a, 0xfa, 0xeb, 0x6c, 0x52, 0xda, 0x9b, 0xd5, 0xd3, 0x77, 0xea, 0x69, 0xeb,
+	0x1e, 0x2c, 0xd6, 0x9d, 0x74, 0xd9, 0x9a, 0xeb, 0x32, 0xfe, 0xc9, 0x83, 0x3b, 0x57, 0x68, 0x7a,
+	0x3a, 0x1a, 0x89, 0xa1, 0xfa, 0x0f, 0xc8, 0xb2, 0xe7, 0xf9, 0x4e, 0x1f, 0xe0, 0x88, 0xad, 0xc6,
+	0x1f, 0x51, 0x5e, 0x01, 0x23, 0xdb, 0xc4, 0x06, 0x94, 0x97, 0x8e, 0x0d, 0x4c, 0x6c, 0x97, 0xa4,
+	0xad, 0x63, 0xbb, 0x26, 0xb6, 0x47, 0xea, 0xd6, 0xb1, 0xbd, 0xf8, 0x0f, 0x0f, 0x6e, 0xe9, 0xfc,
+	0x19, 0xcd, 0x18, 0x6c, 0x89, 0x73, 0x99, 0x53, 0xd6, 0xab, 0x0c, 0xcd, 0xf0, 0x03, 0x08, 0x26,
+	0xb9, 0x54, 0x75, 0xd4, 0x20, 0xd1, 0xba, 0x45, 0xc3, 0x76, 0x65, 0x7a, 0x35, 0x7c, 0x38, 0x97,
+	0x1c, 0xc2, 0xee, 0x38, 0xb0, 0xb9, 0x88, 0xad, 0xee, 0xfa, 0x33, 0x1d, 0x20, 0x76, 0xe3, 0x2a,
+	0xd6, 0x11, 0x43, 0xdf, 0x14, 0x27, 0x58, 0x8e, 0x44, 0x11, 0x98, 0x92, 0x0d, 0xa0, 0x25, 0x88,
+	0x7a, 0x73, 0x9d, 0xde, 0x5d, 0xb6, 0xab, 0x2e, 0x0e, 0x33, 0x48, 0x7c, 0xd1, 0x1c, 0xf3, 0x33,
+	0x61, 0x19, 0xb8, 0xfa, 0xa2, 0xa1, 0x59, 0x13, 0x7f, 0x06, 0xa1, 0x0b, 0x32, 0xd3, 0xf3, 0xc1,
+	0xc2, 0x90, 0xee, 0x0c, 0xd6, 0x9d, 0xe3, 0x34, 0x97, 0xb3, 0xb9, 0xfd, 0x0d, 0xac, 0x9d, 0xd4,
+	0x82, 0xae, 0x99, 0xe5, 0x47, 0xd8, 0x87, 0x90, 0x96, 0x05, 0x9a, 0xb3, 0x42, 0x37, 0x97, 0x14,
+	0xda, 0x9f, 0x17, 0x3a, 0x7e, 0x00, 0xb7, 0x67, 0x7b, 0x2f, 0xbd, 0x3e, 0xba, 0xb3, 0x34, 0x9e,
+	0x40, 0x07, 0x71, 0x87, 0xb9, 0x3a, 0xca, 0x47, 0x05, 0x8d, 0xc3, 0xc4, 0x26, 0x81, 0xe6, 0xdf,
+	0x3d, 0xcf, 0x7c, 0xfd, 0x3c, 0xdb, 0x87, 0x0d, 0xb3, 0xc5, 0xe1, 0x29, 0xcf, 0xc7, 0x22, 0xd1,
+	0x57, 0x0a, 0x8e, 0x3f, 0x99, 0x8f, 0x8a, 0xc8, 0x73, 0xe6, 0x9a, 0x73, 0x16, 0xa3, 0xd5, 0xf8,
+	0x53, 0xe8, 0x1d, 0xf3, 0xea, 0x4c, 0xa8, 0x83, 0xc9, 0x85, 0x65, 0x62, 0x03, 0x02, 0x99, 0x27,
+	0xe2, 0x8d, 0xc9, 0x43, 0x3b, 0x18, 0x1d, 0x16, 0x13, 0xc3, 0x88, 0xcf, 0xb4, 0x13, 0x0f, 0xb0,
+	0x5a, 0xb3, 0xdf, 0x9b, 0xaf, 0x7d, 0x0f, 0x40, 0x54, 0x55, 0x51, 0xbd, 0x1a, 0x16, 0x89, 0xed,
+	0xb6, 0x36, 0x45, 0x0e, 0x8b, 0x04, 0x2f, 0xae, 0x10, 0xaf, 0x6f, 0x7a, 0x12, 0x4c, 0x4a, 0x7b,
+	0xea, 0x3b, 0xb0, 0x82, 0xd7, 0xf9, 0xab, 0x59, 0x11, 0x5a, 0xe8, 0x1e, 0x25, 0xf1, 0x1e, 0xfc,
+	0x7f, 0x01, 0x7e, 0xb3, 0x43, 0x0e, 0x60, 0x9d, 0xde, 0x08, 0xf4, 0xb8, 0xfb, 0xa7, 0x33, 0xf0,
+	0xe3, 0x6a, 0x7a, 0x13, 0x9a, 0x29, 0x40, 0x4e, 0xfc, 0xa5, 0x4e, 0xd4, 0xee, 0x71, 0xa3, 0x83,
+	0x9d, 0x52, 0x37, 0x16, 0x4a, 0xfd, 0x31, 0x6c, 0xe2, 0x66, 0xc8, 0xfd, 0x49, 0x99, 0x70, 0xe5,
+	0x6e, 0xe8, 0x63, 0x1a, 0x46, 0xb4, 0xce, 0xfb, 0x86, 0xc2, 0x07, 0xbd, 0x5f, 0x2e, 0xb7, 0xbc,
+	0x5f, 0x2f, 0xb7, 0xbc, 0xdf, 0x2e, 0xb7, 0xbc, 0xb7, 0xbf, 0x6f, 0xfd, 0xef, 0x75, 0x8b, 0xfe,
+	0x00, 0xec, 0xfe, 0x19, 0x00, 0x00, 0xff, 0xff, 0x8d, 0x64, 0x43, 0x97, 0x0e, 0x0c, 0x00, 0x00,
 }

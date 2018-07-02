@@ -89,44 +89,62 @@ message BattleUnit {
     uint32  id                  = 2;    // 英雄/怪物ID
     uint32  lv                  = 3;    // 等级
     uint32  pos                 = 4;    // 位置
-    uint32  atk                 = 5;    // 攻击
-    uint32  def                 = 6;    // 防御
-    uint32  hp                  = 7;    // HP当前
-    uint32  crit                = 8;    // 暴击
-    uint32  crit_hurt           = 9;    // 暴伤
-    BattleSkill comm            = 10;   // 普攻
-    repeated BattleSkill skill  = 11;   // 技能
-    BattleSkill career_general_skill    = 12;   // 主帅技能
-    BattleAura  career_general_aura     = 13;   // 主帅光环
-    BattleAura  career_guarder_aura     = 14;   // 辅将光环
+    uint32  apm                 = 5;    // 位置
+    uint32  atk                 = 6;    // 攻击
+    uint32  def                 = 7;    // 防御
+    uint32  hp                  = 8;    // HP当前
+    uint32  crit                = 9;    // 暴击
+    uint32  hurt                = 10;   // 暴伤
+    BattleSkill comm            = 11;   // 普攻
+    repeated BattleSkill skill  = 12;   // 技能
 }
 
-
-message CampaignDetail {
-    uint32 host                 = 1;
-    uint32 time                 = 2;
-    uint32 flag                 = 3;
-    int32 arg1                  = 4;
-    int32 arg2                  = 5;
-    int32 arg3                  = 6;
-    int32 arg4                  = 7;
+// 技能释放事件
+message BattleEventSkill {
+    uint32          time                = 1;    // 时间
+    uint32          caster              = 2;    // 释法者
+    BattleSkill     skill               = 3;    // 技能信息
+    repeated uint32 targets             = 4;    // 目标
 }
 
-message BattleCampaign {
-    uint32 a_pos                        = 1;    // 攻击方出战者
-    uint32 d_pos                        = 2;    // 防御方出战者
-    uint32 a_hp_s                       = 3;    // 攻击者战斗前的HP
-    uint32 d_hp_s                       = 4;    // 防御者战斗前的HP
-    uint32 a_hp_e                       = 5;    // 攻击者战斗后的HP
-    uint32 d_hp_e                       = 6;    // 防御者战斗后的HP
-    repeated CampaignDetail details     = 7;    // 战斗细节
+// 光环事件
+message BattleEventAura {
+    uint32          time                = 1;    // 时间
+    uint32          owner               = 2;    // 光环获得者
+    uint32          caster              = 3;    // 谁释放的光环
+    BattleAura      aura                = 4;    // 光环信息
+    bool            obtain              = 5;    // true:获得光环  false:失去光环
 }
 
+// 伤害事件
+message BattleEventHurt {
+    uint32          time                = 1;    // 时间
+    uint32          caster              = 2;    // 攻击者
+    uint32          target              = 3;    // 目标
+    uint32          hurt                = 4;    // 伤害量
+    uint32          crit                = 5;    // 是否暴击
+    uint32          type                = 6;    // 攻击、反弹、溅射       
+}
+
+// 光环效果事件
+message BattleEventAuraEffect {
+    uint32          time                = 1;    // 时间
+    uint32          owner               = 2;    // 光环获得者
+    uint32          caster              = 3;    // 谁释放的光环
+    uint32          type                = 4;    // 事件类型
+    int32           arg1                = 5;    // 
+    int32           arg2                = 6;    // 
+    int32           arg3                = 7;    // 
+    int32           arg4                = 8;    // 
+}
 
 message BattleResult {
-    repeated BattleUnit units           = 1;    // 所有参战人员
-    repeated BattleCampaign camps       = 2;    // 所有战斗战况
-    bool    win                         = 3;    // 攻击者是否获胜
+    bool                            win                 = 1;    // 攻击者是否获胜
+    repeated BattleUnit             units               = 2;    // 所有参战人员
+    repeated BattleEventSkill       skill               = 3;
+    repeated BattleEventAura        aura                = 4;
+    repeated BattleEventHurt        hurt                = 5;
+    repeated BattleEventAuraEffect  effect              = 6;
 }
 
 message MakeBattleRequest {

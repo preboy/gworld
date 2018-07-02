@@ -6,27 +6,18 @@ import (
 )
 
 // ==================================================
-type BattleEventType uint32
-type CampaignEventType uint32
-type ProertyType int32
+type BattleCalcEvent uint32 // 用于战斗计算
 
 const (
-	_                  BattleEventType = 0 + iota
-	BattleEvent_PreAtk                 // 计算攻击之前 (累积光环的附加攻击)
-	BattleEvent_Damage                 // 发出伤害
-	BattleEvent_AftDef                 // 计算防御之后 (抵挡伤害)
+	_          BattleCalcEvent = 0 + iota
+	BCE_PreAtk                 // 计算攻击之前 (累积光环的附加攻击)
+	BCE_Damage                 // 发出伤害
+	BCE_AftDef                 // 计算防御之后 (抵挡伤害)
 )
 
 const (
-	_                        CampaignEventType = 0 + iota // 战斗中的事件
-	CampaignEvent_Cast                                    // 释放技能
-	CampaignEvent_Hurt                                    // 受到伤害
-	CampaignEvent_AuraGet                                 // 得到光环
-	CampaignEvent_AuraLose                                // 失去光环
-	CampaignEvent_AuraEffect                              // 光环效果
+	MAX_TROOP_MEMBER = 6
 )
-
-const MAX_TROOP_MEMBER = 6
 
 type SkillCfg struct {
 	Id, Lv uint32
@@ -57,15 +48,19 @@ type BattleUnit struct {
 	Prop_aura *Property // 战斗中光环所加的属性										-- 战斗中产生
 	Prop      *Property // 战斗属性之和
 
-	Hp   int   // 当前HP
-	Rst  int32 // 分钟 / Apm
-	Last int32 // 上一次时间
+	Hp   int    // 当前HP
+	Rst  uint32 // 分钟 / Apm
+	Last uint32 // 上一次时间
 
 	// 战斗技能、光环
 	Skill_curr   *BattleSkill   // 当前正在释放技能
 	Skill_comm   *BattleSkill   // 普攻
 	Skill_battle []*BattleSkill // 战斗技能
 	Auras_battle []*BattleAura  // 战斗光环
+}
+
+func (self *BattleUnit) GetBattle() *Battle {
+	return self.Troop.battle
 }
 
 func (self *BattleUnit) Name() string {
@@ -88,10 +83,10 @@ func (self *BattleUnit) CalcProp() {
 	self.Prop.AddProperty(self.Prop_base)
 	self.Prop.AddProperty(self.Prop_addi)
 	self.Prop.AddProperty(self.Prop_aura)
-	self.Rst = int32(60000 / self.Prop.Apm)
+	self.Rst = uint32(60000 / self.Prop.Apm)
 }
 
-func (self *BattleUnit) Update(time int32) {
+func (self *BattleUnit) Update(time uint32) {
 	if self.Skill_curr == nil {
 		// apm checking
 		if time < self.Last+self.Rst {
@@ -134,12 +129,8 @@ func (self *BattleUnit) Update(time int32) {
 
 }
 
-func (self *BattleUnit) UpdateLife(time int32) {
+func (self *BattleUnit) UpdateLife(time uint32) {
 	self.dead = self.Hp <= 0
-}
-
-func (self *BattleUnit) AddCampaignDetail(flag CampaignEventType, arg1, arg2, arg3, arg4 int32) {
-	self.Troop.battle.AddCampaignDetail(self, flag, arg1, arg2, arg3, arg4)
 }
 
 func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
@@ -149,21 +140,40 @@ func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
 	}
 	aura.Init(caster, self)
 	self.Auras_battle = append(self.Auras_battle, aura)
-	self.AddCampaignDetail(CampaignEvent_AuraGet, int32(id), int32(lv), 0, 0)
+	self.GetBattle().BattlePlayEvent_Aura(self, caster, id, lv, true)
 }
 
 func (self *BattleUnit) DelAura(id, lv uint32) {
 	for k, aura := range self.Auras_battle {
 		if aura.proto.Id == id && aura.proto.Level == lv {
 			self.Auras_battle[k] = nil
-			self.AddCampaignDetail(CampaignEvent_AuraLose, int32(id), int32(lv), 0, 0)
-			return
+			self.GetBattle().BattlePlayEvent_Aura(self, aura.caster, id, lv, false)
+			break
 		}
 	}
 }
 
 func (self *BattleUnit) ToMsg() *msg.BattleUnit {
-	u := &msg.BattleUnit{}
+	u := &msg.BattleUnit{
+		Type: self.UnitType,
+		Id:   self.Id,
+		Lv:   self.Lv,
+		Pos:  self.Pos,
+		Apm:  uint32(self.Prop.Apm),
+		Atk:  uint32(self.Prop.Atk),
+		Def:  uint32(self.Prop.Def),
+		Hp:   uint32(self.Prop.Hp),
+		Crit: uint32(self.Prop.Crit),
+		Hurt: uint32(self.Prop.Hurt),
+		Comm: &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Level},
+	}
+
+	for _, skill := range self.Skill_battle {
+		u.Skill = append(u.Skill, &msg.BattleSkill{
+			skill.proto.Id,
+			skill.proto.Level,
+		})
+	}
 
 	return u
 }
@@ -191,6 +201,14 @@ func NewBattleTroop(members ...*BattleUnit) *BattleTroop {
 	return troop
 }
 
+func (self *BattleTroop) Init() {
+	for i := 0; i < MAX_TROOP_MEMBER; i++ {
+		if self.members[i] != nil {
+			self.members[i].Init()
+		}
+	}
+}
+
 func (self *BattleTroop) Lose() (ret bool) {
 	ret = true
 	for i := 0; i < MAX_TROOP_MEMBER; i++ {
@@ -204,11 +222,20 @@ func (self *BattleTroop) Lose() (ret bool) {
 }
 
 func (self *BattleTroop) IsAttacker() bool {
-	return self == self.battle.attacker
+	return self == self.battle.GetAttacher()
 }
 
 func (self *BattleTroop) IsDefender() bool {
-	return self == self.battle.defender
+	return self == self.battle.GetDefender()
+}
+
+// 敌方队伍
+func (self *BattleTroop) GetRival() *BattleTroop {
+	if self.IsAttacker() {
+		return self.battle.GetDefender()
+	} else {
+		return self.battle.GetAttacher()
+	}
 }
 
 // ==================================================
@@ -216,11 +243,9 @@ func (self *BattleTroop) IsDefender() bool {
 type Battle struct {
 	attacker *BattleTroop
 	defender *BattleTroop
-
-	campaigns []*msg.BattleCampaign
-	campaign  *msg.BattleCampaign
-	R         uint32 // 0:attacker负  1:attacker胜
-	time      int32
+	R        uint32 // 0:attacker负  1:attacker胜
+	time     uint32
+	Result   msg.BattleResult
 }
 
 func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
@@ -237,6 +262,27 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 	d.battle = b
 
 	return b
+}
+
+func (self *Battle) Init() {
+	self.attacker.Init()
+	self.defender.Init()
+
+	// 装玩家
+	for _, u := range self.attacker.members {
+		self.Result.Units = append(self.Result.Units, u.ToMsg())
+	}
+	for _, u := range self.defender.members {
+		self.Result.Units = append(self.Result.Units, u.ToMsg())
+	}
+}
+
+func (self *Battle) GetAttacher() *BattleTroop {
+	return self.attacker
+}
+
+func (self *Battle) GetDefender() *BattleTroop {
+	return self.defender
 }
 
 func (self *Battle) InBattle() bool {
@@ -298,11 +344,11 @@ func (self *Battle) Calc() {
 
 	for {
 		if self.attacker.Lose() {
-			self.R = 0
+			self.Result.Win = false
 			break
 		}
 		if self.defender.Lose() {
-			self.R = 1
+			self.Result.Win = true
 			break
 		}
 
@@ -335,7 +381,7 @@ func (self *Battle) Calc() {
 		// 超时检测(5分钟 3000 = 5*60*1000/100)
 		if bout >= 3000 {
 			fmt.Println("bout timeout !")
-			self.R = 0
+			self.Result.Win = false
 			break
 		}
 
@@ -344,72 +390,10 @@ func (self *Battle) Calc() {
 
 }
 
-func (self *Battle) AddCampaignDetail(u *BattleUnit, flag CampaignEventType, arg1, arg2, arg3, arg4 int32) {
-	self.campaign.Details = append(self.campaign.Details, &msg.CampaignDetail{
-		Host: u.Pos,
-		Time: uint32(self.time),
-		Flag: uint32(flag),
-		Arg1: arg1,
-		Arg2: arg2,
-		Arg3: arg3,
-		Arg4: arg4,
-	})
-}
-
-func (self *Battle) GetResult() uint32 {
-	return self.R
+func (self *Battle) GetResult() bool {
+	return self.Result.Win
 }
 
 func (self *Battle) ToMsg() *msg.BattleResult {
-	// r := &msg.BattleResult{}
-
-	// r.Win = self.GetResult() == 1
-	// r.Camps = self.campaigns
-	// r.Units = make([]*msg.BattleUnit, 0, 10)
-
-	// u := self.attacker.l_pioneer
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.attacker.r_pioneer
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.attacker.m_general
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.attacker.l_guarder
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.attacker.r_guarder
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-
-	// u = self.defender.l_pioneer
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.defender.r_pioneer
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.defender.m_general
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.defender.l_guarder
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-	// u = self.defender.r_guarder
-	// if u != nil {
-	// 	r.Units = append(r.Units, u.ToMsg())
-	// }
-
-	// return r
-
-	return nil
+	return &self.Result
 }

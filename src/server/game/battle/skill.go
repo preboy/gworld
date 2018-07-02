@@ -29,10 +29,10 @@ type SkillContext struct {
 type BattleSkill struct {
 	proto        *config.SkillProto // 技能原型
 	caster       *BattleUnit        // 技能拥有者
-	time         int32              // 当前时间
-	cd_time      int32              // 用于计算CD(技能结束之后开始计算)
-	start_time   int32              // 技能开始释放时间
-	update_time  int32              // 对于有update的技能，记录上次时间
+	time         uint32             // 当前时间
+	cd_time      uint32             // 用于计算CD(技能结束之后开始计算)
+	start_time   uint32             // 技能开始释放时间
+	update_time  uint32             // 对于有update的技能，记录上次时间
 	finish       bool               // 是否完成
 	target_major []*BattleUnit      // 第一目标
 	target_minor []*BattleUnit      // 第二目标
@@ -50,18 +50,24 @@ func NewBattleSkill(id, lv uint32) *BattleSkill {
 	return sb
 }
 
-func (self *BattleSkill) Cast(caster *BattleUnit, time int32) {
+func (self *BattleSkill) Cast(caster *BattleUnit, time uint32) {
 	self.finish = false
 	self.caster = caster
 	self.start_time = time
 	self.update_time = time + self.proto.Prepare_t
 	self.find_target()
 	self.onStart()
-	self.caster.AddCampaignDetail(CampaignEvent_Cast, int32(self.proto.Id), int32(self.proto.Level), 0, 0)
+
+	targets := []uint32{}
+	for _, t := range self.target_major {
+		targets = append(targets, t.Id)
+	}
+
+	self.caster.GetBattle().BattlePlayEvent_Cast(self.caster, self.proto.Id, self.proto.Level, targets)
 	// fmt.Println("[技能", time, "]", u.Name(), "释放了技能:", self.proto.Name)
 }
 
-func (self *BattleSkill) Update(time int32) {
+func (self *BattleSkill) Update(time uint32) {
 	if self.finish {
 		return
 	}
@@ -87,7 +93,7 @@ func (self *BattleSkill) Update(time int32) {
 }
 
 // CD时间从技能释放结束开始计算
-func (self *BattleSkill) IsFree(time int32) bool {
+func (self *BattleSkill) IsFree(time uint32) bool {
 	return time-self.cd_time >= self.proto.Cd_t
 }
 
@@ -196,7 +202,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	// step 2: 计算光环
 	for _, aura := range ctx.caster.Auras_battle {
 		if aura != nil {
-			aura.OnEvent(BattleEvent_PreAtk, ctx)
+			aura.OnEvent(BCE_PreAtk, ctx)
 		}
 	}
 
@@ -215,7 +221,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	// step 4: 处理攻击方光环事件
 	for _, aura := range ctx.caster.Auras_battle {
 		if aura != nil {
-			aura.OnEvent(BattleEvent_Damage, ctx)
+			aura.OnEvent(BCE_Damage, ctx)
 		}
 	}
 
@@ -232,7 +238,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	// step 6: 计算光环
 	for _, aura := range target.Auras_battle {
 		if aura != nil {
-			aura.OnEvent(BattleEvent_AftDef, ctx)
+			aura.OnEvent(BCE_AftDef, ctx)
 		}
 	}
 
@@ -252,17 +258,13 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 		text = " <击杀了> "
 	}
 
-	var is_crit int32
+	var is_crit uint32
 	if ctx.damage.crit {
 		is_crit = 1
 		text += "[+暴击]"
 	}
 
-	fmt.Println("[技能", self.time, "]", ctx.caster.Name(), text, ctx.target.Name(), ctx.damage.hurt, ctx.target.Hp, "/", ctx.target.Prop.Hp, "[", ctx.caster.Skill_curr.proto.Name, "]")
+	fmt.Println("[技能", self.time, "]", ctx.caster.Name(), text, ctx.target.Name(), ctx.damage.hurt, ctx.target.Hp, "/", ctx.target.Prop.Hp, "[", ctx.caster.Skill_curr.proto.Name, "]", is_crit)
 
-	target.AddCampaignDetail(CampaignEvent_Hurt, int32(ctx.damage.hurt), is_crit, 0, 0)
-}
-
-func (self *BattleSkill) find_target() {
-
+	self.caster.GetBattle().BattlePlayEvent_Hurt(self.caster, target, uint32(ctx.damage.hurt), is_crit, 0)
 }

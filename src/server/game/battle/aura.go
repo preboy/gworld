@@ -9,10 +9,10 @@ type BattleAura struct {
 	caster      *BattleUnit
 	proto       *config.AuraProto
 	script      AuraScript
-	start_time  int32
-	update_time int32 // 对于有update的技能，记录上次时间
-	start       bool  // 就否初始化完成
-	finish      bool  // 是否完成
+	start_time  uint32
+	update_time uint32 // 对于有update的技能，记录上次时间
+	start       bool   // 就否初始化完成
+	finish      bool   // 是否完成
 }
 
 func NewAuraBattle(id, lv uint32) *BattleAura {
@@ -32,7 +32,7 @@ func (self *BattleAura) IsFinish() bool {
 	return self.finish
 }
 
-func (self *BattleAura) Update(time int32) {
+func (self *BattleAura) Update(time uint32) {
 	if self.finish {
 		return
 	}
@@ -67,9 +67,9 @@ func (self *BattleAura) onUpdate() {
 	}
 }
 
-func (self *BattleAura) OnEvent(evt BattleEventType, ctx *SkillContext) {
+func (self *BattleAura) OnEvent(evt BattleCalcEvent, ctx *SkillContext) {
 	if self.script != nil {
-		self.script.OnEvent(evt, self, ctx)
+		self.script.OnEvent(self, evt, ctx)
 	}
 }
 
