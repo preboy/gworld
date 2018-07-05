@@ -38,7 +38,7 @@ type BattleUnit struct {
 	Id       uint32       // ID
 	Lv       uint32       // 等级
 	UnitType uint32       // 生物类型
-	Pos      uint32       // 位置
+	Pos      uint32       // 位置 		pos start 1 to 12
 	Troop    *BattleTroop // 队伍
 	dead     bool         // 是否死亡
 
@@ -71,7 +71,8 @@ func (self *BattleUnit) Dead() bool {
 	return self.dead
 }
 
-func (self *BattleUnit) Init() {
+func (self *BattleUnit) Init(pos int) {
+	self.Pos = uint32(pos)
 	self.Prop_aura = &Property{}
 	self.Prop = &Property{}
 	self.CalcProp()
@@ -168,6 +169,10 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 		Comm: &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Level},
 	}
 
+	if self.Troop.IsAttacker() {
+		u.Attacker = 1
+	}
+
 	for _, skill := range self.Skill_battle {
 		u.Skill = append(u.Skill, &msg.BattleSkill{
 			skill.proto.Id,
@@ -181,8 +186,9 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 // ==================================================
 
 type BattleTroop struct {
-	battle  *Battle
-	members [MAX_TROOP_MEMBER]*BattleUnit // 从第一排到第二排行，从左到右
+	battle   *Battle
+	attacker bool
+	members  [MAX_TROOP_MEMBER]*BattleUnit // 从第一排到第二排行，从左到右
 }
 
 func NewBattleTroop(members ...*BattleUnit) *BattleTroop {
@@ -195,16 +201,20 @@ func NewBattleTroop(members ...*BattleUnit) *BattleTroop {
 
 	for i := 0; i < l; i++ {
 		troop.members[i] = members[i]
-		troop.members[i].Pos = uint32(i)
 	}
 
 	return troop
 }
 
-func (self *BattleTroop) Init() {
+func (self *BattleTroop) Init(attacker bool) {
+	self.attacker = attacker
 	for i := 0; i < MAX_TROOP_MEMBER; i++ {
 		if self.members[i] != nil {
-			self.members[i].Init()
+			if attacker {
+				self.members[i].Init(i + 1)
+			} else {
+				self.members[i].Init(i + 1 + MAX_TROOP_MEMBER)
+			}
 		}
 	}
 }
@@ -222,16 +232,16 @@ func (self *BattleTroop) Lose() (ret bool) {
 }
 
 func (self *BattleTroop) IsAttacker() bool {
-	return self == self.battle.GetAttacher()
+	return self.attacker
 }
 
 func (self *BattleTroop) IsDefender() bool {
-	return self == self.battle.GetDefender()
+	return !self.attacker
 }
 
 // 敌方队伍
 func (self *BattleTroop) GetRival() *BattleTroop {
-	if self.IsAttacker() {
+	if self.attacker {
 		return self.battle.GetDefender()
 	} else {
 		return self.battle.GetAttacher()
@@ -265,8 +275,8 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 }
 
 func (self *Battle) Init() {
-	self.attacker.Init()
-	self.defender.Init()
+	self.attacker.Init(true)
+	self.defender.Init(false)
 
 	// 装玩家
 	for _, u := range self.attacker.members {

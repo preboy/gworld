@@ -51,17 +51,17 @@ func (self *BattleSkill) find_target_impl(ids []int32, units []*BattleUnit) {
 		switch id {
 		// ------------------------------- 我方单位 -------------------------------
 
-		case 0, 1, 2, 3, 4, 5:
+		case 1, 2, 3, 4, 5, 6:
 			{
-				u := self.caster.Troop.members[id]
+				u := self.caster.Troop.members[id-1]
 				units = append(units, u)
 			}
 
 		// ------------------------------- 敌方单位 -------------------------------
 
-		case 200, 201, 202, 203, 204, 205:
+		case 201, 202, 203, 204, 205, 206:
 			{
-				u := self.caster.Troop.GetRival().members[id-200]
+				u := self.caster.Troop.GetRival().members[id-200-1]
 				units = append(units, u)
 			}
 		default:

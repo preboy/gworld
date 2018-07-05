@@ -89,14 +89,15 @@ message BattleUnit {
     uint32  id                  = 2;    // 英雄/怪物ID
     uint32  lv                  = 3;    // 等级
     uint32  pos                 = 4;    // 位置
-    uint32  apm                 = 5;    // 位置
-    uint32  atk                 = 6;    // 攻击
-    uint32  def                 = 7;    // 防御
-    uint32  hp                  = 8;    // HP当前
-    uint32  crit                = 9;    // 暴击
-    uint32  hurt                = 10;   // 暴伤
-    BattleSkill comm            = 11;   // 普攻
-    repeated BattleSkill skill  = 12;   // 技能
+    uint32  attacker            = 5;    // 是否攻击方
+    uint32  apm                 = 6;    // apm
+    uint32  atk                 = 7;    // 攻击
+    uint32  def                 = 8;    // 防御
+    uint32  hp                  = 9;    // HP当前
+    uint32  crit                = 10;   // 暴击
+    uint32  hurt                = 11;   // 暴伤
+    BattleSkill comm            = 12;   // 普攻
+    repeated BattleSkill skill  = 13;   // 技能
 }
 
 // 技能释放事件
@@ -123,7 +124,7 @@ message BattleEventHurt {
     uint32          target              = 3;    // 目标
     uint32          hurt                = 4;    // 伤害量
     uint32          crit                = 5;    // 是否暴击
-    uint32          type                = 6;    // 攻击、反弹、溅射       
+    uint32          type                = 6;    // 攻击、反弹、溅射
 }
 
 // 光环效果事件
@@ -132,10 +133,10 @@ message BattleEventAuraEffect {
     uint32          owner               = 2;    // 光环获得者
     uint32          caster              = 3;    // 谁释放的光环
     uint32          type                = 4;    // 事件类型
-    int32           arg1                = 5;    // 
-    int32           arg2                = 6;    // 
-    int32           arg3                = 7;    // 
-    int32           arg4                = 8;    // 
+    int32           arg1                = 5;    //
+    int32           arg2                = 6;    //
+    int32           arg3                = 7;    //
+    int32           arg4                = 8;    //
 }
 
 message BattleResult {
