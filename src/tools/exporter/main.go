@@ -124,13 +124,15 @@ func expand_lua_array(field, text string) (string, string) {
 	text = strings.Trim(text, " ")
 	vals := strings.Split(text, "|")
 
-	if len(vals) == 0 {
+	if len(text) == 0 || len(vals) == 0 {
 		return field, "{}"
 	}
 
 	str := "{ "
 	for _, val := range vals {
-		str += val + ", "
+		if val != "" {
+			str += val + ", "
+		}
 	}
 	str += "}"
 

@@ -97,12 +97,21 @@ func expand_lua_map(field, text string) (string, string) {
 }
 
 func expand_lua_array(field, text string) (string, string) {
-	str := "{ "
+	text = strings.Trim(text, " ")
 	vals := strings.Split(text, "|")
+
+	if len(text) == 0 || len(vals) == 0 {
+		return field, "{}"
+	}
+
+	str := "{ "
 	for _, val := range vals {
-		str += val + ", "
+		if val != "" {
+			str += val + ", "
+		}
 	}
 	str += "}"
+
 	return field, str
 }
 

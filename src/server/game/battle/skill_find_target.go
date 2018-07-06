@@ -259,6 +259,7 @@ func (self *BattleSkill) find_target_impl(ids []int32, units []*BattleUnit) {
 		}
 	}
 }
+
 func (self *BattleSkill) _default_target() *BattleUnit {
 	var pos int
 	members := self.caster.Troop.GetRival().members
@@ -282,5 +283,13 @@ func (self *BattleSkill) _default_target() *BattleUnit {
 func (self *BattleSkill) find_target() {
 	self.find_target_impl(self.proto.Target_major, self.target_major)
 	self.find_target_impl(self.proto.Target_minor, self.target_minor)
+	if len(self.target_major) == 0 && len(self.target_minor) == 0 {
+		members := self.caster.Troop.GetRival().members
+		for i := 0; i < MAX_TROOP_MEMBER; i++ {
+			if members[i] != nil && !members[i].Dead() {
+				self.target_major = append(self.target_major, members[i])
+			}
+		}
+	}
 	fmt.Println(self.proto.Id, "技能目标：", self.target_major, self.target_minor)
 }
