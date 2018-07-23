@@ -200,6 +200,7 @@ func NewBattleTroop(members ...*BattleUnit) *BattleTroop {
 	}
 
 	for i := 0; i < l; i++ {
+		members[i].Troop = troop
 		troop.members[i] = members[i]
 	}
 
@@ -270,6 +271,8 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 
 	a.battle = b
 	d.battle = b
+
+	b.Init()
 
 	return b
 }
@@ -394,6 +397,8 @@ func (self *Battle) Calc() {
 			self.Result.Win = false
 			break
 		}
+
+		fmt.Println("fuckyou ", self.defender, self.attacker)
 
 		self.time += 100
 	}
