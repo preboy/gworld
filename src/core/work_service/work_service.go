@@ -82,10 +82,10 @@ func (self *WorkService) Start(n int) bool {
 			if atomic.LoadInt32(&self.n) == 0 {
 				return
 			}
-			if len(self.q) > 0 {
+			for len(self.q) > 0 {
 				self.c.Signal()
-				time.Sleep(1000 * time.Microsecond)
 			}
+			time.Sleep(100 * 1000 * time.Microsecond)
 		}
 	}()
 
