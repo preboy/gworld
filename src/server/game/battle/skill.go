@@ -64,7 +64,7 @@ func (self *BattleSkill) Cast(caster *BattleUnit, time uint32) {
 	}
 
 	self.caster.GetBattle().BattlePlayEvent_Cast(self.caster, self.proto.Id, self.proto.Level, targets)
-	// fmt.Println("[技能", time, "]", u.Name(), "释放了技能:", self.proto.Name)
+	// fmt.Println("[技能", time, "]", "释放了技能:", self.proto.Name)
 }
 
 func (self *BattleSkill) Update(time uint32) {
@@ -72,12 +72,11 @@ func (self *BattleSkill) Update(time uint32) {
 		return
 	}
 
-	if time-self.start_time < self.proto.Prepare_t {
+	if self.proto.Prepare_t != 0 && time-self.start_time < self.proto.Prepare_t {
 		return
 	}
 
 	self.time = time
-
 	if self.proto.Itv_t != 0 {
 		if time-self.update_time >= self.proto.Itv_t {
 			self.update_time = time
@@ -118,6 +117,8 @@ func (self *BattleSkill) onUpdate() {
 				self.do_attack(target, false)
 			}
 		}
+	} else if self.proto.Type == 2 {
+		// TODO
 	}
 }
 
@@ -156,6 +157,10 @@ func attachment_skill_attr(p *Property, props []*config.PropConf) {
 		case PropType_HP:
 			{
 				p.Hp += prop.Val
+			}
+		case PropType_Apm:
+			{
+				p.Apm += prop.Val
 			}
 		case PropType_Atk:
 			{
@@ -261,10 +266,12 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	var is_crit uint32
 	if ctx.damage.crit {
 		is_crit = 1
-		text += "[+暴击]"
+		text += "[+暴击] "
 	}
 
-	fmt.Println("[技能", self.time, "]", ctx.caster.Name(), text, ctx.target.Name(), ctx.damage.hurt, ctx.target.Hp, "/", ctx.target.Prop.Hp, "[", ctx.caster.Skill_curr.proto.Name, "]", is_crit)
+	str := ctx.caster.Name() + "[" + ctx.caster.Skill_curr.proto.Name + "]" + text + target.Name()
+
+	fmt.Println(self.time, str, ctx.damage.hurt, target.Hp, "/", target.Prop.Hp)
 
 	self.caster.GetBattle().BattlePlayEvent_Hurt(self.caster, target, uint32(ctx.damage.hurt), is_crit, 0)
 }

@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"core/utils"
 	"fmt"
 	"public/protocol/msg"
 )
@@ -71,7 +72,8 @@ func (self *BattleUnit) Dead() bool {
 	return self.dead
 }
 
-func (self *BattleUnit) Init(pos int) {
+func (self *BattleUnit) Init(troop *BattleTroop, pos int) {
+	self.Troop = troop
 	self.Pos = uint32(pos)
 	self.Prop_aura = &Property{}
 	self.Prop = &Property{}
@@ -200,21 +202,22 @@ func NewBattleTroop(members ...*BattleUnit) *BattleTroop {
 	}
 
 	for i := 0; i < l; i++ {
-		members[i].Troop = troop
 		troop.members[i] = members[i]
 	}
 
 	return troop
 }
 
-func (self *BattleTroop) Init(attacker bool) {
+func (self *BattleTroop) Init(battle *Battle, attacker bool) {
+	self.battle = battle
 	self.attacker = attacker
+
 	for i := 0; i < MAX_TROOP_MEMBER; i++ {
 		if self.members[i] != nil {
 			if attacker {
-				self.members[i].Init(i + 1)
+				self.members[i].Init(self, i+1)
 			} else {
-				self.members[i].Init(i + 1 + MAX_TROOP_MEMBER)
+				self.members[i].Init(self, i+1+MAX_TROOP_MEMBER)
 			}
 		}
 	}
@@ -230,6 +233,23 @@ func (self *BattleTroop) Lose() (ret bool) {
 		}
 	}
 	return
+}
+
+func (self *BattleTroop) Dump() {
+	str := []string{}
+	for i := 0; i < MAX_TROOP_MEMBER; i++ {
+		member := self.members[i]
+		if member == nil {
+			str = append(str, "null")
+		} else {
+			if member.Dead() {
+				str = append(str, "dead")
+			} else {
+				str = append(str, utils.I32toa(int32(member.Hp)))
+			}
+		}
+	}
+	fmt.Println(self.IsAttacker(), str)
 }
 
 func (self *BattleTroop) IsAttacker() bool {
@@ -269,25 +289,22 @@ func NewBattle(a *BattleTroop, d *BattleTroop) *Battle {
 		defender: d,
 	}
 
-	a.battle = b
-	d.battle = b
-
-	b.Init()
-
-	return b
-}
-
-func (self *Battle) Init() {
-	self.attacker.Init(true)
-	self.defender.Init(false)
+	a.Init(b, true)
+	d.Init(b, false)
 
 	// 装玩家
-	for _, u := range self.attacker.members {
-		self.Result.Units = append(self.Result.Units, u.ToMsg())
+	for _, u := range a.members {
+		if u != nil {
+			b.Result.Units = append(b.Result.Units, u.ToMsg())
+		}
 	}
-	for _, u := range self.defender.members {
-		self.Result.Units = append(self.Result.Units, u.ToMsg())
+	for _, u := range d.members {
+		if u != nil {
+			b.Result.Units = append(b.Result.Units, u.ToMsg())
+		}
 	}
+
+	return b
 }
 
 func (self *Battle) GetAttacher() *BattleTroop {
@@ -353,9 +370,11 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 // 计算战斗
 func (self *Battle) Calc() {
 
-	var bout int32
-
 	for {
+
+		// self.attacker.Dump()
+		// self.defender.Dump()
+
 		if self.attacker.Lose() {
 			self.Result.Win = false
 			break
@@ -365,15 +384,13 @@ func (self *Battle) Calc() {
 			break
 		}
 
-		bout++
-
 		// 战斗
 		for _, u := range self.attacker.members {
 			if u != nil && !u.Dead() {
 				u.Update(self.time)
 			}
 		}
-		for _, u := range self.attacker.members {
+		for _, u := range self.defender.members {
 			if u != nil && !u.Dead() {
 				u.Update(self.time)
 			}
@@ -385,22 +402,20 @@ func (self *Battle) Calc() {
 				u.UpdateLife(self.time)
 			}
 		}
-		for _, u := range self.attacker.members {
+		for _, u := range self.defender.members {
 			if u != nil && !u.Dead() {
 				u.UpdateLife(self.time)
 			}
 		}
 
-		// 超时检测(5分钟 3000 = 5*60*1000/100)
-		if bout >= 3000 {
-			fmt.Println("bout timeout !")
+		self.time += 100
+
+		// 超时检测(5分钟)
+		if self.time >= 5*60*1000 {
+			fmt.Println("Battle.Calc timeout !")
 			self.Result.Win = false
 			break
 		}
-
-		fmt.Println("fuckyou ", self.defender, self.attacker)
-
-		self.time += 100
 	}
 
 }

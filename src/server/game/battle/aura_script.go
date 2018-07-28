@@ -16,10 +16,10 @@ const (
 )
 
 type AuraScript interface {
-	OnStart(ab *BattleAura)
-	OnEvent(ab *BattleAura, evt BattleCalcEvent, ctx *SkillContext)
-	OnUpdate(ab *BattleAura)
-	OnFinish(ab *BattleAura)
+	OnStart(aura *BattleAura)
+	OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext)
+	OnUpdate(aura *BattleAura)
+	OnFinish(aura *BattleAura)
 }
 
 var _creators map[uint32]func() AuraScript
@@ -142,13 +142,13 @@ func (self *AuraScript_3) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *Sk
 		} else {
 			ctx.damage.hurt = 0
 		}
+		aura.owner.GetBattle().BattlePlayEvent_Effect(
+			aura.owner, aura.caster, AET_PropChanged, int32(PropType_Hurt), -int32(aura.proto.Param1), 0, 0)
 		if self.times >= aura.proto.Param1 {
 			aura.finish = true
 			return
 		}
 	}
-	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Hurt), -int32(aura.proto.Param1), 0, 0)
 }
 
 func (self *AuraScript_3) OnFinish(aura *BattleAura) {
@@ -176,16 +176,15 @@ func (self *AuraScript_4) OnUpdate(aura *BattleAura) {
 }
 
 func (self *AuraScript_4) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_4 Event:", evt)
+	fmt.Println("AuraScript_4 Event:", aura.proto.Id, aura.proto.Level, evt)
 	if evt == BCE_Damage {
 		aura.owner.Hp += int(aura.proto.Param1)
 		if aura.owner.Hp > int(aura.owner.Prop.Hp) {
 			aura.owner.Hp = int(aura.owner.Prop.Hp)
 		}
+		aura.owner.GetBattle().BattlePlayEvent_Effect(
+			aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(aura.proto.Param1), 0, 0)
 	}
-
-	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(aura.proto.Param1), 0, 0)
 }
 
 func (self *AuraScript_4) OnFinish(aura *BattleAura) {
@@ -216,8 +215,8 @@ func (self *AuraScript_5) OnUpdate(aura *BattleAura) {
 	fmt.Println("AuraScript_5 OnUpdate")
 }
 
-func (self *AuraScript_5) OnEvent(ab *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_5 Event:", evt)
+func (self *AuraScript_5) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
+	fmt.Println("AuraScript_5 Event:", aura.proto.Id, aura.proto.Level, evt)
 }
 
 func (self *AuraScript_5) OnFinish(aura *BattleAura) {

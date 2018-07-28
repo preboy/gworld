@@ -281,15 +281,23 @@ func (self *BattleSkill) _default_target() *BattleUnit {
 }
 
 func (self *BattleSkill) find_target() {
+	self.target_major = nil
+	self.target_minor = nil
+
 	self.find_target_impl(self.proto.Target_major, self.target_major)
 	self.find_target_impl(self.proto.Target_minor, self.target_minor)
+
+	// 未找到目标，攻击第一个活着的目标
 	if len(self.target_major) == 0 && len(self.target_minor) == 0 {
 		members := self.caster.Troop.GetRival().members
 		for i := 0; i < MAX_TROOP_MEMBER; i++ {
-			if members[i] != nil && !members[i].Dead() {
-				self.target_major = append(self.target_major, members[i])
+			if members[i] != nil {
+				if !members[i].Dead() {
+					self.target_major = append(self.target_major, members[i])
+					break
+				}
 			}
 		}
 	}
-	fmt.Println(self.proto.Id, "技能目标：", self.target_major, self.target_minor)
+
 }
