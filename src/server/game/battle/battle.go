@@ -1,7 +1,6 @@
 package battle
 
 import (
-	"core/utils"
 	"fmt"
 	"public/protocol/msg"
 )
@@ -235,23 +234,6 @@ func (self *BattleTroop) Lose() (ret bool) {
 	return
 }
 
-func (self *BattleTroop) Dump() {
-	str := []string{}
-	for i := 0; i < MAX_TROOP_MEMBER; i++ {
-		member := self.members[i]
-		if member == nil {
-			str = append(str, "null")
-		} else {
-			if member.Dead() {
-				str = append(str, "dead")
-			} else {
-				str = append(str, utils.I32toa(int32(member.Hp)))
-			}
-		}
-	}
-	fmt.Println(self.IsAttacker(), str)
-}
-
 func (self *BattleTroop) IsAttacker() bool {
 	return self.attacker
 }
@@ -371,9 +353,6 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 func (self *Battle) Calc() {
 
 	for {
-
-		// self.attacker.Dump()
-		// self.defender.Dump()
 
 		if self.attacker.Lose() {
 			self.Result.Win = false

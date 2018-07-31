@@ -246,6 +246,18 @@ func (self *Database) GetObjectByCond(coll string, cond interface{}, obj interfa
 	return err
 }
 
+func (self *Database) GetProjection(coll string, id interface{}, proj interface{}, obj interface{}) error {
+	session := self.s_get()
+	defer self.s_free(session)
+
+	err := session.DB("").C(coll).FindId(id).Select(proj).One(obj)
+	if is_critical(session, err) {
+		log.Error("db.GetProjection():", err, coll, id, proj)
+		log.Error(utils.Callstack())
+	}
+	return err
+}
+
 func (self *Database) GetProjectionByCond(coll string, cond interface{}, proj interface{}, obj interface{}) error {
 	session := self.s_get()
 	defer self.s_free(session)
