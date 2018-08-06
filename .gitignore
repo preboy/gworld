@@ -1,5 +1,7 @@
 /bin/*.log
 /bin/*.exe
+/bin/*.cpu
+/bin/*.memory
 /bin/server
 /bin/client
 /bin/exporter
