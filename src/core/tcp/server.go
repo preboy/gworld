@@ -35,6 +35,7 @@ func (server *TcpServer) Start(host string, f func(*net.TCPConn)) bool {
 func (server *TcpServer) Stop() {
 	if server.listener != nil {
 		server.listener.Close()
+		server.listener = nil
 	}
 	server.w.Wait()
 }

@@ -2,6 +2,7 @@ package player
 
 import (
 	"core/tcp"
+	"fmt"
 	"github.com/gogo/protobuf/proto"
 	"public/protocol"
 	"public/protocol/msg"
@@ -26,4 +27,8 @@ func handler_player_make_battle(plr *Player, packet *tcp.Packet) {
 	res.Result = b.ToMsg()
 
 	plr.SendPacket(protocol.MSG_SC_MakeBattle, &res)
+
+	fmt.Println("battle attacker:", a)
+	fmt.Println("battle defender:", d)
+	fmt.Println("battle result:", b.GetResult())
 }
