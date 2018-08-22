@@ -18,9 +18,9 @@ import (
 	"server/db_mgr"
 	"server/game"
 	"server/game/config"
+	"server/loop"
 	"server/net_mgr"
 	"server/player"
-	"server/server"
 )
 
 var (
@@ -59,8 +59,8 @@ func main() {
 
 	player.LoadData()
 
-	main_thread := server.NewServer()
-	main_thread.Start()
+	main_loop := loop.NewLoop()
+	main_loop.Start()
 
 	log.Info("server running ...")
 
@@ -91,8 +91,8 @@ func main() {
 	log.Info("net_mgr stopping ...")
 	net_mgr.Stop()
 
-	log.Info("main_thread stopping ...")
-	main_thread.Stop()
+	log.Info("main_loop stopping ...")
+	main_loop.Stop()
 
 	log.Info("work_service stopping ...")
 	work_service.Stop()

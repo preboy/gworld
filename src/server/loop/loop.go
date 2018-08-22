@@ -1,4 +1,4 @@
-package server
+package loop
 
 import (
 	"fmt"
@@ -17,22 +17,22 @@ const (
 
 var (
 	_thread *thread.Thread
-	_server *Server
+	_loop   *Loop
 )
 
-type Server struct {
+type Loop struct {
 	evtMgr   *event.EventMgr
 	timerMgr *timer.TimerMgr
 }
 
-func NewServer() *Server {
-	if _server == nil {
-		_server = &Server{}
+func NewLoop() *Loop {
+	if _loop == nil {
+		_loop = &Loop{}
 	}
-	return _server
+	return _loop
 }
 
-func (self *Server) Start() {
+func (self *Loop) Start() {
 	if _thread != nil {
 		return
 	}
@@ -47,7 +47,7 @@ func (self *Server) Start() {
 
 }
 
-func (self *Server) Stop() {
+func (self *Loop) Stop() {
 	schedule.UnRegister(_SERVER_NAME)
 	if _thread != nil {
 		_thread.Stop()
@@ -59,11 +59,11 @@ func (self *Server) Stop() {
 // ----------------- impl for interface
 
 // ----------------- IScuedule -----------------
-func (self *Server) OnSchedule(evt *event.Event) {
+func (self *Loop) OnSchedule(evt *event.Event) {
 	self.evtMgr.Fire(evt)
 }
 
-func (self *Server) OnEvent(evt *event.Event) {
+func (self *Loop) OnEvent(evt *event.Event) {
 	switch evt.Id {
 	case event.EVT_SCHED_HOUR:
 		self.on_new_hour()
@@ -76,34 +76,34 @@ func (self *Server) OnEvent(evt *event.Event) {
 	case event.EVT_SCHED_YEAR:
 		self.on_new_year()
 	default:
-		fmt.Println("Server.OnEvent:", evt)
+		fmt.Println("Loop.OnEvent:", evt)
 	}
 }
 
-func (self *Server) OnTimer(id uint64) {
-	fmt.Println("Server.OnTimer:", id)
+func (self *Loop) OnTimer(id uint64) {
+	fmt.Println("Loop.OnTimer:", id)
 }
 
 // ----------------- public -----------------
 
-func (self *Server) FireEvent(evt *event.Event) {
+func (self *Loop) FireEvent(evt *event.Event) {
 	self.OnEvent(evt)
 }
 
-func (self *Server) CreateTimer(i uint64, r bool, f func()) uint64 {
+func (self *Loop) CreateTimer(i uint64, r bool, f func()) uint64 {
 	return self.timerMgr.CreateTimer(i, r, f)
 }
 
-func (self *Server) CancelTimer(id uint64) {
+func (self *Loop) CancelTimer(id uint64) {
 	self.timerMgr.CancelTimer(id)
 }
 
 // ----------------- private -----------------
 func game_update() {
-	if _server == nil {
+	if _loop == nil {
 		return
 	}
 
-	_server.evtMgr.Update()
-	_server.timerMgr.Update()
+	_loop.evtMgr.Update()
+	_loop.timerMgr.Update()
 }
