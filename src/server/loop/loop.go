@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	_SERVER_NAME = "main_thread"
+	_LOOP_NAME = "main_loop"
 )
 
 var (
@@ -40,7 +40,7 @@ func (self *Loop) Start() {
 	self.evtMgr = event.NewEventMgr(self)
 	self.timerMgr = timer.NewTimerMgr(self)
 
-	schedule.Register(_SERVER_NAME, self)
+	schedule.Register(_LOOP_NAME, self)
 
 	_thread = thread.NewThread(game_update, 100)
 	_thread.Go()
@@ -48,7 +48,7 @@ func (self *Loop) Start() {
 }
 
 func (self *Loop) Stop() {
-	schedule.UnRegister(_SERVER_NAME)
+	schedule.UnRegister(_LOOP_NAME)
 	if _thread != nil {
 		_thread.Stop()
 	}
