@@ -31,6 +31,8 @@ func (self *Player) dispatch_packet() bool {
 }
 
 func (self *Player) on_packet(packet *tcp.Packet) {
+	defer self.do_next_tick()
+
 	f := _funcs[packet.Opcode]
 	if f != nil {
 		f(self, packet)

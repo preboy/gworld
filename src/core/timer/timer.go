@@ -43,7 +43,7 @@ func NewTimerMgr(r ITimerMgr) *TimerMgr {
 	}
 }
 
-func (self *TimerMgr) Update() {
+func (self *TimerMgr) Update() (busy bool) {
 	now := get_tick()
 	for id, timer := range self.timers {
 		if now >= timer.curr+timer.interval {
@@ -57,8 +57,10 @@ func (self *TimerMgr) Update() {
 			} else {
 				self.CancelTimer(id)
 			}
+			busy = true
 		}
 	}
+	return
 }
 
 func (self *TimerMgr) CreateTimer(i uint64, r bool, f func()) uint64 {

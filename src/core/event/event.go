@@ -52,15 +52,20 @@ func NewEventMgr(r IEventReceiver) *EventMgr {
 	}
 }
 
+func (self *EventMgr) Len() int {
+	return len(self.evts)
+}
+
 func (self *EventMgr) Fire(evt *Event) {
 	self.evts <- evt
 }
 
-func (self *EventMgr) Update() {
+func (self *EventMgr) Update() (busy bool) {
 	for {
 		select {
 		case evt := <-self.evts:
 			self.receiver.OnEvent(evt)
+			busy = true
 		default:
 			return
 		}

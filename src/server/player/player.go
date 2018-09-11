@@ -22,6 +22,7 @@ type Player struct {
 	last_update int64
 	run         bool
 	w           *sync.WaitGroup
+	tf          []func()
 }
 
 func NewPlayer() *Player {
@@ -61,10 +62,10 @@ func (self *Player) Go() {
 
 		for self.run {
 			busy := self.dispatch_packet()
-			if b := self.update(); b {
+			if self.update() {
 				busy = true
 			}
-			if !busy {
+			if !busy && self.idle() {
 				time.Sleep(20 * time.Millisecond)
 			}
 		}
@@ -88,24 +89,45 @@ func (self *Player) IsRun() bool {
 }
 
 // -------------- private function --------------
-func (self *Player) update() bool {
-	now := time.Now().UnixNano() / (1000 * 1000)
-	if now >= self.last_update+200 {
-		self.last_update = now
-		self.on_update()
-		return true
+func (self *Player) update() (busy bool) {
+	if self.evtMgr.Update() {
+		busy = true
 	}
-	return false
-}
-
-func (self *Player) on_update() {
-	self.evtMgr.Update()
-	self.timerMgr.Update()
+	if self.timerMgr.Update() {
+		busy = true
+	}
+	self.last_update = time.Now().UnixNano() / (1000 * 1000)
+	return
 }
 
 func (self *Player) init() {
 	self.evtMgr = event.NewEventMgr(self)
 	self.timerMgr = timer.NewTimerMgr(self)
+	self.tf = make([]func(), 0, 4)
+}
+
+// checking whether idle or not the loop
+func (self *Player) idle() bool {
+	if len(self.q_packets) != 0 {
+		return false
+	}
+	if self.evtMgr.Len() != 0 {
+		return false
+	}
+
+	// timerMgr ignored
+	return true
+}
+
+func (self *Player) do_next_tick() {
+	if len(self.tf) == 0 {
+		return
+	}
+
+	for _, fn := range self.tf {
+		fn()
+	}
+	self.tf = self.tf[:0]
 }
 
 // -------------- public function --------------
