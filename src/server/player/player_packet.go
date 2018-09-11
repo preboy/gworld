@@ -27,6 +27,7 @@ func (self *Player) dispatch_packet() bool {
 			return busy
 		}
 	}
+
 	return busy
 }
 
@@ -43,5 +44,6 @@ func register_handler(opcode uint16, f msg_func) {
 	if opcode >= protocol.MSG_END {
 		return
 	}
+
 	_funcs[opcode] = f
 }

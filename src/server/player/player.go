@@ -30,11 +30,14 @@ func NewPlayer() *Player {
 		q_packets: make(chan *tcp.Packet, 0x100),
 		w:         &sync.WaitGroup{},
 	}
+
 	plr.init()
 	return plr
 }
 
-// ----------------- player evnet -----------------
+// --------------------------------------------------------
+
+// player event
 // 角色线程主体，与玩家网络连接生命周期一致
 // 在循环之前需要先执行<时间差操作>
 func (self *Player) Go() {
@@ -88,14 +91,18 @@ func (self *Player) IsRun() bool {
 	return self.run
 }
 
-// -------------- private function --------------
+// --------------------------------------------------------
+// private function
+
 func (self *Player) update() (busy bool) {
 	if self.evtMgr.Update() {
 		busy = true
 	}
+
 	if self.timerMgr.Update() {
 		busy = true
 	}
+
 	self.last_update = time.Now().UnixNano() / (1000 * 1000)
 	return
 }
@@ -111,6 +118,7 @@ func (self *Player) idle() bool {
 	if len(self.q_packets) != 0 {
 		return false
 	}
+
 	if self.evtMgr.Len() != 0 {
 		return false
 	}
@@ -127,10 +135,13 @@ func (self *Player) do_next_tick() {
 	for _, fn := range self.tf {
 		fn()
 	}
+
 	self.tf = self.tf[:0]
 }
 
-// -------------- public function --------------
+// --------------------------------------------------------
+// public function
+
 func (self *Player) GetSid() int {
 	return int(self.sid)
 }
