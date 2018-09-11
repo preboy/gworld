@@ -1,29 +1,5 @@
 package event
 
-// EventID
-const (
-
-	// system event
-	EVT_SYS_READY uint32 = iota
-
-	EVT_SCHED_MIN
-	EVT_SCHED_HOUR
-	EVT_SCHED_DAY
-	EVT_SCHED_WEEK
-	EVT_SCHED_MONTH
-	EVT_SCHED_YEAR
-
-	EVT_SCHED_SYNC_CALL
-
-	// player evnet
-	EVT_PLR_LOGIN_FIRST
-	EVT_PLR_LOGIN
-	EVT_PLR_LOGOUT
-
-	EVT_PLR_LEVEL_UP
-	EVT_PLR_LEVEL_DEAD
-)
-
 type Event struct {
 	Id  uint32
 	Ptr interface{}
