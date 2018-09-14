@@ -17,6 +17,7 @@ func Load() {
 	load_market_conf()
 	load_refine_super()
 	load_refine_normal()
+	load_activity()
 
 	log.Info("Loading Config COMPLETE !!!")
 }

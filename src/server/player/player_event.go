@@ -2,9 +2,7 @@ package player
 
 import (
 	"fmt"
-)
 
-import (
 	"core/event"
 )
 
@@ -13,8 +11,13 @@ func (self *Player) FireEvent(evt *event.Event) {
 	self.evtMgr.Fire(evt)
 }
 
+func (self *Player) FireEventArgs(id uint32, args ...interface{}) {
+	evt := event.NewEvent(id, args...)
+	self.evtMgr.Fire(evt)
+}
+
 // called by player routine to exec event directly.
-func (self *Player) ExecEvent(evt *event.Event) {
+func (self *Player) CallEvent(evt *event.Event) {
 	self.OnEvent(evt)
 }
 
@@ -25,8 +28,9 @@ func (self *Player) OnEvent(evt *event.Event) {
 	fmt.Println("Player.OnEvent:", evt)
 
 	if evt.Id == event.EVT_SCHED_SYNC_CALL {
-		f := evt.Ptr.(func())
-		f()
+		if f, ok := evt.Args[0].(func()); ok {
+			f()
+		}
 	}
 
 }

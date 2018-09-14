@@ -2,9 +2,7 @@ package loop
 
 import (
 	"fmt"
-)
 
-import (
 	"core/event"
 	"core/schedule"
 	"core/thread"
@@ -87,7 +85,7 @@ func (self *Loop) OnTimer(id uint64) {
 // ----------------- public -----------------
 
 func (self *Loop) FireEvent(evt *event.Event) {
-	self.OnEvent(evt)
+	self.evtMgr.Fire(evt)
 }
 
 func (self *Loop) CreateTimer(i uint64, r bool, f func()) uint64 {

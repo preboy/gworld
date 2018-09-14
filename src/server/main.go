@@ -6,9 +6,7 @@ import (
 	"os"
 	"strings"
 	"syscall"
-)
 
-import (
 	"core/log"
 	"core/schedule"
 	"core/timer"

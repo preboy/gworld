@@ -1,12 +1,10 @@
 package game
 
 import (
-	"encoding/json"
-)
-
-import (
 	"core/log"
 	"core/utils"
+
+	"encoding/json"
 )
 
 var (
@@ -24,7 +22,7 @@ type ServerConfig struct {
 func LoadServerConfig(file string) bool {
 	if _sc == nil {
 		sc := ServerConfig{}
-		data, err := ReadFile(file)
+		data, err := utils.ReadFile(file)
 		if err == nil {
 			err := json.Unmarshal(data, &sc)
 			if err == nil {

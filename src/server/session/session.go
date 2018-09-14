@@ -7,13 +7,9 @@ import (
 	"regexp"
 	"sync/atomic"
 	"time"
-)
 
-import (
 	"github.com/gogo/protobuf/proto"
-)
 
-import (
 	"core/log"
 	"core/tcp"
 	"public/err_code"

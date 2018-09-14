@@ -2,9 +2,7 @@ package net_mgr
 
 import (
 	"net"
-)
 
-import (
 	"core/log"
 	"core/tcp"
 	"server/game"

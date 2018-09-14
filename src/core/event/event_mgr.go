@@ -1,8 +1,8 @@
 package event
 
 type Event struct {
-	Id  uint32
-	Ptr interface{}
+	Id   uint32
+	Args []interface{}
 }
 
 type EventMgr struct {
@@ -14,10 +14,10 @@ type IEventReceiver interface {
 	OnEvent(evt *Event)
 }
 
-func NewEvent(id uint32, ptr interface{}) *Event {
+func NewEvent(id uint32, args ...interface{}) *Event {
 	return &Event{
-		Id:  id,
-		Ptr: ptr,
+		Id:   id,
+		Args: args,
 	}
 }
 

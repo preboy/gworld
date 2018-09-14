@@ -6,13 +6,9 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
-)
 
-import (
 	"github.com/gogo/protobuf/proto"
-)
 
-import (
 	"core/tcp"
 	"core/timer"
 	"public/protocol"

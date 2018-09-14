@@ -2,9 +2,7 @@ package net_mgr
 
 import (
 	"fmt"
-)
 
-import (
 	"client/session"
 	"core/tcp"
 )

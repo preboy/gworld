@@ -4,9 +4,7 @@ import (
 	"core/db"
 	"core/log"
 	"server/db_mgr"
-)
 
-import (
 	"os"
 	"time"
 )

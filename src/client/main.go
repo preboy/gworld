@@ -4,9 +4,7 @@ import (
 	"bufio"
 	"os"
 	"strings"
-)
 
-import (
 	"client/cmd"
 	"client/net_mgr"
 	"core/schedule"

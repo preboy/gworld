@@ -1,14 +1,10 @@
 package session
 
 import (
-	"fmt"
-)
-
-import (
 	"github.com/gogo/protobuf/proto"
-)
 
-import (
+	"fmt"
+
 	"core/tcp"
 	"public/err_code"
 	"public/protocol"

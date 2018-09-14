@@ -2,9 +2,7 @@ package player
 
 import (
 	"fmt"
-)
 
-import (
 	_ "core/timer"
 )
 
