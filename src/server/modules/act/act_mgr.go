@@ -18,7 +18,8 @@ type IAct interface {
 	add_term(*act_term_t)
 	check_term() bool
 
-	// impl by real Act
+	GetRawSvrData() interface{}
+	GetRawPlrData(id string) interface{}
 }
 
 var (
@@ -29,10 +30,11 @@ var (
 // impl for IAct & Base for real act
 
 type ActBase struct {
-	Id    int
-	Data  interface{}
-	Stage int32 // 0:当前关闭 1:当前打开
-	Key   int64 // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
+	Id      int
+	DataSvr interface{}
+	DataPlr map[string]interface{}
+	Stage   int32 // 0:当前关闭 1:当前打开
+	Key     int64 // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
 
 	terms []*act_term_t
 }
@@ -122,6 +124,8 @@ func parse_act_config() {
 		panic("activity: parse_act_config")
 	}
 }
+
+// ------------------------------------------------------------------------------------
 
 func load_act_data() {
 

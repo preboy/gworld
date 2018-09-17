@@ -28,3 +28,29 @@ func (self *ActBase) check_term() bool {
 
 	return pass
 }
+
+func (self *ActBase) GetRawSvrData() interface{} {
+	if self.DataSvr == nil {
+		self.DataSvr = self.NewSvrData()
+	}
+	return self.DataSvr
+}
+
+func (self *ActBase) GetRawPlrData(id string) interface{} {
+	d, ok := self.DataPlr[id]
+	if !ok {
+		d = self.NewPlrData(id)
+		self.DataPlr[id] = d
+	}
+	return d
+}
+
+// ------------------------------------------------------------------------------------
+
+func (self *ActBase) NewSvrData() interface{} {
+	return nil
+}
+
+func (self *ActBase) NewPlrData(id string) interface{} {
+	return nil
+}

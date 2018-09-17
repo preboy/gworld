@@ -1,5 +1,5 @@
 package app
 
 type IPlayer interface {
-	// TODO
+	GetId() string
 }
