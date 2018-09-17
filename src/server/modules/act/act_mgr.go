@@ -1,6 +1,9 @@
 package act
 
 import (
+	"strings"
+	"time"
+
 	"core/log"
 	"core/utils"
 
@@ -10,43 +13,37 @@ import (
 
 // ---------------------------------------------------------
 
-type IActBase interface {
-	GetId() int
+type IAct interface {
+	// impl by ActBase
+	add_term(*act_term_t)
+	check_term() bool
+
+	// impl by real Act
 }
 
-type act_term_t struct {
-	Seq      uint32
-	OpenSec  int64 // 开启时间(单位：秒)
-	CloseSec int64 // 结束时间
-}
+var (
+	_acts map[int]IAct
+)
 
-type act_t struct {
-	Id    uint32
+// ------------------------------------------------------------------------------------
+// impl for IAct & Base for real act
+
+type ActBase struct {
+	Id    int
 	Data  interface{}
 	Stage int32 // 0:当前关闭 1:当前打开
 	Key   int64 // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
 
-	obj   IActBase
 	terms []*act_term_t
 }
 
-var (
-	_acts map[int]*act_t
-)
+type act_term_t struct {
+	Seq      int
+	OpenSec  int64 // 开启时间(单位：秒)
+	CloseSec int64 // 结束时间
+}
 
 // ------------------------------------------------------------------------------------
-
-func RegisterActivity(aid int, act IActBase) {
-	if _, ok := _acts[aid]; ok {
-		log.Warning("activity repeated register, aid =", aid)
-		return
-	}
-
-	_acts[aid] = &act_t{
-		Id:  aid,
-		Obj: act,
-	}
-}
 
 func Open() {
 
@@ -61,11 +58,36 @@ func Close() {
 
 // ------------------------------------------------------------------------------------
 
-func parse_config_date(date string) int {
+func RegAct(aid int, act IAct) {
+	if _, ok := _acts[aid]; ok {
+		log.Warning("activity repeated register, aid =", aid)
+		return
+	}
+
+	_acts[aid] = act
+}
+
+func FindAct(aid int32) IAct {
+	return nil
+}
+
+func IsOpen(aid int32) bool {
+	return false
+}
+
+func EachAct(f func(IAct)) {
+	for _, act := range _acts {
+		f(act)
+	}
+}
+
+// ------------------------------------------------------------------------------------
+
+func parse_config_date(date string) int64 {
 	date = strings.Trim(date, " ")
 
 	if strings.HasPrefix(date, "@") {
-		t = time.Unix(game.GetServerData().ServerOpenTime, 0)
+		t := time.Unix(app.GetServerData().ServerOpenTime, 0)
 		return utils.ParseRelativeTime(t, date).Unix()
 	} else {
 		return utils.ParseTime(date).Unix()
@@ -81,27 +103,18 @@ func parse_act_config() {
 			return
 		}
 
-		term := &act_term_t{
+		act.add_term(&act_term_t{
 			Seq:      item.Seq,
 			OpenSec:  parse_config_date(item.Open),
 			CloseSec: parse_config_date(item.Close),
-		}
-
-		act.terms = append(act.terms, term)
+		})
 	})
 
 	// period checking
 	overlap := false
 	for _, act := range _acts {
-		l := len(act.terms)
-		for i := 0; i < l; i++ {
-			for j := i + 1; i < l; j++ {
-				if (act.terms[i].OpenSec >= act.terms[j].OpenSec && act.terms[i].OpenSec < act.terms[j].CloseSec) ||
-					(act.terms[j].OpenSec >= act.terms[i].OpenSec && act.terms[j].OpenSec < act.terms[i].CloseSec) {
-					log.Warning("活动开放时间有重叠", act.Id, act.terms[i].Seq, act.terms[j].Seq)
-					overlap = true
-				}
-			}
+		if !act.check_term() {
+			overlap = true
 		}
 	}
 

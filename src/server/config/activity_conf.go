@@ -7,8 +7,8 @@ import (
 )
 
 type ActivityItem struct {
-	Seq   uint32 `json:"seq"`
-	Id    uint32 `json:"id"`
+	Seq   int    `json:"seq"`
+	Id    int    `json:"id"`
 	Name  string `json:"name"`
 	Desc  string `json:"desc"`
 	Open  string `json:"open"`
@@ -16,7 +16,7 @@ type ActivityItem struct {
 }
 
 type ActivityConf struct {
-	items map[uint32]*ActivityItem
+	items map[int]*ActivityItem
 }
 
 var _ActivityConf ActivityConf
@@ -41,7 +41,7 @@ func load_activity() {
 		return
 	}
 
-	_ActivityConf.items = make(map[uint32]*ActivityItem)
+	_ActivityConf.items = make(map[int]*ActivityItem)
 
 	for _, v := range arr {
 		key := v.Seq

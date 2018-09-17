@@ -17,8 +17,11 @@ import (
 	"server/config"
 	"server/db_mgr"
 	"server/loop"
+	"server/modules/act"
 	"server/net_mgr"
 	"server/player"
+
+	_ "server/modules/preloader"
 )
 
 var (
@@ -57,6 +60,8 @@ func main() {
 
 	player.LoadData()
 
+	act.Open()
+
 	main_loop := loop.NewLoop()
 	main_loop.Start()
 
@@ -85,6 +90,8 @@ func main() {
 	<-quit
 
 	log.Info("server stopping ...")
+
+	act.Close()
 
 	log.Info("net_mgr stopping ...")
 	net_mgr.Stop()
