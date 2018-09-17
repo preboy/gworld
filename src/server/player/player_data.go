@@ -5,8 +5,8 @@ import (
 	"core/log"
 	"core/utils"
 	"gopkg.in/mgo.v2"
+	"server/app"
 	"server/db_mgr"
-	"server/game"
 	"time"
 )
 
@@ -22,10 +22,10 @@ type PlayerData struct {
 	ServerID uint32 `bson:"server_id"`
 
 	// remark:  map的键必要是字符串  加载之后，写入之前需要特别处理
-	Heros_bson      map[string]*game.Hero `bson:"heros"`       // 英雄
+	Heros_bson      map[string]*app.Hero  `bson:"heros"`       // 英雄
 	Items_bson      map[string]uint64     `bson:"items"`       // 道具
 	ItemsTimed_bson map[string]TItemTimed `bson:"items_timed"` // 限时道具
-	Heros           map[uint32]*game.Hero `bson:"-"`
+	Heros           map[uint32]*app.Hero  `bson:"-"`
 	Items           map[uint32]uint64     `bson:"-"`
 	ItemsTimed      map[uint32]TItemTimed `bson:"-"`
 	Level           uint32                `bson:"level"`       // 等级
@@ -63,7 +63,7 @@ func (self *Player) on_after_load() {
 
 	data := self.GetData()
 
-	data.Heros = make(map[uint32]*game.Hero)
+	data.Heros = make(map[uint32]*app.Hero)
 	data.Items = make(map[uint32]uint64)
 	data.ItemsTimed = make(map[uint32]TItemTimed)
 
@@ -86,7 +86,7 @@ func (self *Player) on_before_save() {
 
 	data := self.GetData()
 
-	data.Heros_bson = make(map[string]*game.Hero)
+	data.Heros_bson = make(map[string]*app.Hero)
 	data.Items_bson = make(map[string]uint64)
 	data.ItemsTimed_bson = make(map[string]TItemTimed)
 
@@ -132,13 +132,13 @@ func SaveData() {
 }
 
 func CreatePlayerData(acct string) *PlayerData {
-	pid := game.GeneralPlayerID()
-	nam := game.GeneralPlayerName(pid)
+	pid := app.GeneralPlayerID()
+	nam := app.GeneralPlayerName(pid)
 
 	data := &PlayerData{
 		Acct:        acct,
 		Pid:         pid,
-		ServerID:    game.GetServerConfig().Server_id,
+		ServerID:    app.GetServerConfig().Server_id,
 		Last_update: time.Now().Unix() * 1000,
 	}
 	data.SetName(nam)

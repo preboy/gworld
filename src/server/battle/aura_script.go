@@ -3,7 +3,7 @@ package battle
 import (
 	"core/log"
 	"fmt"
-	"server/game/config"
+	"server/config"
 )
 
 // ============================================================

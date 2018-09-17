@@ -2,7 +2,7 @@ package player
 
 import (
 	"core/log"
-	"server/game"
+	"server/app"
 )
 
 const (
@@ -128,7 +128,7 @@ func EnterGame(acct string, s ISession) bool {
 		plr.Save()
 	}
 
-	plr.server_id = game.GetServerConfig().Server_id
+	plr.server_id = app.GetServerConfig().Server_id
 
 	s.SetPlayer(plr)
 	plr.SetSession(s)

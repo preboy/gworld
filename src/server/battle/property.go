@@ -1,7 +1,7 @@
 package battle
 
 import (
-	"server/game/config"
+	"server/config"
 )
 
 type Property struct {

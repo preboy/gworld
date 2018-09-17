@@ -5,7 +5,7 @@ import (
 
 	"core/log"
 	"core/tcp"
-	"server/game"
+	"server/app"
 	"server/session"
 )
 
@@ -22,7 +22,7 @@ func on_client_connected(conn *net.TCPConn) {
 }
 
 func Start() {
-	addr := game.GetServerConfig().Listen_addr
+	addr := app.GetServerConfig().Listen_addr
 	server = tcp.NewTcpServer()
 	server.Start(addr, on_client_connected)
 	log.Info("server listen on: %s", addr)

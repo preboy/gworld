@@ -7,8 +7,8 @@ import (
 	"public/err_code"
 	"public/protocol"
 	"public/protocol/msg"
-	"server/constants"
-	"server/game/config"
+	"server/config"
+	"server/constant"
 )
 
 func init() {
@@ -39,7 +39,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
 				}
-				goods.Sub(constants.ItemID_RefineSuper, uint64(conf.Count))
+				goods.Sub(constant.ItemID_RefineSuper, uint64(conf.Count))
 				if !goods.Enough(plr) {
 					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
 					return
@@ -60,7 +60,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
 				}
-				goods.Sub(constants.ItemID_RefineNormal, uint64(conf.Count))
+				goods.Sub(constant.ItemID_RefineNormal, uint64(conf.Count))
 				if !goods.Enough(plr) {
 					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
 					return
@@ -84,7 +84,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
 				}
-				goods.Sub(constants.ItemID_RefineSuper, uint64(conf.Count))
+				goods.Sub(constant.ItemID_RefineSuper, uint64(conf.Count))
 				if !goods.Enough(plr) {
 					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
 					return
@@ -102,7 +102,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
 				}
-				goods.Sub(constants.ItemID_RefineNormal, uint64(conf.Count))
+				goods.Sub(constant.ItemID_RefineNormal, uint64(conf.Count))
 				if !goods.Enough(plr) {
 					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
 					return

@@ -1,4 +1,4 @@
-package game
+package app
 
 type Equipment struct {
 	Quality uint32 `bson:quality"` // 品质

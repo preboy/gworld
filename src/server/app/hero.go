@@ -1,9 +1,9 @@
-package game
+package app
 
 import (
 	"public/protocol/msg"
-	"server/game/battle"
-	"server/game/config"
+	"server/battle"
+	"server/config"
 )
 
 type Hero struct {

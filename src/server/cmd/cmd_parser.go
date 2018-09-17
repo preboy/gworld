@@ -3,8 +3,8 @@ package cmd
 import (
 	"core/utils"
 	"fmt"
-	"server/game"
-	"server/game/battle"
+	"server/app"
+	"server/battle"
 )
 
 func ParseCommand(cmd *string) {
@@ -13,8 +13,8 @@ func ParseCommand(cmd *string) {
 		panic("self")
 
 	case "b":
-		a := game.CreatureTeamToBattleTroop(1)
-		d := game.CreatureTeamToBattleTroop(2)
+		a := app.CreatureTeamToBattleTroop(1)
+		d := app.CreatureTeamToBattleTroop(2)
 		b := battle.NewBattle(a, d)
 		b.Calc()
 		r := b.GetResult()

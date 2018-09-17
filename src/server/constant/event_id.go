@@ -1,4 +1,4 @@
-package gconst
+package constant
 
 // EventID
 const (

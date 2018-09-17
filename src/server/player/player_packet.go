@@ -1,6 +1,7 @@
 package player
 
 import (
+	"core/log"
 	"core/tcp"
 	"public/protocol"
 )
@@ -37,6 +38,8 @@ func (self *Player) on_packet(packet *tcp.Packet) {
 	f := _funcs[packet.Opcode]
 	if f != nil {
 		f(self, packet)
+	} else {
+		log.Warning("!!! Unkonwn packat: id = %v", packet.Opcode)
 	}
 }
 

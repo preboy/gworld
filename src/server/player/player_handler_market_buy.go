@@ -6,7 +6,7 @@ import (
 	"public/err_code"
 	"public/protocol"
 	"public/protocol/msg"
-	"server/game/config"
+	"server/config"
 )
 
 func init() {

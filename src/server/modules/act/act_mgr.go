@@ -4,8 +4,8 @@ import (
 	"core/log"
 	"core/utils"
 
-	"server/game"
-	"server/game/config"
+	"server/app"
+	"server/config"
 )
 
 // ---------------------------------------------------------

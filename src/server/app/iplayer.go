@@ -1,4 +1,4 @@
-package comm
+package app
 
 type IPlayer interface {
 	// TODO

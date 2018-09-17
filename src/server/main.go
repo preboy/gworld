@@ -12,10 +12,10 @@ import (
 	"core/timer"
 	"core/utils"
 	"core/work_service"
+	"server/app"
 	"server/cmd"
+	"server/config"
 	"server/db_mgr"
-	"server/game"
-	"server/game/config"
 	"server/loop"
 	"server/net_mgr"
 	"server/player"
@@ -38,15 +38,15 @@ func main() {
 		}
 	})
 
-	if !game.LoadServerConfig("config.json") {
-		log.Error("game.LoadServerConfig: Failed")
+	if !app.LoadServerConfig("config.json") {
+		log.Error("app.LoadServerConfig: Failed")
 		log.Stop()
 		return
 	}
 
-	db_mgr.Open(game.GetServerConfig().DBAddr)
+	db_mgr.Open(app.GetServerConfig().DBAddr)
 
-	game.LoadServerData()
+	app.LoadServerData()
 
 	timer.Start()
 	schedule.Start()
@@ -99,7 +99,7 @@ func main() {
 	player.SaveData()
 
 	log.Info("save server data ...")
-	game.SaveServerData()
+	app.SaveServerData()
 
 	log.Info("schedule stopping ...")
 	schedule.Stop()

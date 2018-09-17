@@ -4,7 +4,7 @@ import (
 	// "core/log"
 	"core/math"
 	"fmt"
-	"server/game/config"
+	"server/config"
 )
 
 // ==================================================

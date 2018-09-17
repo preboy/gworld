@@ -3,10 +3,10 @@ package player
 import (
 	"public/protocol"
 	"public/protocol/msg"
-	"server/game"
+	"server/app"
 )
 
-func (self *Player) GetHero(id uint32) *game.Hero {
+func (self *Player) GetHero(id uint32) *app.Hero {
 	hero, _ := self.data.Heros[id]
 	return hero
 }
@@ -16,7 +16,7 @@ func (self *Player) AddHero(id uint32) bool {
 	if hero != nil {
 		return true
 	} else {
-		hero = game.NewHero(id)
+		hero = app.NewHero(id)
 	}
 
 	if hero == nil {

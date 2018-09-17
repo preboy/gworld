@@ -1,8 +1,8 @@
-package game
+package app
 
 import (
-	"server/game/battle"
-	"server/game/config"
+	"server/battle"
+	"server/config"
 )
 
 // 对象属性

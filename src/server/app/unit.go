@@ -1,4 +1,4 @@
-package game
+package app
 
 type UnitType uint32
 
