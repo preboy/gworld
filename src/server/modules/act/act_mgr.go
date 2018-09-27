@@ -4,27 +4,38 @@ import (
 	"strings"
 	"time"
 
+	"core/db"
 	"core/log"
 	"core/utils"
-
 	"server/app"
 	"server/config"
+	"server/db_mgr"
 )
 
 // ---------------------------------------------------------
 
 type IAct interface {
+	get_id() int
+	get_key() int64
+	get_stage() int32
+
 	// impl by ActBase
+	is_open() int64
 	add_term(*act_term_t)
 	check_term() bool
 
 	GetRawSvrData() interface{}
-	GetRawPlrData(id string) interface{}
+	GetRawPlrData() map[string]interface{}
+	GetRawPlrTable(id string) interface{}
 }
 
 var (
 	_acts map[int]IAct
 )
+
+func init() {
+	_acts = make(map[int]IAct)
+}
 
 // ------------------------------------------------------------------------------------
 // impl for IAct & Base for real act
@@ -48,14 +59,12 @@ type act_term_t struct {
 // ------------------------------------------------------------------------------------
 
 func Open() {
-
 	parse_act_config()
-
 	load_act_data()
 }
 
 func Close() {
-
+	save_act_data()
 }
 
 // ------------------------------------------------------------------------------------
@@ -69,11 +78,14 @@ func RegAct(aid int, act IAct) {
 	_acts[aid] = act
 }
 
-func FindAct(aid int32) IAct {
-	return nil
+func FindAct(id int) IAct {
+	return _acts[id]
 }
 
-func IsOpen(aid int32) bool {
+func IsOpen(id int) bool {
+	if act, ok := _acts[id]; ok {
+		return act.is_open() != 0
+	}
 	return false
 }
 
@@ -101,7 +113,7 @@ func parse_act_config() {
 	config.GetActivityConf().ForEach(func(item *config.ActivityItem) {
 		act := _acts[item.Id]
 		if act == nil {
-			log.Warning("NOT IMPL activity:", item.Id, item.Name)
+			log.Warning("NOT IMPL activity: {id=%v, name=%v}", item.Id, item.Name)
 			return
 		}
 
@@ -128,9 +140,53 @@ func parse_act_config() {
 // ------------------------------------------------------------------------------------
 
 func load_act_data() {
+	var arr []*ActBase
+
+	err := db_mgr.GetDB().GetAllObjects(db_mgr.Table_name_activitys, &arr)
+	if err != nil {
+		if db.IsNotFound(err) {
+			log.Info("Loading < %v >, IsNotFound !", db_mgr.Table_name_activitys)
+		} else {
+			log.Fatal("Loading < %v >  Fatal !!!", db_mgr.Table_name_activitys)
+			return
+		}
+	} else {
+		for _, v := range arr {
+			if act, ok := _acts[v.Id]; ok {
+				a := act.(*ActBase)
+				a.DataSvr = v.DataSvr
+				a.DataPlr = v.DataPlr
+				a.Stage = v.Stage
+				a.Key = v.Key
+			}
+		}
+	}
+
+	// checking ...
+	for _, act := range _acts {
+		_ = act
+	}
 
 }
 
 func save_act_data() {
+	type act_rec_t struct {
+		Acts []*ActBase
+	}
 
+	rec := &act_rec_t{
+		Acts: make([]*ActBase, 0, len(_acts)),
+	}
+
+	for _, act := range _acts {
+		rec.Acts = append(rec.Acts, &ActBase{
+			Id:      act.get_id(),
+			DataSvr: act.GetRawSvrData(),
+			DataPlr: act.GetRawPlrData(),
+			Stage:   act.get_stage(),
+			Key:     act.get_key(),
+		})
+	}
+
+	db_mgr.GetDB().Upsert(db_mgr.Table_name_activitys, 1, rec)
 }

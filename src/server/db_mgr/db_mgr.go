@@ -7,8 +7,9 @@ import (
 var _db *db.Database
 
 const (
-	Table_name_server  = "server"  // 服务器全局数据
-	Table_name_players = "players" // 玩家表
+	Table_name_server    = "server" // 服务器全局数据
+	Table_name_players   = "players"
+	Table_name_activitys = "activitys"
 )
 
 func init() {

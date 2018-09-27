@@ -16,12 +16,12 @@ type data_svr_t struct {
 type data_plr_t struct {
 }
 
-var act_01 = &act_t{}
+var _the_act = &act_t{}
 
 // ------------------------------------------------------------------------------------
 
 func init() {
-	act.RegAct(constant.ActId_1, act_01)
+	act.RegAct(constant.ActId_1, _the_act)
 }
 
 func (self *act_t) NewSvrData() interface{} {
@@ -40,7 +40,7 @@ func (self *act_t) GetSvrData() *data_svr_t {
 }
 
 func (self *act_t) GetPlrData(plr app.IPlayer) *data_plr_t {
-	return self.GetRawPlrData(plr.GetId()).(*data_plr_t)
+	return self.GetRawPlrTable(plr.GetId()).(*data_plr_t)
 }
 
 // ------------------------------------------------------------------------------------
