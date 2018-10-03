@@ -7,11 +7,11 @@ import (
 
 // 对象属性
 type Creature struct {
-	proto *config.CreatureProto
+	proto *config.Creature
 }
 
 func NewCreature(id, lv uint32) *Creature {
-	proto := config.GetCreatureProto(id, lv)
+	proto := config.CreatureConf.Query(id, lv)
 	if proto != nil {
 		return &Creature{
 			proto: proto,
@@ -79,7 +79,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 // ==================================================
 
 func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
-	team := config.GetCreatureTeam(id)
+	team := config.CreatureTeamConf.Query(id)
 	if team == nil {
 		return nil
 	}

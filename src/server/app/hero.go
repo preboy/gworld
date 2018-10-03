@@ -22,7 +22,7 @@ type Hero struct {
 }
 
 func NewHero(id uint32) *Hero {
-	proto := config.GetHeroProto(id, 1)
+	proto := config.HeroConf.Query(id, 1)
 	if proto == nil {
 		return nil
 	}
@@ -63,7 +63,7 @@ func (self *Hero) UnitType() UnitType {
 }
 
 func (self *Hero) Name() string {
-	proto := config.GetHeroProto(self.Id, self.Level)
+	proto := config.HeroConf.Query(self.Id, self.Level)
 	return proto.Name
 }
 
@@ -78,7 +78,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	u.Prop_addi = &battle.Property{}
 	u.Prop_base = &battle.Property{}
 
-	proto := config.GetHeroProto(self.Id, self.Level)
+	proto := config.HeroConf.Query(self.Id, self.Level)
 
 	u.Prop_base.Hp += float64(proto.Hp)
 	u.Prop_base.Apm += float64(proto.Apm)
@@ -105,7 +105,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	// 被动技能
 	for i := 0; i < 4; i++ {
 		v := &self.Passive[i]
-		skill := config.GetSkillProto(v.Id, v.Level)
+		skill := config.SkillProtoConf.Query(v.Id, v.Level)
 		if skill != nil {
 			u.Prop_base.AddConf(skill.Prop_passive)
 		}
@@ -114,7 +114,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	// 英雄精炼
 	if self.RefineLv > 0 {
 		if self.RefineSuper {
-			conf := config.GetRefineSuper(self.RefineLv)
+			conf := config.RefineSuperConf.Query(self.RefineLv)
 			if conf != nil {
 				u.Prop_base.Hp += float64(conf.Hp)
 				u.Prop_base.Apm += float64(conf.Apm)
@@ -124,7 +124,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 				u.Prop_base.Hurt += float64(conf.Hurt)
 			}
 		} else {
-			conf := config.GetRefineNormal(self.RefineLv)
+			conf := config.RefineNormalConf.Query(self.RefineLv)
 			if conf != nil {
 				u.Prop_base.Hp += float64(conf.Hp)
 				u.Prop_base.Apm += float64(conf.Apm)

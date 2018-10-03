@@ -7,7 +7,7 @@ import (
 type BattleAura struct {
 	owner       *BattleUnit
 	caster      *BattleUnit
-	proto       *config.AuraProto
+	proto       *config.Aura
 	script      AuraScript
 	start_time  uint32
 	update_time uint32 // 对于有update的技能，记录上次时间
@@ -16,7 +16,7 @@ type BattleAura struct {
 }
 
 func NewAuraBattle(id, lv uint32) *BattleAura {
-	proto := config.GetAuraProto(id, lv)
+	proto := config.AuraProtoConf.Query(id, lv)
 	return &BattleAura{
 		proto:  proto,
 		script: create_script_object(proto),

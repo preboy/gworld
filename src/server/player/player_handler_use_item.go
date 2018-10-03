@@ -27,7 +27,7 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 		ItemCt := req.Cnt
 
 		// 是否存在此种道具
-		ip := config.GetItemProto(ItemID)
+		ip := config.ItemProtoConf.Query(ItemID)
 		if ip == nil {
 			res.Result = err_code.ERR_UNKNOWN_ITEM
 			return

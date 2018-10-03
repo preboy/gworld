@@ -2,9 +2,9 @@ package config
 
 import (
 	"core/log"
-	"encoding/json"
-	"io/ioutil"
 )
+
+// ============================================================================
 
 type RefineSuper struct {
 	Level  uint32 `json:"level"`
@@ -31,91 +31,69 @@ type RefineNormal struct {
 	Prob  uint32 `json:"prob"`
 }
 
-type RefineSuperConf struct {
-	items []*RefineSuper
+type RefineSuperTable struct {
+	items map[uint32]*RefineSuper
 }
 
-type RefineNormalConf struct {
-	items []*RefineNormal
+type RefineNormalTable struct {
+	items map[uint32]*RefineNormal
 }
 
-var _RefineSuperConf RefineSuperConf
-var _RefineNormalConf RefineNormalConf
+// ============================================================================
 
-func GetRefineSuperConf() *RefineSuperConf {
-	return &_RefineSuperConf
-}
+var (
+	RefineSuperConf  = &RefineSuperTable{}
+	RefineNormalConf = &RefineNormalTable{}
+)
 
-func GetRefineNormalConf() *RefineNormalConf {
-	return &_RefineNormalConf
-}
+// ============================================================================
 
-func load_refine_super() {
-	path := "config/RefineSuper.json"
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Error("[RefineSuper] loading failed: %s: %s", path, err)
-		return
-	}
-
+func (self *RefineSuperTable) Load() {
+	file := "RefineSuper.json"
 	var arr []*RefineSuper
-	err = json.Unmarshal(content, &arr)
-	if err != nil {
-		log.Error("[RefineSuper] Unmarshal failed: %s: %s", path, err)
+
+	if !load_from_json(file, arr) {
 		return
 	}
 
-	_RefineSuperConf.items = make([]*RefineSuper, len(arr)+1)
+	self.items = make(map[uint32]*RefineSuper)
 	for _, v := range arr {
-		_RefineSuperConf.items[v.Level] = v
+		self.items[v.Level] = v
 	}
 
-	log.Info("[RefineSuper] load OK")
+	log.Info("[%s] load OK", file)
 }
 
-func load_refine_normal() {
-	path := "config/RefineNormal.json"
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Error("[RefineNormal] loading failed: %s: %s", path, err)
-		return
-	}
+func (self *RefineSuperTable) Query(id uint32) *RefineSuper {
+	return self.items[id]
+}
 
+func (self *RefineSuperTable) Items() map[uint32]*RefineSuper {
+	return self.items
+}
+
+// ============================================================================
+
+func (self *RefineNormalTable) Load() {
+	file := "RefineNormal.json"
 	var arr []*RefineNormal
-	err = json.Unmarshal(content, &arr)
-	if err != nil {
-		log.Error("[RefineNormal] Unmarshal failed: %s: %s", path, err)
+
+	if !load_from_json(file, arr) {
 		return
 	}
 
-	_RefineNormalConf.items = make([]*RefineNormal, len(arr)+1)
+	self.items = make(map[uint32]*RefineNormal)
 	for _, v := range arr {
-		_RefineNormalConf.items[v.Level] = v
+		self.items[v.Level] = v
 	}
 
-	log.Info("[RefineNormal] load OK")
+	log.Info("[%s] load OK", file)
 }
 
-func GetRefineSuper(lv uint32) *RefineSuper {
-	if _RefineSuperConf.items == nil {
-		return nil
-	}
-
-	if lv < 1 || int(lv) >= len(_RefineSuperConf.items) {
-		return nil
-	}
-
-	return _RefineSuperConf.items[lv]
+func (self *RefineNormalTable) Query(id uint32) *RefineNormal {
+	return self.items[id]
 }
 
-func GetRefineNormal(lv uint32) *RefineNormal {
-	if _RefineNormalConf.items == nil {
-		return nil
-	}
-
-	if lv < 1 || int(lv) >= len(_RefineNormalConf.items) {
-		return nil
-	}
-
-	return _RefineNormalConf.items[lv]
+func (self *RefineNormalTable) Items() map[uint32]*RefineNormal {
+	return self.items
 }

@@ -92,9 +92,9 @@ func ParseWeekTime(date string) (val int, ret bool) {
 		return
 	}
 
-	wday := int(core.Atoi32(arr[1]))
-	hour := int(core.Atoi32(arr[2]))
-	minu := int(core.Atoi32(arr[3]))
+	wday := int(Atoi32(arr[1]))
+	hour := int(Atoi32(arr[2]))
+	minu := int(Atoi32(arr[3]))
 
 	if hour >= 24 || minu >= 60 {
 		val, ret = 0, false
@@ -133,8 +133,29 @@ func WeekSeconds() int {
 	now := time.Now()
 	day := int(now.Weekday())
 	if day == 0 {
-		day == 7
+		day = 7
 	}
 	day--
 	return day*86400 + now.Hour()*3600 + now.Minute()*60 + now.Second()
+}
+
+func MonthSeconds() int {
+	now := time.Now()
+	return (now.Day()-1)*86400 + now.Hour()*3600 + now.Minute()*60 + now.Second()
+}
+
+func DayIndex() int {
+	now := time.Now()
+	return now.YearDay() + now.Year()*1000
+}
+
+func WeekIndex() int {
+	now := time.Now()
+	_, w := now.ISOWeek()
+	return w + now.Year()*100
+}
+
+func MonthIndex() int {
+	now := time.Now()
+	return int(now.Month()) + now.Year()*100
 }

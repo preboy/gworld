@@ -2,11 +2,11 @@ package config
 
 import (
 	"core/log"
-	"encoding/json"
-	"io/ioutil"
 )
 
-type SkillProto struct {
+// ============================================================================
+
+type Skill struct {
 	Id           uint32          `json:"id"`
 	Level        uint32          `json:"level"`
 	Name         string          `json:"name"`
@@ -24,47 +24,41 @@ type SkillProto struct {
 	Prop_passive []*PropConf     `json:"prop_passive"`
 }
 
-type SkillProtoConf struct {
-	items map[uint64]*SkillProto
+type SkillTable struct {
+	items map[uint64]*Skill
 }
 
-var _SkillProtoConf SkillProtoConf
+// ============================================================================
 
-func GetSkillProtoConf() *SkillProtoConf {
-	return &_SkillProtoConf
-}
+var (
+	SkillProtoConf = &SkillTable{}
+)
 
-func load_skill() {
-	path := "config/SkillProto.json"
+// ============================================================================
 
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Error("[SkillProtoConf] loading failed: %s: %s", path, err)
+func (self *SkillTable) Load() {
+	file := "Skill.json"
+	var arr []*Skill
+
+	if !load_from_json(file, arr) {
 		return
 	}
 
-	var arr []*SkillProto
-	err = json.Unmarshal(content, &arr)
-	if err != nil {
-		log.Error("[SkillProtoConf] Unmarshal failed: %s: %s", path, err)
-		return
-	}
-
-	_SkillProtoConf.items = make(map[uint64]*SkillProto)
-
+	self.items = make(map[uint64]*Skill)
 	for _, v := range arr {
 		key := MakeUint64(v.Id, v.Level)
-		_SkillProtoConf.items[key] = v
+		self.items[key] = v
 	}
 
-	log.Info("[SkillProtoConf] load OK")
+	log.Info("[%s] load OK", file)
 }
 
-func GetSkillProto(id, lv uint32) *SkillProto {
-	if _SkillProtoConf.items == nil {
-		return nil
-	}
-
+func (self *SkillTable) Query(id, lv uint32) *Skill {
 	key := MakeUint64(id, lv)
-	return _SkillProtoConf.items[key]
+	return self.items[key]
+
+}
+
+func (self *SkillTable) Items() map[uint64]*Skill {
+	return self.items
 }

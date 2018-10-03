@@ -110,7 +110,7 @@ func parse_config_date(date string) int64 {
 
 // 加载配置，解析日期
 func parse_act_config() {
-	config.GetActivityConf().ForEach(func(item *config.ActivityItem) {
+	config.ActivityConf.ForEach(func(item *config.Activity) {
 		act := _acts[item.Id]
 		if act == nil {
 			log.Warning("NOT IMPL activity: {id=%v, name=%v}", item.Id, item.Name)

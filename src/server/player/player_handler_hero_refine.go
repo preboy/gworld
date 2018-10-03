@@ -34,7 +34,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 
 		if hero.RefineSuper {
 			if req.Super == 1 {
-				conf := config.GetRefineSuper(hero.RefineLv + 1)
+				conf := config.RefineSuperConf.Query(hero.RefineLv + 1)
 				if conf == nil {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
@@ -55,7 +55,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 				hero.RefineLv = 0
 				hero.RefineTimes = 0
 				hero.RefineSuper = false
-				conf := config.GetRefineNormal(hero.RefineLv + 1)
+				conf := config.RefineNormalConf.Query(hero.RefineLv + 1)
 				if conf == nil {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
@@ -79,7 +79,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 				hero.RefineLv = 0
 				hero.RefineTimes = 0
 				hero.RefineSuper = true
-				conf := config.GetRefineSuper(hero.RefineLv + 1)
+				conf := config.RefineSuperConf.Query(hero.RefineLv + 1)
 				if conf == nil {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return
@@ -97,7 +97,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 					hero.RefineLv = 0
 				}
 			} else {
-				conf := config.GetRefineNormal(hero.RefineLv + 1)
+				conf := config.RefineNormalConf.Query(hero.RefineLv + 1)
 				if conf == nil {
 					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
 					return

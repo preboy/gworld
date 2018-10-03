@@ -27,19 +27,19 @@ type SkillContext struct {
 }
 
 type BattleSkill struct {
-	proto        *config.SkillProto // 技能原型
-	caster       *BattleUnit        // 技能拥有者
-	time         uint32             // 当前时间
-	cd_time      uint32             // 用于计算CD(技能结束之后开始计算)
-	start_time   uint32             // 技能开始释放时间
-	update_time  uint32             // 对于有update的技能，记录上次时间
-	finish       bool               // 是否完成
-	target_major []*BattleUnit      // 第一目标
-	target_minor []*BattleUnit      // 第二目标
+	proto        *config.Skill // 技能原型
+	caster       *BattleUnit   // 技能拥有者
+	time         uint32        // 当前时间
+	cd_time      uint32        // 用于计算CD(技能结束之后开始计算)
+	start_time   uint32        // 技能开始释放时间
+	update_time  uint32        // 对于有update的技能，记录上次时间
+	finish       bool          // 是否完成
+	target_major []*BattleUnit // 第一目标
+	target_minor []*BattleUnit // 第二目标
 }
 
 func NewBattleSkill(id, lv uint32) *BattleSkill {
-	proto := config.GetSkillProto(id, lv)
+	proto := config.SkillProtoConf.Query(id, lv)
 	if proto == nil {
 		return nil
 	}

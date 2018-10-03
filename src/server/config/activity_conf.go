@@ -2,11 +2,11 @@ package config
 
 import (
 	"core/log"
-	"encoding/json"
-	"io/ioutil"
 )
 
-type ActivityItem struct {
+// ============================================================================
+
+type Activity struct {
 	Seq   int    `json:"seq"`
 	Id    int    `json:"id"`
 	Name  string `json:"name"`
@@ -15,45 +15,45 @@ type ActivityItem struct {
 	Close string `json:"close"`
 }
 
-type ActivityConf struct {
-	items map[int]*ActivityItem
+type ActivityTable struct {
+	items map[int]*Activity
 }
 
-var _ActivityConf ActivityConf
+// ============================================================================
 
-func GetActivityConf() *ActivityConf {
-	return &_ActivityConf
-}
+var (
+	ActivityConf = &ActivityTable{}
+)
 
-func load_activity() {
-	path := "config/ActivityConf.json"
+// ============================================================================
 
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Error("[ActivityConf] loading failed: %s: %s", path, err)
+func (self *ActivityTable) Load() {
+	file := "Activity.json"
+	var arr []*Activity
+
+	if !load_from_json(file, arr) {
 		return
 	}
 
-	var arr []*ActivityItem
-	err = json.Unmarshal(content, &arr)
-	if err != nil {
-		log.Error("[ActivityConf] Unmarshal failed: %s: %s", path, err)
-		return
-	}
-
-	_ActivityConf.items = make(map[int]*ActivityItem)
-
+	self.items = make(map[int]*Activity)
 	for _, v := range arr {
-		key := v.Seq
-		_ActivityConf.items[key] = v
+		self.items[v.Id] = v
 	}
 
-	log.Info("[ActivityConf] load OK")
+	log.Info("[%s] load OK", file)
+}
+
+func (self *ActivityTable) Query(id int) *Activity {
+	return self.items[id]
+}
+
+func (self *ActivityTable) Items() map[int]*Activity {
+	return self.items
 }
 
 // --------------------------------------------------------------------
 
-func (self *ActivityConf) ForEach(f func(*ActivityItem)) {
+func (self *ActivityTable) ForEach(f func(*Activity)) {
 	for _, item := range self.items {
 		f(item)
 	}

@@ -106,6 +106,7 @@ func (self *Player) update() (busy bool) {
 }
 
 func (self *Player) init() {
+	self.data.Init(self)
 	self.evtMgr = event.NewEventMgr(self)
 	self.timerMgr = timer.NewTimerMgr(self)
 	self.tf = make([]func(), 0, 4)

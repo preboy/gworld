@@ -1,20 +1,24 @@
 package player
 
 import (
+	"time"
+
 	"core/db"
 	"core/log"
 	"core/utils"
 	"gopkg.in/mgo.v2"
 	"server/app"
 	"server/db_mgr"
-	"time"
+	"server/modules/achv"
 )
 
 type TItemTimed map[uint32]uint64 // "20180226" => cnt 表示2018-02-26之后过期
 
 type PlayerData struct {
+	owner *Player
+
 	// 这里的数据就是要存入DB的数据
-	Pid      uint64 `bson:"pid"`
+	Pid      string `bson:"pid"`
 	Acct     string `bson:"acct"`
 	Name     string `bson:"name"`
 	ShowName string `bson:"show_name"`
@@ -33,10 +37,20 @@ type PlayerData struct {
 	Last_update     int64                 `bson:"last_update"` // 最后一次处理数据的时间
 	Male            bool                  `bson:"male"`        // 性别(默认:女)
 	LoginTimes      uint32                `bson:"login_times"` // 登录次数
+
+	// modules data
+	Growth *achv.Growth `bson:"growth"`
 }
 
-func (self *Player) GetData() *PlayerData {
-	return self.data
+// ============================================================================
+
+func (self *PlayerData) Init(plr *Player) {
+	self.owner = plr
+
+	if self.Growth == nil {
+		self.Growth = achv.NewGrowth()
+	}
+	self.Growth.Init(plr)
 }
 
 func (self *PlayerData) SetName(name string) {
@@ -81,6 +95,13 @@ func (self *Player) on_after_load() {
 	}
 }
 
+// ============================================================================
+// player methond
+
+func (self *Player) GetData() *PlayerData {
+	return self.data
+}
+
 func (self *Player) on_before_save() {
 	self.data.Last_update = self.last_update
 
@@ -104,7 +125,8 @@ func (self *Player) on_before_save() {
 	}
 }
 
-// ------------------ global ------------------
+// ============================================================================
+// exporter
 
 func LoadData() {
 	// 加载DB中所有的玩家

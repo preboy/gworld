@@ -30,11 +30,11 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 		}
 
 		// 可否升到下一级
-		if config.GetHeroProto(hero.Id, hero.Level+1) == nil {
+		if config.HeroConf.Query(hero.Id, hero.Level+1) == nil {
 			return
 		}
 
-		conf := config.GetHeroProto(hero.Id, hero.Level)
+		conf := config.HeroConf.Query(hero.Id, hero.Level)
 
 		// 道具数量是否足够
 		goods := NewItemProxy(protocol.MSG_CS_HeroLevelup)

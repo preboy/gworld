@@ -2,55 +2,49 @@ package config
 
 import (
 	"core/log"
-	"encoding/json"
-	"io/ioutil"
 )
 
-type MarketItem struct {
+// ============================================================================
+
+type Market struct {
 	Index uint32      `json:"index"`
 	Class uint32      `json:"class"`
 	Src   []*ItemConf `json:"src"`
 	Dst   []*ItemConf `json:"dst"`
 }
 
-type MarketConf struct {
-	items map[uint32]*MarketItem
+type MarketTable struct {
+	items map[uint32]*Market
 }
 
-var _MarketConf MarketConf
+// ============================================================================
 
-func GetMarketConf() *MarketConf {
-	return &_MarketConf
-}
+var (
+	MarketConf = &MarketTable{}
+)
 
-func load_market_conf() {
-	path := "config/MarketConf.json"
+// ============================================================================
 
-	content, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Error("[MarketConf] loading failed: %s: %s", path, err)
+func (self *MarketTable) Load() {
+	file := "Market.json"
+	var arr []*Market
+
+	if !load_from_json(file, arr) {
 		return
 	}
 
-	var arr []*MarketItem
-	err = json.Unmarshal(content, &arr)
-	if err != nil {
-		log.Error("[MarketConf] Unmarshal failed: %s: %s", path, err)
-		return
-	}
-
-	_MarketConf.items = make(map[uint32]*MarketItem)
-
+	self.items = make(map[uint32]*Market)
 	for _, v := range arr {
-		_MarketConf.items[v.Index] = v
+		self.items[v.Index] = v
 	}
 
-	log.Info("[MarketConf] load OK")
+	log.Info("[%s] load OK", file)
 }
 
-func GetMarketItem(index uint32) *MarketItem {
-	if _MarketConf.items == nil {
-		return nil
-	}
-	return _MarketConf.items[index]
+func (self *MarketTable) Query(index uint32) *Market {
+	return self.items[index]
+}
+
+func (self *MarketTable) Items() map[uint32]*Market {
+	return self.items
 }

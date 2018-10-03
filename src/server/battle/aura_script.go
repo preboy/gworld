@@ -35,7 +35,7 @@ func init() {
 	}
 }
 
-func create_script_object(proto *config.AuraProto) AuraScript {
+func create_script_object(proto *config.Aura) AuraScript {
 	if f, ok := _creators[proto.ScriptId]; ok {
 		return f()
 	} else {

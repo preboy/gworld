@@ -22,7 +22,7 @@ func handler_player_market_buy(plr *Player, packet *tcp.Packet) {
 
 	func() {
 		// 检测包裹道具是否足够
-		conf := config.GetMarketItem(req.Index)
+		conf := config.MarketConf.Query(req.Index)
 		if conf == nil {
 			return
 		}
