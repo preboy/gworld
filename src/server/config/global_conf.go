@@ -28,13 +28,13 @@ var (
 
 func (self *GlobalTable) Load() {
 	file := "Global.json"
-	var arr []*Global
+	var arr *Global
 
 	if !load_from_json(file, arr) {
 		return
 	}
 
-	self.item = arr[0]
+	self.item = arr
 
 	log.Info("[%s] load OK", file)
 }
