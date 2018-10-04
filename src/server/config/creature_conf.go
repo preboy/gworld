@@ -33,12 +33,12 @@ var (
 
 // ============================================================================
 
-func (self *CreatureTable) Load() {
+func (self *CreatureTable) Load() bool {
 	file := "Creature.json"
 	var arr []*Creature
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint64]*Creature)
@@ -47,7 +47,8 @@ func (self *CreatureTable) Load() {
 		self.items[key] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *CreatureTable) Query(id, lv uint32) *Creature {

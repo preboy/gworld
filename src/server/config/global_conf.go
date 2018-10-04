@@ -26,17 +26,22 @@ var (
 
 // ============================================================================
 
-func (self *GlobalTable) Load() {
+func (self *GlobalTable) Load() bool {
 	file := "Global.json"
-	var arr *Global
+	var arr []*Global
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
-	self.item = arr
+	if len(arr) == 0 {
+		return false
+	}
 
-	log.Info("[%s] load OK", file)
+	self.item = arr[0]
+
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *GlobalTable) Get() *Global {

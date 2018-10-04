@@ -4,14 +4,16 @@ import (
 	"core/log"
 	"encoding/json"
 	"io/ioutil"
+	"reflect"
+	"strings"
 )
 
 const (
-	C_Path = "config/"
+	C_Config_Path = "./config/"
 )
 
 type IConf interface {
-	Load()
+	Load() bool
 }
 
 var (
@@ -34,18 +36,8 @@ var (
 
 // ============================================================================
 
-func Load() {
-	log.Info("Loading Config Starting ...")
-
-	for _, conf := range confs {
-		conf.Load()
-	}
-
-	log.Info("Loading Config COMPLETE !!!")
-}
-
-func load_from_json(file string, arr interface{}) bool {
-	content, err := ioutil.ReadFile(C_Path + file)
+func load_json_as_arr(file string, arr interface{}) bool {
+	content, err := ioutil.ReadFile(C_Config_Path + file)
 	if err != nil {
 		log.Error("loading [%s] failed! err = %s", file, err)
 		return false
@@ -58,4 +50,40 @@ func load_from_json(file string, arr interface{}) bool {
 	}
 
 	return true
+}
+
+// ============================================================================
+
+func LoadAll(launch bool) {
+	log.Info("Loading Configs Starting ...")
+
+	succ := true
+	for _, conf := range confs {
+		if !conf.Load() {
+			succ = false
+		}
+	}
+
+	if launch {
+		if !succ {
+			log.Fatal("load config NOT all is ok ")
+		}
+	}
+
+	log.Info("Loading Configs COMPLETE !!!")
+}
+
+func LoadOne(name string) bool {
+	for _, conf := range confs {
+		t := reflect.TypeOf(conf).Elem()
+		file_name := strings.TrimSuffix(t.Name(), "Table")
+
+		if file_name == name {
+			return conf.Load()
+		}
+	}
+
+	log.Info("Loading [ %s ] FAILED, Not found the file !!!")
+
+	return false
 }

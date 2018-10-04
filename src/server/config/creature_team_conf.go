@@ -33,12 +33,12 @@ var (
 
 // ============================================================================
 
-func (self *CreatureTeamTable) Load() {
+func (self *CreatureTeamTable) Load() bool {
 	file := "CreatureTeam.json"
 	var arr []*CreatureTeam
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*CreatureTeam)
@@ -46,10 +46,14 @@ func (self *CreatureTeamTable) Load() {
 		self.items[v.Id] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *CreatureTeamTable) Query(id uint32) *CreatureTeam {
+
+	println("dddddd", len(self.items))
+
 	return self.items[id]
 }
 

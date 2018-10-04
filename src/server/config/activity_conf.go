@@ -27,12 +27,12 @@ var (
 
 // ============================================================================
 
-func (self *ActivityTable) Load() {
+func (self *ActivityTable) Load() bool {
 	file := "Activity.json"
 	var arr []*Activity
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[int]*Activity)
@@ -40,7 +40,8 @@ func (self *ActivityTable) Load() {
 		self.items[v.Id] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *ActivityTable) Query(id int) *Activity {

@@ -31,12 +31,12 @@ var (
 
 // ============================================================================
 
-func (self *AuraTable) Load() {
+func (self *AuraTable) Load() bool {
 	file := "Aura.json"
 	var arr []*Aura
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint64]*Aura)
@@ -45,7 +45,8 @@ func (self *AuraTable) Load() {
 		self.items[key] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *AuraTable) Query(id, lv uint32) *Aura {

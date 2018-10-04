@@ -56,7 +56,7 @@ func main() {
 	net_mgr.Start()
 	work_service.Start(4)
 
-	config.Load()
+	config.LoadAll(true)
 
 	player.LoadData()
 

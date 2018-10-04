@@ -22,6 +22,9 @@ func handler_player_make_battle(plr *Player, packet *tcp.Packet) {
 
 	a := app.CreatureTeamToBattleTroop(req.Id)
 	d := app.CreatureTeamToBattleTroop(2)
+
+	println("fuck", a, d, req.Id, 2)
+
 	b := battle.NewBattle(a, d)
 	b.Calc()
 	res.Result = b.ToMsg()

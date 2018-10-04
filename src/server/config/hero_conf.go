@@ -34,12 +34,12 @@ var (
 
 // ============================================================================
 
-func (self *HeroTable) Load() {
+func (self *HeroTable) Load() bool {
 	file := "Hero.json"
 	var arr []*Hero
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint64]*Hero)
@@ -48,7 +48,8 @@ func (self *HeroTable) Load() {
 		self.items[key] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *HeroTable) Query(id, lv uint32) *Hero {

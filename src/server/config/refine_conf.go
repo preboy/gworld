@@ -48,12 +48,12 @@ var (
 
 // ============================================================================
 
-func (self *RefineSuperTable) Load() {
+func (self *RefineSuperTable) Load() bool {
 	file := "RefineSuper.json"
 	var arr []*RefineSuper
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*RefineSuper)
@@ -61,7 +61,8 @@ func (self *RefineSuperTable) Load() {
 		self.items[v.Level] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *RefineSuperTable) Query(id uint32) *RefineSuper {
@@ -74,12 +75,12 @@ func (self *RefineSuperTable) Items() map[uint32]*RefineSuper {
 
 // ============================================================================
 
-func (self *RefineNormalTable) Load() {
+func (self *RefineNormalTable) Load() bool {
 	file := "RefineNormal.json"
 	var arr []*RefineNormal
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*RefineNormal)
@@ -87,7 +88,8 @@ func (self *RefineNormalTable) Load() {
 		self.items[v.Level] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *RefineNormalTable) Query(id uint32) *RefineNormal {

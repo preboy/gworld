@@ -25,12 +25,12 @@ var (
 
 // ============================================================================
 
-func (self *MarketTable) Load() {
+func (self *MarketTable) Load() bool {
 	file := "Market.json"
 	var arr []*Market
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*Market)
@@ -38,7 +38,8 @@ func (self *MarketTable) Load() {
 		self.items[v.Index] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *MarketTable) Query(index uint32) *Market {

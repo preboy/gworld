@@ -33,12 +33,12 @@ var (
 
 // ============================================================================
 
-func (self *AchvTable) Load() {
+func (self *AchvTable) Load() bool {
 	file := "Achv.json"
 	var arr []*Achv
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*Achv)
@@ -46,7 +46,8 @@ func (self *AchvTable) Load() {
 		self.items[v.Id] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *AchvTable) Query(id uint32) *Achv {
@@ -59,12 +60,12 @@ func (self *AchvTable) Items() map[uint32]*Achv {
 
 // ============================================================================
 
-func (self *GrowthTable) Load() {
+func (self *GrowthTable) Load() bool {
 	file := "Growth.json"
 	var arr []*Growth
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*Growth)
@@ -72,7 +73,8 @@ func (self *GrowthTable) Load() {
 		self.items[v.Id] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *GrowthTable) Query(id uint32) *Growth {

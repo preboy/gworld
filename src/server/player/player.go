@@ -29,7 +29,6 @@ func NewPlayer() *Player {
 		w:         &sync.WaitGroup{},
 	}
 
-	plr.init()
 	return plr
 }
 
@@ -105,7 +104,7 @@ func (self *Player) update() (busy bool) {
 	return
 }
 
-func (self *Player) init() {
+func (self *Player) Init() {
 	self.data.Init(self)
 	self.evtMgr = event.NewEventMgr(self)
 	self.timerMgr = timer.NewTimerMgr(self)

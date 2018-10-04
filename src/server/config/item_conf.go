@@ -31,12 +31,12 @@ var (
 
 // ============================================================================
 
-func (self *ItemTable) Load() {
+func (self *ItemTable) Load() bool {
 	file := "Item.json"
 	var arr []*Item
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint32]*Item)
@@ -44,7 +44,8 @@ func (self *ItemTable) Load() {
 		self.items[v.Id] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *ItemTable) Query(id uint32) *Item {

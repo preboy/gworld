@@ -36,12 +36,12 @@ var (
 
 // ============================================================================
 
-func (self *SkillTable) Load() {
+func (self *SkillTable) Load() bool {
 	file := "Skill.json"
 	var arr []*Skill
 
-	if !load_from_json(file, arr) {
-		return
+	if !load_json_as_arr(file, &arr) {
+		return false
 	}
 
 	self.items = make(map[uint64]*Skill)
@@ -50,7 +50,8 @@ func (self *SkillTable) Load() {
 		self.items[key] = v
 	}
 
-	log.Info("[%s] load OK", file)
+	log.Info("load [ %s ] OK", file)
+	return true
 }
 
 func (self *SkillTable) Query(id, lv uint32) *Skill {

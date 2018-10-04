@@ -128,6 +128,8 @@ func EnterGame(acct string, s ISession) bool {
 		plr.Save()
 	}
 
+	plr.Init()
+
 	plr.server_id = app.GetServerConfig().Server_id
 
 	s.SetPlayer(plr)
