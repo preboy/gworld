@@ -1,14 +1,30 @@
 package cmd
 
 import (
-	"core/utils"
 	"fmt"
+	"strings"
+
+	"core/utils"
 	"server/app"
 	"server/battle"
+	"server/config"
 )
 
-func ParseCommand(cmd *string) {
-	switch *cmd {
+func ParseCommand(cmd string) {
+	var args []string
+	for _, v := range strings.Split(cmd, " ") {
+		arg := strings.Trim(v, " ,\t")
+		if arg != "" {
+			args = append(args, arg)
+		}
+	}
+
+	len_args := len(args)
+	if len_args == 0 {
+		return
+	}
+
+	switch args[0] {
 	case "p":
 		panic("self")
 
@@ -26,6 +42,13 @@ func ParseCommand(cmd *string) {
 		fmt.Println(utils.StartPprof("prof"))
 	case "close_prof":
 		fmt.Println(utils.ClosePprof())
+
+	case "load":
+		if len_args > 1 {
+			config.LoadOne(args[1])
+		} else {
+			fmt.Println("load config_name")
+		}
 
 	default:
 		fmt.Println("unknown command !!!")

@@ -83,7 +83,7 @@ func main() {
 			close(quit)
 			break
 		} else {
-			cmd.ParseCommand(&text)
+			cmd.ParseCommand(text)
 		}
 	}
 
