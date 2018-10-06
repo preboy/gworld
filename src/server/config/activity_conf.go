@@ -52,7 +52,7 @@ func (self *ActivityTable) Items() map[int]*Activity {
 	return self.items
 }
 
-// --------------------------------------------------------------------
+// ============================================================================
 
 func (self *ActivityTable) ForEach(f func(*Activity)) {
 	for _, item := range self.items {
