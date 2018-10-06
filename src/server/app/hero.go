@@ -48,7 +48,7 @@ func NewHero(id uint32) *Hero {
 	return hero
 }
 
-// ==================================================
+// ============================================================================
 
 func (self *Hero) ToCreature() *Creature {
 	return nil

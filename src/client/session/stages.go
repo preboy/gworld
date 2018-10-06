@@ -48,8 +48,10 @@ func init() {
 	stages[idx].OnTimer = func(s *Session, id uint64) {
 	}
 
-	//------------------------------------------------------------------
-	idx = 1 // login
+	// ------------------------------------------------------------------------
+	// login
+
+	idx = 1
 	stages[idx].OnEnter = func(s *Session) {
 		fmt.Println("Stage:", s.stage_id, "OnEnter")
 		req := &msg.LoginRequest{}
@@ -97,8 +99,10 @@ func init() {
 	stages[idx].OnTimer = func(s *Session, id uint64) {
 	}
 
-	//------------------------------------------------------------------
-	idx = 2 // game
+	// ------------------------------------------------------------------------
+	// game
+
+	idx = 2
 	stages[idx].OnEnter = func(s *Session) {
 		fmt.Println("Stage:", s.stage_id, "OnEnter")
 		req := &msg.EnterGameRequest{}

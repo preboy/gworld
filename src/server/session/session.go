@@ -112,7 +112,8 @@ func (self *Session) Disconnect() {
 	}
 }
 
-// ------------------ session handler ------------------
+// ============================================================================
+//  session handler
 
 // 心跳包
 func (self *Session) on_ping(packet *tcp.Packet) {

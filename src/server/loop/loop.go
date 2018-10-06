@@ -54,9 +54,9 @@ func (self *Loop) Stop() {
 	self.on_stop()
 }
 
-// ----------------- impl for interface
+// ============================================================================
+//  IScuedule
 
-// ----------------- IScuedule -----------------
 func (self *Loop) OnSchedule(evt *event.Event) {
 	self.evtMgr.Fire(evt)
 }
@@ -82,7 +82,8 @@ func (self *Loop) OnTimer(id uint64) {
 	fmt.Println("Loop.OnTimer:", id)
 }
 
-// ----------------- public -----------------
+// ============================================================================
+// public
 
 func (self *Loop) FireEvent(evt *event.Event) {
 	self.evtMgr.Fire(evt)
@@ -96,7 +97,9 @@ func (self *Loop) CancelTimer(id uint64) {
 	self.timerMgr.CancelTimer(id)
 }
 
-// ----------------- private -----------------
+// ============================================================================
+// private
+
 func game_update() {
 	if _loop == nil {
 		return

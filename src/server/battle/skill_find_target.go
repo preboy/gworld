@@ -61,7 +61,10 @@ func _add_target(units []*BattleUnit, us ...*BattleUnit) {
 func (self *BattleSkill) find_target_impl(ids []int32, units []*BattleUnit) {
 	for _, id := range ids {
 		switch id {
-		// ------------------------------- 我方单位 -------------------------------
+
+		// --------------------------------------------------------------------
+		// 我方单位
+
 		case 1, 2, 3, 4, 5, 6:
 			{
 				_add_target(units, self.caster.Troop.members[id])
@@ -137,7 +140,9 @@ func (self *BattleSkill) find_target_impl(ids []int32, units []*BattleUnit) {
 				_add_target(units, self.caster)
 			}
 
-		// ------------------------------- 敌方单位 -------------------------------
+		// --------------------------------------------------------------------
+		// 敌方单位
+
 		case 201, 202, 203, 204, 205, 206:
 			{
 				u := self.caster.Troop.members[id]

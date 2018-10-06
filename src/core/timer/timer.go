@@ -81,7 +81,8 @@ func (self *TimerMgr) CancelTimer(id uint64) {
 	delete(self.timers, id)
 }
 
-// ------------- package method -------------
+// ============================================================================
+// package method
 
 func get_tick() uint64 {
 	_lock.RLock()

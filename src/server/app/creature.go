@@ -20,7 +20,7 @@ func NewCreature(id, lv uint32) *Creature {
 	return nil
 }
 
-// ==================================================
+// ============================================================================
 
 func (self *Creature) ToCreature() *Creature {
 	return self
@@ -76,7 +76,7 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	return u
 }
 
-// ==================================================
+// ============================================================================
 
 func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
 	team := config.CreatureTeamConf.Query(id)
