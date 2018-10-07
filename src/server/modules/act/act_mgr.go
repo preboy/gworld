@@ -18,15 +18,22 @@ type IAct interface {
 	get_id() int
 	get_key() int64
 	get_stage() int32
+	get_key_curr() int64
+
+	set_close()
+	set_open(key int64)
 
 	// impl by ActBase
-	is_open() int64
+	is_open() bool
 	add_term(*act_term_t)
 	check_term() bool
 
 	GetRawSvrData() interface{}
 	GetRawPlrData() map[string]interface{}
 	GetRawPlrTable(id string) interface{}
+
+	OnOpen()
+	OnClose()
 }
 
 var (
@@ -61,6 +68,7 @@ type act_term_t struct {
 func Open() {
 	parse_act_config()
 	load_act_data()
+	check_act_state()
 }
 
 func Close() {
@@ -84,7 +92,7 @@ func FindAct(id int) IAct {
 
 func IsOpen(id int) bool {
 	if act, ok := _acts[id]; ok {
-		return act.is_open() != 0
+		return act.is_open()
 	}
 	return false
 }
@@ -161,12 +169,6 @@ func load_act_data() {
 			}
 		}
 	}
-
-	// checking ...
-	for _, act := range _acts {
-		_ = act
-	}
-
 }
 
 func save_act_data() {
@@ -189,4 +191,38 @@ func save_act_data() {
 	}
 
 	db_mgr.GetDB().Upsert(db_mgr.Table_name_activitys, 1, rec)
+}
+
+func check_act_state() {
+	for _, act := range _acts {
+		if !act.is_open() {
+			key := act.get_key_curr()
+			if key == 0 {
+				// also closed, do nothing
+			} else {
+				// new team, set open
+				act.set_open(key)
+			}
+		} else {
+			key := act.get_key_curr()
+			if key == 0 {
+				act.set_close()
+				// closed
+			} else {
+				if key == act.get_key() {
+					// some team
+				} else {
+					// another team
+					act.set_close()
+					act.set_open(key)
+				}
+			}
+		}
+	}
+}
+
+// ============================================================================
+
+func LoopUpdate() {
+	check_act_state()
 }

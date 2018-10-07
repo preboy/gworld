@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"core/log"
+	"core/utils"
 )
 
 // ============================================================================
@@ -66,7 +67,11 @@ func (self *ActBase) get_key() int64 {
 	return self.Key
 }
 
-func (self *ActBase) is_open() int64 {
+func (self *ActBase) is_open() bool {
+	return self.Stage == 1
+}
+
+func (self *ActBase) get_key_curr() int64 {
 	sec := time.Now().Unix()
 	for _, term := range self.terms {
 		if sec >= term.OpenSec && sec < term.CloseSec {
@@ -74,6 +79,25 @@ func (self *ActBase) is_open() int64 {
 		}
 	}
 	return 0
+}
+
+func (self *ActBase) set_close() {
+	utils.ExecuteSafely(func() {
+		self.OnClose()
+	})
+
+	self.Stage = 0
+	self.Key = 0
+}
+
+func (self *ActBase) set_open(key int64) {
+	self.DataSvr = self.NewSvrData()
+	self.DataPlr = make(map[string]interface{})
+
+	self.Stage = 1
+	self.Key = key
+
+	self.OnOpen()
 }
 
 // ============================================================================
@@ -84,4 +108,14 @@ func (self *ActBase) NewSvrData() interface{} {
 
 func (self *ActBase) NewPlrData(id string) interface{} {
 	return nil
+}
+
+// ============================================================================
+// holdplace
+
+func (self *ActBase) OnOpen() {
+
+}
+func (self *ActBase) OnClose() {
+
 }

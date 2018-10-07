@@ -2,11 +2,13 @@ package loop
 
 import (
 	"fmt"
+	"time"
 
 	"core/event"
 	"core/schedule"
 	"core/thread"
 	"core/timer"
+	"server/modules/act"
 )
 
 const (
@@ -16,6 +18,7 @@ const (
 var (
 	_thread *thread.Thread
 	_loop   *Loop
+	_last   int64
 )
 
 type Loop struct {
@@ -40,7 +43,7 @@ func (self *Loop) Start() {
 
 	schedule.Register(_LOOP_NAME, self)
 
-	_thread = thread.NewThread(game_update, 100)
+	_thread = thread.NewThread(loop_update, 100)
 	_thread.Go()
 
 }
@@ -100,11 +103,17 @@ func (self *Loop) CancelTimer(id uint64) {
 // ============================================================================
 // private
 
-func game_update() {
+func loop_update() {
 	if _loop == nil {
 		return
 	}
 
 	_loop.evtMgr.Update()
 	_loop.timerMgr.Update()
+
+	sec := time.Now().Unix()
+	if _last != sec {
+		_last = sec
+		act.LoopUpdate()
+	}
 }
