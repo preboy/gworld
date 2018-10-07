@@ -1,7 +1,10 @@
 package config
 
 import (
+	"core/event"
 	"core/log"
+	"server/constant"
+
 	"encoding/json"
 	"io/ioutil"
 	"reflect"
@@ -71,6 +74,8 @@ func LoadAll(launch bool) {
 	}
 
 	log.Info("Loading Configs COMPLETE !!!")
+
+	event.Fire(constant.EVT_SYS_ConfigLoaded, launch)
 }
 
 func LoadOne(name string) bool {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"core/event"
+	"core/utils"
 )
 
 // called by other go routine to push event to player.Go
@@ -33,4 +34,9 @@ func (self *Player) OnEvent(evt *event.Event) {
 		}
 	}
 
+	// fallthrough to other modules
+
+	utils.ExecuteSafely(func() {
+		self.data.Growth.OnEvent(evt)
+	})
 }

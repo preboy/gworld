@@ -2,7 +2,9 @@ package player
 
 import (
 	"core/log"
+	"gopkg.in/mgo.v2"
 	"server/app"
+	"server/db_mgr"
 )
 
 const (
@@ -145,4 +147,31 @@ func EachPlayer(f func(*Player)) {
 			f(plr)
 		}
 	}
+}
+
+// ============================================================================
+
+func LoadData() {
+	// 加载DB中所有的玩家
+	arr := []*PlayerData{}
+	err := db_mgr.GetDB().GetAllObjects(
+		db_mgr.Table_name_players,
+		&arr,
+	)
+	if err != nil && err != mgo.ErrNotFound {
+		log.Error("load all PlayerData err :", err)
+		return
+	}
+
+	for _, data := range arr {
+		plr := NewPlayer()
+		plr.AssociateData(data)
+	}
+
+	log.Info("[%d] player loaded !", len(arr))
+}
+
+func SaveData() {
+	// 所有玩家存盘
+	// TODO
 }

@@ -1,8 +1,15 @@
 package achv
 
 import (
+	"core/event"
 	"gopkg.in/mgo.v2/bson"
 	"server/app"
+	"server/config"
+	"server/constant"
+)
+
+var (
+	care map[int32][]int32
 )
 
 // ============================================================================
@@ -12,6 +19,7 @@ type iPlayer interface {
 	app.IPlayer
 
 	GetGrowth() *Growth
+	GetAchv() *Achv
 }
 
 // ============================================================================
@@ -20,20 +28,29 @@ type iPlayer interface {
 type growth_t struct {
 	Id  int32
 	Val int32
-
-	care []int32 // associated achv id
 }
-
-type growth_map_t map[int32]*growth_t
 
 type Growth struct {
 	plr iPlayer
 
-	// saved data
 	GrowthV growth_map_t
+}
 
-	// unsaved data
-	achv map[int32]bool
+type growth_map_t map[int32]*growth_t
+
+// ============================================================================
+
+func init() {
+	care = make(map[int32][]int32)
+
+	event.On(constant.EVT_SYS_ConfigLoaded, func(args ...interface{}) {
+		launch := args[0].(bool)
+		if launch {
+			for _, conf := range config.AchvConf.Items() {
+				care[conf.Gid] = append(care[conf.Gid], conf.Id)
+			}
+		}
+	})
 }
 
 // ============================================================================
@@ -77,10 +94,32 @@ func (self *Growth) Init(plr iPlayer) {
 	if self.GrowthV == nil {
 		self.GrowthV = make(growth_map_t)
 	}
-
-	if self.achv == nil {
-		self.achv = make(map[int32]bool)
-	}
 }
 
-// ============================================================================
+func (self *Growth) OnEvent(evt *event.Event) {
+	// on_changed(id, val)
+}
+
+func (self *Growth) change(id int32, val int32, set bool) {
+	if self.GrowthV[id] == nil {
+		return
+	}
+
+	prev := self.GrowthV[id].Val
+
+	if set {
+		self.GrowthV[id].Val = val
+	} else {
+		self.GrowthV[id].Val += val
+	}
+
+	self.on_changed(id, prev, self.GrowthV[id].Val)
+}
+
+// 成就变化是通知客户端
+func (self *Growth) on_changed(id int32, prev, curr int32) {
+	for _, achv_id := range care[id] {
+		_ = achv_id
+		// TODO ...
+	}
+}

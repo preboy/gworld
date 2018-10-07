@@ -7,21 +7,21 @@ import (
 // ============================================================================
 
 type Achv struct {
-	Id  uint32 `json:"id"`
-	Gid uint32 `json:"gid"`
-	Val uint32 `json:"val"`
+	Id  int32 `json:"id"`
+	Gid int32 `json:"gid"`
+	Val int32 `json:"val"`
 }
 
 type AchvTable struct {
-	items map[uint32]*Achv
+	items map[int32]*Achv
 }
 
 type Growth struct {
-	Id uint32 `json:"id"`
+	Id int32 `json:"id"`
 }
 
 type GrowthTable struct {
-	items map[uint32]*Growth
+	items map[int32]*Growth
 }
 
 // ============================================================================
@@ -41,7 +41,7 @@ func (self *AchvTable) Load() bool {
 		return false
 	}
 
-	self.items = make(map[uint32]*Achv)
+	self.items = make(map[int32]*Achv)
 	for _, v := range arr {
 		self.items[v.Id] = v
 	}
@@ -50,11 +50,11 @@ func (self *AchvTable) Load() bool {
 	return true
 }
 
-func (self *AchvTable) Query(id uint32) *Achv {
+func (self *AchvTable) Query(id int32) *Achv {
 	return self.items[id]
 }
 
-func (self *AchvTable) Items() map[uint32]*Achv {
+func (self *AchvTable) Items() map[int32]*Achv {
 	return self.items
 }
 
@@ -68,7 +68,7 @@ func (self *GrowthTable) Load() bool {
 		return false
 	}
 
-	self.items = make(map[uint32]*Growth)
+	self.items = make(map[int32]*Growth)
 	for _, v := range arr {
 		self.items[v.Id] = v
 	}
@@ -77,10 +77,10 @@ func (self *GrowthTable) Load() bool {
 	return true
 }
 
-func (self *GrowthTable) Query(id uint32) *Growth {
+func (self *GrowthTable) Query(id int32) *Growth {
 	return self.items[id]
 }
 
-func (self *GrowthTable) Items() map[uint32]*Growth {
+func (self *GrowthTable) Items() map[int32]*Growth {
 	return self.items
 }

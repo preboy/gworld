@@ -6,7 +6,6 @@ import (
 	"core/db"
 	"core/log"
 	"core/utils"
-	"gopkg.in/mgo.v2"
 	"server/app"
 	"server/db_mgr"
 	"server/modules/achv"
@@ -40,6 +39,7 @@ type PlayerData struct {
 
 	// modules data
 	Growth *achv.Growth `bson:"growth"`
+	Achv   *achv.Achv   `bson:"achv"`
 }
 
 // ============================================================================
@@ -51,6 +51,12 @@ func (self *PlayerData) Init(plr *Player) {
 		self.Growth = achv.NewGrowth()
 	}
 	self.Growth.Init(plr)
+
+	if self.Achv == nil {
+		self.Achv = achv.NewAchv()
+	}
+	self.Achv.Init(plr)
+
 }
 
 func (self *PlayerData) SetName(name string) {
@@ -127,31 +133,6 @@ func (self *Player) on_before_save() {
 
 // ============================================================================
 // exporter
-
-func LoadData() {
-	// 加载DB中所有的玩家
-	arr := []*PlayerData{}
-	err := db_mgr.GetDB().GetAllObjects(
-		db_mgr.Table_name_players,
-		&arr,
-	)
-	if err != nil && err != mgo.ErrNotFound {
-		log.Error("load all PlayerData err :", err)
-		return
-	}
-
-	for _, data := range arr {
-		plr := NewPlayer()
-		plr.AssociateData(data)
-	}
-
-	log.Info("[%d] player loaded !", len(arr))
-}
-
-func SaveData() {
-	// 所有玩家存盘
-	// TODO
-}
 
 func CreatePlayerData(acct string) *PlayerData {
 	pid := app.GeneralPlayerID()
