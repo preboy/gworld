@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"core/event"
+	"core/log"
 	"core/utils"
 )
 
@@ -25,6 +26,13 @@ func (self *Player) CallEvent(evt *event.Event) {
 // events callback dispatcher
 func (self *Player) OnEvent(evt *event.Event) {
 	defer self.do_next_tick()
+
+	defer func() {
+		if err := recover(); err != nil {
+			log.Error("PANIC on 'OnEvent':", self.GetId(), evt.Id, evt.Args)
+			log.Error("STACK TRACE:", utils.Callstack())
+		}
+	}()
 
 	fmt.Println("Player.OnEvent:", evt)
 

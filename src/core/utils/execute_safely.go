@@ -13,9 +13,8 @@ import (
 
 func ExecuteSafely(f func()) {
 	defer func() {
-		e := recover()
-		if e != nil {
-			log.Error("STACK TRACE:", Callstack())
+		if err := recover(); err != nil {
+			log.Error("[PANIC] STACK TRACE:", Callstack())
 		}
 	}()
 

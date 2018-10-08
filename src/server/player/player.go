@@ -1,12 +1,14 @@
 package player
 
 import (
+	"sync"
 	"time"
 
 	"core/event"
+	"core/log"
 	"core/tcp"
 	"core/timer"
-	"sync"
+	"core/utils"
 )
 
 type Player struct {
@@ -129,6 +131,13 @@ func (self *Player) do_next_tick() {
 	if len(self.tf) == 0 {
 		return
 	}
+
+	defer func() {
+		if err := recover(); err != nil {
+			log.Error("PANIC on 'do_next_tick':", self.GetId())
+			log.Error("STACK TRACE:", utils.Callstack())
+		}
+	}()
 
 	for _, fn := range self.tf {
 		fn()
