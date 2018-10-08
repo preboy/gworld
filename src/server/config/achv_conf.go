@@ -37,7 +37,7 @@ func (self *AchvTable) Load() bool {
 	file := "Achv.json"
 	var arr []*Achv
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 
@@ -64,7 +64,7 @@ func (self *GrowthTable) Load() bool {
 	file := "Growth.json"
 	var arr []*Growth
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 

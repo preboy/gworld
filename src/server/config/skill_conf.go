@@ -40,7 +40,7 @@ func (self *SkillTable) Load() bool {
 	file := "Skill.json"
 	var arr []*Skill
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 

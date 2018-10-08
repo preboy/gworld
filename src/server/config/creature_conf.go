@@ -37,7 +37,7 @@ func (self *CreatureTable) Load() bool {
 	file := "Creature.json"
 	var arr []*Creature
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 

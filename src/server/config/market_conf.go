@@ -29,7 +29,7 @@ func (self *MarketTable) Load() bool {
 	file := "Market.json"
 	var arr []*Market
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 

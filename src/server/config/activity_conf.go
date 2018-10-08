@@ -31,7 +31,7 @@ func (self *ActivityTable) Load() bool {
 	file := "Activity.json"
 	var arr []*Activity
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 

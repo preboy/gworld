@@ -3,8 +3,6 @@ package app
 import (
 	"core/log"
 	"core/utils"
-
-	"encoding/json"
 )
 
 var (
@@ -21,24 +19,20 @@ type ServerConfig struct {
 }
 
 func LoadServerConfig(file string) bool {
-	if _sc == nil {
-		sc := ServerConfig{}
-		data, err := utils.ReadFile(file)
-		if err == nil {
-			err := json.Unmarshal(data, &sc)
-			if err == nil {
-				_sc = &sc
-			} else {
-				log.Debug("zcg_err2 : %s", err.Error())
-				return false
-			}
-		} else {
-			log.Debug("zcg_err : %s", err.Error())
-			return false
-		}
+	var obj *ServerConfig
+
+	if !utils.LoadJsonAsObj(file, &obj) {
+		return false
 	}
 
+	if obj == nil {
+		return false
+	}
+
+	_sc = obj
 	utils.PrintPretty(_sc, "server cnfig ")
+
+	log.Info("load [ %s ] OK", file)
 	return true
 }
 

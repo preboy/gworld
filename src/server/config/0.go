@@ -3,10 +3,9 @@ package config
 import (
 	"core/event"
 	"core/log"
+	"core/utils"
 	"server/constant"
 
-	"encoding/json"
-	"io/ioutil"
 	"reflect"
 	"strings"
 )
@@ -37,23 +36,9 @@ var (
 	}
 )
 
-// ============================================================================
-
-func load_json_as_arr(file string, arr interface{}) bool {
-	content, err := ioutil.ReadFile(C_Config_Path + file)
-	if err != nil {
-		log.Error("loading [%s] failed! err = %s", file, err)
-		return false
-	}
-
-	err = json.Unmarshal(content, &arr)
-	if err != nil {
-		log.Error("Unmarshal [%s] failed! %s", file, err)
-		return false
-	}
-
-	return true
-}
+var (
+	load_json_as_arr = utils.LoadJsonAsArr
+)
 
 // ============================================================================
 

@@ -52,7 +52,7 @@ func (self *RefineSuperTable) Load() bool {
 	file := "RefineSuper.json"
 	var arr []*RefineSuper
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 
@@ -79,7 +79,7 @@ func (self *RefineNormalTable) Load() bool {
 	file := "RefineNormal.json"
 	var arr []*RefineNormal
 
-	if !load_json_as_arr(file, &arr) {
+	if !load_json_as_arr(C_Config_Path+file, &arr) {
 		return false
 	}
 
