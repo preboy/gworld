@@ -17,6 +17,7 @@ type ServerConfig struct {
 	Listen_addr string `json:"listen_addr"`
 	PlatID      string `json:"plat_id"`
 	DBAddr      string `json:"db_addr"`
+	DebugMode   bool   `json:"debug_mode"`
 }
 
 func LoadServerConfig(file string) bool {
@@ -43,4 +44,11 @@ func LoadServerConfig(file string) bool {
 
 func GetServerConfig() *ServerConfig {
 	return _sc
+}
+
+func InDebugMode() bool {
+	if _sc != nil {
+		return _sc.DebugMode
+	}
+	return false
 }

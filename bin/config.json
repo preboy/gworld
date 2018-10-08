@@ -3,5 +3,6 @@
     "server_name" : "牛逼",
     "listen_addr" : ":4040",
     "plat_id" : "zcg self",
-    "db_addr" : "mongodb://118.24.48.149:27017/game?authSource=admin"
+    "db_addr" : "mongodb://118.24.48.149:27017/game?authSource=admin",    
+    "debug_mode" : true
 }
