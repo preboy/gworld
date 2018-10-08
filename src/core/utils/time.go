@@ -81,6 +81,32 @@ func ParseRelativeTime(t0 time.Time, v string) (t time.Time) {
 	return
 }
 
+// 返回从本周开始计算的秒数(周：从周一[1]开始，到周日[7]结束)
+// from "6~23:00" to 514800
+func ParseWeekTime(date string) (val int, ret bool) {
+	date = strings.Trim(date, " ")
+	reg := regexp.MustCompile(`^([1-7])~([0-9]{1,2}):([0-9]{1,2})$`)
+	arr := reg.FindStringSubmatch(date)
+	if arr == nil {
+		val, ret = 0, false
+		return
+	}
+
+	wday := int(core.Atoi32(arr[1]))
+	hour := int(core.Atoi32(arr[2]))
+	minu := int(core.Atoi32(arr[3]))
+
+	if hour >= 24 || minu >= 60 {
+		val, ret = 0, false
+		return
+	}
+
+	wday--
+	val = wday*86400 + hour*3600 + minu*60
+	ret = true
+	return
+}
+
 func BeginOfDay(t time.Time) time.Time {
 	y, M, d := t.Date()
 	return time.Date(y, M, d, 0, 0, 0, 0, t.Location())
@@ -102,8 +128,13 @@ func DaySeconds() int {
 	return now.Hour()*3600 + now.Minute()*60 + now.Second()
 }
 
+// Week: from Monday to Sunday
 func WeekSeconds() int {
 	now := time.Now()
-	day := now.Weekday()
-	return int(day)*86400 + now.Hour()*3600 + now.Minute()*60 + now.Second()
+	day := int(now.Weekday())
+	if day == 0 {
+		day == 7
+	}
+	day--
+	return day*86400 + now.Hour()*3600 + now.Minute()*60 + now.Second()
 }

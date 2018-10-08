@@ -22,6 +22,7 @@ type Socket struct {
 }
 
 func NewSocket(conn *net.TCPConn, s ISession) *Socket {
+	// conn.SetNoDelay(false)
 	return &Socket{
 		conn: conn,
 		s:    s,
@@ -48,6 +49,8 @@ func (self *Socket) rt_recv() {
 	self.w.Add(1)
 J:
 	for {
+		self.conn.SetReadDeadline(time.Now().Add(1 * time.Minute))
+
 		head := make([]byte, 4)
 		var l int = 0
 		for l < 4 {
@@ -79,7 +82,7 @@ J:
 	}
 
 	self.s.OnClosed()
-    self.conn.Close()
+	self.conn.Close()
 }
 
 func (self *Socket) rt_send() {
