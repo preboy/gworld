@@ -107,6 +107,27 @@ func ParseWeekTime(date string) (val int, ret bool) {
 	return
 }
 
+// from "23:00" to 82800
+func ParseDayTime(v string) (bool, int) {
+	// format: HH:MM
+	v = strings.Trim(v, " ")
+
+	re := regexp.MustCompile(`([0-9]{1,2}):([0-9]{1,2})$`)
+	arr := re.FindStringSubmatch(v)
+	if arr == nil {
+		return false, 0
+	}
+
+	hour := Atoi32(arr[1])
+	minu := Atoi32(arr[2])
+
+	if hour < 0 || hour > 23 || minu < 0 || minu > 59 {
+		return false, 0
+	}
+
+	return true, int(hour*3600 + minu*60)
+}
+
 func BeginOfDay(t time.Time) time.Time {
 	y, M, d := t.Date()
 	return time.Date(y, M, d, 0, 0, 0, 0, t.Location())
