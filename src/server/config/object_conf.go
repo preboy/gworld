@@ -11,8 +11,8 @@ type Object struct {
 	Name    string `json:"name"`
 	Title   string `json:"title"`
 	SceneId uint32 `json:"sceneId"`
-	X       uint32 `json:"x"`
-	Y       uint32 `json:"y"`
+	X       int32  `json:"x"`
+	Y       int32  `json:"y"`
 }
 
 type ObjectTable struct {

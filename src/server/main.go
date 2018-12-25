@@ -20,6 +20,7 @@ import (
 	"server/modules/act"
 	"server/net_mgr"
 	"server/player"
+	"server/world"
 
 	_ "server/modules/preloader"
 )
@@ -57,6 +58,8 @@ func main() {
 	work_service.Start(4)
 
 	config.LoadAll(true)
+
+	world.Stop()
 
 	player.LoadData()
 
@@ -104,6 +107,9 @@ func main() {
 
 	log.Info("player stopping ...")
 	player.SaveData()
+
+	log.Info("world stopping ...")
+	world.Stop()
 
 	log.Info("save server data ...")
 	app.SaveServerData()
