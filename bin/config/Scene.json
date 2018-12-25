@@ -2,55 +2,64 @@
 	{
 		"id" : 2001,
 		"name" : "巴蜀",
-		"img_bg" : ""
+		"openLv" : 1,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2002,
 		"name" : "终南山",
-		"img_bg" : ""
+		"openLv" : 1,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2003,
 		"name" : "烟雨楼",
-		"img_bg" : ""
+		"openLv" : 1,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2004,
 		"name" : "西湖",
-		"img_bg" : ""
+		"openLv" : 1,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2005,
 		"name" : "楼兰",
-		"img_bg" : ""
+		"openLv" : 1,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2006,
 		"name" : "精绝城",
-		"img_bg" : ""
+		"openLv" : 1,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2007,
 		"name" : "天山",
-		"img_bg" : ""
+		"openLv" : 10,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2008,
 		"name" : "阴山",
-		"img_bg" : ""
+		"openLv" : 10,
+		"img_bg" : "zzz.jpg"
 	},
 
 	{
 		"id" : 2009,
 		"name" : "风陵古渡",
-		"img_bg" : ""
+		"openLv" : 10,
+		"img_bg" : "zzz.jpg"
 	}
 
 ]
