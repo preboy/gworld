@@ -33,6 +33,9 @@ var (
 		RefineNormalConf,
 		RefineSuperConf,
 		SkillProtoConf,
+		ObjectConf,
+		SceneConf,
+		QuestConf,
 	}
 )
 

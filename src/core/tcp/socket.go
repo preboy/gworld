@@ -49,7 +49,7 @@ func (self *Socket) rt_recv() {
 	self.w.Add(1)
 J:
 	for {
-		self.conn.SetReadDeadline(time.Now().Add(1 * time.Minute))
+		self.conn.SetReadDeadline(time.Now().Add(5 * time.Minute))
 
 		head := make([]byte, 4)
 		var l int = 0
