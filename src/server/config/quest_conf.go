@@ -8,12 +8,15 @@ import (
 
 type Quest struct {
 	Id      uint32       `json:"id"`
-	Conds   []*QuestCond `json:"conds"`
 	Type    uint32       `json:"type"`
-	Head    string       `json:"head"`
+	Conds   []*QuestCond `json:"conds"`
+	Title   string       `json:"title"`
 	Desc    string       `json:"desc"`
+	Comment string       `json:"comment"`
 	Tasks   []*QuestTask `json:"tasks"`
 	Rewards []*ItemConf  `json:"rewards"`
+
+	TaskMap map[uint32]*QuestTask
 }
 
 type QuestTable struct {
@@ -28,9 +31,28 @@ type QuestCond struct {
 }
 
 type QuestTask struct {
-	Type uint32  `json:"type"`
-	Text string  `json:"text"`
-	Args []int32 `json:"args"`
+	Id         uint32          `json:"id"`
+	Type       uint32          `json:"type"`
+	Tip        string          `json:"tip"`
+	Praise     string          `json:"praise"`
+	NextId     uint32          `json:"next_id"`
+	Save       bool            `json:"save"`
+	TaskTalk   []*TalkOption   `json:"task_talk"`
+	TaskKill   []*TaskTypeKill `json:"task_kill"`
+	TaskGather []*ItemConf     `json:"task_gather"`
+}
+
+// ------------------------------------
+
+// Npc谈话项
+type TalkOption struct {
+	Text   string `json:"text"`
+	NextId uint32 `json:"next_id"`
+}
+
+type TaskTypeKill struct {
+	Mid int32 `json:"mid"` // 要击杀的怪物ID(场景中的怪物)
+	Cnt int32 `json:"cnt"` // 要击杀的次数
 }
 
 // ============================================================================
@@ -51,6 +73,11 @@ func (self *QuestTable) Load() bool {
 
 	self.items = make(map[uint32]*Quest)
 	for _, v := range arr {
+		v.TaskMap = make(map[uint32]*QuestTask)
+		for _, t := range v.Tasks {
+			v.TaskMap[t.Id] = t
+		}
+
 		self.items[v.Id] = v
 	}
 

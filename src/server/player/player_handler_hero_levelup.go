@@ -3,9 +3,10 @@ package player
 import (
 	"core/tcp"
 	"github.com/gogo/protobuf/proto"
-	"public/err_code"
+	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
+	"server/app"
 	"server/config"
 )
 
@@ -18,14 +19,14 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 	res := msg.HeroLevelupResponse{}
 	proto.Unmarshal(packet.Data, &req)
 
-	res.ErrorCode = err_code.ERR_OK
+	res.ErrorCode = ec.OK
 
 	var lv_old, lv_new uint32
 
 	func() {
 		hero := plr.GetHero(req.HeroId)
 		if hero == nil {
-			res.ErrorCode = err_code.ERR_INVALID_HERO
+			res.ErrorCode = ec.Hero_Not_Activated
 			return
 		}
 
@@ -37,12 +38,12 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 		conf := config.HeroConf.Query(hero.Id, hero.Level)
 
 		// 道具数量是否足够
-		goods := NewItemProxy(protocol.MSG_CS_HeroLevelup)
+		goods := app.NewItemProxy(protocol.MSG_CS_HeroLevelup)
 		for _, v := range conf.Needs {
-			goods.Sub(v.Id, uint64(v.Cnt))
+			goods.Sub(v.Id, v.Cnt)
 		}
 		if !goods.Enough(plr) {
-			res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
+			res.ErrorCode = ec.Item_Not_Enough
 			return
 		}
 

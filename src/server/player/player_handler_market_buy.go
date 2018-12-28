@@ -3,9 +3,10 @@ package player
 import (
 	"core/tcp"
 	"github.com/gogo/protobuf/proto"
-	"public/err_code"
+	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
+	"server/app"
 	"server/config"
 )
 
@@ -18,7 +19,7 @@ func handler_player_market_buy(plr *Player, packet *tcp.Packet) {
 	res := msg.MarketBuyResponse{}
 	proto.Unmarshal(packet.Data, &req)
 
-	res.ErrorCode = err_code.ERR_FAILED
+	res.ErrorCode = ec.Failed
 
 	func() {
 		// 检测包裹道具是否足够
@@ -27,14 +28,14 @@ func handler_player_market_buy(plr *Player, packet *tcp.Packet) {
 			return
 		}
 
-		proxy := NewItemProxy(protocol.MSG_CS_MarketBuy)
+		proxy := app.NewItemProxy(protocol.MSG_CS_MarketBuy)
 
 		for _, item := range conf.Src {
 			proxy.Sub(item.Id, uint64(item.Cnt)*req.Count)
 		}
 
 		if !proxy.Enough(plr) {
-			res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
+			res.ErrorCode = ec.Item_Not_Enough
 			return
 		}
 
@@ -44,7 +45,7 @@ func handler_player_market_buy(plr *Player, packet *tcp.Packet) {
 
 		proxy.Apply(plr)
 
-		res.ErrorCode = err_code.ERR_OK
+		res.ErrorCode = ec.OK
 	}()
 
 	plr.SendPacket(protocol.MSG_SC_MarketBuy, &res)

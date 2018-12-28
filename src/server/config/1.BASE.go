@@ -2,7 +2,7 @@ package config
 
 type ItemConf struct {
 	Id  uint32 `json:"id"`
-	Cnt uint32 `json:"cnt"`
+	Cnt uint64 `json:"cnt"`
 }
 
 type SkillConf struct {

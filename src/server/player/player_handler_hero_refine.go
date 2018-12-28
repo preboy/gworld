@@ -4,9 +4,10 @@ import (
 	"core/math"
 	"core/tcp"
 	"github.com/gogo/protobuf/proto"
-	"public/err_code"
+	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
+	"server/app"
 	"server/config"
 	"server/constant"
 )
@@ -20,28 +21,28 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 	res := msg.HeroRefineResponse{}
 	proto.Unmarshal(packet.Data, &req)
 
-	res.ErrorCode = err_code.ERR_OK
+	res.ErrorCode = ec.OK
 
 	func() {
 
 		hero := plr.GetHero(req.HeroId)
 		if hero == nil {
-			res.ErrorCode = err_code.ERR_INVALID_HERO
+			res.ErrorCode = ec.Hero_Not_Activated
 			return
 		}
 
-		goods := NewItemProxy(protocol.MSG_CS_HeroRefine)
+		goods := app.NewItemProxy(protocol.MSG_CS_HeroRefine)
 
 		if hero.RefineSuper {
 			if req.Super == 1 {
 				conf := config.RefineSuperConf.Query(hero.RefineLv + 1)
 				if conf == nil {
-					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
+					res.ErrorCode = ec.Level_Exceed
 					return
 				}
 				goods.Sub(constant.ItemID_RefineSuper, uint64(conf.Count))
 				if !goods.Enough(plr) {
-					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
+					res.ErrorCode = ec.Item_Not_Enough
 					return
 				}
 				goods.Apply(plr)
@@ -57,12 +58,12 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 				hero.RefineSuper = false
 				conf := config.RefineNormalConf.Query(hero.RefineLv + 1)
 				if conf == nil {
-					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
+					res.ErrorCode = ec.Level_Exceed
 					return
 				}
 				goods.Sub(constant.ItemID_RefineNormal, uint64(conf.Count))
 				if !goods.Enough(plr) {
-					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
+					res.ErrorCode = ec.Item_Not_Enough
 					return
 				}
 				goods.Apply(plr)
@@ -81,12 +82,12 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 				hero.RefineSuper = true
 				conf := config.RefineSuperConf.Query(hero.RefineLv + 1)
 				if conf == nil {
-					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
+					res.ErrorCode = ec.Level_Exceed
 					return
 				}
 				goods.Sub(constant.ItemID_RefineSuper, uint64(conf.Count))
 				if !goods.Enough(plr) {
-					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
+					res.ErrorCode = ec.Item_Not_Enough
 					return
 				}
 				goods.Apply(plr)
@@ -99,12 +100,12 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 			} else {
 				conf := config.RefineNormalConf.Query(hero.RefineLv + 1)
 				if conf == nil {
-					res.ErrorCode = err_code.ERR_LEVEL_EXCEED
+					res.ErrorCode = ec.Level_Exceed
 					return
 				}
 				goods.Sub(constant.ItemID_RefineNormal, uint64(conf.Count))
 				if !goods.Enough(plr) {
-					res.ErrorCode = err_code.ERR_ITEM_NOT_ENOUGH
+					res.ErrorCode = ec.Item_Not_Enough
 					return
 				}
 				goods.Apply(plr)
@@ -119,7 +120,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 		}
 	}()
 
-	if res.ErrorCode == err_code.ERR_OK {
+	if res.ErrorCode == ec.OK {
 		plr.UpdateHeroToClient(req.HeroId)
 	}
 	plr.SendPacket(protocol.MSG_SC_HeroRefine, &res)

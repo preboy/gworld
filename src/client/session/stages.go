@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"core/tcp"
-	"public/err_code"
+	"public/err"
 	"public/protocol"
 	"public/protocol/msg"
 )

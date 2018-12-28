@@ -9,6 +9,7 @@ import (
 	"server/app"
 	"server/db_mgr"
 	"server/modules/achv"
+	"server/modules/quest"
 )
 
 type TItemTimed map[uint32]uint64 // "20180226" => cnt 表示2018-02-26之后过期
@@ -40,6 +41,7 @@ type PlayerData struct {
 	// modules data
 	Growth *achv.Growth `bson:"growth"`
 	Achv   *achv.Achv   `bson:"achv"`
+	Quest  *quest.Quest `bson:"quest"`
 }
 
 // ============================================================================
@@ -56,6 +58,11 @@ func (self *PlayerData) Init(plr *Player) {
 		self.Achv = achv.NewAchv()
 	}
 	self.Achv.Init(plr)
+
+	if self.Quest == nil {
+		self.Quest = quest.NewQuest()
+	}
+	self.Quest.Init(plr)
 
 }
 

@@ -1,0 +1,60 @@
+[
+    {
+        "id"    : 3001,
+        "type"  : 1,
+        "title" : "第一章",
+        "desc"  : "击败大坏蛋",
+        "comment" : "你果然是个人才",
+        "conds" : [
+            { "type" : 1, "args" : [1,2,3] }    
+        ],
+        "rewards" : [
+            { "id" : 1001, "cnt" : 1 },
+            { "id" : 1002, "cnt" : 2 }
+        ],
+        "tasks" : [
+            {
+                "id" : 1,
+                "type" : 1,
+                "tip" : "找NPC谈谈",
+                "praise" : "你终于来了",
+                "next_id" : 0,
+                "save": true,
+                "task_talk" : [
+                    {
+                        "text": "选项1，玄",
+                        "next_id" : 1
+                    },
+                    {
+                        "text": "选项2，道",
+                        "next_id" : 2
+                    },
+                    {
+                        "text": "选项3，情",
+                        "next_id" : 3
+                    }
+                ]
+            },
+            {
+                "id" : 2,
+                "type" : 2,
+                "tip" : "这里要击杀几个怪物",
+                "praise" : "射手真好",
+                "task_kill" :  [
+                    { "mid": 1001, "cnt": 3 },
+                    { "mid": 1002, "cnt": 5 }
+                ]
+            },
+            {
+                "id" : 3,
+                "type" : 3,
+                "tip" : "这几种东西比较难找",
+                "praise" : "找到了?",
+                "task_gather" :  [
+                    { "id": 1001, "cnt": 3 },
+                    { "id": 1002, "cnt": 5 }
+                ]                
+            }
+        ]
+    }
+]

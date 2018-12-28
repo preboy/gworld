@@ -13,5 +13,9 @@ copy /Y lua\*.lua   ..\..\2dgame\simulator\win32\src\configs_raw\*.lua
 copy /Y json\*.json ..\bin\config\*.json
 
 
+copy /Y manual\lua\*.lua   ..\..\2dgame\simulator\win32\src\configs_raw\*.lua
+copy /Y manual\json\*.json ..\bin\config\*.json
+
+
 echo COPY OVER !
 pause

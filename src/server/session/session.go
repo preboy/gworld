@@ -12,7 +12,7 @@ import (
 
 	"core/log"
 	"core/tcp"
-	"public/err_code"
+	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
 	"server/player"
@@ -133,17 +133,17 @@ func (self *Session) on_login(packet *tcp.Packet) {
 	res := msg.LoginResponse{}
 	proto.Unmarshal(packet.Data, &req)
 	// TODO something
-	res.ErrorCode = err_code.ERR_LOGIN_FAILED
+	res.ErrorCode = ec.Login_Failed
 
 	if _re.MatchString(req.Acct) {
 		if req.Pass == "1" {
 			self.verify = true
-			res.ErrorCode = err_code.ERR_OK
+			res.ErrorCode = ec.OK
 		}
 	}
 
 	self.SendPacket(protocol.MSG_SC_LOGIN, &res)
-	if res.ErrorCode == err_code.ERR_OK {
+	if res.ErrorCode == ec.OK {
 		self.account = req.Acct
 	}
 
@@ -161,12 +161,12 @@ func (self *Session) on_enter_game(packet *tcp.Packet) {
 	}
 
 	if !self.verify {
-		res.ErrorCode = err_code.ERR_NOT_LOGIN
+		res.ErrorCode = ec.Login_Not
 	} else {
 		if player.EnterGame(self.account, self) {
-			res.ErrorCode = err_code.ERR_OK
+			res.ErrorCode = ec.OK
 		} else {
-			res.ErrorCode = err_code.ERR_FAILED
+			res.ErrorCode = ec.Failed
 		}
 	}
 

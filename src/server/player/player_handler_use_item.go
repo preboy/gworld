@@ -4,9 +4,10 @@ import (
 	"core/log"
 	"core/tcp"
 	"github.com/gogo/protobuf/proto"
-	"public/err_code"
+	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
+	"server/app"
 	"server/config"
 )
 
@@ -19,7 +20,7 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 	res := msg.UseItemResponse{}
 	proto.Unmarshal(packet.Data, &req)
 
-	res.Result = err_code.ERR_OK
+	res.Result = ec.OK
 
 	func() {
 
@@ -29,21 +30,21 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 		// 是否存在此种道具
 		ip := config.ItemProtoConf.Query(ItemID)
 		if ip == nil {
-			res.Result = err_code.ERR_UNKNOWN_ITEM
+			res.Result = ec.Item_Not_Enough
 			return
 		}
 
 		// 道具数量是否足够
-		goods := NewItemProxy(protocol.MSG_CS_UseItem)
+		goods := app.NewItemProxy(protocol.MSG_CS_UseItem)
 		goods.Sub(ItemID, uint64(ItemCt))
 		if !goods.Enough(plr) {
-			res.Result = err_code.ERR_ITEM_NOT_ENOUGH
+			res.Result = ec.Item_Not_Enough
 			return
 		}
 
 		// 是否可使用
 		if ip.UseType == 0 {
-			res.Result = err_code.ERR_ITEM_UNUSABLE
+			res.Result = ec.Item_Unusable
 			return
 		}
 
