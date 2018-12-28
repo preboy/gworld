@@ -7,14 +7,16 @@ import (
 // ============================================================================
 
 type Quest struct {
-	Id      uint32       `json:"id"`
-	Type    uint32       `json:"type"`
-	Conds   []*QuestCond `json:"conds"`
-	Title   string       `json:"title"`
-	Desc    string       `json:"desc"`
-	Comment string       `json:"comment"`
-	Tasks   []*QuestTask `json:"tasks"`
-	Rewards []*ItemConf  `json:"rewards"`
+	Id       uint32       `json:"id"`
+	Type     uint32       `json:"type"`
+	Conds    []*QuestCond `json:"conds"`
+	Title    string       `json:"title"`
+	Desc     string       `json:"desc"`
+	Commit   string       `json:"commit"`
+	AcceptId uint32       `json:"accept_id"`
+	CommitId uint32       `json:"commit_id"`
+	Tasks    []*QuestTask `json:"tasks"`
+	Rewards  []*ItemConf  `json:"rewards"`
 
 	TaskMap map[uint32]*QuestTask
 }
