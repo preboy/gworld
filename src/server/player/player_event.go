@@ -6,6 +6,7 @@ import (
 	"core/event"
 	"core/log"
 	"core/utils"
+	"server/constant"
 )
 
 // called by other go routine to push event to player.Go
@@ -36,10 +37,21 @@ func (self *Player) OnEvent(evt *event.Event) {
 
 	fmt.Println("Player.OnEvent:", evt)
 
-	if evt.Id == event.EVT_SCHED_SYNC_CALL {
-		if f, ok := evt.Args[0].(func()); ok {
-			f()
+	switch evt.Id {
+	case event.EVT_SCHED_SYNC_CALL:
+		{
+			if f, ok := evt.Args[0].(func()); ok {
+				f()
+			}
 		}
+		// 击杀怪物
+	case constant.EVT_PLR_KILL_MONSTER:
+		{
+			if mid, ok := evt.Args[0].(int32); ok {
+				self.data.Quest.OnKill(mid)
+			}
+		}
+	default:
 	}
 
 	// fallthrough to other modules

@@ -54,9 +54,6 @@ type quest_item_t struct {
 	Data   map[string]int32 // 任务项数据
 }
 
-func (self *quest_item_t) init() {
-}
-
 // ============================================================================
 
 type quest_value_t map[int32]int32
@@ -135,7 +132,6 @@ func (self *Quest) Accept(id uint32) int {
 		Task: 1,
 		Data: make(map[string]int32),
 	}
-	q.init()
 
 	switch conf.Type {
 	case QuestType_Main:
@@ -223,11 +219,21 @@ func (self *Quest) Commit(id uint32, r int32) int {
 		}
 	}
 
-	if next == 0 {
-		next = q.Task + 1
-	}
+	{
+		if next == 0 {
+			next = q.Task + 1
+		}
 
-	// 新的task
+		if conf.TaskMap[next] == nil {
+			next = 0
+		}
+
+		q.Task = next
+
+		if next != 0 {
+			// 初始化
+		}
+	}
 
 	return ec.OK
 }
@@ -258,13 +264,13 @@ func (self *Quest) Finish(id uint32) int {
 
 	// 发放奖励，设置标识
 	proxy := app.NewItemProxy(protocol.MSG_CS_MarketBuy)
-	// TODO
 
 	for _, v := range conf.Rewards {
 		proxy.Add(v.Id, v.Cnt)
 	}
 
 	proxy.Apply(self.plr)
+
 	q.Finish = true
 
 	return ec.OK
@@ -272,5 +278,43 @@ func (self *Quest) Finish(id uint32) int {
 
 // 放弃任务
 func (self *Quest) Cancel(id uint32) {
+	if self.Main != nil && self.Main.Id == id {
+		self.Main = nil
+	} else if self.Forture != nil && self.Forture.Id == id {
+		self.Forture = nil
+	}
 
+	// ToMsg
+}
+
+func (self *Quest) OnKill(mid int32) {
+
+	var check = func(q *quest_item_t) {
+		if q == nil {
+			return
+		}
+
+		if q.Task == 0 {
+			return
+		}
+
+		conf := config.QuestConf.Query(q.Id)
+		task := conf.TaskMap[q.Task]
+
+		if task.Type != TaskType_Kill {
+			return
+		}
+
+		for _, v := range task.TaskKill {
+			if v.Mid == mid {
+				key := utils.I32toa(mid)
+				if q.Data[key] < v.Cnt {
+					q.Data[key]++
+				}
+			}
+		}
+	}
+
+	check(self.Main)
+	check(self.Forture)
 }
