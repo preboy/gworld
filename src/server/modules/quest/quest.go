@@ -48,10 +48,9 @@ const (
 // ============================================================================
 
 type quest_item_t struct {
-	Id     uint32           // 任务ID
-	Task   uint32           // 当前的task项   0:表示已完成所有的task项
-	Finish bool             // true表示已领取奖励
-	Data   map[string]int32 // 任务项数据
+	Id   uint32           // 任务ID
+	Task uint32           // 当前的task项   0:表示已完成所有的task项
+	Data map[string]int32 // 任务项数据
 }
 
 // ============================================================================
@@ -122,7 +121,7 @@ func (self *Quest) Accept(id uint32) int {
 		return ec.Conf_Invalid
 	}
 
-	// 检测条件是否满足
+	// TODO 检测条件是否满足
 	if false {
 		return ec.QUEST_Cond_Dissatisfy
 	}
@@ -139,14 +138,14 @@ func (self *Quest) Accept(id uint32) int {
 			if id <= self.LastId {
 				return ec.QUEST_Pass_Over
 			}
-			if self.Main != nil && !self.Main.Finish {
+			if self.Main != nil {
 				return ec.QUEST_Not_Finish
 			}
 			self.Main = q
 		}
 	case QuestType_Fortune:
 		{
-			if self.Forture != nil && !self.Forture.Finish {
+			if self.Forture != nil {
 				return ec.QUEST_Not_Finish
 			}
 			self.Forture = q
@@ -241,19 +240,18 @@ func (self *Quest) Commit(id uint32, r int32) int {
 // 完成任务
 func (self *Quest) Finish(id uint32) int {
 	var q *quest_item_t
+	var qt uint32 = QuestType_Main
 
 	if self.Main != nil && self.Main.Id == id {
 		q = self.Main
+		qt = QuestType_Main
 	} else if self.Forture != nil && self.Forture.Id == id {
 		q = self.Forture
+		qt = QuestType_Fortune
 	}
 
 	if q == nil {
 		return ec.Failed
-	}
-
-	if q.Finish {
-		return ec.QUEST_Finish_Yet
 	}
 
 	if q.Task != 0 {
@@ -271,7 +269,12 @@ func (self *Quest) Finish(id uint32) int {
 
 	proxy.Apply(self.plr)
 
-	q.Finish = true
+	// 任务完成
+	if qt == QuestType_Main {
+		self.Main = nil
+	} else if qt == QuestType_Fortune {
+		self.Forture = nil
+	}
 
 	return ec.OK
 }
