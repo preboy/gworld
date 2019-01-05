@@ -64,6 +64,26 @@ func expand_json_array(field, text string) (string, string) {
 	return field, str
 }
 
+func expand_json_array_string(field, text string) (string, string) {
+	text = strings.Trim(text, " ")
+	vals := strings.Split(text, "|")
+
+	if len(vals) == 0 || (len(vals) == 1 && vals[0] == "") {
+		return field, "[]"
+	}
+
+	str := "["
+	for k, val := range vals {
+		str += "\"" + val + "\""
+		if k != len(vals)-1 {
+			str += ", "
+		}
+	}
+	str += "]"
+
+	return field, str
+}
+
 func expand_lua_map(field, text string) (string, string) {
 	idx := strings.Index(field, "#")
 	if idx == -1 {
@@ -108,6 +128,25 @@ func expand_lua_array(field, text string) (string, string) {
 	for _, val := range vals {
 		if val != "" {
 			str += val + ", "
+		}
+	}
+	str += "}"
+
+	return field, str
+}
+
+func expand_lua_array_string(field, text string) (string, string) {
+	text = strings.Trim(text, " ")
+	vals := strings.Split(text, "|")
+
+	if len(text) == 0 || len(vals) == 0 {
+		return field, "{}"
+	}
+
+	str := "{ "
+	for _, val := range vals {
+		if val != "" {
+			str += "\"" + val + "\", "
 		}
 	}
 	str += "}"
@@ -208,6 +247,10 @@ func main() {
 				key, val = expand_json_array(key, val)
 				f.WriteString("\t\t\"" + key + "\" : ")
 				f.WriteString(val)
+			} else if types[i] == "array_string" {
+				key, val = expand_json_array_string(key, val)
+				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString(val)
 			} else if types[i] == "map" {
 				key, val = expand_json_map(key, val)
 				f.WriteString("\t\t\"" + key + "\" : ")
@@ -294,6 +337,10 @@ func main() {
 				f.WriteString(fmt.Sprintf("\"%s\"", val))
 			} else if types[i] == "array" {
 				key, val = expand_lua_array(key, val)
+				f.WriteString("\t" + key + " = ")
+				f.WriteString(val)
+			} else if types[i] == "array_string" {
+				key, val = expand_lua_array_string(key, val)
 				f.WriteString("\t" + key + " = ")
 				f.WriteString(val)
 			} else if types[i] == "map" {

@@ -78,6 +78,26 @@ func expand_json_array(field, text string) (string, string) {
 	return field, str
 }
 
+func expand_json_array_string(field, text string) (string, string) {
+	text = strings.Trim(text, " ")
+	vals := strings.Split(text, "|")
+
+	if len(vals) == 0 || (len(vals) == 1 && vals[0] == "") {
+		return field, "[]"
+	}
+
+	str := "["
+	for k, val := range vals {
+		str += "\"" + val + "\""
+		if k != len(vals)-1 {
+			str += ", "
+		}
+	}
+	str += "]"
+
+	return field, str
+}
+
 func expand_json_normal(field, text string) (string, string) {
 	return field, strings.Trim(text, " ")
 }
@@ -132,6 +152,25 @@ func expand_lua_array(field, text string) (string, string) {
 	for _, val := range vals {
 		if val != "" {
 			str += val + ", "
+		}
+	}
+	str += "}"
+
+	return field, str
+}
+
+func expand_lua_array_string(field, text string) (string, string) {
+	text = strings.Trim(text, " ")
+	vals := strings.Split(text, "|")
+
+	if len(text) == 0 || len(vals) == 0 {
+		return field, "{}"
+	}
+
+	str := "{ "
+	for _, val := range vals {
+		if val != "" {
+			str += "\"" + val + "\", "
 		}
 	}
 	str += "}"
@@ -271,6 +310,8 @@ func main() {
 					key, text = expand_json_map(field[k], cell)
 				} else if types[k] == "array" {
 					key, text = expand_json_array(field[k], cell)
+				} else if types[k] == "array_string" {
+					key, text = expand_json_array_string(field[k], cell)
 				} else if types[k] == "number" {
 					key, text = expand_json_normal(field[k], cell)
 					if text == "" {
@@ -383,6 +424,8 @@ func main() {
 					key, text = expand_lua_map(field[k], cell)
 				} else if types[k] == "array" {
 					key, text = expand_lua_array(field[k], cell)
+				} else if types[k] == "array_string" {
+					key, text = expand_lua_array_string(field[k], cell)
 				} else if types[k] == "number" {
 					key, text = expand_json_normal(field[k], cell)
 					if text == "" {
