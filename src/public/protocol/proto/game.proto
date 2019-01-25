@@ -71,8 +71,8 @@ message NoticeResponse {
     string  notice              = 2;
 }
 
-
-// ------------------------ Battle ------------------------
+// ----------------------------------------------------------------------------
+// Battle
 
 message BattleSkill {
     uint32  id                  = 1;
@@ -168,7 +168,6 @@ message UseItemResponse {
     uint32    result            = 1;    // 结果
 }
 
-
 message ItemCntInfo {
     uint32  add                 = 1;    // 0:总量 1:增加 2:减少
     uint32  id                  = 2;
@@ -178,7 +177,6 @@ message ItemCntInfo {
 message ItemCntChangedNotice {
     repeated ItemCntInfo info   = 1;
 }
-
 
 message MarketBuyRequest {
     uint32  index               = 1;    // 购买的索引
@@ -190,6 +188,9 @@ message MarketBuyResponse {
 }
 
 
+// ----------------------------------------------------------------------------
+// 英雄养成
+
 message HeroLevelupRequest {
     uint32  hero_id             = 1;
 }
@@ -197,7 +198,6 @@ message HeroLevelupRequest {
 message HeroLevelupResponse {
     uint32 error_code           = 1;
 }
-
 
 message HeroRefineRequest {
     uint32  hero_id             = 1;
@@ -209,7 +209,47 @@ message HeroRefineResponse {
     uint32 result               = 2;    // error_code为0时，操作是否成功
 }
 
-
 message HeroInfoUpdateResponse {
     Hero   hero                 = 1;
+}
+
+// ----------------------------------------------------------------------------
+// quest
+
+message QuestData {
+    int32 key   = 1;
+    int32 val   = 2;
+}
+
+message QuestInfo {
+    uint32              id      = 1;    // 任务ID
+    uint32              task    = 2;    // 当前的task项   0:表示已完成所有的task项
+    repeated QuestData  data    = 3;    // 任务数据
+}
+
+message QuestListRequest {
+}
+
+message QuestListResponse {
+    repeated QuestInfo  quests  = 1;
+}
+
+// 任务操作
+message QuestOpRequest {
+    uint32 id   = 1;    // 任务ID
+    uint32 op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
+    uint32 r    = 3;    // 提交任务的参数
+}
+
+message QuestOpResponse {
+    uint32 id   = 1;    // 任务ID
+    uint32 op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
+    uint32 r    = 3;    // 提交任务的参数
+    uint32      error_code  = 4;
+    QuestInfo   quest       = 5;
+}
+
+// 任务变更推送(由服务端产生变化时推送)
+message QuestUpdate {
+    repeated QuestInfo  Quests  = 1;
 }

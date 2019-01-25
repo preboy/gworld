@@ -2,10 +2,9 @@ package quest
 
 import (
 	"core/log"
-	"core/utils"
-	"gopkg.in/mgo.v2/bson"
 	"public/ec"
 	"public/protocol"
+	"public/protocol/msg"
 	"server/app"
 	"server/config"
 )
@@ -48,45 +47,25 @@ const (
 // ============================================================================
 
 type quest_item_t struct {
-	Id   uint32           // 任务ID
-	Task uint32           // 当前的task项   0:表示已完成所有的task项
-	Data map[string]int32 // 任务项数据
+	Id   uint32       // 任务ID
+	Task uint32       // 当前的task项   0:表示已完成所有的task项
+	Data app.KV_map_t // 任务项数据
 }
 
-// ============================================================================
-
-type quest_value_t map[int32]int32
-
-func (self quest_value_t) GetBSON() (interface{}, error) {
-	type QV struct {
-		Id, Val int32
+func (self *quest_item_t) to_msg() *msg.QuestInfo {
+	m := &msg.QuestInfo{
+		Id:   self.Id,
+		Task: self.Task,
 	}
 
-	var arr []*QV
-	for k, v := range self {
-		arr = append(arr, &QV{Id: k, Val: v})
+	for k, v := range self.Data {
+		m.Data = append(m.Data, &msg.QuestData{
+			Key: k,
+			Val: v,
+		})
 	}
 
-	return arr, nil
-}
-
-func (self *quest_value_t) SetBSON(raw bson.Raw) error {
-	type QV struct {
-		Id, Val int32
-	}
-
-	var arr []*QV
-	err := raw.Unmarshal(&arr)
-	if err != nil {
-		return err
-	}
-
-	*self = make(quest_value_t)
-	for _, v := range arr {
-		(*self)[v.Id] = v.Val
-	}
-
-	return nil
+	return m
 }
 
 // ============================================================================
@@ -103,19 +82,43 @@ type Quest struct {
 	LastId    uint32        // 上一个完成的任务(主线)
 	Main      *quest_item_t // 主线任务
 	Forture   *quest_item_t // 奇遇任务
-	Selection quest_value_t // 任务值
+	Selection app.KV_map_t  // 任务值
 }
 
 func (self *Quest) Init(plr iPlayer) {
 	self.plr = plr
 
 	if self.Selection == nil {
-		self.Selection = make(quest_value_t)
+		self.Selection = make(app.KV_map_t)
 	}
 }
 
+func (self *Quest) ToMsg(id uint32) *msg.QuestInfo {
+	if self.Main != nil && self.Main.Id == id {
+		return self.Main.to_msg()
+	}
+
+	if self.Forture != nil && self.Forture.Id == id {
+		return self.Forture.to_msg()
+	}
+
+	return nil
+}
+
+func (self *Quest) ToMsgs() (ret []*msg.QuestInfo) {
+	if self.Main != nil {
+		ret = append(ret, self.Main.to_msg())
+	}
+
+	if self.Forture != nil {
+		ret = append(ret, self.Forture.to_msg())
+	}
+
+	return
+}
+
 // 接任务
-func (self *Quest) Accept(id uint32) int {
+func (self *Quest) Accept(id uint32) uint32 {
 	conf := config.QuestConf.Query(id)
 	if conf == nil {
 		return ec.Conf_Invalid
@@ -129,7 +132,7 @@ func (self *Quest) Accept(id uint32) int {
 	q := &quest_item_t{
 		Id:   id,
 		Task: 1,
-		Data: make(map[string]int32),
+		Data: make(app.KV_map_t),
 	}
 
 	switch conf.Type {
@@ -160,7 +163,7 @@ func (self *Quest) Accept(id uint32) int {
 }
 
 // 提交任务
-func (self *Quest) Commit(id uint32, r int32) int {
+func (self *Quest) Commit(id uint32, r uint32) uint32 {
 	var q *quest_item_t
 
 	if self.Main != nil && self.Main.Id == id {
@@ -188,7 +191,7 @@ func (self *Quest) Commit(id uint32, r int32) int {
 				return ec.QUEST_Task_Invalid_r
 			}
 			if task.Save {
-				self.Selection[int32(id)] = r
+				self.Selection[int32(id)] = int32(r)
 			}
 
 			next = task.TaskTalk[r-1].NextId
@@ -196,7 +199,7 @@ func (self *Quest) Commit(id uint32, r int32) int {
 	case TaskType_Kill:
 		{ // 检测是否杀够
 			for _, v := range task.TaskKill {
-				if q.Data[utils.I32toa(v.Mid)] < v.Cnt {
+				if q.Data[v.Mid] < v.Cnt {
 					return ec.QUEST_Task_Invalid_Kill
 				}
 			}
@@ -238,7 +241,7 @@ func (self *Quest) Commit(id uint32, r int32) int {
 }
 
 // 完成任务
-func (self *Quest) Finish(id uint32) int {
+func (self *Quest) Finish(id uint32) uint32 {
 	var q *quest_item_t
 	var qt uint32 = QuestType_Main
 
@@ -280,7 +283,7 @@ func (self *Quest) Finish(id uint32) int {
 }
 
 // 放弃任务
-func (self *Quest) Cancel(id uint32) {
+func (self *Quest) Cancel(id uint32) uint32 {
 	if self.Main != nil && self.Main.Id == id {
 		self.Main = nil
 	} else if self.Forture != nil && self.Forture.Id == id {
@@ -288,6 +291,7 @@ func (self *Quest) Cancel(id uint32) {
 	}
 
 	// ToMsg
+	return ec.OK
 }
 
 func (self *Quest) OnKill(mid int32) {
@@ -310,9 +314,8 @@ func (self *Quest) OnKill(mid int32) {
 
 		for _, v := range task.TaskKill {
 			if v.Mid == mid {
-				key := utils.I32toa(mid)
-				if q.Data[key] < v.Cnt {
-					q.Data[key]++
+				if q.Data[mid] < v.Cnt {
+					q.Data[mid]++
 				}
 			}
 		}
