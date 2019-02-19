@@ -5,6 +5,7 @@
 		"title" : "我是一个NPC",
 		"type" : 1,
 		"sceneId" : 2001,
+		"limit_lv" : 1,
 		"x" : 20,
 		"y" : 20,
 		"def_text" : ["不要问我从哪里来", "我的故乡在远方"]
@@ -16,6 +17,7 @@
 		"title" : "NPC_得道高僧",
 		"type" : 1,
 		"sceneId" : 2002,
+		"limit_lv" : 10,
 		"x" : 80,
 		"y" : 80,
 		"def_text" : ["数组文字", "没文本"]
@@ -27,6 +29,7 @@
 		"title" : "NPC_江湖记者",
 		"type" : 1,
 		"sceneId" : 2003,
+		"limit_lv" : 10,
 		"x" : 140,
 		"y" : 140,
 		"def_text" : ["数组文字", "不知道"]
@@ -38,6 +41,7 @@
 		"title" : "NPC_消息贩子",
 		"type" : 1,
 		"sceneId" : 2004,
+		"limit_lv" : 2,
 		"x" : 200,
 		"y" : 200,
 		"def_text" : ["数组文字"]
@@ -49,6 +53,7 @@
 		"title" : "我是怪物",
 		"type" : 2,
 		"sceneId" : 2005,
+		"limit_lv" : 1,
 		"x" : 260,
 		"y" : 260,
 		"def_text" : ["11"]
@@ -60,6 +65,7 @@
 		"title" : "我是怪物",
 		"type" : 2,
 		"sceneId" : 2006,
+		"limit_lv" : 2,
 		"x" : 0,
 		"y" : 0,
 		"def_text" : ["sunquan"]
@@ -71,6 +77,7 @@
 		"title" : "我是可采集的",
 		"type" : 3,
 		"sceneId" : 2007,
+		"limit_lv" : 1,
 		"x" : 100,
 		"y" : 100,
 		"def_text" : ["23"]
@@ -82,6 +89,7 @@
 		"title" : "我是可采集的",
 		"type" : 3,
 		"sceneId" : 2008,
+		"limit_lv" : 2,
 		"x" : 200,
 		"y" : 200,
 		"def_text" : []
@@ -93,9 +101,430 @@
 		"title" : "我是未定义类型的",
 		"type" : 4,
 		"sceneId" : 2009,
+		"limit_lv" : 1,
 		"x" : 300,
 		"y" : 300,
 		"def_text" : ["sunquan"]
+	},
+
+	{
+		"id" : 1100,
+		"name" : "巴蜀",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 0,
+		"y" : 0,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1101,
+		"name" : "峨眉山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 30,
+		"y" : 30,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1102,
+		"name" : "青城山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 60,
+		"y" : 60,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1103,
+		"name" : "巫山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 90,
+		"y" : 90,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1104,
+		"name" : "神女峰",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 120,
+		"y" : 120,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1105,
+		"name" : "大理",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 150,
+		"y" : 150,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1106,
+		"name" : "烟雨楼",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 1,
+		"x" : 180,
+		"y" : 180,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1107,
+		"name" : "西湖",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 210,
+		"y" : 210,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1108,
+		"name" : "扬州",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 240,
+		"y" : 240,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1109,
+		"name" : "金陵",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 270,
+		"y" : 270,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1110,
+		"name" : "洛阳",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 300,
+		"y" : 300,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1111,
+		"name" : "长安",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 330,
+		"y" : 330,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1112,
+		"name" : "武当山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 360,
+		"y" : 360,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1113,
+		"name" : "少林寺",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 390,
+		"y" : 390,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1114,
+		"name" : "太湖",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 420,
+		"y" : 420,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1115,
+		"name" : "昆仑山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 450,
+		"y" : 450,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1116,
+		"name" : "天山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 480,
+		"y" : 480,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1117,
+		"name" : "波斯",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 510,
+		"y" : 510,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1118,
+		"name" : "西夏",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 540,
+		"y" : 540,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1119,
+		"name" : "精绝城",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 570,
+		"y" : 570,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1120,
+		"name" : "楼兰",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 600,
+		"y" : 600,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1121,
+		"name" : "敦煌",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 630,
+		"y" : 630,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1122,
+		"name" : "玉门关",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 660,
+		"y" : 660,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1123,
+		"name" : "塞外",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 690,
+		"y" : 690,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1124,
+		"name" : "突厥部落",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 720,
+		"y" : 720,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1125,
+		"name" : "阴山",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 750,
+		"y" : 750,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1126,
+		"name" : "龙门",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 780,
+		"y" : 780,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1127,
+		"name" : "天池",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 810,
+		"y" : 810,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1128,
+		"name" : "天涯海阁",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 840,
+		"y" : 840,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1129,
+		"name" : "南海诸岛",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 870,
+		"y" : 870,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1130,
+		"name" : "桃花岛",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 900,
+		"y" : 900,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1131,
+		"name" : "山海关",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 930,
+		"y" : 930,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1132,
+		"name" : "倭寇岛",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 960,
+		"y" : 960,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1133,
+		"name" : "风凌古渡",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 990,
+		"y" : 990,
+		"def_text" : []
+	},
+
+	{
+		"id" : 1134,
+		"name" : "绝天崖",
+		"title" : "",
+		"type" : 1,
+		"sceneId" : 2000,
+		"limit_lv" : 10,
+		"x" : 1020,
+		"y" : 1020,
+		"def_text" : []
 	}
 
 ]
