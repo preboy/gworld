@@ -3,108 +3,126 @@
 		"id" : 1001,
 		"name" : "枯木老人",
 		"title" : "我是一个NPC",
-		"type" : 1,
+		"type" : 2,
 		"sceneId" : 2001,
 		"limit_lv" : 1,
 		"x" : 20,
 		"y" : 20,
-		"def_text" : ["不要问我从哪里来", "我的故乡在远方"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["不要问我从哪里来", "我的故乡在远方"]
 	},
 
 	{
 		"id" : 1002,
 		"name" : "衍悔",
 		"title" : "NPC_得道高僧",
-		"type" : 1,
+		"type" : 2,
 		"sceneId" : 2002,
 		"limit_lv" : 10,
 		"x" : 80,
 		"y" : 80,
-		"def_text" : ["数组文字", "没文本"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["数组文字", "没文本"]
 	},
 
 	{
 		"id" : 1003,
 		"name" : "百晓生",
 		"title" : "NPC_江湖记者",
-		"type" : 1,
+		"type" : 2,
 		"sceneId" : 2003,
 		"limit_lv" : 10,
 		"x" : 140,
 		"y" : 140,
-		"def_text" : ["数组文字", "不知道"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["数组文字", "不知道"]
 	},
 
 	{
 		"id" : 1004,
 		"name" : "万事通",
 		"title" : "NPC_消息贩子",
-		"type" : 1,
+		"type" : 2,
 		"sceneId" : 2004,
 		"limit_lv" : 2,
 		"x" : 200,
 		"y" : 200,
-		"def_text" : ["数组文字"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["数组文字"]
 	},
 
 	{
 		"id" : 1005,
 		"name" : "愚公",
 		"title" : "我是怪物",
-		"type" : 2,
+		"type" : 3,
 		"sceneId" : 2005,
 		"limit_lv" : 1,
 		"x" : 260,
 		"y" : 260,
-		"def_text" : ["11"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
 		"id" : 1006,
 		"name" : "状元郎",
 		"title" : "我是怪物",
-		"type" : 2,
+		"type" : 3,
 		"sceneId" : 2006,
 		"limit_lv" : 2,
 		"x" : 0,
 		"y" : 0,
-		"def_text" : ["sunquan"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
 		"id" : 1007,
 		"name" : "算死天",
 		"title" : "我是可采集的",
-		"type" : 3,
+		"type" : 4,
 		"sceneId" : 2007,
 		"limit_lv" : 1,
 		"x" : 100,
 		"y" : 100,
-		"def_text" : ["23"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
 		"id" : 1008,
 		"name" : "日破天",
 		"title" : "我是可采集的",
-		"type" : 3,
+		"type" : 4,
 		"sceneId" : 2008,
 		"limit_lv" : 2,
 		"x" : 200,
 		"y" : 200,
-		"def_text" : []
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
 		"id" : 1009,
 		"name" : "叶倾城",
 		"title" : "我是未定义类型的",
-		"type" : 4,
+		"type" : 0,
 		"sceneId" : 2009,
 		"limit_lv" : 1,
 		"x" : 300,
 		"y" : 300,
-		"def_text" : ["sunquan"]
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -116,7 +134,9 @@
 		"limit_lv" : 1,
 		"x" : 0,
 		"y" : 0,
-		"def_text" : []
+		"param1" : 2001,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -128,7 +148,9 @@
 		"limit_lv" : 1,
 		"x" : 30,
 		"y" : 30,
-		"def_text" : []
+		"param1" : 2002,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -140,7 +162,9 @@
 		"limit_lv" : 1,
 		"x" : 60,
 		"y" : 60,
-		"def_text" : []
+		"param1" : 2003,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -152,7 +176,9 @@
 		"limit_lv" : 1,
 		"x" : 90,
 		"y" : 90,
-		"def_text" : []
+		"param1" : 2004,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -164,7 +190,9 @@
 		"limit_lv" : 1,
 		"x" : 120,
 		"y" : 120,
-		"def_text" : []
+		"param1" : 2005,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -176,7 +204,9 @@
 		"limit_lv" : 1,
 		"x" : 150,
 		"y" : 150,
-		"def_text" : []
+		"param1" : 2006,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -188,7 +218,9 @@
 		"limit_lv" : 1,
 		"x" : 180,
 		"y" : 180,
-		"def_text" : []
+		"param1" : 2007,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -200,7 +232,9 @@
 		"limit_lv" : 10,
 		"x" : 210,
 		"y" : 210,
-		"def_text" : []
+		"param1" : 2008,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -212,7 +246,9 @@
 		"limit_lv" : 10,
 		"x" : 240,
 		"y" : 240,
-		"def_text" : []
+		"param1" : 2009,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -224,7 +260,9 @@
 		"limit_lv" : 10,
 		"x" : 270,
 		"y" : 270,
-		"def_text" : []
+		"param1" : 2010,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -236,7 +274,9 @@
 		"limit_lv" : 10,
 		"x" : 300,
 		"y" : 300,
-		"def_text" : []
+		"param1" : 2011,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -248,7 +288,9 @@
 		"limit_lv" : 10,
 		"x" : 330,
 		"y" : 330,
-		"def_text" : []
+		"param1" : 2012,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -260,7 +302,9 @@
 		"limit_lv" : 10,
 		"x" : 360,
 		"y" : 360,
-		"def_text" : []
+		"param1" : 2013,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -272,7 +316,9 @@
 		"limit_lv" : 10,
 		"x" : 390,
 		"y" : 390,
-		"def_text" : []
+		"param1" : 2014,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -284,7 +330,9 @@
 		"limit_lv" : 10,
 		"x" : 420,
 		"y" : 420,
-		"def_text" : []
+		"param1" : 2015,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -296,7 +344,9 @@
 		"limit_lv" : 10,
 		"x" : 450,
 		"y" : 450,
-		"def_text" : []
+		"param1" : 2016,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -308,7 +358,9 @@
 		"limit_lv" : 10,
 		"x" : 480,
 		"y" : 480,
-		"def_text" : []
+		"param1" : 2017,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -320,7 +372,9 @@
 		"limit_lv" : 10,
 		"x" : 510,
 		"y" : 510,
-		"def_text" : []
+		"param1" : 2018,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -332,7 +386,9 @@
 		"limit_lv" : 10,
 		"x" : 540,
 		"y" : 540,
-		"def_text" : []
+		"param1" : 2019,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -344,7 +400,9 @@
 		"limit_lv" : 10,
 		"x" : 570,
 		"y" : 570,
-		"def_text" : []
+		"param1" : 2020,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -356,7 +414,9 @@
 		"limit_lv" : 10,
 		"x" : 600,
 		"y" : 600,
-		"def_text" : []
+		"param1" : 2021,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -368,7 +428,9 @@
 		"limit_lv" : 10,
 		"x" : 630,
 		"y" : 630,
-		"def_text" : []
+		"param1" : 2022,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -380,7 +442,9 @@
 		"limit_lv" : 10,
 		"x" : 660,
 		"y" : 660,
-		"def_text" : []
+		"param1" : 2023,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -392,7 +456,9 @@
 		"limit_lv" : 10,
 		"x" : 690,
 		"y" : 690,
-		"def_text" : []
+		"param1" : 2024,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -404,7 +470,9 @@
 		"limit_lv" : 10,
 		"x" : 720,
 		"y" : 720,
-		"def_text" : []
+		"param1" : 2025,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -416,7 +484,9 @@
 		"limit_lv" : 10,
 		"x" : 750,
 		"y" : 750,
-		"def_text" : []
+		"param1" : 2026,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -428,7 +498,9 @@
 		"limit_lv" : 10,
 		"x" : 780,
 		"y" : 780,
-		"def_text" : []
+		"param1" : 2027,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -440,7 +512,9 @@
 		"limit_lv" : 10,
 		"x" : 810,
 		"y" : 810,
-		"def_text" : []
+		"param1" : 2028,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -452,7 +526,9 @@
 		"limit_lv" : 10,
 		"x" : 840,
 		"y" : 840,
-		"def_text" : []
+		"param1" : 2029,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -464,7 +540,9 @@
 		"limit_lv" : 10,
 		"x" : 870,
 		"y" : 870,
-		"def_text" : []
+		"param1" : 2030,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -476,7 +554,9 @@
 		"limit_lv" : 10,
 		"x" : 900,
 		"y" : 900,
-		"def_text" : []
+		"param1" : 2031,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -488,7 +568,9 @@
 		"limit_lv" : 10,
 		"x" : 930,
 		"y" : 930,
-		"def_text" : []
+		"param1" : 2032,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -500,7 +582,9 @@
 		"limit_lv" : 10,
 		"x" : 960,
 		"y" : 960,
-		"def_text" : []
+		"param1" : 2033,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -512,7 +596,9 @@
 		"limit_lv" : 10,
 		"x" : 990,
 		"y" : 990,
-		"def_text" : []
+		"param1" : 2034,
+		"param2" : [],
+		"param3" : []
 	},
 
 	{
@@ -524,7 +610,9 @@
 		"limit_lv" : 10,
 		"x" : 1020,
 		"y" : 1020,
-		"def_text" : []
+		"param1" : 2035,
+		"param2" : [],
+		"param3" : []
 	}
 
 ]
