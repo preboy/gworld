@@ -36,6 +36,7 @@ var (
 		ObjectConf,
 		SceneConf,
 		QuestConf,
+		LevelupConf,
 	}
 )
 

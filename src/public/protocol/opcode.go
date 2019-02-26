@@ -46,11 +46,13 @@ const (
 
 	MSG_SC_HeroInfoUpdate uint16 = 0x0018
 
-	MSG_CS_QuestList uint16 = 0x0020
-	MSG_SC_QuestList uint16 = 0x0021
-	MSG_CS_QuestOp   uint16 = 0x0022
-	MSG_SC_QuestOp   uint16 = 0x0023
-	QuestUpdate      uint16 = 0x0024
+	MSG_CS_QuestList   uint16 = 0x0020
+	MSG_SC_QuestList   uint16 = 0x0021
+	MSG_CS_QuestOp     uint16 = 0x0022
+	MSG_SC_QuestOp     uint16 = 0x0023
+	MSG_SC_QuestUpdate uint16 = 0x0024
+
+	MSG_SC_PlayerLvExpUpdate uint16 = 0x0025
 
 	// ------------------------------------------------------------------------
 

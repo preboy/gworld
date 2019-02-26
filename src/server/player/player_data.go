@@ -32,11 +32,16 @@ type PlayerData struct {
 	Heros           map[uint32]*app.Hero  `bson:"-"`
 	Items           map[uint32]uint64     `bson:"-"`
 	ItemsTimed      map[uint32]TItemTimed `bson:"-"`
+	Exp             uint64                `bson:"exp"`         // 经验
 	Level           uint32                `bson:"level"`       // 等级
 	VipLevel        uint32                `bson:"vip_level"`   // VIP等级
-	Last_update     int64                 `bson:"last_update"` // 最后一次处理数据的时间
+	LastUpdate      int64                 `bson:"last_update"` // 最后一次处理数据的时间
 	Male            bool                  `bson:"male"`        // 性别(默认:女)
-	LoginTimes      uint32                `bson:"login_times"` // 登录次数
+
+	CreateTs   time.Time `bson:"create_ts"`   // 创建角色时间
+	LoginTs    time.Time `bson:"login_ts"`    // 最近登录时间
+	OfflineTs  time.Time `bson:"offline_ts"`  // 最近下线时间
+	LoginTimes uint32    `bson:"login_times"` // 总登录次数
 
 	// modules data
 	Growth *achv.Growth `bson:"growth"`
@@ -86,7 +91,7 @@ func (self *Player) Save() {
 }
 
 func (self *Player) on_after_load() {
-	self.last_update = self.data.Last_update
+	self.last_update = self.data.LastUpdate
 
 	data := self.GetData()
 
@@ -116,7 +121,7 @@ func (self *Player) GetData() *PlayerData {
 }
 
 func (self *Player) on_before_save() {
-	self.data.Last_update = self.last_update
+	self.data.LastUpdate = self.last_update
 
 	data := self.GetData()
 
@@ -144,13 +149,18 @@ func (self *Player) on_before_save() {
 func CreatePlayerData(acct string) *PlayerData {
 	pid := app.GeneralPlayerID()
 	nam := app.GeneralPlayerName(pid)
+	now := time.Now()
 
 	data := &PlayerData{
-		Acct:        acct,
-		Pid:         pid,
-		ServerID:    app.GetServerConfig().Server_id,
-		Last_update: time.Now().Unix() * 1000,
+		Acct:       acct,
+		Pid:        pid,
+		Level:      1,
+		ServerID:   app.GetServerConfig().Server_id,
+		LastUpdate: now.Unix() * 1000,
+		CreateTs:   now,
+		LoginTs:    now,
 	}
+
 	data.SetName(nam)
 
 	return data

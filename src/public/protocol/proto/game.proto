@@ -2,6 +2,16 @@ syntax = "proto3";
 
 package msg;
 
+// ----------------------------------------------------------------------------
+// base
+message PlayerLvExpUpdate {
+    uint32  lv                  = 1;
+    uint64  exp                 = 2;
+}
+
+
+// ----------------------------------------------------------------------------
+
 message PlayerDataRequest {
     uint64  id                  = 1;
 }
