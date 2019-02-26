@@ -1,10 +1,13 @@
 package player
 
 import (
-	_ "core/log"
+	// "core/log"
+
+	"core/event"
 	"public/protocol"
 	"public/protocol/msg"
 	"server/config"
+	"server/constant"
 )
 
 func (self *Player) GetLevel() uint32 {
@@ -17,7 +20,6 @@ func (self *Player) AddExp(exp uint64) {
 	}
 
 	self.data.Exp += exp
-
 	old_lv := self.data.Level
 
 	for {
@@ -40,19 +42,14 @@ func (self *Player) AddExp(exp uint64) {
 	}
 
 	// notice
-	res := &msg.PlayerLvExpUpdate{
+	self.SendPacket(protocol.MSG_SC_PlayerLvExpUpdate, &msg.PlayerLvExpUpdate{
 		Lv:  self.data.Level,
 		Exp: self.data.Exp,
-	}
+	})
 
-	self.SendPacket(protocol.MSG_SC_PlayerLvExpUpdate, res)
-
-	// upgrade event
+	// level upgrade event
 	new_lv := self.data.Level
 	if old_lv != new_lv {
-		self.on_levelup(old_lv, new_lv)
+		self.CallEvent(event.NewEvent(constant.EVT_PLR_LEVEL_UP, old_lv, new_lv))
 	}
-}
-
-func (self *Player) on_levelup(old_lv, new_lv uint32) {
 }

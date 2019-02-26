@@ -18,8 +18,12 @@ const (
 	EVT_PLR_LOGIN
 	EVT_PLR_LOGOUT
 	EVT_PLR_LEVEL_UP
-	EVT_PLR_LEVEL_DEAD
 	EVT_PLR_KILL_MONSTER
+
+	// ------------------------------------------------------------------------
+	// hero events
+
+	EVT_HERO_LEVEL_UP
 )
 
 const ()
