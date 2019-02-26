@@ -1,120 +1,22 @@
 [
 	{
 		"id" : 1001,
-		"name" : "枯木老人",
-		"title" : "我是一个NPC",
-		"type" : 2,
-		"sceneId" : 2001,
+		"name" : "小花",
+		"title" : "我是装饰用的",
+		"type" : 0,
+		"sceneId" : 2009,
 		"limit_lv" : 1,
-		"x" : 20,
-		"y" : 20,
+		"x" : 300,
+		"y" : 300,
 		"param1" : 0,
 		"param2" : [],
-		"param3" : ["不要问我从哪里来", "我的故乡在远方"]
+		"param3" : []
 	},
 
 	{
 		"id" : 1002,
-		"name" : "衍悔",
-		"title" : "NPC_得道高僧",
-		"type" : 2,
-		"sceneId" : 2002,
-		"limit_lv" : 10,
-		"x" : 80,
-		"y" : 80,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : ["数组文字", "没文本"]
-	},
-
-	{
-		"id" : 1003,
-		"name" : "百晓生",
-		"title" : "NPC_江湖记者",
-		"type" : 2,
-		"sceneId" : 2003,
-		"limit_lv" : 10,
-		"x" : 140,
-		"y" : 140,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : ["数组文字", "不知道"]
-	},
-
-	{
-		"id" : 1004,
-		"name" : "万事通",
-		"title" : "NPC_消息贩子",
-		"type" : 2,
-		"sceneId" : 2004,
-		"limit_lv" : 2,
-		"x" : 200,
-		"y" : 200,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : ["数组文字"]
-	},
-
-	{
-		"id" : 1005,
-		"name" : "愚公",
-		"title" : "我是怪物",
-		"type" : 3,
-		"sceneId" : 2005,
-		"limit_lv" : 1,
-		"x" : 260,
-		"y" : 260,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : []
-	},
-
-	{
-		"id" : 1006,
-		"name" : "状元郎",
-		"title" : "我是怪物",
-		"type" : 3,
-		"sceneId" : 2006,
-		"limit_lv" : 2,
-		"x" : 0,
-		"y" : 0,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : []
-	},
-
-	{
-		"id" : 1007,
-		"name" : "算死天",
-		"title" : "我是可采集的",
-		"type" : 4,
-		"sceneId" : 2007,
-		"limit_lv" : 1,
-		"x" : 100,
-		"y" : 100,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : []
-	},
-
-	{
-		"id" : 1008,
-		"name" : "日破天",
-		"title" : "我是可采集的",
-		"type" : 4,
-		"sceneId" : 2008,
-		"limit_lv" : 2,
-		"x" : 200,
-		"y" : 200,
-		"param1" : 0,
-		"param2" : [],
-		"param3" : []
-	},
-
-	{
-		"id" : 1009,
-		"name" : "叶倾城",
-		"title" : "我是未定义类型的",
+		"name" : "绿叶",
+		"title" : "点我没用",
 		"type" : 0,
 		"sceneId" : 2009,
 		"limit_lv" : 1,
@@ -597,6 +499,258 @@
 		"x" : 1020,
 		"y" : 1020,
 		"param1" : 2034,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1201,
+		"name" : "枯木老人",
+		"title" : "我是一个NPC",
+		"type" : 2,
+		"sceneId" : 2001,
+		"limit_lv" : 1,
+		"x" : 20,
+		"y" : 20,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["不要问我从哪里来", "我的故乡在远方"]
+	},
+
+	{
+		"id" : 1202,
+		"name" : "衍悔",
+		"title" : "NPC_得道高僧",
+		"type" : 2,
+		"sceneId" : 2002,
+		"limit_lv" : 10,
+		"x" : 80,
+		"y" : 80,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["数组文字", "没文本"]
+	},
+
+	{
+		"id" : 1203,
+		"name" : "百晓生",
+		"title" : "NPC_江湖记者",
+		"type" : 2,
+		"sceneId" : 2003,
+		"limit_lv" : 10,
+		"x" : 140,
+		"y" : 140,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["数组文字", "不知道"]
+	},
+
+	{
+		"id" : 1204,
+		"name" : "万事通",
+		"title" : "NPC_消息贩子",
+		"type" : 2,
+		"sceneId" : 2004,
+		"limit_lv" : 2,
+		"x" : 200,
+		"y" : 200,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : ["数组文字"]
+	},
+
+	{
+		"id" : 1205,
+		"name" : "愚公",
+		"title" : "我是怪物",
+		"type" : 2,
+		"sceneId" : 2005,
+		"limit_lv" : 1,
+		"x" : 260,
+		"y" : 260,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1206,
+		"name" : "状元郎",
+		"title" : "我是怪物",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 2,
+		"x" : 0,
+		"y" : 0,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1207,
+		"name" : "黄衫女",
+		"title" : "就是少年郭襄",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 20,
+		"y" : 20,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1208,
+		"name" : "摸金校尉",
+		"title" : "",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 40,
+		"y" : 40,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1209,
+		"name" : "算死天",
+		"title" : "相士",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 60,
+		"y" : 60,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1210,
+		"name" : "月满天",
+		"title" : "",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 80,
+		"y" : 80,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1211,
+		"name" : "血长空",
+		"title" : "",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 100,
+		"y" : 100,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1212,
+		"name" : "日破天",
+		"title" : "",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 120,
+		"y" : 120,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1213,
+		"name" : "日破城",
+		"title" : "",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 140,
+		"y" : 140,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1214,
+		"name" : "叶倾城",
+		"title" : "",
+		"type" : 2,
+		"sceneId" : 2006,
+		"limit_lv" : 1,
+		"x" : 160,
+		"y" : 160,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 0,
+		"name" : "",
+		"title" : "",
+		"type" : 0,
+		"sceneId" : 0,
+		"limit_lv" : 0,
+		"x" : 0,
+		"y" : 0,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1501,
+		"name" : "地鼠",
+		"title" : "来打我啊",
+		"type" : 3,
+		"sceneId" : 2000,
+		"limit_lv" : 20,
+		"x" : 100,
+		"y" : 200,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1901,
+		"name" : "优昙仙花",
+		"title" : "此物最相思",
+		"type" : 4,
+		"sceneId" : 2007,
+		"limit_lv" : 1,
+		"x" : 100,
+		"y" : 100,
+		"param1" : 0,
+		"param2" : [],
+		"param3" : []
+	},
+
+	{
+		"id" : 1902,
+		"name" : "地火之精",
+		"title" : "炼武器材料",
+		"type" : 4,
+		"sceneId" : 2008,
+		"limit_lv" : 2,
+		"x" : 200,
+		"y" : 200,
+		"param1" : 0,
 		"param2" : [],
 		"param3" : []
 	}
