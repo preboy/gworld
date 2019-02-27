@@ -317,7 +317,7 @@ func main() {
 		}
 		defer f.Close()
 
-		f.WriteString("local data = \n")
+		f.WriteString("local data =\n")
 		f.WriteString("{\n")
 
 		for i := 1; i < rows; i++ {
