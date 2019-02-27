@@ -26,6 +26,9 @@ exporter jl excel/achv_成就表.xlsx                  Achv
 exporter jl excel/world_场景对象表.xlsx             Scene
 exporter jl excel/world_场景对象表.xlsx             Object
 
+exporter jl excel/drop_掉落表.xlsx                  Drop
+exporter jl excel/cond_条件表.xlsx                  Cond
+
 
 rem: map export
 exporter_map jl excel/global_全局表.xlsx            Global

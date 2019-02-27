@@ -37,6 +37,8 @@ var (
 		SceneConf,
 		QuestConf,
 		LevelupConf,
+		DropConf,
+		CondConf,
 	}
 )
 
