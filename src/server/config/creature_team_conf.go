@@ -12,13 +12,14 @@ type PosCreatureInfo struct {
 }
 
 type CreatureTeam struct {
-	Id        uint32             `json:"id"`
-	Desc      string             `json:"name"`
-	L_Pioneer []*PosCreatureInfo `json:"l_pioneer"`
-	R_Pioneer []*PosCreatureInfo `json:"r_pioneer"`
-	Commander []*PosCreatureInfo `json:"commander"`
-	L_Guarder []*PosCreatureInfo `json:"l_guarder"`
-	R_Guarder []*PosCreatureInfo `json:"r_guarder"`
+	Id    uint32             `json:"id"`
+	Desc  string             `json:"name"`
+	Row11 []*PosCreatureInfo `json:"row11"`
+	Row12 []*PosCreatureInfo `json:"row12"`
+	Row13 []*PosCreatureInfo `json:"row13"`
+	Row21 []*PosCreatureInfo `json:"row21"`
+	Row22 []*PosCreatureInfo `json:"row22"`
+	Row23 []*PosCreatureInfo `json:"row23"`
 }
 
 type CreatureTeamTable struct {
@@ -51,9 +52,6 @@ func (self *CreatureTeamTable) Load() bool {
 }
 
 func (self *CreatureTeamTable) Query(id uint32) *CreatureTeam {
-
-	println("dddddd", len(self.items))
-
 	return self.items[id]
 }
 

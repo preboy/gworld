@@ -84,32 +84,37 @@ func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
 		return nil
 	}
 
-	var lp, rp, c, lg, rg *battle.BattleUnit
+	var r11, r12, r13, r21, r22, r23 *battle.BattleUnit
 
-	if len(team.L_Pioneer) > 0 {
-		m := team.L_Pioneer[0]
-		lp = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if len(team.Row11) > 0 {
+		m := team.Row11[0]
+		r11 = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	if len(team.R_Pioneer) > 0 {
-		m := team.R_Pioneer[0]
-		rp = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if len(team.Row12) > 0 {
+		m := team.Row12[0]
+		r12 = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	if len(team.Commander) > 0 {
-		m := team.Commander[0]
-		c = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if len(team.Row13) > 0 {
+		m := team.Row13[0]
+		r13 = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	if len(team.L_Guarder) > 0 {
-		m := team.L_Guarder[0]
-		lg = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if len(team.Row21) > 0 {
+		m := team.Row21[0]
+		r21 = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	if len(team.R_Guarder) > 0 {
-		m := team.R_Guarder[0]
-		rg = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if len(team.Row22) > 0 {
+		m := team.Row22[0]
+		r22 = NewCreature(m.Id, m.Lv).ToBattleUnit()
 	}
 
-	return battle.NewBattleTroop(lp, rp, c, lg, rg)
+	if len(team.Row23) > 0 {
+		m := team.Row23[0]
+		r23 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	}
+
+	return battle.NewBattleTroop(r11, r12, r13, r21, r22, r23)
 }
