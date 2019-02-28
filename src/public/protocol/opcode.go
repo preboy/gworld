@@ -62,6 +62,8 @@ const (
 	MSG_SC_ChapterFighting uint16 = 0x0029
 	MSG_CS_ChapterRewards  uint16 = 0x0030
 	MSG_SC_ChapterRewards  uint16 = 0x0031
+	MSG_CS_ChapterLoot     uint16 = 0x0032
+	MSG_SC_ChapterLoot     uint16 = 0x0033
 
 	// ------------------------------------------------------------------------
 

@@ -305,3 +305,12 @@ message ChapterRewardsResponse {
     repeated Item   rewards = 3;    // 奖励
     ChapterInfo info        = 4;
 }
+
+// 领取挂机奖励
+message ChapterLootRequest {
+}
+
+message ChapterLootResponse {
+    uint32 error_code       = 1;
+    repeated Item   rewards = 2;    // 奖励
+}

@@ -49,6 +49,8 @@ func (self *Chapter) ChapterInfo(req *msg.ChapterInfoRequest, res *msg.ChapterIn
 
 // 领取章节奖励
 func (self *Chapter) ChapterFighting(req *msg.ChapterFightingRequest, res *msg.ChapterFightingResponse) {
+	// TODO
+
 	// 是否完成
 	// 是否已领取
 
@@ -58,7 +60,17 @@ func (self *Chapter) ChapterFighting(req *msg.ChapterFightingRequest, res *msg.C
 
 // 攻击关卡
 func (self *Chapter) ChapterRewards(req *msg.ChapterRewardsRequest, res *msg.ChapterRewardsResponse) {
+	// TODO
+
 	// 检测条件是否足够
 	res.Info = self.ToMsg()
+	res.ErrorCode = ec.OK
+}
+
+// 领取挂机奖励
+func (self *Chapter) ChapterLoot(req *msg.ChapterLootRequest, res *msg.ChapterLootResponse) {
+	// TODO
+
+	// 检测条件是否足够
 	res.ErrorCode = ec.OK
 }
