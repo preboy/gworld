@@ -16,7 +16,7 @@ type drop_item struct {
 	Cnt uint64
 }
 
-func Get(plr app.IPlayer, dropid uint32) (ret []*drop_item) {
+func Drop(plr app.IPlayer, dropid uint32) (ret []*drop_item) {
 	conf := config.DropConf.Query(dropid)
 	if conf == nil {
 		return

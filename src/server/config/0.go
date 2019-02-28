@@ -39,6 +39,8 @@ var (
 		LevelupConf,
 		DropConf,
 		CondConf,
+		BreakConf,
+		ChapterConf,
 	}
 )
 

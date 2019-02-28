@@ -56,6 +56,15 @@ const (
 
 	// ------------------------------------------------------------------------
 
+	MSG_CS_ChapterInfo     uint16 = 0x0026
+	MSG_SC_ChapterInfo     uint16 = 0x0027
+	MSG_CS_ChapterFighting uint16 = 0x0028
+	MSG_SC_ChapterFighting uint16 = 0x0029
+	MSG_CS_ChapterRewards  uint16 = 0x0030
+	MSG_SC_ChapterRewards  uint16 = 0x0031
+
+	// ------------------------------------------------------------------------
+
 	MSG_OTHER uint16 = iota + 0x1000
 
 	// end flag

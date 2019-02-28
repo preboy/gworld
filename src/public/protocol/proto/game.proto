@@ -3,6 +3,16 @@ syntax = "proto3";
 package msg;
 
 // ----------------------------------------------------------------------------
+// common
+
+message Item {
+    uint32  flag                = 1;    // 0:该道具总数量  1:变化量
+    uint32  id                  = 2;
+    int64   cnt                 = 3;
+}
+
+
+// ----------------------------------------------------------------------------
 // base
 message PlayerLvExpUpdate {
     uint32  lv                  = 1;
@@ -14,12 +24,6 @@ message PlayerLvExpUpdate {
 
 message PlayerDataRequest {
     uint64  id                  = 1;
-}
-
-message Item {
-    uint32  flag                = 1;    // 0:该道具总数量  1:变化量
-    uint32  id                  = 2;
-    int64   cnt                 = 3;
 }
 
 message Skill {
@@ -262,4 +266,42 @@ message QuestOpResponse {
 // 任务变更推送(由服务端产生变化时推送)
 message QuestUpdate {
     repeated QuestInfo  Quests  = 1;
+}
+
+// ----------------------------------------------------------------------------
+// chapter
+
+message ChapterInfo {
+}
+
+// 拉取关卡信息
+message ChapterInfoRequest {
+}
+
+message ChapterInfoResponse {
+    uint32  error_code      = 1;
+    ChapterInfo info        = 2;
+}
+
+// 关卡战斗
+message ChapterFightingRequest {
+}
+
+message ChapterFightingResponse {
+    uint32  error_code      = 1;
+    bool    win             = 2;    // 是否胜利
+    repeated Item   rewards = 3;    // 奖励
+    ChapterInfo info        = 4;
+}
+
+// 领取章节奖励
+message ChapterRewardsRequest {
+    uint32 id               = 1;    // 章节ID
+}
+
+message ChapterRewardsResponse {
+    uint32 error_code       = 1;
+    uint32 id               = 2;
+    repeated Item   rewards = 3;    // 奖励
+    ChapterInfo info        = 4;
 }

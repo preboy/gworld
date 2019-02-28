@@ -9,6 +9,7 @@ import (
 	"server/app"
 	"server/db_mgr"
 	"server/modules/achv"
+	"server/modules/chapter"
 	"server/modules/quest"
 )
 
@@ -44,9 +45,10 @@ type PlayerData struct {
 	LoginTimes uint32    `bson:"login_times"` // 总登录次数
 
 	// modules data
-	Growth *achv.Growth `bson:"growth"`
-	Achv   *achv.Achv   `bson:"achv"`
-	Quest  *quest.Quest `bson:"quest"`
+	Growth  *achv.Growth     `bson:"growth"`
+	Achv    *achv.Achv       `bson:"achv"`
+	Quest   *quest.Quest     `bson:"quest"`
+	Chapter *chapter.Chapter `bson:"chapter"`
 }
 
 // ============================================================================
@@ -68,6 +70,11 @@ func (self *PlayerData) Init(plr *Player) {
 		self.Quest = quest.NewQuest()
 	}
 	self.Quest.Init(plr)
+
+	if self.Chapter == nil {
+		self.Chapter = chapter.NewChapter()
+	}
+	self.Chapter.Init(plr)
 
 }
 
@@ -164,4 +171,11 @@ func CreatePlayerData(acct string) *PlayerData {
 	data.SetName(nam)
 
 	return data
+}
+
+// ============================================================================
+// data member export
+
+func (self *Player) Getchapter() *chapter.Chapter {
+	return self.data.Chapter
 }
