@@ -3,10 +3,10 @@ package quest
 import (
 	"core/log"
 	"public/ec"
-	"public/protocol"
 	"public/protocol/msg"
 	"server/app"
 	"server/config"
+	"server/constant"
 )
 
 // ============================================================================
@@ -208,7 +208,7 @@ func (self *Quest) Commit(id uint32, r uint32) uint32 {
 		}
 	case TaskType_Gather:
 		{ // 检测包裹是否收集完成
-			proxy := app.NewItemProxy(1) // todo
+			proxy := app.NewItemProxy(constant.ItemLog_QuestCommit).SetArgs(id)
 			for _, v := range task.TaskGather {
 				proxy.Sub(v.Id, v.Cnt)
 			}
@@ -264,7 +264,7 @@ func (self *Quest) Finish(id uint32) uint32 {
 	conf := config.QuestConf.Query(id)
 
 	// 发放奖励，设置标识
-	proxy := app.NewItemProxy(protocol.MSG_CS_MarketBuy)
+	proxy := app.NewItemProxy(constant.ItemLog_QuestFinish).SetArgs(id)
 
 	for _, v := range conf.Rewards {
 		proxy.Add(v.Id, v.Cnt)

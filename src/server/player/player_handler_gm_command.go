@@ -8,6 +8,7 @@ import (
 	"public/protocol"
 	"public/protocol/msg"
 	"server/app"
+	"server/constant"
 	"strings"
 )
 
@@ -51,7 +52,7 @@ func (self *Player) on_gm_command(args []string) int32 {
 		}
 	case "item":
 		for i := 1; i < len(args); i++ {
-			ip := app.NewItemProxy(protocol.MSG_CS_GMCommand)
+			ip := app.NewItemProxy(constant.ItemLog_GM)
 			item := strings.Split(args[i], "|")
 			id := utils.Atou32(item[0])
 			ct := utils.Atou32(item[1])

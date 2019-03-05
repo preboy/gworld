@@ -8,6 +8,7 @@ import (
 	"public/protocol/msg"
 	"server/app"
 	"server/config"
+	"server/constant"
 )
 
 func init() {
@@ -28,7 +29,7 @@ func handler_player_market_buy(plr *Player, packet *tcp.Packet) {
 			return
 		}
 
-		proxy := app.NewItemProxy(protocol.MSG_CS_MarketBuy)
+		proxy := app.NewItemProxy(constant.ItemLog_MarketBuy)
 
 		for _, item := range conf.Src {
 			proxy.Sub(item.Id, uint64(item.Cnt)*req.Count)

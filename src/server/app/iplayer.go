@@ -2,6 +2,8 @@ package app
 
 import (
 	"github.com/gogo/protobuf/proto"
+
+	"server/battle"
 )
 
 type IPlayer interface {
@@ -12,6 +14,8 @@ type IPlayer interface {
 	SetItem(id uint32, cnt uint64)
 	AddItem(id uint32, cnt uint64)
 	SubItem(id uint32, cnt uint64)
+
+	CreateBattleTroop([]uint32) *battle.BattleTroop
 
 	SendPacket(opcode uint16, obj proto.Message)
 }

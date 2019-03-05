@@ -26,15 +26,20 @@ const (
 	// --------------------------------
 	// 任务 [200, 300)
 	// --------------------------------
-	QUEST_Cond_Dissatisfy   // 接任务条件不满足
-	QUEST_Pass_Over         // 过去的任务不能接
-	QUEST_Not_Finish        // 任务未领奖
-	QUEST_Finish_Yet        // 任务已经完成了
-	QUEST_Task_Unfinished   // 任务项未完成
-	QUEST_Unknown           // 未知的任务
-	QUEST_Tasks_Over        // 已完成所有任务项
-	QUEST_Task_Invalid_r    // 提交对话任务若的索引不对
-	QUEST_Task_Invalid_Kill // 击杀怪物数据不足
+	QUEST_Cond_Dissatisfy   = iota + 200 // 接任务条件不满足
+	QUEST_Pass_Over                      // 过去的任务不能接
+	QUEST_Not_Finish                     // 任务未领奖
+	QUEST_Finish_Yet                     // 任务已经完成了
+	QUEST_Task_Unfinished                // 任务项未完成
+	QUEST_Unknown                        // 未知的任务
+	QUEST_Tasks_Over                     // 已完成所有任务项
+	QUEST_Task_Invalid_r                 // 提交对话任务若的索引不对
+	QUEST_Task_Invalid_Kill              // 击杀怪物数据不足
+
+	// --------------------------------
+	// 任务 [300, 400)
+	// --------------------------------
+	CHAPTER_Cond_Dissatisfy = iota + 200 // 接任务条件不满足
 
 	// 功能错误码
 	ERR_END

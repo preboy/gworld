@@ -12,6 +12,7 @@ type Break struct {
 	OpenLv    uint32 `json:"openLv"`
 	TeamId    uint32 `json:"teamId"`
 	DropId    uint32 `json:"dropId"`
+	LootId    uint32 `json:"lootId"`
 	StartCgid uint32 `json:"startCgid"`
 	EndCgid   uint32 `json:"endCgid"`
 }

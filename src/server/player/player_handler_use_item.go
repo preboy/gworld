@@ -9,6 +9,7 @@ import (
 	"public/protocol/msg"
 	"server/app"
 	"server/config"
+	"server/constant"
 )
 
 func init() {
@@ -35,7 +36,7 @@ func handler_use_item(plr *Player, packet *tcp.Packet) {
 		}
 
 		// 道具数量是否足够
-		goods := app.NewItemProxy(protocol.MSG_CS_UseItem)
+		goods := app.NewItemProxy(constant.ItemLog_UseItem).SetArgs(ItemID, ItemCt)
 		goods.Sub(ItemID, uint64(ItemCt))
 		if !goods.Enough(plr) {
 			res.Result = ec.Item_Not_Enough

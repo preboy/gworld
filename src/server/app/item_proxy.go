@@ -6,18 +6,24 @@ import (
 )
 
 type ItemProxy struct {
-	msg uint16
+	msg uint32
+	arg []uint32
 	add map[uint32]uint64
 	sub map[uint32]uint64
 }
 
-func NewItemProxy(msg uint16) *ItemProxy {
+func NewItemProxy(msg uint32) *ItemProxy {
 	ib := &ItemProxy{
 		msg: msg,
 	}
 	ib.add = make(map[uint32]uint64)
 	ib.sub = make(map[uint32]uint64)
 	return ib
+}
+
+func (self *ItemProxy) SetArgs(args ...uint32) *ItemProxy {
+	self.arg = args
+	return self
 }
 
 func (self *ItemProxy) Add(id uint32, cnt uint64) {
@@ -38,7 +44,7 @@ func (self *ItemProxy) Enough(plr IPlayer) bool {
 	return true
 }
 
-func (self *ItemProxy) Apply(plr IPlayer) {
+func (self *ItemProxy) Apply(plr IPlayer) *ItemProxy {
 	res := msg.ItemCntChangedNotice{}
 
 	for id, cnt := range self.add {
@@ -69,4 +75,16 @@ func (self *ItemProxy) Apply(plr IPlayer) {
 	}
 
 	plr.SendPacket(protocol.MSG_SC_ItemCntChanged, &res)
+
+	return self
+}
+
+func (self *ItemProxy) ToMsg() (ret []*msg.Item) {
+	for id, cnt := range self.add {
+		ret = append(ret, &msg.Item{1, id, int64(cnt)})
+	}
+	for id, cnt := range self.sub {
+		ret = append(ret, &msg.Item{1, id, -int64(cnt)})
+	}
+	return
 }

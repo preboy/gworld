@@ -5,6 +5,7 @@
 		"openLv" : 1,
 		"teamId" : 100,
 		"dropId" : 10001,
+		"lootId" : 10001,
 		"startCgid" : 1,
 		"endCgid" : 2
 	},
@@ -15,6 +16,7 @@
 		"openLv" : 1,
 		"teamId" : 200,
 		"dropId" : 10002,
+		"lootId" : 10002,
 		"startCgid" : 0,
 		"endCgid" : 0
 	},
@@ -25,6 +27,7 @@
 		"openLv" : 2,
 		"teamId" : 300,
 		"dropId" : 10003,
+		"lootId" : 10003,
 		"startCgid" : 0,
 		"endCgid" : 3
 	},
@@ -35,6 +38,7 @@
 		"openLv" : 3,
 		"teamId" : 400,
 		"dropId" : 10004,
+		"lootId" : 10004,
 		"startCgid" : 4,
 		"endCgid" : 0
 	},
@@ -45,6 +49,7 @@
 		"openLv" : 3,
 		"teamId" : 500,
 		"dropId" : 10005,
+		"lootId" : 10005,
 		"startCgid" : 0,
 		"endCgid" : 0
 	},
@@ -55,6 +60,7 @@
 		"openLv" : 3,
 		"teamId" : 600,
 		"dropId" : 10006,
+		"lootId" : 10006,
 		"startCgid" : 0,
 		"endCgid" : 0
 	},
@@ -65,6 +71,7 @@
 		"openLv" : 4,
 		"teamId" : 700,
 		"dropId" : 10007,
+		"lootId" : 10007,
 		"startCgid" : 0,
 		"endCgid" : 5
 	},
@@ -75,6 +82,7 @@
 		"openLv" : 5,
 		"teamId" : 700,
 		"dropId" : 10007,
+		"lootId" : 10007,
 		"startCgid" : 6,
 		"endCgid" : 0
 	},
@@ -85,6 +93,7 @@
 		"openLv" : 5,
 		"teamId" : 700,
 		"dropId" : 10007,
+		"lootId" : 10007,
 		"startCgid" : 0,
 		"endCgid" : 0
 	},
@@ -95,6 +104,7 @@
 		"openLv" : 6,
 		"teamId" : 700,
 		"dropId" : 10007,
+		"lootId" : 10007,
 		"startCgid" : 0,
 		"endCgid" : 7
 	}

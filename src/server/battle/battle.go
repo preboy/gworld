@@ -351,7 +351,6 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 
 // 计算战斗
 func (self *Battle) Calc() {
-
 	for {
 
 		if self.attacker.Lose() {
@@ -396,7 +395,6 @@ func (self *Battle) Calc() {
 			break
 		}
 	}
-
 }
 
 func (self *Battle) GetResult() bool {

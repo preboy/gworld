@@ -31,7 +31,7 @@ func handler_hero_refine(plr *Player, packet *tcp.Packet) {
 			return
 		}
 
-		goods := app.NewItemProxy(protocol.MSG_CS_HeroRefine)
+		goods := app.NewItemProxy(constant.ItemLog_HeroRefine).SetArgs(hero.Id)
 
 		if hero.RefineSuper {
 			if req.Super == 1 {

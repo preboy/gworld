@@ -8,6 +8,7 @@ import (
 	"public/protocol/msg"
 	"server/app"
 	"server/config"
+	"server/constant"
 )
 
 func init() {
@@ -38,7 +39,7 @@ func handler_hero_levelup(plr *Player, packet *tcp.Packet) {
 		conf := config.HeroConf.Query(hero.Id, hero.Level)
 
 		// 道具数量是否足够
-		goods := app.NewItemProxy(protocol.MSG_CS_HeroLevelup)
+		goods := app.NewItemProxy(constant.ItemLog_HeroLvUp).SetArgs(hero.Id, hero.Level+1)
 		for _, v := range conf.Needs {
 			goods.Sub(v.Id, v.Cnt)
 		}
