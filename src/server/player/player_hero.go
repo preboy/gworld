@@ -1,6 +1,7 @@
 package player
 
 import (
+	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
 	"server/app"
@@ -34,10 +35,9 @@ func (self *Player) UpdateHeroToClient(id uint32) {
 	self.SendPacket(protocol.MSG_SC_HeroInfoUpdate, &res)
 }
 
-// 检测队伍的合法性
-func (self *Player) IsValidTeam(team []uint32) (ret bool, heros []*app.Hero) {
-	size := len(team)
-	if size > battle.MAX_TROOP_MEMBER {
+func (self *Player) IsValidTeam(team []uint32) (ret bool, err int) {
+	if len(team) > battle.MAX_TROOP_MEMBER {
+		err = ec.BATTLE_Hero_Cnt_Exceed
 		return
 	}
 
@@ -48,36 +48,44 @@ func (self *Player) IsValidTeam(team []uint32) (ret bool, heros []*app.Hero) {
 			continue
 		}
 		if ids[id] != 0 {
+			err = ec.BATTLE_Hero_Present
 			return
 		}
 		ids[id]++
+
+		if self.GetHero(id) == nil {
+			err = ec.BATTLE_Hero_NotExist
+			return
+		}
 	}
 
 	if len(ids) == 0 {
+		err = ec.BATTLE_Hero_Zero
 		return
 	}
 
-	for _, id := range ids {
-		hero := self.GetHero(id)
-		if hero == nil {
-			return
-		}
-		heros = append(heros, hero)
-	}
-
 	ret = true
+	err = ec.OK
 
 	return
 }
 
-func (self *Player) CreateBattleTroop(team []uint32) *battle.BattleTroop {
-	// 找出英雄
-	ok, heros := self.IsValidTeam(team)
-	if !ok {
-		return nil
+// 检测队伍的合法性
+func (self *Player) CreateBattleTroop(team []uint32) (*battle.BattleTroop, int) {
+
+	if ok, err := self.IsValidTeam(team); !ok {
+		return nil, err
 	}
 
-	// todo
+	var units = make([]*battle.BattleUnit, 0, battle.MAX_TROOP_MEMBER)
 
-	// return NewBattleTroop(members ...*BattleUnit)
+	for i, id := range team {
+		if id == 0 {
+			continue
+		}
+
+		units[i] = self.GetHero(id).ToBattleUnit()
+	}
+
+	return battle.NewBattleTroop(units...), ec.OK
 }

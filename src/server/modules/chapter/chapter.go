@@ -64,15 +64,19 @@ func (self *Chapter) ChapterFighting(req *msg.ChapterFightingRequest, res *msg.C
 		return
 	}
 
-	plrTrp := self.plr.CreateBattleTroop(req.Team)
-	CreTrp := app.CreatureTeamToBattleTroop(conf.TeamId)
+	trp_plr, err := self.plr.CreateBattleTroop(req.Team)
+	if trp_plr == nil {
+		res.ErrorCode = uint32(err)
+		return
+	}
 
-	if plrTrp == nil || CreTrp == nil {
+	trp_cre := app.CreatureTeamToBattleTroop(conf.TeamId)
+	if trp_cre == nil {
 		res.ErrorCode = ec.Failed
 		return
 	}
 
-	b := battle.NewBattle(plrTrp, CreTrp)
+	b := battle.NewBattle(trp_plr, trp_cre)
 	b.Calc()
 	res.Win = b.GetResult()
 

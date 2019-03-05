@@ -39,7 +39,15 @@ const (
 	// --------------------------------
 	// 任务 [300, 400)
 	// --------------------------------
-	CHAPTER_Cond_Dissatisfy = iota + 200 // 接任务条件不满足
+	CHAPTER_Cond_Dissatisfy = iota + 300 // 接任务条件不满足
+
+	// --------------------------------
+	// 任务 [400, 500)
+	// --------------------------------
+	BATTLE_Hero_Cnt_Exceed = iota + 400 // 队伍人数过多
+	BATTLE_Hero_Present                 // 英雄重复
+	BATTLE_Hero_Zero                    // 队伍无英雄
+	BATTLE_Hero_NotExist                // 不存在的英雄
 
 	// 功能错误码
 	ERR_END

@@ -15,7 +15,7 @@ type IPlayer interface {
 	AddItem(id uint32, cnt uint64)
 	SubItem(id uint32, cnt uint64)
 
-	CreateBattleTroop([]uint32) *battle.BattleTroop
+	CreateBattleTroop([]uint32) (*battle.BattleTroop, int)
 
 	SendPacket(opcode uint16, obj proto.Message)
 }
