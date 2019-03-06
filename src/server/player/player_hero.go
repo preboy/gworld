@@ -77,7 +77,7 @@ func (self *Player) CreateBattleTroop(team []uint32) (*battle.BattleTroop, int) 
 		return nil, err
 	}
 
-	var units = make([]*battle.BattleUnit, 0, battle.MAX_TROOP_MEMBER)
+	var units = make([]*battle.BattleUnit, battle.MAX_TROOP_MEMBER)
 
 	for i, id := range team {
 		if id == 0 {
