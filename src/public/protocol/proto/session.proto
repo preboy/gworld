@@ -17,7 +17,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    uint32 error_code = 1;
+    uint32 ErrorCode    = 1;
 }
 
 
@@ -25,5 +25,5 @@ message EnterGameRequest {
 }
 
 message EnterGameResponse {
-    uint32 error_code = 1;
+    uint32 ErrorCode    = 1;
 }

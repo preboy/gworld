@@ -7,7 +7,7 @@ import (
 // ============================================================================
 
 type Break struct {
-	BreakId   uint32 `json:"breakId"`
+	Id        uint32 `json:"id"`
 	Name      string `json:"name"`
 	OpenLv    uint32 `json:"openLv"`
 	TeamId    uint32 `json:"teamId"`
@@ -39,7 +39,7 @@ func (self *BreakTable) Load() bool {
 
 	self.items = make(map[uint32]*Break)
 	for _, v := range arr {
-		key := v.BreakId
+		key := v.Id
 		self.items[key] = v
 	}
 

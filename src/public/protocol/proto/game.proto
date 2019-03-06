@@ -198,7 +198,7 @@ message MarketBuyRequest {
 }
 
 message MarketBuyResponse {
-    uint32 error_code           = 1;
+    uint32 ErrorCode           = 1;
 }
 
 
@@ -210,7 +210,7 @@ message HeroLevelupRequest {
 }
 
 message HeroLevelupResponse {
-    uint32 error_code           = 1;
+    uint32 ErrorCode            = 1;
 }
 
 message HeroRefineRequest {
@@ -219,8 +219,8 @@ message HeroRefineRequest {
 }
 
 message HeroRefineResponse {
-    uint32 error_code           = 1;
-    uint32 result               = 2;    // error_code为0时，操作是否成功
+    uint32 ErrorCode            = 1;
+    uint32 result               = 2;    // ErrorCode为0时，操作是否成功
 }
 
 message HeroInfoUpdateResponse {
@@ -259,7 +259,7 @@ message QuestOpResponse {
     uint32 id   = 1;    // 任务ID
     uint32 op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
     uint32 r    = 3;    // 提交任务的参数
-    uint32      error_code  = 4;
+    uint32      ErrorCode   = 4;
     QuestInfo   quest       = 5;
 }
 
