@@ -66,11 +66,11 @@ message PlayerDataResponse {
 }
 
 
-message GMCommandRequest {
+message GMCommandRequest {      // Opcode: 100
     string  command             = 1;
 }
 
-message GMCommandResponse {
+message GMCommandResponse {     // Opcode: 100
     int32   result              = 1;
 }
 
