@@ -72,7 +72,7 @@ func (self *Chapter) ChapterFighting(req *msg.ChapterFightingRequest, res *msg.C
 
 	trp_cre := app.CreatureTeamToBattleTroop(conf.TeamId)
 	if trp_cre == nil {
-		res.ErrorCode = ec.Failed
+		res.ErrorCode = ec.CHAPTER_InvalidCreateTeam
 		return
 	}
 
@@ -100,18 +100,18 @@ func (self *Chapter) ChapterFighting(req *msg.ChapterFightingRequest, res *msg.C
 func (self *Chapter) ChapterRewards(req *msg.ChapterRewardsRequest, res *msg.ChapterRewardsResponse) {
 	conf := config.ChapterConf.Query(req.Id)
 	if conf == nil {
-		res.ErrorCode = ec.Failed // 未查到该章节
+		res.ErrorCode = ec.Conf_Invalid
 		return
 	}
 
 	if self.BreakId < conf.BreakEnd {
-		res.ErrorCode = ec.Failed // 未完成该章节
+		res.ErrorCode = ec.CHAPTER_NotAccomplish
 		return
 	}
 
 	for _, v := range self.Chapters {
 		if v == req.Id {
-			res.ErrorCode = ec.Failed // 已领取过了
+			res.ErrorCode = ec.CHAPTER_RewardsGot
 			return
 		}
 	}
@@ -139,7 +139,7 @@ func (self *Chapter) ChapterLoot(req *msg.ChapterLootRequest, res *msg.ChapterLo
 	}
 
 	if sec < 60 {
-		res.ErrorCode = ec.Failed // 至少一分钟
+		res.ErrorCode = ec.CHAPTER_LootTimeShort
 		return
 	}
 
