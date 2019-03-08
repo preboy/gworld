@@ -14,7 +14,7 @@ message Item {
 
 // ----------------------------------------------------------------------------
 // base
-message PlayerLvExpUpdate {
+message PlayerLvExpUpdate {     // opcode: 22
     uint32  lv                  = 1;
     uint64  exp                 = 2;
 }
@@ -22,7 +22,7 @@ message PlayerLvExpUpdate {
 
 // ----------------------------------------------------------------------------
 
-message PlayerDataRequest {
+message PlayerDataRequest {     // opcode: 23
     uint64  id                  = 1;
 }
 
