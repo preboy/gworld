@@ -1,0 +1,35 @@
+syntax = "proto3";
+package msg;
+
+
+// ----------------------------------------------------------------------------
+// session      opcode range: [100 ~ 200)
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+// request <---> response
+
+message PingRequest {           // opcode: 100
+    uint32 Time         = 1;
+}
+
+message PingResponse {          // opcode: 101
+    uint32 Time         = 1;
+}
+
+message LoginRequest {          // opcode: 102
+    string Acct         = 1;
+    string Pass         = 2;
+}
+
+message LoginResponse {         // opcode: 103
+    uint32 ErrorCode    = 1;
+}
+
+message EnterGameRequest {      // opcode: 104
+}
+
+message EnterGameResponse {     // opcode: 105
+    uint32 ErrorCode    = 1;
+}

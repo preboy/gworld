@@ -1,0 +1,119 @@
+syntax = "proto3";
+package msg;
+
+
+// ----------------------------------------------------------------------------
+// common
+// ----------------------------------------------------------------------------
+
+
+message Item {
+    uint32  flag                = 1;    // 0:该道具总数量  1:变化量
+    uint32  id                  = 2;
+    int64   cnt                 = 3;
+}
+
+message Skill {
+    uint32  Id                  = 1;
+    uint32  Level               = 2;
+}
+
+message Aura {
+    uint32  Id                  = 1;
+    uint32  Level               = 2;
+}
+
+message Hero {
+    uint32  Id                  = 1;
+    uint32  Level               = 2;
+    uint32  RefineLv            = 3;
+    uint32  RefineTimes         = 4;
+    bool    RefineSuper         = 5;
+    repeated Skill  Active      = 6;
+    repeated Skill  Passive     = 7;
+    uint32  Power               = 8;
+    uint32  Status              = 9;
+    uint32  LifePoint           = 10;
+    uint32  LifePointMax        = 11;
+}
+
+
+// ----------------------------------------------------------------------------
+// Battle
+
+message BattleSkill {
+    uint32  Id                  = 1;
+    uint32  Lv                  = 2;
+}
+
+message BattleAura {
+    uint32  Id                  = 1;
+    uint32  Lv                  = 2;
+}
+
+message BattleUnit {
+    uint32  Type                = 1;    // 生物类型
+    uint32  Id                  = 2;    // 英雄/怪物ID
+    uint32  Lv                  = 3;    // 等级
+    uint32  Pos                 = 4;    // 位置
+    uint32  Attacker            = 5;    // 是否攻击方
+    uint32  Apm                 = 6;    // apm
+    uint32  Atk                 = 7;    // 攻击
+    uint32  Def                 = 8;    // 防御
+    uint32  Hp                  = 9;    // HP当前
+    uint32  Crit                = 10;   // 暴击
+    uint32  Hurt                = 11;   // 暴伤
+    BattleSkill Comm            = 12;   // 普攻
+    repeated BattleSkill Skill  = 13;   // 技能
+}
+
+// 技能释放事件
+message BattleEventSkill {
+    uint32          Time                = 1;    // 时间
+    uint32          Caster              = 2;    // 释法者
+    BattleSkill     Skill               = 3;    // 技能信息
+    repeated uint32 Targets             = 4;    // 目标
+}
+
+// 光环事件
+message BattleEventAura {
+    uint32          Time                = 1;    // 时间
+    uint32          Owner               = 2;    // 光环获得者
+    uint32          Caster              = 3;    // 谁释放的光环
+    BattleAura      Aura                = 4;    // 光环信息
+    bool            Obtain              = 5;    // true:获得光环  false:失去光环
+}
+
+// 伤害事件
+message BattleEventHurt {
+    uint32          Time                = 1;    // 时间
+    uint32          Caster              = 2;    // 攻击者
+    uint32          Target              = 3;    // 目标
+    uint32          Hurt                = 4;    // 伤害量
+    uint32          Crit                = 5;    // 是否暴击
+    uint32          Type                = 6;    // 攻击、反弹、溅射
+}
+
+// 光环效果事件
+message BattleEventAuraEffect {
+    uint32          Time                = 1;    // 时间
+    uint32          Owner               = 2;    // 光环获得者
+    uint32          Caster              = 3;    // 谁释放的光环
+    uint32          Type                = 4;    // 事件类型
+    int32           Arg1                = 5;    //
+    int32           Arg2                = 6;    //
+    int32           Arg3                = 7;    //
+    int32           Arg4                = 8;    //
+}
+
+message BattleResult {
+    bool                            Win                 = 1;    // 攻击者是否获胜
+    repeated BattleUnit             Units               = 2;    // 所有参战人员
+    repeated BattleEventSkill       Skill               = 3;
+    repeated BattleEventAura        Aura                = 4;
+    repeated BattleEventHurt        Hurt                = 5;
+    repeated BattleEventAuraEffect  Effect              = 6;
+}
+
+
+// ----------------------------------------------------------------------------

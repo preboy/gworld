@@ -1,0 +1,82 @@
+syntax = "proto3";
+package msg;
+
+import "0.type.proto";
+
+
+// ----------------------------------------------------------------------------
+// session      opcode range: [200 ~ 300)
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+// request <---> response
+
+
+message PlayerDataRequest {     // opcode: 200
+    uint64  Id                  = 1;
+}
+
+message PlayerDataResponse {    // opcode: 201
+    string  Acct                = 1;
+    string  Name                = 2;
+    string  Pid                 = 3;
+    uint32  Sid                 = 4;
+    uint64  Id                  = 5;
+    uint32  Level               = 6;
+    uint32  VipLevel            = 7;
+    bool    Male                = 8;
+    repeated Item   Items       = 9;
+    repeated Hero   Heros       = 10;
+    repeated Aura   Auras       = 11;
+}
+
+
+message GMCommandRequest {      // Opcode: 202
+    string  Command             = 1;
+}
+
+message GMCommandResponse {     // Opcode: 203
+    int32   Result              = 1;
+}
+
+
+// 使用道具
+message UseItemRequest {        // Opcode: 204
+    uint32  Id                  = 1;    // 道具ID
+    uint32  Cnt                 = 2;    // 数量
+    int32   Arg1                = 3;    // 参数
+    int32   Arg2                = 4;    // 参数
+}
+
+message UseItemResponse {       // Opcode: 205
+    uint32    Result            = 1;    // 结果
+}
+
+
+message MarketBuyRequest {      // Opcode: 206
+    uint32  Index               = 1;    // 购买的索引
+    uint64  Count               = 2;    // 数量
+}
+
+message MarketBuyResponse {     // Opcode: 207
+    uint32 ErrorCode           = 1;
+}
+
+
+// ----------------------------------------------------------------------------
+// update
+
+message ItemUpdate {            // Opcode: 280
+    repeated Item Items         = 1;
+}
+
+message PlayerExpUpdate {       // Opcode: 281
+    uint32  Lv                  = 1;
+    uint64  Exp                 = 2;
+}
+
+message NoticeResponse {        // Opcode: 282
+    int32   Flag                = 1;
+    string  Notice              = 2;
+}

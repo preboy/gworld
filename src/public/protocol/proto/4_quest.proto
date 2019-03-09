@@ -1,0 +1,54 @@
+syntax = "proto3";
+package msg;
+
+
+// ----------------------------------------------------------------------------
+// quest      opcode range: [400 ~ 500)
+// ----------------------------------------------------------------------------
+
+
+message QuestData {
+    int32 Key   = 1;
+    int32 Val   = 2;
+}
+
+message QuestInfo {
+    uint32              Id      = 1;    // 任务ID
+    uint32              Task    = 2;    // 当前的task项   0:表示已完成所有的task项
+    repeated QuestData  Data    = 3;    // 任务数据
+}
+
+
+// ----------------------------------------------------------------------------
+// request <---> response
+
+message QuestListRequest {      // opcode: 400
+}
+
+message QuestListResponse {     // opcode: 401
+    repeated QuestInfo  Quests  = 1;
+}
+
+// 任务操作
+message QuestOpRequest {        // opcode: 402
+    uint32 Id   = 1;    // 任务ID
+    uint32 Op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
+    uint32 R    = 3;    // 提交任务的参数
+}
+
+message QuestOpResponse {       // opcode: 403
+    uint32 Id   = 1;    // 任务ID
+    uint32 Op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
+    uint32 R    = 3;    // 提交任务的参数
+    uint32      ErrorCode   = 4;
+    QuestInfo   Quest       = 5;
+}
+
+
+// ----------------------------------------------------------------------------
+// update
+
+// 任务变更推送(由服务端产生变化时推送)
+message QuestUpdate {           // opcode: 403
+    repeated QuestInfo  Quests  = 1;
+}

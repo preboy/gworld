@@ -1,0 +1,40 @@
+syntax = "proto3";
+package msg;
+
+import "0.type.proto";
+
+
+
+// ----------------------------------------------------------------------------
+// hero      opcode range: [300 ~ 400)
+// ----------------------------------------------------------------------------
+
+
+// ----------------------------------------------------------------------------
+// request <---> response
+
+message HeroLevelupRequest {    // opcode: 300
+    uint32  Id                  = 1;
+}
+
+message HeroLevelupResponse {   // opcode: 301
+    uint32 ErrorCode            = 1;
+}
+
+message HeroRefineRequest {     // opcode: 302
+    uint32  Id                  = 1;
+    uint32  Flag                = 2;    // 1:普通精炼  0:超级精炼
+}
+
+message HeroRefineResponse {    // opcode: 303
+    uint32 ErrorCode            = 1;
+    uint32 Result               = 2;    // ErrorCode为0时，操作是否成功
+}
+
+
+// ----------------------------------------------------------------------------
+// update
+
+message HeroInfoUpdateResponse {// opcode: 380
+    Hero   Hero                 = 1;
+}

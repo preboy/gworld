@@ -1,0 +1,63 @@
+syntax = "proto3";
+package msg;
+
+import "0.type.proto";
+
+
+// ----------------------------------------------------------------------------
+// chapter      opcode range: [500 ~ 600)
+// ----------------------------------------------------------------------------
+
+
+message ChapterInfo {
+    int64  LootTs               = 1;
+    uint32 BreakId              = 2;
+    repeated uint32 Chapters    = 3;
+}
+
+
+// ----------------------------------------------------------------------------
+// request <---> response
+
+// 拉取关卡信息
+message ChapterInfoRequest {        // opcode: 500
+}
+
+message ChapterInfoResponse {       // opcode: 501
+    uint32  ErrorCode       = 1;
+    ChapterInfo Info        = 2;
+}
+
+// 关卡战斗
+message ChapterFightingRequest {    // opcode: 502
+    repeated uint32 Team    = 1;    // 战斗队伍
+}
+
+message ChapterFightingResponse {   // opcode: 503
+    uint32  ErrorCode       = 1;
+    bool    Win             = 2;    // 是否胜利
+    repeated Item   Rewards = 3;    // 奖励
+    ChapterInfo Info        = 4;
+    BattleResult Br         = 5;
+}
+
+// 领取章节奖励
+message ChapterRewardsRequest {     // opcode: 504
+    uint32 Id               = 1;    // 章节ID
+}
+
+message ChapterRewardsResponse {    // opcode: 505
+    uint32 ErrorCode        = 1;
+    uint32 Id               = 2;
+    repeated Item   Rewards = 3;    // 奖励
+    ChapterInfo Info        = 4;
+}
+
+// 领取挂机奖励
+message ChapterLootRequest {        // opcode: 506
+}
+
+message ChapterLootResponse {       // opcode: 507
+    uint32 ErrorCode        = 1;
+    repeated Item   Rewards = 2;    // 奖励
+}
