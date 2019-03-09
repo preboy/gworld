@@ -32,34 +32,34 @@ message PlayerDataResponse {    // opcode: 201
 }
 
 
-message GMCommandRequest {      // Opcode: 202
+message GMCommandRequest {      // opcode: 202
     string  Command             = 1;
 }
 
-message GMCommandResponse {     // Opcode: 203
+message GMCommandResponse {     // opcode: 203
     int32   Result              = 1;
 }
 
 
 // 使用道具
-message UseItemRequest {        // Opcode: 204
+message UseItemRequest {        // opcode: 204
     uint32  Id                  = 1;    // 道具ID
     uint32  Cnt                 = 2;    // 数量
     int32   Arg1                = 3;    // 参数
     int32   Arg2                = 4;    // 参数
 }
 
-message UseItemResponse {       // Opcode: 205
+message UseItemResponse {       // opcode: 205
     uint32    Result            = 1;    // 结果
 }
 
 
-message MarketBuyRequest {      // Opcode: 206
+message MarketBuyRequest {      // opcode: 206
     uint32  Index               = 1;    // 购买的索引
     uint64  Count               = 2;    // 数量
 }
 
-message MarketBuyResponse {     // Opcode: 207
+message MarketBuyResponse {     // opcode: 207
     uint32 ErrorCode           = 1;
 }
 
@@ -67,16 +67,16 @@ message MarketBuyResponse {     // Opcode: 207
 // ----------------------------------------------------------------------------
 // update
 
-message ItemUpdate {            // Opcode: 280
+message ItemUpdate {            // opcode: 280
     repeated Item Items         = 1;
 }
 
-message PlayerExpUpdate {       // Opcode: 281
+message PlayerExpUpdate {       // opcode: 281
     uint32  Lv                  = 1;
     uint64  Exp                 = 2;
 }
 
-message NoticeResponse {        // Opcode: 282
+message NoticeUpdate {        // opcode: 282
     int32   Flag                = 1;
     string  Notice              = 2;
 }

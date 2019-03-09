@@ -45,36 +45,36 @@ func (self *ItemProxy) Enough(plr IPlayer) bool {
 }
 
 func (self *ItemProxy) Apply(plr IPlayer) *ItemProxy {
-	res := msg.ItemCntChangedNotice{}
+	res := msg.ItemUpdate{}
 
 	for id, cnt := range self.add {
 		plr.AddItem(id, cnt)
-		res.Info = append(res.Info, &msg.ItemCntInfo{
-			Add: 1,
-			Id:  id,
-			Cnt: cnt,
+		res.Items = append(res.Items, &msg.Item{
+			Flag: 1,
+			Id:   id,
+			Cnt:  int64(cnt),
 		})
 	}
 
 	for id, cnt := range self.sub {
 		if plr.GetItem(id) >= cnt {
 			plr.SubItem(id, cnt)
-			res.Info = append(res.Info, &msg.ItemCntInfo{
-				Add: 2,
-				Id:  id,
-				Cnt: cnt,
+			res.Items = append(res.Items, &msg.Item{
+				Flag: 1,
+				Id:   id,
+				Cnt:  -int64(cnt),
 			})
 		} else {
 			plr.SetItem(id, 0)
-			res.Info = append(res.Info, &msg.ItemCntInfo{
-				Add: 2,
-				Id:  id,
-				Cnt: 0,
+			res.Items = append(res.Items, &msg.Item{
+				Flag: 0,
+				Id:   id,
+				Cnt:  0,
 			})
 		}
 	}
 
-	plr.SendPacket(protocol.MSG_SC_ItemCntChanged, &res)
+	plr.SendPacket(protocol.MSG_SC_ItemUpdate, &res)
 
 	return self
 }

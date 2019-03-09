@@ -42,7 +42,7 @@ func (self *Player) AddExp(exp uint64) {
 	}
 
 	// notice
-	self.SendPacket(protocol.MSG_SC_PlayerLvExpUpdate, &msg.PlayerLvExpUpdate{
+	self.SendPacket(protocol.MSG_SC_PlayerExpUpdate, &msg.PlayerExpUpdate{
 		Lv:  self.data.Level,
 		Exp: self.data.Exp,
 	})

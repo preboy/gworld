@@ -53,7 +53,7 @@ func (self *Session) SetPlayer(player *player.Player) {
 // session interface impl
 func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	self.last_touch = time.Now().Unix()
-	if packet.Opcode == uint16(protocol.MSG_CS_PING) {
+	if packet.Opcode == uint16(protocol.MSG_CS_PingRequest) {
 		self.on_ping(packet)
 		return
 	}
@@ -64,9 +64,9 @@ func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	}
 
 	switch packet.Opcode {
-	case protocol.MSG_CS_LOGIN:
+	case protocol.MSG_CS_LoginRequest:
 		self.on_login(packet)
-	case protocol.MSG_CS_ENTER_GAME:
+	case protocol.MSG_CS_EnterGameRequest:
 		self.on_enter_game(packet)
 	default:
 		fmt.Println("unknown packet in session:", packet.Opcode)
@@ -122,7 +122,7 @@ func (self *Session) on_ping(packet *tcp.Packet) {
 	proto.Unmarshal(packet.Data, &req)
 
 	res.Time = req.Time
-	self.SendPacket(protocol.MSG_SC_PING, &res)
+	self.SendPacket(protocol.MSG_SC_PingResponse, &res)
 
 	fmt.Println("session: on_ping", req.Time)
 }
@@ -142,7 +142,7 @@ func (self *Session) on_login(packet *tcp.Packet) {
 		}
 	}
 
-	self.SendPacket(protocol.MSG_SC_LOGIN, &res)
+	self.SendPacket(protocol.MSG_SC_LoginResponse, &res)
 	if res.ErrorCode == ec.OK {
 		self.account = req.Acct
 	}
@@ -170,6 +170,6 @@ func (self *Session) on_enter_game(packet *tcp.Packet) {
 		}
 	}
 
-	self.SendPacket(protocol.MSG_SC_ENTER_GAME, &res)
+	self.SendPacket(protocol.MSG_SC_EnterGameResponse, &res)
 	log.Debug("on_enter_game: %v", res.ErrorCode)
 }

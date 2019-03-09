@@ -6,8 +6,8 @@ import (
 )
 
 func (self *Player) SendNotice(notice string, flag int32) {
-	res := msg.NoticeResponse{}
+	res := &msg.NoticeUpdate{}
 	res.Flag = flag
 	res.Notice = notice
-	self.SendPacket(protocol.MSG_SC_Notice, &res)
+	self.SendPacket(protocol.MSG_SC_NoticeUpdate, res)
 }

@@ -30,9 +30,9 @@ func (self *Player) AddHero(id uint32) bool {
 }
 
 func (self *Player) UpdateHeroToClient(id uint32) {
-	res := msg.HeroInfoUpdateResponse{}
+	res := &msg.HeroInfoUpdateResponse{}
 	res.Hero = self.GetHero(id).ToMsg()
-	self.SendPacket(protocol.MSG_SC_HeroInfoUpdate, &res)
+	self.SendPacket(protocol.MSG_SC_HeroInfoUpdateResponse, res)
 }
 
 func (self *Player) IsValidTeam(team []uint32) (ret bool, err int) {

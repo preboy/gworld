@@ -30,7 +30,7 @@ function find_proto_files() {
 
 function gen_handler_go() {
     proto_files.forEach( fn => {
-        if (fn == "0.type.proto") {
+        if (fn == "0.type.proto" || fn == "1_session.proto") {
             return
         }
 
@@ -160,6 +160,9 @@ func init() {
     fs.writeFileSync(file, head, options)
 
     matches.forEach(match => {
+        if (!match[1].endsWith("Request")) {
+            return
+        }
         let line = `\tregister_handler(protocol.${match.opcode}, handler_${match[1]})\n`
         fs.writeFileSync(file, line, options)
     })
@@ -182,11 +185,13 @@ require "message.opcode"
     fs.writeFileSync(file, head, options)
 
     proto_files.forEach(name => {
+        if (name = "0.type.proto") {
+            return
+        }
         let line = `require "message.msg_${path.basename(name, ".proto")}"\n`
         fs.writeFileSync(file, line, options)
     })
 
-    fs.writeFileSync(file, "}\n", options)
     fs.closeSync(file)
 }
 
@@ -274,7 +279,7 @@ function export_proto_files() {
     })
 
     gen_proto_file_go("../opcode.go")
-    gen_proto_file_lua("../../../../../2dgame/simulator/win32/src/message/opcode_2.lua")
+    gen_proto_file_lua("../../../../../2dgame/simulator/win32/src/message/opcode.lua")
     
     gen_register_go("../../../server/player/handler_0_init.go")
     gen_register_lua("../../../../../2dgame/simulator/win32/src/message/init.lua")

@@ -4,13 +4,12 @@ import (
 	"core/log"
 	"core/tcp"
 	"core/utils"
-	"public/protocol"
 )
 
 type msg_func = func(*Player, *tcp.Packet)
 
 var (
-	_funcs = [protocol.MSG_END]msg_func{}
+	_funcs = map[uint16]msg_func{}
 )
 
 // 将Packet转化为Message
@@ -53,9 +52,5 @@ func (self *Player) on_packet(packet *tcp.Packet) {
 }
 
 func register_handler(opcode uint16, f msg_func) {
-	if opcode >= protocol.MSG_END {
-		return
-	}
-
 	_funcs[opcode] = f
 }
