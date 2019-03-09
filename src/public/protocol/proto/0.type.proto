@@ -8,9 +8,9 @@ package msg;
 
 
 message Item {
-    uint32  flag                = 1;    // 0:该道具总数量  1:变化量
-    uint32  id                  = 2;
-    int64   cnt                 = 3;
+    uint32  Flag                = 1;    // 0:该道具总数量  1:变化量
+    uint32  Id                  = 2;
+    int64   Cnt                 = 3;
 }
 
 message Skill {

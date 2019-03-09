@@ -95,6 +95,7 @@ local EventMgr   = require "core.event_mgr"
 
 local md         = MessageDispatcher
 local Opcode     = Opcode
+
 `
             fs.writeFileSync(name, head, options)
         }
@@ -108,7 +109,7 @@ local Opcode     = Opcode
             if (!fs.readFileSync(name, "utf8").includes(handler)) {
                 let data =
 `
-${handler} = function(tab) {
+${handler} = function(tab)
     print("msg:${match.opcode}")
     -- TODO
 end
@@ -188,7 +189,7 @@ require "message.opcode"
     fs.writeFileSync(file, head, options)
 
     proto_files.forEach(name => {
-        if (name = "0.type.proto") {
+        if (name == "0.type.proto") {
             return
         }
         let line = `require "message.msg_${path.basename(name, ".proto")}"\n`
