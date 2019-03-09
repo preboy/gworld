@@ -7,9 +7,6 @@ import (
 )
 
 func init() {
-	register_handler(protocol.MSG_CS_PingRequest, handler_PingRequest)
-	register_handler(protocol.MSG_CS_LoginRequest, handler_LoginRequest)
-	register_handler(protocol.MSG_CS_EnterGameRequest, handler_EnterGameRequest)
 	register_handler(protocol.MSG_CS_PlayerDataRequest, handler_PlayerDataRequest)
 	register_handler(protocol.MSG_CS_GMCommandRequest, handler_GMCommandRequest)
 	register_handler(protocol.MSG_CS_UseItemRequest, handler_UseItemRequest)

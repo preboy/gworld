@@ -32,13 +32,13 @@ message QuestListResponse {     // opcode: 401
 // 任务操作
 message QuestOpRequest {        // opcode: 402
     uint32 Id   = 1;    // 任务ID
-    uint32 Op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
+    uint32 Op   = 2;    // 1:接受 2:放弃 3:提交  4:完成
     uint32 R    = 3;    // 提交任务的参数
 }
 
 message QuestOpResponse {       // opcode: 403
     uint32 Id   = 1;    // 任务ID
-    uint32 Op   = 2;    // 1:接受 2:放弃 3:提交  4:完成  
+    uint32 Op   = 2;    // 1:接受 2:放弃 3:提交  4:完成
     uint32 R    = 3;    // 提交任务的参数
     uint32      ErrorCode   = 4;
     QuestInfo   Quest       = 5;
