@@ -4,14 +4,14 @@ let fs = require("fs")
 let path = require("path")
 let child_process = require("child_process")
 
-const options   = { encoding: 'utf8', flag: 'a+'}
+const options   = { encoding: 'utf8', flag: 'a+' }
 const reg_const = /\s*(\w+)\s*=\s*(\d+)\s*\/\/\s*(.*)$/
 const reg_proto = /\s*message\s+(\w+)\s*{\s*\/\/\s*opcode\:\s*(\d+)/
 
 // ----------------------------------------------------------------------------
 
-let proto_files     = []
-let proto_matches   = {}
+let proto_files   = []
+let proto_matches = {}
 
 // ----------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ function find_proto_files() {
 
 
 function gen_handler_go() {
-    proto_files.forEach( fn => {
+    proto_files.forEach(fn => {
         if (fn == "0.type.proto" || fn == "1_session.proto") {
             return
         }
@@ -37,7 +37,7 @@ function gen_handler_go() {
 
         if (!fs.existsSync(name)) {
             let file = fs.openSync(name, "w")
-            let head =
+            let head = 
 `package player
 
 import (
@@ -52,14 +52,14 @@ import (
             fs.closeSync(file)
         }
 
-        proto_matches[fn].forEach (match => {
-            if (!match[1].endsWith("Request")){
+        proto_matches[fn].forEach(match => {
+            if (!match[1].endsWith("Request")) {
                 return
             }
 
             let handler = `handler_${match[1]}`
             if (!fs.readFileSync(name, "utf8").includes(handler)) {
-                let data =
+                let data = 
 `func ${handler}(plr *Player, packet *tcp.Packet) {
     req := &msg.${match[1]}{}
     res := &msg.${match.resp}{}
@@ -71,7 +71,7 @@ import (
 }
 
 `
-                fs.writeFileSync(name, data, {flag:"a+"})
+                fs.writeFileSync(name, data, { flag: "a+" })
             }
         })
     })
@@ -79,7 +79,7 @@ import (
 
 
 function gen_handler_lua() {
-    proto_files.forEach( fn => {
+    proto_files.forEach(fn => {
         if (fn == "0.type.proto") {
             return
         }
@@ -100,8 +100,8 @@ local Opcode     = Opcode
             fs.writeFileSync(name, head, options)
         }
 
-        proto_matches[fn].forEach (match => {
-            if (!match[1].endsWith("Response") && !match[1].endsWith("Update")){
+        proto_matches[fn].forEach(match => {
+            if (!match[1].endsWith("Response") && !match[1].endsWith("Update")) {
                 return
             }
 
@@ -115,7 +115,7 @@ ${handler} = function(tab)
 end
 
 `
-                fs.writeFileSync(name, data, {flag:"a+"})
+                fs.writeFileSync(name, data, { flag: "a+" })
             }
         })
     })
@@ -124,13 +124,13 @@ end
 
 // 处理一个文件
 function extract_proto_file(file) {
-    fs.readFileSync(file, "utf8").split("\n").forEach(line=>{
+    fs.readFileSync(file, "utf8").split("\n").forEach(line => {
         var matched = line.match(reg_proto)
         if (!matched) {
             return
         }
 
-        if(matched[1].endsWith("Request")) {
+        if (matched[1].endsWith("Request")) {
             matched.opcode = `MSG_CS_${matched[1]}`
             matched.resp = matched[1].replace(/Request$/, "Response")
         } else if (matched[1].endsWith("Response") || matched[1].endsWith("Update")) {
@@ -264,7 +264,7 @@ cc.exports.Error =
 `
     fs.writeFileSync(file, head, options)
 
-    fs.readFileSync(go_file, "utf8").split("\n").forEach(line=>{
+    fs.readFileSync(go_file, "utf8").split("\n").forEach(line => {
         var matched = line.match(reg_const)
         if (matched) {
             let d = span - matched[1].length
