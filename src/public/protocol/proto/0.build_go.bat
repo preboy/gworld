@@ -2,6 +2,8 @@
 
 echo generate proto file for golang ...
 
-protoc --gogofaster_out=..\msg *.proto
+set /p fs=<FILES
+
+protoc --gogofaster_out=..\msg %fs%
 
 echo done
