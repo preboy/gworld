@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 let fs = require("fs")
 let path = require("path")
@@ -37,7 +37,7 @@ function gen_handler_go() {
 
         if (!fs.existsSync(name)) {
             let file = fs.openSync(name, "w")
-            let head = 
+            let head =
 `package player
 
 import (
@@ -59,7 +59,7 @@ import (
 
             let handler = `handler_${match[1]}`
             if (!fs.readFileSync(name, "utf8").includes(handler)) {
-                let data = 
+                let data =
 `func ${handler}(plr *Player, packet *tcp.Packet) {
     req := &msg.${match[1]}{}
     res := &msg.${match.resp}{}
@@ -283,7 +283,7 @@ cc.exports.Error =
 
 function export_proto_files() {
     find_proto_files().forEach(file => {
-        extract_proto_file(file);
+        extract_proto_file(file)
     })
 
     gen_proto_file_go("../opcode.go")
