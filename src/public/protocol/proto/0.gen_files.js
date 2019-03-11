@@ -109,11 +109,11 @@ local Opcode     = Opcode
             if (!fs.readFileSync(name, "utf8").includes(handler)) {
                 let data =
 `
-${handler} = function(tab)
+local function ${match.opcode}(tab)
     print("msg:${match.opcode}")
     -- TODO
 end
-
+${handler} = ${match.opcode}
 `
                 fs.writeFileSync(name, data, { flag: "a+" })
             }
