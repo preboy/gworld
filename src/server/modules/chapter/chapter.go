@@ -78,6 +78,7 @@ func (self *Chapter) ChapterFighting(req *msg.ChapterFightingRequest, res *msg.C
 
 	b := battle.NewBattle(trp_plr, trp_cre)
 	b.Calc()
+	res.Br = b.ToMsg()
 	res.Win = b.GetResult()
 
 	if res.Win {
