@@ -43,10 +43,7 @@ type BattleUnit struct {
 	dead     bool         // 是否死亡
 
 	// 角色战斗属性
-	Prop_base *Property // 战斗属性(等级、品质、装备、其它养成)							-- 进入战斗前计算
-	Prop_addi *Property // 战斗属性(附加部分[BUFF、被动技能加成，以Prop_base为基数])	-- 进入战斗前计算
-	Prop_aura *Property // 战斗中光环所加的属性										-- 战斗中产生
-	Prop      *Property // 战斗属性之和
+	Prop *PropertyGroup
 
 	Hp   int    // 当前HP
 	Rst  uint32 // 分钟 / Apm
@@ -71,17 +68,16 @@ func (self *BattleUnit) Dead() bool {
 	return self.dead
 }
 
-func (self *BattleUnit) Init(troop *BattleTroop, pos int) {
+func (self *BattleUnit) set_troop(troop *BattleTroop, pos int) {
 	self.Troop = troop
 	self.Pos = uint32(pos)
-	self.Prop_aura = &Property{}
-	self.Prop = &Property{}
+
 	self.CalcProp()
+
 	self.Hp = int(self.Prop.Hp)
 }
 
 func (self *BattleUnit) CalcProp() {
-	self.Prop.Clear()
 	self.Prop.AddProperty(self.Prop_base)
 	self.Prop.AddProperty(self.Prop_addi)
 	self.Prop.AddProperty(self.Prop_aura)
@@ -128,7 +124,6 @@ func (self *BattleUnit) Update(time uint32) {
 			}
 		}
 	}
-
 }
 
 func (self *BattleUnit) UpdateLife(time uint32) {
@@ -161,12 +156,12 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 		Id:   self.Id,
 		Lv:   self.Lv,
 		Pos:  self.Pos,
-		Apm:  uint32(self.Prop.Apm),
-		Atk:  uint32(self.Prop.Atk),
-		Def:  uint32(self.Prop.Def),
-		Hp:   uint32(self.Prop.Hp),
-		Crit: uint32(self.Prop.Crit),
-		Hurt: uint32(self.Prop.Hurt),
+		Apm:  uint32(self.Prop.Value(PropType_Apm)),
+		Atk:  uint32(self.Prop.Value(PropType_Atk)),
+		Def:  uint32(self.Prop.Value(PropType_Def)),
+		Hp:   uint32(self.Prop.Value(PropType_HP)),
+		Crit: uint32(self.Prop.Value(PropType_Crit)),
+		Hurt: uint32(self.Prop.Value(PropType_Hurt)),
 		Comm: &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Level},
 	}
 

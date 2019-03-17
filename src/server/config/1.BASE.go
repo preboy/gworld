@@ -22,8 +22,9 @@ type ProbAuraConf struct {
 }
 
 type PropConf struct {
-	Id  uint32  `json:"id"`
-	Val float64 `json:"val"`
+	Id   uint32  `json:"id"`
+	Val  float64 `json:"val"`
+	Part uint32  `json:"part"`
 }
 
 func MakeUint64(l uint32, r uint32) uint64 {

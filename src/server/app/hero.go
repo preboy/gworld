@@ -73,10 +73,8 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		Id:       self.Id,
 		Lv:       self.Level,
 		UnitType: uint32(self.UnitType()),
+		Prop:     battle.NewPropertyGroup(),
 	}
-
-	u.Prop_addi = &battle.Property{}
-	u.Prop_base = &battle.Property{}
 
 	proto := config.HeroConf.Query(self.Id, self.Level)
 

@@ -4,79 +4,110 @@ import (
 	"server/config"
 )
 
-type Property struct {
-	Hp   float64 // HP上限
-	Apm  float64 // 速度
-	Atk  float64 // 攻击
-	Def  float64 // 防御
-	Crit float64 // 暴击
-	Hurt float64 // 暴伤
-}
-
-type PropType uint32
-
 const (
-	_                PropType = 0 + iota // 角色属性类型
-	PropType_HP                          // 1 HP
-	PropType_Apm                         // 2 速度
-	PropType_Atk                         // 3 攻击
-	PropType_Def                         // 4 防御
-	PropType_Crit                        // 5 暴击
-	PropType_Hurt                        // 6 暴伤
-	PropType_PctHP                       // 7  HP加成
-	PropType_PctApm                      // 8  速度加成
-	PropType_PctAtk                      // 9  攻击加成
-	PropType_PctDef                      // 10 防御加成
-	PropType_PctCrit                     // 11 暴击加成
-	PropType_PctHurt                     // 12 暴伤加成
+	PartBase  uint32 = 0
+	PartPerc  uint32 = 1
+	PartExtra uint32 = 2
 )
 
-func (self *Property) Clear() {
-	self.Hp = 0
-	self.Apm = 0
-	self.Atk = 0
-	self.Def = 0
-	self.Crit = 0
-	self.Hurt = 0
+const (
+	PropType_HP   = 0 // HP
+	PropType_Apm  = 1 // 速度
+	PropType_Atk  = 2 // 攻击
+	PropType_Def  = 3 // 防御
+	PropType_Crit = 4 // 暴击
+	PropType_Hurt = 5 // 暴伤
+)
+
+const (
+	C_Property_Number = 6 // 属性总数量
+)
+
+// ----------------------------------------------------------------------------
+
+type Property struct {
+	base  float64 // 基础属性
+	perc  float64 // 百分比加成
+	extra float64 // 额外追加
+	total float64 // 总属性
+	daity bool
 }
 
-func (self *Property) AddConf(props []*config.PropConf) {
-	for _, v := range props {
-		switch PropType(v.Id) {
-		case PropType_HP:
-			{
-				self.Hp += v.Val
-			}
-		case PropType_Apm:
-			{
-				self.Apm += v.Val
-			}
-		case PropType_Atk:
-			{
-				self.Atk += v.Val
-			}
-		case PropType_Def:
-			{
-				self.Def += v.Val
-			}
-		case PropType_Crit:
-			{
-				self.Crit += v.Val
-			}
-		case PropType_Hurt:
-			{
-				self.Hurt += v.Val
-			}
-		default:
+type PropertyGroup [C_Property_Number]Property
+
+func NewPropertyGroup() *PropertyGroup {
+	return new(PropertyGroup)
+}
+
+// ----------------------------------------------------------------------------
+
+func (self *Property) Clear() {
+	self.base = 0
+	self.perc = 0
+	self.extra = 0
+	self.total = 0
+	self.daity = true
+}
+
+func (self *Property) add(part uint32, val float64, add bool) {
+	if val == 0 || part > PartExtra {
+		return
+	}
+
+	if !add {
+		val *= -1
+	}
+
+	switch part {
+	case PartBase:
+		self.base += val
+	case PartPerc:
+		self.perc += val
+	case PartExtra:
+		self.extra += val
+	}
+
+	self.daity = true
+}
+
+func (self *Property) Calc() {
+	if self.daity {
+		self.daity = false
+		self.total = self.base*(1+self.perc) + self.extra
+		if self.total < 0 {
+			self.total = 0
 		}
 	}
 }
 
-func (self *Property) AddProperty(prop *Property) {
-	self.Hp += prop.Hp
-	self.Apm += prop.Apm
-	self.Atk += prop.Atk
-	self.Def += prop.Def
-	self.Crit += prop.Crit
-	self.Hurt += prop.Hurt
+func (self *Property) Value() float64 {
+	if self.daity {
+		self.Calc()
+	}
+	return self.total
+}
+
+// ----------------------------------------------------------------------------
+
+func (self *PropertyGroup) AddProps(props []*config.PropConf) {
+	for _, p := range props {
+		if p.Id <= PropType_Hurt {
+			self[p.Id].add(p.Part, p.Val, true)
+		}
+	}
+}
+
+func (self *PropertyGroup) SubProps(props []*config.PropConf) {
+	for _, p := range props {
+		if p.Id <= PropType_Hurt {
+			self[p.Id].add(p.Part, p.Val, false)
+		}
+	}
+}
+
+func (self *PropertyGroup) Value(id uint32) float64 {
+	if id <= PropType_Hurt {
+		return self[p.Id].Value()
+	}
+	return 0
 }
