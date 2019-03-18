@@ -7,16 +7,16 @@ import (
 // ============================================================================
 
 type Aura struct {
-	Id       uint32  `json:"id"`
-	Level    uint32  `json:"level"`
-	Name     string  `json:"name"`
-	Last_t   uint32  `json:"last_t"`
-	Itv_t    uint32  `json:"itv_t"`
-	ScriptId uint32  `json:"script_id"`
-	Param1   int32   `json:"param1"`
-	Param2   int32   `json:"param2"`
-	Param3   []int32 `json:"param3"`
-	Param4   string  `json:"param4"`
+	Id        uint32      `json:"id"`
+	Level     uint32      `json:"level"`
+	Name      string      `json:"name"`
+	Last_t    uint32      `json:"last_t"`
+	Itv_t     uint32      `json:"itv_t"`
+	Deletable []int32     `json:"deletable"`
+	Helpful   []int32     `json:"helpful"`
+	ScriptId  uint32      `json:"script_id"`
+	Props     []*PropConf `json:"props"`
+	Params    []int32     `json:"params"`
 }
 
 type AuraTable struct {

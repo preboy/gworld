@@ -1,6 +1,7 @@
 package battle
 
 import (
+	"core/log"
 	"server/config"
 )
 
@@ -84,6 +85,12 @@ func (self *Property) Value() float64 {
 	if self.daity {
 		self.Calc()
 	}
+
+	if self.total < 0 {
+		log.Error("error value: self.total = %f", self.total)
+		return 0
+	}
+
 	return self.total
 }
 
