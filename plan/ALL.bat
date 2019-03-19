@@ -37,4 +37,7 @@ rem: map export
 exporter_map jl excel/global_È«¾Ö±í.xlsx            Global
 
 
+echo "Checking lua files ..."
+forfiles /p .\lua  /c "cmd /c lua @file"
+
 pause
