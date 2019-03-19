@@ -17,13 +17,13 @@ type SkillDamage struct {
 type SkillContext struct {
 	caster      *BattleUnit
 	target      *BattleUnit
-	caster_prop *Property   // 攻击者的属性(此处只读不写)
-	target_prop *Property   // 防御者的属性(此处只读不写)
-	prop_add    Property    // 攻击者光环加成
-	damage_send SkillDamage // 攻击者造成实际伤害
-	damage_recv SkillDamage // 防御者计算防御之后的伤害
-	damage_sub  SkillDamage // 防御者计算防御之后光环减免部分
-	damage      SkillDamage //最终造成的实际伤害
+	caster_prop *PropertyGroup // 攻击者的属性(此处只读不写)
+	target_prop *PropertyGroup // 防御者的属性(此处只读不写)
+	prop_add    Property       // 攻击者光环加成
+	damage_send SkillDamage    // 攻击者造成实际伤害
+	damage_recv SkillDamage    // 防御者计算防御之后的伤害
+	damage_sub  SkillDamage    // 防御者计算防御之后光环减免部分
+	damage      SkillDamage    // 最终造成的实际伤害
 }
 
 type BattleSkill struct {

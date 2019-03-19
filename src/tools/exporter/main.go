@@ -40,7 +40,7 @@ func expand_json_map(field, text string) (string, string) {
 		}
 		s := "\t\t\t{\n"
 		for k, sub_value := range sub_values {
-			s = s + "\t\t\t\t\"" + fields[k] + "\" : " + sub_value
+			s = s + "\t\t\t\t\"" + fields[k] + "\": " + sub_value
 			if k != len(sub_values)-1 {
 				s = s + ",\n"
 			} else {
@@ -321,7 +321,7 @@ func main() {
 					key, text = expand_json_normal(field[k], cell)
 				}
 
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				if types[k] == "string" {
 					f.WriteString("\"" + text + "\"")
 				} else {

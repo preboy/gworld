@@ -2,6 +2,7 @@ package config
 
 import (
 	"core/log"
+	"io/ioutil"
 )
 
 // ============================================================================
@@ -65,15 +66,13 @@ var (
 
 // ============================================================================
 
-func (self *QuestTable) Load() bool {
-	file := "Quest.json"
+func (self *QuestTable) load_quest(filename string) bool {
 	var arr []*Quest
 
-	if !load_json_as_arr(C_Config_Path+file, &arr) {
+	if !load_json_as_arr("./config/quests/"+filename, &arr) {
 		return false
 	}
 
-	self.items = make(map[uint32]*Quest)
 	for _, v := range arr {
 		v.TaskMap = make(map[uint32]*QuestTask)
 		for _, t := range v.Tasks {
@@ -83,7 +82,25 @@ func (self *QuestTable) Load() bool {
 		self.items[v.Id] = v
 	}
 
-	log.Info("load [ %s ] OK", file)
+	log.Info("load [ %s ] OK", filename)
+	return true
+}
+
+func (self *QuestTable) Load() bool {
+	files, err := ioutil.ReadDir("./config/quests")
+	if err != nil {
+		log.Error("QuestTable.Load error:", err)
+		return false
+	}
+
+	self.items = make(map[uint32]*Quest)
+
+	for _, file := range files {
+		if !self.load_quest(file.Name()) {
+			return false
+		}
+	}
+
 	return true
 }
 

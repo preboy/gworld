@@ -21,6 +21,11 @@ type ProbAuraConf struct {
 	Lv   uint32 `json:"lv"`
 }
 
+type ExtraAtkConf struct {
+	Typ uint32  `json:"typ"`
+	Val float64 `json:"val"`
+}
+
 type PropConf struct {
 	Id   uint32  `json:"id"`
 	Val  float64 `json:"val"`

@@ -16,12 +16,15 @@ type Skill struct {
 	Cd_t         uint32          `json:"cd_t"`
 	Type         int32           `json:"type"`
 	Target_major []int32         `json:"target_major"`
-	Target_minor []int32         `json:"target_minor"`
+	Ratio_major  float64         `json:"ratio_major"`
+	Extra_major  []*ExtraAtkConf `json:"extra_major"`
 	Aura_major   []*ProbAuraConf `json:"aura_major"`
+	Target_minor []int32         `json:"target_minor"`
+	Ratio_minor  float64         `json:"ratio_minor"`
+	Extra_minor  []*ExtraAtkConf `json:"extra_minor"`
 	Aura_minor   []*ProbAuraConf `json:"aura_minor"`
-	Prop_major   []*PropConf     `json:"prop_major"`
-	Prop_minor   []*PropConf     `json:"prop_minor"`
-	Prop_passive []*PropConf     `json:"prop_passive"`
+	Prop_Passive []*PropConf     `json:"prop_passive"`
+	Aura_Passive []*ProbAuraConf `json:"aura_passive"`
 }
 
 type SkillTable struct {

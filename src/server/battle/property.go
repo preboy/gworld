@@ -112,9 +112,15 @@ func (self *PropertyGroup) SubProps(props []*config.PropConf) {
 	}
 }
 
+func (self *PropertyGroup) Calc() {
+	for i := 0; i < C_Property_Number; i++ {
+		self[i].Calc()
+	}
+}
+
 func (self *PropertyGroup) Value(id uint32) float64 {
 	if id <= PropType_Hurt {
-		return self[p.Id].Value()
+		return self[id].Value()
 	}
 	return 0
 }

@@ -2,7 +2,10 @@ package battle
 
 import (
 	"fmt"
+
+	"core/math"
 	"public/protocol/msg"
+	"server/config"
 )
 
 // ============================================================================
@@ -50,10 +53,12 @@ type BattleUnit struct {
 	Last uint32 // 上一次时间
 
 	// 战斗技能、光环
-	Skill_curr   *BattleSkill   // 当前正在释放技能
-	Skill_comm   *BattleSkill   // 普攻
-	Skill_battle []*BattleSkill // 战斗技能
-	Auras_battle []*BattleAura  // 战斗光环
+	Skill_comm    *BattleSkill   // 普攻
+	Skill_battle  []*BattleSkill // 战斗技能
+	Skill_Passive []*BattleSkill // 被动技能
+
+	Skill_curr   *BattleSkill  // 当前正在释放技能
+	Auras_battle []*BattleAura // 战斗光环
 }
 
 func (self *BattleUnit) GetBattle() *Battle {
@@ -68,23 +73,42 @@ func (self *BattleUnit) Dead() bool {
 	return self.dead
 }
 
+func (self *BattleUnit) AddHp(val int) int {
+	if self.Hp <= 0 {
+		return 0
+	}
+
+	max := int(self.Prop.Value(PropType_HP))
+
+	if self.Hp+val > max {
+		val = max - self.Hp
+	}
+
+	self.Hp += val
+
+	return val
+}
+
 func (self *BattleUnit) set_troop(troop *BattleTroop, pos int) {
 	self.Troop = troop
 	self.Pos = uint32(pos)
-
-	self.CalcProp()
-
-	self.Hp = int(self.Prop.Hp)
 }
 
-func (self *BattleUnit) CalcProp() {
-	self.Prop.AddProperty(self.Prop_base)
-	self.Prop.AddProperty(self.Prop_addi)
-	self.Prop.AddProperty(self.Prop_aura)
-	self.Rst = uint32(60000 / self.Prop.Apm)
+func (self *BattleUnit) prepare() {
+	for _, v := range self.Skill_Passive {
+		self.AddAuraConf(v.proto.Aura_Passive)
+	}
+	self.UpdateProp()
+}
+
+func (self *BattleUnit) UpdateProp() {
+	self.Prop.Calc()
+	self.Rst = uint32(60000 / self.Prop.Value(PropType_Apm))
 }
 
 func (self *BattleUnit) Update(time uint32) {
+	self.UpdateProp()
+
 	if self.Skill_curr == nil {
 		// apm checking
 		if time < self.Last+self.Rst {
@@ -128,6 +152,14 @@ func (self *BattleUnit) Update(time uint32) {
 
 func (self *BattleUnit) UpdateLife(time uint32) {
 	self.dead = self.Hp <= 0
+}
+
+func (self *BattleUnit) AddAuraConf(confs []*config.ProbAuraConf) {
+	for _, conf := range confs {
+		if math.RandomHitn(int(conf.Prob), 100) {
+			self.AddAura(self, conf.Id, conf.Lv)
+		}
+	}
 }
 
 func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
@@ -209,10 +241,18 @@ func (self *BattleTroop) Init(battle *Battle, attacker bool) {
 	for i := 0; i < MAX_TROOP_MEMBER; i++ {
 		if self.members[i] != nil {
 			if attacker {
-				self.members[i].Init(self, i+1)
+				self.members[i].set_troop(self, i+1)
 			} else {
-				self.members[i].Init(self, i+1+MAX_TROOP_MEMBER)
+				self.members[i].set_troop(self, i+1+MAX_TROOP_MEMBER)
 			}
+		}
+	}
+}
+
+func (self *BattleTroop) prepare() {
+	for i := 0; i < MAX_TROOP_MEMBER; i++ {
+		if self.members[i] != nil {
+			self.members[i].prepare()
 		}
 	}
 }
@@ -346,6 +386,10 @@ func (self *Battle) get_unit_name(u *BattleUnit) string {
 
 // 计算战斗
 func (self *Battle) Calc() {
+
+	self.attacker.prepare()
+	self.defender.prepare()
+
 	for {
 
 		if self.attacker.Lose() {

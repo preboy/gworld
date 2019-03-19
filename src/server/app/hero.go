@@ -76,14 +76,43 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		Prop:     battle.NewPropertyGroup(),
 	}
 
-	proto := config.HeroConf.Query(self.Id, self.Level)
+	// ------------------------------------------------------------------------
+	// 装入属性
 
-	u.Prop_base.Hp += float64(proto.Hp)
-	u.Prop_base.Apm += float64(proto.Apm)
-	u.Prop_base.Atk += float64(proto.Atk)
-	u.Prop_base.Def += float64(proto.Def)
-	u.Prop_base.Crit += float64(proto.Crit)
-	u.Prop_base.Hurt += float64(proto.Hurt)
+	for { // 等级
+		proto := config.HeroConf.Query(self.Id, self.Level)
+		u.Prop.AddProps(proto.Props)
+		break
+	}
+
+	for { // 精炼
+		if self.RefineLv == 0 {
+			break
+		}
+
+		if self.RefineSuper {
+			proto := config.RefineSuperConf.Query(self.RefineLv)
+			u.Prop.AddProps(proto.Props)
+		} else {
+			proto := config.RefineNormalConf.Query(self.RefineLv)
+			u.Prop.AddProps(proto.Props)
+		}
+		break
+	}
+
+	for { // 被动技能
+		for i := 0; i < 4; i++ {
+			v := &self.Passive[i]
+			proto := config.SkillProtoConf.Query(v.Id, v.Level)
+			if proto != nil {
+				u.Prop_base.AddConf(proto.Prop_Passive)
+			}
+		}
+		break
+	}
+
+	// ------------------------------------------------------------------------
+	// 装入技能
 
 	// 普攻
 	if len(proto.SkillCommon) > 0 {
@@ -105,36 +134,9 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		v := &self.Passive[i]
 		skill := config.SkillProtoConf.Query(v.Id, v.Level)
 		if skill != nil {
-			u.Prop_base.AddConf(skill.Prop_passive)
+			u.Skill_Passive = append(u.Skill_Passive, skill)
 		}
 	}
-
-	// 英雄精炼
-	if self.RefineLv > 0 {
-		if self.RefineSuper {
-			conf := config.RefineSuperConf.Query(self.RefineLv)
-			if conf != nil {
-				u.Prop_base.Hp += float64(conf.Hp)
-				u.Prop_base.Apm += float64(conf.Apm)
-				u.Prop_base.Atk += float64(conf.Atk)
-				u.Prop_base.Def += float64(conf.Def)
-				u.Prop_base.Crit += float64(conf.Crit)
-				u.Prop_base.Hurt += float64(conf.Hurt)
-			}
-		} else {
-			conf := config.RefineNormalConf.Query(self.RefineLv)
-			if conf != nil {
-				u.Prop_base.Hp += float64(conf.Hp)
-				u.Prop_base.Apm += float64(conf.Apm)
-				u.Prop_base.Atk += float64(conf.Atk)
-				u.Prop_base.Def += float64(conf.Def)
-				u.Prop_base.Crit += float64(conf.Crit)
-				u.Prop_base.Hurt += float64(conf.Hurt)
-			}
-		}
-	}
-
-	// 英雄专精
 
 	return u
 }

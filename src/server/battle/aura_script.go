@@ -27,11 +27,11 @@ var _creators map[uint32]func() AuraScript
 func init() {
 	// 脚本ID  创建函数
 	_creators = map[uint32]func() AuraScript{
-		1: NewAuraScript_1, // 回春
-		2: NewAuraScript_2, // 狂燥
-		3: NewAuraScript_3, // 合欢
-		4: NewAuraScript_4, // 吸血
-		5: NewAuraScript_5, // 掉防
+		1: NewAuraScript_1, // 每次update恢复HP
+		2: NewAuraScript_2, // 开始、结束时分别增加、减少属性
+		3: NewAuraScript_3, // 光环时间段时，抵挡x次伤害
+		4: NewAuraScript_4, // 给敌人造成伤害时，吸血
+		5: NewAuraScript_4, // 加光环
 	}
 }
 
@@ -46,10 +46,10 @@ func create_script_object(proto *config.Aura) AuraScript {
 
 // ============================================================================
 /*
-	回血
+	1 每次update恢复HP
 */
+
 type AuraScript_1 struct {
-	// 在这里存储每个光环自身的数据
 }
 
 func NewAuraScript_1() AuraScript {
@@ -57,30 +57,27 @@ func NewAuraScript_1() AuraScript {
 }
 
 func (self *AuraScript_1) OnStart(aura *BattleAura) {
-	fmt.Println("AuraScript_1 OnStart")
 }
 
 func (self *AuraScript_1) OnUpdate(aura *BattleAura) {
-	fmt.Println("AuraScript_1 OnUpdate")
-	aura.owner.Hp += int(aura.proto.Param1)
+	val := aura.owner.AddHp(int(aura.proto.Params[1]))
+
 	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(aura.proto.Param1), 0, 0)
+		aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(val), 0, 0)
 }
 
 func (self *AuraScript_1) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_1 Event:", evt)
 }
 
 func (self *AuraScript_1) OnFinish(aura *BattleAura) {
-	fmt.Println("AuraScript_1 OnFinish")
 }
 
 // ============================================================================
 /*
-	加攻
+	2 开始、结束时分别增加、减少属性
 */
+
 type AuraScript_2 struct {
-	// 在这里存储每个光环自身的数据
 }
 
 func NewAuraScript_2() AuraScript {
@@ -88,34 +85,37 @@ func NewAuraScript_2() AuraScript {
 }
 
 func (self *AuraScript_2) OnStart(aura *BattleAura) {
-	fmt.Println("AuraScript_2 OnStart")
-	aura.owner.Prop_addi.Atk += float64(aura.proto.Param1)
-	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Atk), int32(aura.proto.Param1), 0, 0)
+	aura.owner.Prop.AddProps(aura.proto.Props)
+
+	for _, v := range aura.proto.Props {
+		aura.owner.GetBattle().BattlePlayEvent_Effect(
+			aura.owner, aura.caster, AET_PropChanged, int32(v.Id), int32(v.Val), 0, 0)
+	}
 }
 
 func (self *AuraScript_2) OnUpdate(aura *BattleAura) {
-	fmt.Println("AuraScript_2 OnUpdate")
 }
 
 func (self *AuraScript_2) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_2 Event:", evt)
 }
 
 func (self *AuraScript_2) OnFinish(aura *BattleAura) {
-	fmt.Println("AuraScript_2 OnFinish")
-	aura.owner.Prop_addi.Atk -= float64(aura.proto.Param1)
-	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Atk), -int32(aura.proto.Param1), 0, 0)
+	aura.owner.Prop.SubProps(aura.proto.Props)
+	for _, v := range aura.proto.Props {
+		aura.owner.GetBattle().BattlePlayEvent_Effect(
+			aura.owner, aura.caster, AET_PropChanged, int32(v.Id), -int32(v.Val), 0, 0)
+	}
 }
 
 // ============================================================================
 /*
-	减伤
+	3 光环时间段时，抵挡x次伤害
 */
+
 type AuraScript_3 struct {
-	// 在这里存储每个光环自身的数据
-	times int32
+	curr_times int32
+	times      int32
+	hurt       float64
 }
 
 func NewAuraScript_3() AuraScript {
@@ -123,28 +123,29 @@ func NewAuraScript_3() AuraScript {
 }
 
 func (self *AuraScript_3) OnStart(aura *BattleAura) {
-	fmt.Println("AuraScript_3 OnStart")
+	self.times = aura.proto.Params[0]
+	self.hurt = float64(aura.proto.Params[1])
 }
 
 func (self *AuraScript_3) OnUpdate(aura *BattleAura) {
-	fmt.Println("AuraScript_3 OnUpdate")
 }
 
 func (self *AuraScript_3) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_3 Event:", evt)
 	if evt == BCE_AftDef {
-		if self.times >= aura.proto.Param1 {
+		if self.curr_times >= self.times {
 			return
 		}
-		self.times++
-		if ctx.damage.hurt > float64(aura.proto.Param2) {
-			ctx.damage.hurt -= float64(aura.proto.Param2)
+		self.curr_times++
+		if ctx.damage.hurt > self.hurt {
+			ctx.damage.hurt -= float64(self.hurt)
 		} else {
 			ctx.damage.hurt = 0
 		}
+
 		aura.owner.GetBattle().BattlePlayEvent_Effect(
-			aura.owner, aura.caster, AET_PropChanged, int32(PropType_Hurt), -int32(aura.proto.Param1), 0, 0)
-		if self.times >= aura.proto.Param1 {
+			aura.owner, aura.caster, AET_PropChanged, int32(PropType_Hurt), -int32(self.hurt), 0, 0)
+
+		if self.curr_times >= self.times {
 			aura.finish = true
 			return
 		}
@@ -152,15 +153,14 @@ func (self *AuraScript_3) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *Sk
 }
 
 func (self *AuraScript_3) OnFinish(aura *BattleAura) {
-	fmt.Println("AuraScript_3 OnFinish")
 }
 
 // ============================================================================
 /*
-   吸血光环
+   4 给敌人造成伤害时，吸收造成伤害百分比的血
 */
+
 type AuraScript_4 struct {
-	// 在这里存储每个光环自身的数据
 }
 
 func NewAuraScript_4() AuraScript {
@@ -168,22 +168,19 @@ func NewAuraScript_4() AuraScript {
 }
 
 func (self *AuraScript_4) OnStart(aura *BattleAura) {
-	fmt.Println("AuraScript_4 OnStart")
 }
 
 func (self *AuraScript_4) OnUpdate(aura *BattleAura) {
-	fmt.Println("AuraScript_4 OnUpdate")
 }
 
 func (self *AuraScript_4) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_4 Event:", aura.proto.Id, aura.proto.Level, evt)
+
 	if evt == BCE_Damage {
-		aura.owner.Hp += int(aura.proto.Param1)
-		if aura.owner.Hp > int(aura.owner.Prop.Hp) {
-			aura.owner.Hp = int(aura.owner.Prop.Hp)
-		}
+		val := aura.owner.AddHp(int(aura.proto.Params[0]))
+
 		aura.owner.GetBattle().BattlePlayEvent_Effect(
-			aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(aura.proto.Param1), 0, 0)
+			aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(val), 0, 0)
 	}
 }
 
@@ -193,10 +190,12 @@ func (self *AuraScript_4) OnFinish(aura *BattleAura) {
 
 // ============================================================================
 /*
-   掉防
+   未完成
+   5 加光环，给某些战斗位置的单位加光环，参数还没有想好
+   参数：[光环ID，光环LV，位置1，位置2...]
 */
+
 type AuraScript_5 struct {
-	// 在这里存储每个光环自身的数据
 }
 
 func NewAuraScript_5() AuraScript {
@@ -204,25 +203,17 @@ func NewAuraScript_5() AuraScript {
 }
 
 func (self *AuraScript_5) OnStart(aura *BattleAura) {
-	fmt.Println("AuraScript_5 OnStart")
-	aura.owner.Prop_addi.Def -= float64(aura.proto.Param1)
 
-	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Def), -int32(aura.proto.Param1), 0, 0)
+	aura_id := aura.proto.Params[0]
+	aura_lv := aura.proto.Params[1]
 }
 
 func (self *AuraScript_5) OnUpdate(aura *BattleAura) {
-	fmt.Println("AuraScript_5 OnUpdate")
 }
 
 func (self *AuraScript_5) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_5 Event:", aura.proto.Id, aura.proto.Level, evt)
 }
 
 func (self *AuraScript_5) OnFinish(aura *BattleAura) {
 	fmt.Println("AuraScript_5 OnFinish")
-	aura.owner.Prop_addi.Def += float64(aura.proto.Param1)
-
-	aura.owner.GetBattle().BattlePlayEvent_Effect(
-		aura.owner, aura.caster, AET_PropChanged, int32(PropType_Def), int32(aura.proto.Param1), 0, 0)
 }

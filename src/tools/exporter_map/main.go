@@ -33,7 +33,7 @@ func expand_json_map(field, text string) (string, string) {
 		}
 		s := "\t\t\t{\n"
 		for k, sub_value := range sub_values {
-			s = s + "\t\t\t\t\"" + fields[k] + "\" : " + sub_value
+			s = s + "\t\t\t\t\"" + fields[k] + "\": " + sub_value
 			if k != len(sub_values)-1 {
 				s = s + ",\n"
 			} else {
@@ -241,26 +241,26 @@ func main() {
 			}
 
 			if types[i] == "string" {
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				f.WriteString(fmt.Sprintf("\"%s\"", val))
 			} else if types[i] == "array" {
 				key, val = expand_json_array(key, val)
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				f.WriteString(val)
 			} else if types[i] == "array_string" {
 				key, val = expand_json_array_string(key, val)
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				f.WriteString(val)
 			} else if types[i] == "map" {
 				key, val = expand_json_map(key, val)
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				f.WriteString(val)
 			} else if types[i] == "float" {
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				v, _ := strconv.ParseFloat(val, 32)
 				f.WriteString(fmt.Sprintf("%.2f", v))
 			} else {
-				f.WriteString("\t\t\"" + key + "\" : ")
+				f.WriteString("\t\t\"" + key + "\": ")
 				f.WriteString(val)
 			}
 
