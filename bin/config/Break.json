@@ -1,112 +1,112 @@
 [
 	{
-		"id" : 1,
-		"name" : "少林寺1",
-		"openLv" : 1,
-		"teamId" : 1,
-		"dropId" : 10001,
-		"lootId" : 10001,
-		"startCgid" : 1,
-		"endCgid" : 2
+		"id": 1,
+		"name": "少林寺1",
+		"openLv": 1,
+		"teamId": 1,
+		"dropId": 10001,
+		"lootId": 10001,
+		"startCgid": 1,
+		"endCgid": 2
 	},
 
 	{
-		"id" : 2,
-		"name" : "少林寺2",
-		"openLv" : 1,
-		"teamId" : 2,
-		"dropId" : 10002,
-		"lootId" : 10002,
-		"startCgid" : 0,
-		"endCgid" : 0
+		"id": 2,
+		"name": "少林寺2",
+		"openLv": 1,
+		"teamId": 2,
+		"dropId": 10002,
+		"lootId": 10002,
+		"startCgid": 0,
+		"endCgid": 0
 	},
 
 	{
-		"id" : 3,
-		"name" : "少林寺3",
-		"openLv" : 2,
-		"teamId" : 3,
-		"dropId" : 10003,
-		"lootId" : 10003,
-		"startCgid" : 0,
-		"endCgid" : 3
+		"id": 3,
+		"name": "少林寺3",
+		"openLv": 2,
+		"teamId": 3,
+		"dropId": 10003,
+		"lootId": 10003,
+		"startCgid": 0,
+		"endCgid": 3
 	},
 
 	{
-		"id" : 4,
-		"name" : "武当山1",
-		"openLv" : 3,
-		"teamId" : 4,
-		"dropId" : 10004,
-		"lootId" : 10004,
-		"startCgid" : 4,
-		"endCgid" : 0
+		"id": 4,
+		"name": "武当山1",
+		"openLv": 3,
+		"teamId": 4,
+		"dropId": 10004,
+		"lootId": 10004,
+		"startCgid": 4,
+		"endCgid": 0
 	},
 
 	{
-		"id" : 5,
-		"name" : "武当山2",
-		"openLv" : 3,
-		"teamId" : 5,
-		"dropId" : 10005,
-		"lootId" : 10005,
-		"startCgid" : 0,
-		"endCgid" : 0
+		"id": 5,
+		"name": "武当山2",
+		"openLv": 3,
+		"teamId": 5,
+		"dropId": 10005,
+		"lootId": 10005,
+		"startCgid": 0,
+		"endCgid": 0
 	},
 
 	{
-		"id" : 6,
-		"name" : "武当山3",
-		"openLv" : 3,
-		"teamId" : 6,
-		"dropId" : 10006,
-		"lootId" : 10006,
-		"startCgid" : 0,
-		"endCgid" : 0
+		"id": 6,
+		"name": "武当山3",
+		"openLv": 3,
+		"teamId": 6,
+		"dropId": 10006,
+		"lootId": 10006,
+		"startCgid": 0,
+		"endCgid": 0
 	},
 
 	{
-		"id" : 7,
-		"name" : "武当山4",
-		"openLv" : 4,
-		"teamId" : 7,
-		"dropId" : 10007,
-		"lootId" : 10007,
-		"startCgid" : 0,
-		"endCgid" : 5
+		"id": 7,
+		"name": "武当山4",
+		"openLv": 4,
+		"teamId": 7,
+		"dropId": 10007,
+		"lootId": 10007,
+		"startCgid": 0,
+		"endCgid": 5
 	},
 
 	{
-		"id" : 8,
-		"name" : "论剑1",
-		"openLv" : 5,
-		"teamId" : 8,
-		"dropId" : 10007,
-		"lootId" : 10007,
-		"startCgid" : 6,
-		"endCgid" : 0
+		"id": 8,
+		"name": "论剑1",
+		"openLv": 5,
+		"teamId": 8,
+		"dropId": 10007,
+		"lootId": 10007,
+		"startCgid": 6,
+		"endCgid": 0
 	},
 
 	{
-		"id" : 9,
-		"name" : "论剑2",
-		"openLv" : 5,
-		"teamId" : 9,
-		"dropId" : 10007,
-		"lootId" : 10007,
-		"startCgid" : 0,
-		"endCgid" : 0
+		"id": 9,
+		"name": "论剑2",
+		"openLv": 5,
+		"teamId": 9,
+		"dropId": 10007,
+		"lootId": 10007,
+		"startCgid": 0,
+		"endCgid": 0
 	},
 
 	{
-		"id" : 10,
-		"name" : "论剑3",
-		"openLv" : 6,
-		"teamId" : 10,
-		"dropId" : 10007,
-		"lootId" : 10007,
-		"startCgid" : 0,
-		"endCgid" : 7
+		"id": 10,
+		"name": "论剑3",
+		"openLv": 6,
+		"teamId": 10,
+		"dropId": 10007,
+		"lootId": 10007,
+		"startCgid": 0,
+		"endCgid": 7
 	}
 
 ]
