@@ -44,7 +44,19 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 		Id:       self.proto.Id,
 		Lv:       self.proto.Level,
 		UnitType: uint32(self.UnitType()),
+		Prop:     battle.NewPropertyGroup(),
 	}
+
+	// ------------------------------------------------------------------------
+	// 装入属性
+
+	for { // 等级
+		u.Prop.AddProps(self.proto.Props)
+		break
+	}
+
+	// ------------------------------------------------------------------------
+	// 装入技能
 
 	// 普攻
 	if len(self.proto.SkillCommon) > 0 {
@@ -59,19 +71,6 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 			u.Skill_battle = append(u.Skill_battle, s)
 		}
 	}
-
-	// 可见属性计算
-	u.Prop_base = &battle.Property{
-		Hp:   float64(self.proto.Hp),
-		Apm:  float64(self.proto.Apm),
-		Atk:  float64(self.proto.Atk),
-		Def:  float64(self.proto.Def),
-		Crit: float64(self.proto.Crit),
-		Hurt: float64(self.proto.Hurt),
-	}
-
-	// 加成属性计算 TODO
-	u.Prop_addi = &battle.Property{}
 
 	return u
 }

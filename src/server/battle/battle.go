@@ -48,9 +48,9 @@ type BattleUnit struct {
 	// 角色战斗属性
 	Prop *PropertyGroup
 
-	Hp   int    // 当前HP
-	Rst  uint32 // 分钟 / Apm
-	Last uint32 // 上一次时间
+	Hp   float64 // 当前HP
+	Rst  uint32  // 分钟 / Apm
+	Last uint32  // 上一次时间
 
 	// 战斗技能、光环
 	Skill_comm    *BattleSkill   // 普攻
@@ -73,20 +73,24 @@ func (self *BattleUnit) Dead() bool {
 	return self.dead
 }
 
-func (self *BattleUnit) AddHp(val int) int {
+func (self *BattleUnit) AddHp(val float64) float64 {
 	if self.Hp <= 0 {
 		return 0
 	}
 
-	max := int(self.Prop.Value(PropType_HP))
+	max_hp := self.Prop.Value(PropType_HP)
 
-	if self.Hp+val > max {
-		val = max - self.Hp
+	if self.Hp+val > max_hp {
+		val = max_hp - self.Hp
 	}
 
 	self.Hp += val
 
 	return val
+}
+
+func (self *BattleUnit) SubHp(val float64) {
+	self.Hp -= val
 }
 
 func (self *BattleUnit) set_troop(troop *BattleTroop, pos int) {

@@ -9,21 +9,17 @@ import (
 
 // ============================================================================
 
-type SkillDamage struct {
-	hurt float64
-	crit bool
-}
-
 type SkillContext struct {
 	caster      *BattleUnit
 	target      *BattleUnit
-	caster_prop *PropertyGroup // 攻击者的属性(此处只读不写)
-	target_prop *PropertyGroup // 防御者的属性(此处只读不写)
-	prop_add    Property       // 攻击者光环加成
-	damage_send SkillDamage    // 攻击者造成实际伤害
-	damage_recv SkillDamage    // 防御者计算防御之后的伤害
-	damage_sub  SkillDamage    // 防御者计算防御之后光环减免部分
-	damage      SkillDamage    // 最终造成的实际伤害
+	caster_prop *PropertyGroup
+	target_prop *PropertyGroup
+
+	crit        bool    // 是否暴击
+	hurt        float64 // 未计算暴击前的伤害
+	damage_send float64 // 攻击者造成实际伤害
+	damage_recv float64 // 防御者计算格挡之后、计算防御之前的伤害
+	damage_calc float64 // 最终造成的实际伤害
 }
 
 type BattleSkill struct {
@@ -40,14 +36,13 @@ type BattleSkill struct {
 
 func NewBattleSkill(id, lv uint32) *BattleSkill {
 	proto := config.SkillProtoConf.Query(id, lv)
-	if proto == nil {
-		return nil
+	if proto != nil {
+		return &BattleSkill{
+			proto:  proto,
+			finish: true,
+		}
 	}
-	sb := &BattleSkill{
-		proto:  proto,
-		finish: true,
-	}
-	return sb
+	return nil
 }
 
 func (self *BattleSkill) Cast(caster *BattleUnit, time uint32) {
@@ -150,42 +145,6 @@ func (self *BattleSkill) onFinish() {
 	// fmt.Println("[技能", self.time, "]", self.caster.Name(), "释放的技能结束了", self.proto.Name)
 }
 
-// 处理技能的附加属性
-func attachment_skill_attr(p *Property, props []*config.PropConf) {
-	for _, prop := range props {
-		switch PropType(prop.Id) {
-		case PropType_HP:
-			{
-				p.Hp += prop.Val
-			}
-		case PropType_Apm:
-			{
-				p.Apm += prop.Val
-			}
-		case PropType_Atk:
-			{
-				p.Atk += prop.Val
-			}
-		case PropType_Def:
-			{
-				p.Def += prop.Val
-			}
-		case PropType_Crit:
-			{
-				p.Crit += prop.Val
-			}
-		case PropType_Hurt:
-			{
-				p.Hurt += prop.Val
-			}
-		default:
-			{
-				fmt.Println("Unsupported Proptype:", prop.Id)
-			}
-		}
-	}
-}
-
 func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	ctx := &SkillContext{}
 
@@ -195,83 +154,73 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	ctx.caster_prop = ctx.caster.Prop
 	ctx.target_prop = ctx.target.Prop
 
-	// ----------- 攻击方 -----------
-	props := self.proto.Prop_major
-	if !major {
-		props = self.proto.Prop_minor
+	// ------------------------------------------------------------------------
+	// 攻击方
+
+	// 计算伤害值
+	if major {
+		ctx.hurt = self.get_attack_for_target_major()
+	} else {
+		ctx.hurt = self.get_attack_for_target_minor()
 	}
 
-	// step 1: 技能的附加属性
-	attachment_skill_attr(&ctx.prop_add, props)
+	// 计算暴击
+	if math.RandomHitn(int(ctx.caster_prop.Value(PropType_Crit)), 100) {
+		ctx.crit = true
+		ctx.damage_send = ctx.hurt * (1 + ctx.caster_prop.Value(PropType_Hurt))
+	} else {
+		ctx.damage_send = ctx.hurt
+	}
 
-	// step 2: 计算光环
+	// step 2: 计算光环(对damage_send做随后的调整，比如必定暴击)
 	for _, aura := range ctx.caster.Auras_battle {
 		if aura != nil {
 			aura.OnEvent(BCE_PreAtk, ctx)
 		}
 	}
 
-	// step 3: 计算输出伤害
-	hurt := ctx.caster_prop.Atk + ctx.prop_add.Atk
-	crit := ctx.caster_prop.Crit + ctx.prop_add.Crit
+	// ------------------------------------------------------------------------
+	// 防御方
 
-	ctx.damage_send.hurt = hurt
-	ctx.damage_send.crit = false
+	ctx.damage_recv = ctx.damage_send
 
-	if math.RandomHitn(int(crit), 100) {
-		ctx.damage_send.crit = true
-		ctx.damage_send.hurt = hurt * (1 + (ctx.caster_prop.Hurt+ctx.prop_add.Hurt)/100.0)
-	}
-
-	// step 4: 处理攻击方光环事件
-	for _, aura := range ctx.caster.Auras_battle {
-		if aura != nil {
-			aura.OnEvent(BCE_Damage, ctx)
-		}
-	}
-
-	// ----------- 防御方 -----------
-
-	// step 5: 计算防御
-	if ctx.damage_send.hurt >= ctx.target_prop.Def {
-		ctx.damage_recv.hurt = ctx.damage_send.hurt - ctx.target_prop.Def
-	} else {
-		ctx.damage_recv.hurt = 0
-	}
-	ctx.damage_recv.crit = ctx.damage_send.crit
-
-	// step 6: 计算光环
+	// 计算光环(对攻击先行调整，比如格挡暴击、处理攻防类型克制关系)
 	for _, aura := range target.Auras_battle {
 		if aura != nil {
 			aura.OnEvent(BCE_AftDef, ctx)
 		}
 	}
 
-	// step 7: 计算最终伤害
-	if ctx.damage_recv.hurt > ctx.damage_sub.hurt {
-		ctx.damage.hurt = ctx.damage_recv.hurt - ctx.damage_sub.hurt
-	} else {
-		ctx.damage.hurt = 0
-	}
-	ctx.damage.crit = ctx.damage_recv.crit
-
-	text := " <伤害了> "
-	if target.Hp > int(ctx.damage.hurt) {
-		target.Hp -= int(ctx.damage.hurt)
-	} else {
-		target.Hp = 0
-		text = " <击杀了> "
+	ctx.damage_calc = ctx.damage_recv - ctx.target_prop.Value(PropType_Def)
+	if ctx.damage_calc < 1 {
+		ctx.damage_calc = 1
 	}
 
-	var is_crit uint32
-	if ctx.damage.crit {
+	// step 6: 计算光环(对抵挡伤害类的光环在此工作)
+	for _, aura := range target.Auras_battle {
+		if aura != nil {
+			aura.OnEvent(BCE_AftDef, ctx)
+		}
+	}
+
+	// 实际伤害
+	ctx.target.SubHp(ctx.damage_calc)
+
+	text := " <伤害了>"
+	if target.Hp <= 0 {
+		text = " <击杀了>"
+	}
+
+	if ctx.crit {
+		text += "[+暴击]"
+	}
+
+	fmt.Sprintln("%d [%s] %s [%s] %f/%f", self.time, ctx.caster.Name(), text, ctx.target.Name(), ctx.target.Hp, ctx.target_prop.Value(PropType_HP))
+
+	is_crit := uint32(0)
+	if ctx.crit {
 		is_crit = 1
-		text += "[+暴击] "
 	}
 
-	str := ctx.caster.Name() + "[" + ctx.caster.Skill_curr.proto.Name + "]" + text + target.Name()
-
-	fmt.Println(self.time, str, ctx.damage.hurt, target.Hp, "/", target.Prop.Hp)
-
-	self.caster.GetBattle().BattlePlayEvent_Hurt(self.caster, target, uint32(ctx.damage.hurt), is_crit, 0)
+	self.caster.GetBattle().BattlePlayEvent_Hurt(self.caster, target, uint32(ctx.damage_calc), is_crit, 0)
 }

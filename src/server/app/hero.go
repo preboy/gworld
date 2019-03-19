@@ -105,7 +105,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 			v := &self.Passive[i]
 			proto := config.SkillProtoConf.Query(v.Id, v.Level)
 			if proto != nil {
-				u.Prop_base.AddConf(proto.Prop_Passive)
+				u.Prop.AddProps(proto.Prop_Passive)
 			}
 		}
 		break
@@ -114,10 +114,13 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	// ------------------------------------------------------------------------
 	// 装入技能
 
-	// 普攻
-	if len(proto.SkillCommon) > 0 {
-		sc := proto.SkillCommon[0]
-		u.Skill_comm = battle.NewBattleSkill(sc.Id, sc.Lv)
+	for { // 普攻
+		proto := config.HeroConf.Query(self.Id, self.Level)
+		if len(proto.SkillCommon) > 0 {
+			sc := proto.SkillCommon[0]
+			u.Skill_comm = battle.NewBattleSkill(sc.Id, sc.Lv)
+		}
+		break
 	}
 
 	// 主动技能
@@ -134,7 +137,10 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 		v := &self.Passive[i]
 		skill := config.SkillProtoConf.Query(v.Id, v.Level)
 		if skill != nil {
-			u.Skill_Passive = append(u.Skill_Passive, skill)
+			u.Skill_Passive = append(u.Skill_Passive, &battle.BattleSkill{
+				Id: v.id,
+				Lv: v.Level,
+			})
 		}
 	}
 

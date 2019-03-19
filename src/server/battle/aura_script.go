@@ -60,7 +60,7 @@ func (self *AuraScript_1) OnStart(aura *BattleAura) {
 }
 
 func (self *AuraScript_1) OnUpdate(aura *BattleAura) {
-	val := aura.owner.AddHp(int(aura.proto.Params[1]))
+	val := aura.owner.AddHp(float64(aura.proto.Params[1]))
 
 	aura.owner.GetBattle().BattlePlayEvent_Effect(
 		aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(val), 0, 0)
@@ -136,10 +136,10 @@ func (self *AuraScript_3) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *Sk
 			return
 		}
 		self.curr_times++
-		if ctx.damage.hurt > self.hurt {
-			ctx.damage.hurt -= float64(self.hurt)
+		if ctx.damage_calc > self.hurt {
+			ctx.damage_calc -= self.hurt
 		} else {
-			ctx.damage.hurt = 0
+			ctx.damage_calc = 1
 		}
 
 		aura.owner.GetBattle().BattlePlayEvent_Effect(
@@ -177,7 +177,7 @@ func (self *AuraScript_4) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *Sk
 	fmt.Println("AuraScript_4 Event:", aura.proto.Id, aura.proto.Level, evt)
 
 	if evt == BCE_Damage {
-		val := aura.owner.AddHp(int(aura.proto.Params[0]))
+		val := aura.owner.AddHp(float64(aura.proto.Params[0]))
 
 		aura.owner.GetBattle().BattlePlayEvent_Effect(
 			aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(val), 0, 0)
@@ -203,9 +203,10 @@ func NewAuraScript_5() AuraScript {
 }
 
 func (self *AuraScript_5) OnStart(aura *BattleAura) {
+	// todo
 
-	aura_id := aura.proto.Params[0]
-	aura_lv := aura.proto.Params[1]
+	// aura_id := aura.proto.Params[0]
+	// aura_lv := aura.proto.Params[1]
 }
 
 func (self *AuraScript_5) OnUpdate(aura *BattleAura) {
