@@ -56,7 +56,7 @@ func (self *Property) add(part uint32, val float64, add bool) {
 	}
 
 	if !add {
-		val *= -1
+		val = -val
 	}
 
 	switch part {
@@ -72,23 +72,22 @@ func (self *Property) add(part uint32, val float64, add bool) {
 }
 
 func (self *Property) Calc() {
-	if self.daity {
-		self.daity = false
-		self.total = self.base*(1+self.perc) + self.extra
-		if self.total < 0 {
-			self.total = 0
-		}
+	if !self.daity {
+		return
+	}
+
+	self.daity = false
+	self.total = self.base*(1+self.perc) + self.extra
+
+	if self.total < 0 {
+		log.Error("Property.Calc ERROR: %f, %f, %f, %f", self.base, self.perc, self.extra, self.total)
+		self.total = 0
 	}
 }
 
 func (self *Property) Value() float64 {
 	if self.daity {
 		self.Calc()
-	}
-
-	if self.total < 0 {
-		log.Error("error value: self.total = %f", self.total)
-		return 0
 	}
 
 	return self.total
