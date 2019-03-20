@@ -12,8 +12,8 @@ type Aura struct {
 	Name      string      `json:"name"`
 	Last_t    uint32      `json:"last_t"`
 	Itv_t     uint32      `json:"itv_t"`
-	Deletable []int32     `json:"deletable"`
-	Helpful   []int32     `json:"helpful"`
+	Deletable int32       `json:"deletable"`
+	Helpful   int32       `json:"helpful"`
 	ScriptId  uint32      `json:"script_id"`
 	Props     []*PropConf `json:"props"`
 	Params    []int32     `json:"params"`

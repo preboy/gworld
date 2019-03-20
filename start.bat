@@ -9,6 +9,7 @@ if %ERRORLEVEL% NEQ 0 goto ERROR
 
 cd bin
 server.exe
+cd ..
 goto END
 
 :ERROR

@@ -53,9 +53,9 @@ type BattleUnit struct {
 	Last uint32  // 上一次时间
 
 	// 战斗技能、光环
-	Skill_comm    *BattleSkill   // 普攻
-	Skill_battle  []*BattleSkill // 战斗技能
-	Skill_Passive []*BattleSkill // 被动技能
+	Skill_comm    *BattleSkill    // 普攻
+	Skill_battle  []*BattleSkill  // 战斗技能
+	Skill_Passive []*config.Skill // 被动技能原型
 
 	Skill_curr   *BattleSkill  // 当前正在释放技能
 	Auras_battle []*BattleAura // 战斗光环
@@ -100,7 +100,7 @@ func (self *BattleUnit) set_troop(troop *BattleTroop, pos int) {
 
 func (self *BattleUnit) prepare() {
 	for _, v := range self.Skill_Passive {
-		self.AddAuraConf(v.proto.Aura_Passive)
+		self.AddAuraConf(v.Aura_Passive)
 	}
 	self.UpdateProp()
 }

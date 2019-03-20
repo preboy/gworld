@@ -135,12 +135,9 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	// 被动技能
 	for i := 0; i < 4; i++ {
 		v := &self.Passive[i]
-		skill := config.SkillProtoConf.Query(v.Id, v.Level)
-		if skill != nil {
-			u.Skill_Passive = append(u.Skill_Passive, &battle.BattleSkill{
-				Id: v.id,
-				Lv: v.Level,
-			})
+		proto := config.SkillProtoConf.Query(v.Id, v.Level)
+		if proto != nil {
+			u.Skill_Passive = append(u.Skill_Passive, proto)
 		}
 	}
 
