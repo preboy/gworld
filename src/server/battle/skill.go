@@ -59,7 +59,8 @@ func (self *BattleSkill) Cast(caster *BattleUnit, time uint32) {
 	}
 
 	self.caster.GetBattle().BattlePlayEvent_Cast(self.caster, self.proto.Id, self.proto.Level, targets)
-	// fmt.Println("[技能", time, "]", "释放了技能:", self.proto.Name)
+
+	fmt.Printf("[%d] %s<%d> 释放了 %s\n", time, self.caster.Base.Name(), self.caster.Pos, self.proto.Name)
 }
 
 func (self *BattleSkill) Update(time uint32) {
@@ -142,7 +143,7 @@ func (self *BattleSkill) onFinish() {
 		}
 	}
 
-	// fmt.Println("[技能", self.time, "]", self.caster.Name(), "释放的技能结束了", self.proto.Name)
+	fmt.Printf("[%d %s<%d>的技能 <%s> 结束了\n", self.time, self.caster.Base.Name(), self.caster.Pos, self.proto.Name)
 }
 
 func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
@@ -167,7 +168,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	// 计算暴击
 	if math.RandomHitn(int(ctx.caster_prop.Value(PropType_Crit)), 100) {
 		ctx.crit = true
-		ctx.damage_send = ctx.hurt * (1 + ctx.caster_prop.Value(PropType_Hurt))
+		ctx.damage_send = ctx.hurt * (1 + ctx.caster_prop.Value(PropType_Hurt)/100)
 	} else {
 		ctx.damage_send = ctx.hurt
 	}
@@ -203,6 +204,8 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 		}
 	}
 
+	origin_hp := ctx.target.Hp
+
 	// 实际伤害
 	ctx.target.SubHp(ctx.damage_calc)
 
@@ -215,7 +218,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 		text += "[+暴击]"
 	}
 
-	fmt.Sprintln("%d [%s] %s [%s] %f/%f", self.time, ctx.caster.Name(), text, ctx.target.Name(), ctx.target.Hp, ctx.target_prop.Value(PropType_HP))
+	fmt.Printf("[%d] %s %s %s, 伤害=%f/%f, %f/%f\n", self.time, ctx.caster.Name(), text, ctx.target.Name(), ctx.damage_calc, origin_hp, ctx.target.Hp, ctx.target_prop.Value(PropType_HP))
 
 	is_crit := uint32(0)
 	if ctx.crit {

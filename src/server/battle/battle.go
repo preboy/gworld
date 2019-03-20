@@ -43,7 +43,6 @@ type BattleUnit struct {
 	UnitType uint32       // 生物类型
 	Pos      uint32       // 位置 		pos start 1 to 12
 	Troop    *BattleTroop // 队伍
-	dead     bool         // 是否死亡
 
 	// 角色战斗属性
 	Prop *PropertyGroup
@@ -70,7 +69,7 @@ func (self *BattleUnit) Name() string {
 }
 
 func (self *BattleUnit) Dead() bool {
-	return self.dead
+	return self.Hp <= 0
 }
 
 func (self *BattleUnit) AddHp(val float64) float64 {
@@ -102,12 +101,21 @@ func (self *BattleUnit) prepare() {
 	for _, v := range self.Skill_Passive {
 		self.AddAuraConf(v.Aura_Passive)
 	}
+
 	self.UpdateProp()
+
+	self.Hp = self.Prop.Value(PropType_HP)
 }
 
 func (self *BattleUnit) UpdateProp() {
 	self.Prop.Calc()
-	self.Rst = uint32(60000 / self.Prop.Value(PropType_Apm))
+
+	apm := self.Prop.Value(PropType_Apm)
+	if apm <= 0 {
+		self.Rst = uint32(60000 / 1)
+	} else {
+		self.Rst = uint32(60000 / apm)
+	}
 }
 
 func (self *BattleUnit) Update(time uint32) {
@@ -152,10 +160,6 @@ func (self *BattleUnit) Update(time uint32) {
 			}
 		}
 	}
-}
-
-func (self *BattleUnit) UpdateLife(time uint32) {
-	self.dead = self.Hp <= 0
 }
 
 func (self *BattleUnit) AddAuraConf(confs []*config.ProbAuraConf) {
@@ -400,6 +404,7 @@ func (self *Battle) Calc() {
 			self.Result.Win = false
 			break
 		}
+
 		if self.defender.Lose() {
 			self.Result.Win = true
 			break
@@ -411,21 +416,10 @@ func (self *Battle) Calc() {
 				u.Update(self.time)
 			}
 		}
+
 		for _, u := range self.defender.members {
 			if u != nil && !u.Dead() {
 				u.Update(self.time)
-			}
-		}
-
-		// 判生死
-		for _, u := range self.attacker.members {
-			if u != nil && !u.Dead() {
-				u.UpdateLife(self.time)
-			}
-		}
-		for _, u := range self.defender.members {
-			if u != nil && !u.Dead() {
-				u.UpdateLife(self.time)
 			}
 		}
 

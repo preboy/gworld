@@ -21,17 +21,17 @@ func (self *BattleSkill) get_attack_for_target_minor() float64 {
 
 // ----------------------------------------------------------------------------
 
-func (self *BattleSkill) get_extra_atk(confs []*config.ExtraAtkConf) float64 {
+func (self *BattleSkill) get_extra_atk(confs []*config.ExtraAtkConf) (ret float64) {
 	for _, conf := range confs {
 		switch conf.Typ {
 		case 1:
-			return conf.Val
+			ret += conf.Val
 		case 2:
-			return conf.Val * self.caster.Prop.Value(PropType_Atk)
+			ret += conf.Val * self.caster.Prop.Value(PropType_Atk) / 100
 		default:
-			log.Error("known extra atk type", conf.Typ)
+			log.Error("unknown extra atk type = %d", conf.Typ)
 		}
 	}
 
-	return 0
+	return ret
 }
