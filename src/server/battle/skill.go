@@ -7,6 +7,14 @@ import (
 	"server/config"
 )
 
+const (
+	_           BattleCalcEvent = 0 + iota
+	BCE_PreSend                 // 发送最终伤害前(攻方, damage_send) 如:百分百暴击
+	BCE_PreDef                  // 防御之前(防方, damage_recv) 如:克制暴击、攻击类型克制
+	BCE_PreHurt                 // 最终伤害之前(防方, damage_calc)如:抵挡伤害
+	BCE_PreBack                 // 生成伤害之后(攻方, kill)如:吸血，死亡触发事件
+)
+
 // ============================================================================
 
 type SkillContext struct {
@@ -15,6 +23,7 @@ type SkillContext struct {
 	caster_prop *PropertyGroup
 	target_prop *PropertyGroup
 
+	kill        bool    // 是否最后一击
 	crit        bool    // 是否暴击
 	hurt        float64 // 未计算暴击前的伤害
 	damage_send float64 // 攻击者造成实际伤害
@@ -173,10 +182,10 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 		ctx.damage_send = ctx.hurt
 	}
 
-	// step 2: 计算光环(对damage_send做随后的调整，比如必定暴击)
+	// 计算光环(对damage_send做随后的调整，比如必定暴击)
 	for _, aura := range ctx.caster.Auras_battle {
 		if aura != nil {
-			aura.OnEvent(BCE_PreAtk, ctx)
+			aura.OnEvent(BCE_PreSend, ctx)
 		}
 	}
 
@@ -188,7 +197,7 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	// 计算光环(对攻击先行调整，比如格挡暴击、处理攻防类型克制关系)
 	for _, aura := range target.Auras_battle {
 		if aura != nil {
-			aura.OnEvent(BCE_AftDef, ctx)
+			aura.OnEvent(BCE_PreDef, ctx)
 		}
 	}
 
@@ -197,10 +206,10 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 		ctx.damage_calc = 1
 	}
 
-	// step 6: 计算光环(对抵挡伤害类的光环在此工作)
+	// 计算光环(对抵挡伤害类的光环在此工作)
 	for _, aura := range target.Auras_battle {
 		if aura != nil {
-			aura.OnEvent(BCE_AftDef, ctx)
+			aura.OnEvent(BCE_PreHurt, ctx)
 		}
 	}
 
@@ -212,18 +221,23 @@ func (self *BattleSkill) do_attack(target *BattleUnit, major bool) {
 	text := " <伤害了>"
 	if target.Hp <= 0 {
 		text = " <击杀了>"
+		ctx.kill = true
 	}
-
-	if ctx.crit {
-		text += "[+暴击]"
-	}
-
-	fmt.Printf("[%d] %s %s %s, 伤害=%f/%f, %f/%f\n", self.time, ctx.caster.Name(), text, ctx.target.Name(), ctx.damage_calc, origin_hp, ctx.target.Hp, ctx.target_prop.Value(PropType_HP))
 
 	is_crit := uint32(0)
 	if ctx.crit {
 		is_crit = 1
+		text += "[+暴击]"
 	}
+
+	// 计算光环
+	for _, aura := range ctx.caster.Auras_battle {
+		if aura != nil {
+			aura.OnEvent(BCE_PreBack, ctx)
+		}
+	}
+
+	fmt.Printf("[%d] %s %s %s, 伤害=%f/%f, %f/%f\n", self.time, ctx.caster.Name(), text, ctx.target.Name(), ctx.damage_calc, origin_hp, ctx.target.Hp, ctx.target_prop.Value(PropType_HP))
 
 	self.caster.GetBattle().BattlePlayEvent_Hurt(self.caster, target, uint32(ctx.damage_calc), is_crit, 0)
 }

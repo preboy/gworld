@@ -131,7 +131,7 @@ func (self *AuraScript_3) OnUpdate(aura *BattleAura) {
 }
 
 func (self *AuraScript_3) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	if evt == BCE_AftDef {
+	if evt == BCE_PreHurt {
 		if self.curr_times >= self.times {
 			return
 		}
@@ -176,8 +176,8 @@ func (self *AuraScript_4) OnUpdate(aura *BattleAura) {
 func (self *AuraScript_4) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
 	fmt.Println("AuraScript_4 Event:", aura.proto.Id, aura.proto.Level, evt)
 
-	if evt == BCE_Damage {
-		val := aura.owner.AddHp(float64(aura.proto.Params[0]))
+	if evt == BCE_PreBack {
+		val := aura.owner.AddHp(float64(aura.proto.Params[0]) * ctx.damage_calc)
 
 		aura.owner.GetBattle().BattlePlayEvent_Effect(
 			aura.owner, aura.caster, AET_PropChanged, int32(PropType_HP), int32(val), 0, 0)

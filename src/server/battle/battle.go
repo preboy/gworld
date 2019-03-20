@@ -12,13 +12,6 @@ import (
 type BattleCalcEvent uint32 // 用于战斗计算
 
 const (
-	_          BattleCalcEvent = 0 + iota
-	BCE_PreAtk                 // 计算攻击之前 (累积光环的附加攻击)
-	BCE_Damage                 // 发出伤害
-	BCE_AftDef                 // 计算防御之后 (抵挡伤害)
-)
-
-const (
 	MAX_TROOP_MEMBER = 6
 )
 
