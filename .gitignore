@@ -3,7 +3,8 @@
 /bin/*.exe~
 /bin/*.cpu
 /bin/*.memory
-/bin/server
+/bin/game
+/bin/router
 /bin/client
 /bin/exporter
 /bin/exporter_map

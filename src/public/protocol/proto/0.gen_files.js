@@ -33,7 +33,7 @@ function gen_handler_go() {
             return
         }
 
-        let name = `../../../server/player/handler_${path.basename(fn, ".proto")}.go`
+        let name = `../../../game/player/handler_${path.basename(fn, ".proto")}.go`
 
         if (!fs.existsSync(name)) {
             let file = fs.openSync(name, "w")
@@ -289,7 +289,7 @@ function export_proto_files() {
     gen_proto_file_go("../opcode.go")
     gen_proto_file_lua("../../../../../2dgame/simulator/win32/src/message/opcode.lua")
 
-    gen_register_go("../../../server/player/handler_0_init.go")
+    gen_register_go("../../../game/player/handler_0_init.go")
     gen_register_lua("../../../../../2dgame/simulator/win32/src/message/init.lua")
 
     gen_handler_go()
