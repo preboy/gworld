@@ -73,3 +73,19 @@
 	破坏大阵
 
 
+---------------------------------------------------------------------------------
+-- 服务器分布
+
+sdk		登录验证、支付确定
+auth		登录验证 game -> auth -> sdk -> auth -> game
+bill		支付回调 sdk -> bill -> game
+admin		GM工具 配置工具(跨服配置、合服配置)
+
+
+客户端用到的
+pull	拉取		公告、服务器列表信息
+push	上报		错误报错
+
+
+router	game之间的消息转发，跨服管理
+game	game logic & for all client request
