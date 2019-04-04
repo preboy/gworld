@@ -15,7 +15,7 @@ app.use(function(req, res, next){
     next();
 });
 
-app.use('/api', auth);
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -30,14 +30,15 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.end('Not Found Page');
+  res.end('error');
+  console.error(err);
 });
 
 // ----------------------------------------------------------------------------
 // process events
 
 process.on('uncaughtException', (err) => {
-    console.log('uncaughtException', err);
+    console.error('uncaughtException', err);
 });
 
 
