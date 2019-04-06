@@ -1,7 +1,8 @@
 {
   "name": "web",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
+  "description": "all web projects",
   "main": "index.js",
   "dependencies": {
     "async": "^2.6.2",
@@ -13,6 +14,7 @@
     "md5": "^2.2.1",
     "mongodb": "^3.2.2",
     "morgan": "^1.9.1",
+    "pug": "^2.0.3",
     "request": "^2.88.0"
   },
   "devDependencies": {},

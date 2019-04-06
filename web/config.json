@@ -1,25 +1,25 @@
 {
-    "admin" : {
-        "port" : 5001
+    "sdk" : {
+        "port" : 2100
     },
 
     "auth" : {
-        "port" : 5002
+        "port" : 2200
     },
 
     "bill" : {
-        "port" : 5003
+        "port" : 2300
     },
 
     "pull" : {
-        "port" : 5004
+        "port" : 2400
     },
 
     "push" : {
-        "port" : 5005
+        "port" : 2500
     },
 
-    "sdk" : {
-        "port" : 5006
+    "admin" : {
+        "port" : 2600
     }    
 }
