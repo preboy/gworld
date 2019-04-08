@@ -18,7 +18,6 @@ type Player struct {
 	evtMgr      *event.EventMgr
 	timerMgr    *timer.TimerMgr
 	q_packets   chan *tcp.Packet
-	server_id   uint32 // 当前Player所运行的server_id
 	last_update int64
 	run         bool
 	w           *sync.WaitGroup

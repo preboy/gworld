@@ -1,6 +1,8 @@
 package player
 
 import (
+	"fmt"
+
 	"core/log"
 	"game/app"
 	"game/db_mgr"
@@ -41,9 +43,13 @@ func init() {
 }
 
 func (self *Player) SetName(name string) {
+	// TODO checking valid & repeat
+
 	old_name := self.data.Name
-	self.data.SetName(name)
-	new_name := self.data.Name
+	new_name := fmt.Sprintf("%s-%s", app.GetGameId(), name)
+
+	self.data.Name = new_name
+
 	_plrs_name[old_name] = nil
 	_plrs_name[new_name] = self
 }
@@ -131,8 +137,6 @@ func EnterGame(acct string, s ISession) bool {
 	}
 
 	plr.Init()
-
-	plr.server_id = app.GetServerConfig().Server_id
 
 	s.SetPlayer(plr)
 	plr.SetSession(s)

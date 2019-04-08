@@ -1,52 +1,47 @@
 {
     "common": {
-        "plat_id": "zcg self",
+        "plat_id": "dx",
         "debug_mode": true
     },
 
     "sdk": {
-        "port": 2100
+        "port": 8100
     },
 
     "auth": {
-        "port": 2200
+        "port": 8200
     },
 
     "bill": {
-        "port": 2300
+        "port": 8300
     },
 
     "pull": {
-        "port": 2400
+        "port": 8400
     },
 
     "push": {
-        "port": 2500
+        "port": 8500
     },
 
     "admin": {
-        "port": 2600
+        "port": 8600
     },
 
     "router": {
-        "port": 2700
+        "port": 8700
     },
 
     "games": {
         "game1": {
-            "listen_addr": ":4040",
+            "listen_addr": "118.24.48.149:9001",
             "db_game": "mongodb://118.24.48.149:27017/wm_game1?authSource=admin",
             "db_stat": "mongodb://118.24.48.149:27017/wm_stat1?authSource=admin"
         },
         "game2": {
-            "listen_addr": ":4040",
+            "listen_addr": "127.0.0.1:9002",
             "db_game": "mongodb://118.24.48.149:27017/wm_game2?authSource=admin",
             "db_stat": "mongodb://118.24.48.149:27017/wm_stat2?authSource=admin"
-        },
-        "game3": {
-            "listen_addr": ":4040",
-            "db_game": "mongodb://118.24.48.149:27017/wm_game3?authSource=admin",
-            "db_stat": "mongodb://118.24.48.149:27017/wm_stat3?authSource=admin"
         }
     }
 }

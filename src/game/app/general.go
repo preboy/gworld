@@ -1,7 +1,7 @@
 package app
 
 import (
-	"strconv"
+	"fmt"
 	"sync"
 )
 
@@ -14,20 +14,18 @@ func init() {
 }
 
 // 产生一个玩家ID
-func GeneralPlayerID() string {
+func GeneralPlayerID() (string, string) {
 	_lock.Lock()
 	defer func() {
 		_lock.Unlock()
 	}()
 
 	sd := GetServerData()
-	sc := GetServerConfig()
 
 	sd.IdSeq++
 
-	return strconv.FormatUint(uint64(sc.Server_id), 10) + strconv.FormatUint(uint64(sd.IdSeq), 10)
-}
+	pid := fmt.Sprintf("%s_%05d", GetGameId(), sd.IdSeq)
+	name := fmt.Sprintf("%s-finder_%05d", GetGameId(), sd.IdSeq)
 
-func GeneralPlayerName(pid string) string {
-	return "lord_" + pid
+	return pid, name
 }

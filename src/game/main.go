@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -30,7 +31,13 @@ var (
 )
 
 func main() {
-	log.Start("GameServer")
+	arg_svr := flag.String("svr", "game1", "server id")
+	arg_log := flag.String("log", "game1.log", "log file name")
+	flag.Parse()
+
+	fmt.Println("ddddd", *arg_svr, *arg_log)
+
+	log.Start(*arg_log)
 	log.Info("server start ...")
 
 	utils.RegisterSignalHandler(func(sig os.Signal) {
@@ -42,13 +49,13 @@ func main() {
 		}
 	})
 
-	if !app.LoadServerConfig("config.json") {
+	if !app.LoadConfig("config.json", *arg_svr) {
 		log.Error("app.LoadServerConfig: Failed")
 		log.Stop()
 		return
 	}
 
-	db_mgr.Open(app.GetServerConfig().DBAddr)
+	db_mgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat)
 
 	app.LoadServerData()
 

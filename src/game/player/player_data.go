@@ -22,9 +22,8 @@ type PlayerData struct {
 	Pid      string `bson:"pid"`
 	Acct     string `bson:"acct"`
 	Name     string `bson:"name"`
-	ShowName string `bson:"show_name"`
 	PlatName string `bson:"plat_name"`
-	ServerID uint32 `bson:"server_id"`
+	ServerID string `bson:"server_id"`
 
 	// remark:  map的键必要是字符串  加载之后，写入之前需要特别处理
 	Heros_bson      map[string]*app.Hero  `bson:"heros"`       // 英雄
@@ -74,13 +73,8 @@ func (self *PlayerData) Init(plr *Player) {
 	if self.Chapter == nil {
 		self.Chapter = chapter.NewChapter()
 	}
+
 	self.Chapter.Init(plr)
-
-}
-
-func (self *PlayerData) SetName(name string) {
-	self.ShowName = name
-	self.Name = utils.U32toa(self.ServerID) + "." + name
 }
 
 func (self *Player) Save() {
@@ -154,21 +148,19 @@ func (self *Player) on_before_save() {
 // exporter
 
 func CreatePlayerData(acct string) *PlayerData {
-	pid := app.GeneralPlayerID()
-	nam := app.GeneralPlayerName(pid)
 	now := time.Now()
+	pid, name := app.GeneralPlayerID()
 
 	data := &PlayerData{
-		Acct:       acct,
 		Pid:        pid,
+		Acct:       acct,
+		Name:       name,
 		Level:      1,
-		ServerID:   app.GetServerConfig().Server_id,
+		ServerID:   app.GetGameId(),
 		LastUpdate: now.Unix() * 1000,
 		CreateTs:   now,
 		LoginTs:    now,
 	}
-
-	data.SetName(nam)
 
 	return data
 }
