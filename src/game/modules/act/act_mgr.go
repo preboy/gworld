@@ -150,12 +150,12 @@ func parse_act_config() {
 func load_act_data() {
 	var arr []*ActBase
 
-	err := db_mgr.GetDB().GetAllObjects(db_mgr.Table_name_activitys, &arr)
+	err := db_mgr.GetDB().GetAllObjects(db_mgr.Table_name_activity, &arr)
 	if err != nil {
 		if db.IsNotFound(err) {
-			log.Info("Loading < %v >, IsNotFound !", db_mgr.Table_name_activitys)
+			log.Info("Loading < %v >, IsNotFound !", db_mgr.Table_name_activity)
 		} else {
-			log.Fatal("Loading < %v >  Fatal !!!", db_mgr.Table_name_activitys)
+			log.Fatal("Loading < %v >  Fatal !!!", db_mgr.Table_name_activity)
 			return
 		}
 	} else {

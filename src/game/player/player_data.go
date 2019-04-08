@@ -80,7 +80,7 @@ func (self *PlayerData) Init(plr *Player) {
 func (self *Player) Save() {
 	self.on_before_save()
 	err := db_mgr.GetDB().UpsertByCond(
-		db_mgr.Table_name_players,
+		db_mgr.Table_name_player,
 		db.Condition{
 			"acct": self.data.Acct,
 		},

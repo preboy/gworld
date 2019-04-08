@@ -10,9 +10,9 @@ var (
 )
 
 const (
-	Table_name_server    = "server" // 服务器全局数据
-	Table_name_players   = "players"
-	Table_name_activitys = "activitys"
+	Table_name_server   = "server" // 服务器全局数据
+	Table_name_player   = "player"
+	Table_name_activity = "activity"
 )
 
 func init() {

@@ -159,7 +159,7 @@ func LoadData() {
 	// 加载DB中所有的玩家
 	arr := []*PlayerData{}
 	err := db_mgr.GetDB().GetAllObjects(
-		db_mgr.Table_name_players,
+		db_mgr.Table_name_player,
 		&arr,
 	)
 	if err != nil && err != mgo.ErrNotFound {
