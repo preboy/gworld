@@ -35,8 +35,6 @@ func main() {
 	arg_log := flag.String("log", "game1.log", "log file name")
 	flag.Parse()
 
-	fmt.Println("ddddd", *arg_svr, *arg_log)
-
 	log.Start(*arg_log)
 	log.Info("server start ...")
 
