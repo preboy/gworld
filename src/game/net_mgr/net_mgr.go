@@ -1,6 +1,7 @@
 package net_mgr
 
 import (
+	"fmt"
 	"net"
 
 	"core/log"
@@ -22,7 +23,7 @@ func on_client_connected(conn *net.TCPConn) {
 }
 
 func Start() {
-	addr := app.GetGameConfig().Addr
+	addr := fmt.Sprintf("%s:%d", app.GetGameConfig().Host, app.GetGameConfig().Port)
 	server = tcp.NewTcpServer()
 	server.Start(addr, on_client_connected)
 	log.Info("server listen on: %s", addr)

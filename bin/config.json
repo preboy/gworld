@@ -36,12 +36,14 @@
 
     "games": {
         "game1": {
-            "listen_addr": "118.24.48.149:9001",
+            "host": "127.0.0.1",
+            "port": 9001,
             "db_game": "mongodb://118.24.48.149:27017/wm_game1?authSource=admin",
             "db_stat": "mongodb://118.24.48.149:27017/wm_stat1?authSource=admin"
         },
         "game2": {
-            "listen_addr": "127.0.0.1:9002",
+            "host": "118.24.48.149",
+            "port": 9002,
             "db_game": "mongodb://118.24.48.149:27017/wm_game2?authSource=admin",
             "db_stat": "mongodb://118.24.48.149:27017/wm_stat2?authSource=admin"
         }

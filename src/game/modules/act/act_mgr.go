@@ -190,7 +190,7 @@ func save_act_data() {
 		})
 	}
 
-	db_mgr.GetDB().Upsert(db_mgr.Table_name_activitys, 1, rec)
+	db_mgr.GetDB().Upsert(db_mgr.Table_name_activity, 1, rec)
 }
 
 func check_act_state() {

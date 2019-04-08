@@ -44,7 +44,8 @@ type router_t struct {
 }
 
 type game_t struct {
-	Addr   string `json:"listen_addr"`
+	Host   string `json:"host"`
+	Port   uint32 `json:"port"`
 	DBGame string `json:"db_game"`
 	DBStat string `json:"db_stat"`
 }
