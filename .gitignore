@@ -19,3 +19,4 @@
 /gotest.go
 /src/public/protocol/proto/FILES
 /bin/node_modules
+bin/nodet.js

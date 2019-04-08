@@ -2,10 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var logger = require('morgan');
 
-var list = require('./routes/list');
-var notice = require('./routes/notice');
-var reload = require('./routes/reload');
-
+var auth = require('./routes/auth');
 
 var app = express();
 
@@ -18,14 +15,11 @@ app.use(function(req, res, next){
     next();
 });
 
-app.use('/list', list);
-app.use('/notice', notice);
-app.use('/reload', reload);
-
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
