@@ -9,7 +9,7 @@ var http = require('http');
 var debug = require('debug')('sdk:server');
 var config = require('../config.json');
 
-const dbmgr = require('./modules/dbmgr');
+const dbmgr = require('../modules/dbmgr');
 
 // init
 function init() {

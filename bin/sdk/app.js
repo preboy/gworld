@@ -2,7 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var logger = require('morgan');
 
-var auth = require('./routes/auth');
+var acct = require('./routes/acct');
 
 var app = express();
 
@@ -15,7 +15,7 @@ app.use(function(req, res, next){
     next();
 });
 
-app.use('/auth', auth);
+app.use('/acct', acct);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

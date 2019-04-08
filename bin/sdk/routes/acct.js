@@ -4,7 +4,7 @@ var router = express.Router();
 const TokenGenerator = require('tokgen');
 const generator = new TokenGenerator();
 
-const dbmgr = require('../modules/dbmgr');
+const dbmgr = require('../../modules/dbmgr');
 
 let tokens = {} // uid -> [token, time]
 
