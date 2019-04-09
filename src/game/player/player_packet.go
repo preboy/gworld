@@ -37,18 +37,24 @@ func (self *Player) on_packet(packet *tcp.Packet) {
 
 	f := _funcs[packet.Opcode]
 	if f != nil {
-		func() {
-			defer func() {
-				if err := recover(); err != nil {
-					log.Error("PANIC on 'on_packet':", self.GetId(), packet.Opcode, packet.Data)
-					log.Error("STACK TRACE:", utils.Callstack())
-				}
-			}()
-			f(self, packet)
-		}()
-	} else {
 		log.Warning("!!! Unkonwn packat: id = %v", packet.Opcode)
 	}
+
+	self.do_packet(packet)
+}
+
+func (self *Player) do_packet(packet *tcp.Packet) {
+	self._msg_lock.Lock()
+	defer self._msg_lock.Unlock()
+
+	defer func() {
+		if err := recover(); err != nil {
+			log.Error("PANIC on 'on_packet':", self.GetId(), packet.Opcode, packet.Data)
+			log.Error("STACK TRACE:", utils.Callstack())
+		}
+	}()
+
+	_funcs[packet.Opcode](self, packet)
 }
 
 func register_handler(opcode uint16, f msg_func) {

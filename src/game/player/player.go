@@ -22,12 +22,17 @@ type Player struct {
 	run         bool
 	w           *sync.WaitGroup
 	tf          []func()
+
+	_snd_lock *sync.Mutex
+	_msg_lock *sync.Mutex
 }
 
 func NewPlayer() *Player {
 	plr := &Player{
 		q_packets: make(chan *tcp.Packet, 0x100),
 		w:         &sync.WaitGroup{},
+		_snd_lock: &sync.Mutex{},
+		_plr_lock: &sync.Mutex{},
 	}
 
 	return plr
