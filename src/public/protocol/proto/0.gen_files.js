@@ -84,7 +84,7 @@ function gen_handler_lua() {
             return
         }
 
-        let name = `../../../../../2dgame/simulator/win32/src/message/msg_${path.basename(fn, ".proto")}.lua`
+        let name = `../../../../../whome/simulator/win32/src/message/msg_${path.basename(fn, ".proto")}.lua`
 
         if (!fs.existsSync(name)) {
             let head =
@@ -287,10 +287,10 @@ function export_proto_files() {
     })
 
     gen_proto_file_go("../opcode.go")
-    gen_proto_file_lua("../../../../../2dgame/simulator/win32/src/message/opcode.lua")
+    gen_proto_file_lua("../../../../../whome/simulator/win32/src/message/opcode.lua")
 
     gen_register_go("../../../game/player/handler_0_init.go")
-    gen_register_lua("../../../../../2dgame/simulator/win32/src/message/init.lua")
+    gen_register_lua("../../../../../whome/simulator/win32/src/message/init.lua")
 
     gen_handler_go()
     gen_handler_lua()
@@ -299,6 +299,6 @@ function export_proto_files() {
 
 // ----------------------------------------------------------------------------
 
-export_const_file("../../ec/error_code.go", "../../../../../2dgame/simulator/win32/src/error_code.lua")
+export_const_file("../../ec/error_code.go", "../../../../../whome/simulator/win32/src/error_code.lua")
 
 export_proto_files()

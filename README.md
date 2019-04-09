@@ -23,4 +23,4 @@ go get  github.com/tealeg/xlsx
 	数据库： mongodb
 
 配套demo:
-	2dgame
+	whome
