@@ -61,7 +61,6 @@ func main() {
 
 	timer.Start()
 	schedule.Start()
-	net_mgr.Start()
 	work_service.Start(4)
 
 	config.LoadAll(true)
@@ -75,6 +74,8 @@ func main() {
 	act.Open()
 
 	loop.Start()
+
+	net_mgr.Start()
 
 	log.Info("server running ...")
 
@@ -102,10 +103,10 @@ func main() {
 
 	log.Info("server stopping ...")
 
-	act.Close()
-
 	log.Info("net_mgr stopping ...")
 	net_mgr.Stop()
+
+	act.Close()
 
 	log.Info("micro svrs stopping ...")
 	microsvr.Stop()
