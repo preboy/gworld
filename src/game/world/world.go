@@ -1,6 +1,7 @@
 package world
 
 import (
+	"core/log"
 	"game/config"
 )
 
@@ -35,7 +36,13 @@ func init_world() {
 		}
 
 		ObjectMgr.AddObject(obj)
-		SceneMgr.GetScene(v.SceneId).AddObject(obj)
+
+		scene := SceneMgr.GetScene(v.SceneId)
+		if scene != nil {
+			scene.AddObject(obj)
+		} else {
+			log.Error("NOT exist scene id = %d", v.SceneId)
+		}
 	}
 }
 
@@ -46,5 +53,4 @@ func Start() {
 }
 
 func Stop() {
-
 }

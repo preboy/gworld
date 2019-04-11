@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/gogo/protobuf/proto"
 
+	"core/tcp"
 	"game/battle"
 )
 
@@ -17,5 +18,6 @@ type IPlayer interface {
 
 	CreateBattleTroop([]uint32) (*battle.BattleTroop, int)
 
+	DoPacket(packet *tcp.Packet)
 	SendPacket(opcode uint16, obj proto.Message)
 }

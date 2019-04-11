@@ -1,5 +1,7 @@
 package loop
 
+// the main loop in game
+
 import (
 	"fmt"
 	"time"
@@ -8,7 +10,7 @@ import (
 	"core/schedule"
 	"core/thread"
 	"core/timer"
-	"game/modules/act"
+	//	"game/modules/act"
 )
 
 const (
@@ -18,19 +20,12 @@ const (
 var (
 	_thread *thread.Thread
 	_loop   *Loop
-	_last   int64
 )
 
 type Loop struct {
+	last     int64
 	evtMgr   *event.EventMgr
 	timerMgr *timer.TimerMgr
-}
-
-func NewLoop() *Loop {
-	if _loop == nil {
-		_loop = &Loop{}
-	}
-	return _loop
 }
 
 func (self *Loop) Start() {
@@ -43,9 +38,11 @@ func (self *Loop) Start() {
 
 	schedule.Register(_LOOP_NAME, self)
 
-	_thread = thread.NewThread(loop_update, 100)
-	_thread.Go()
+	_thread = thread.NewThread(func() {
+		self.update()
+	}, 1000)
 
+	_thread.Go()
 }
 
 func (self *Loop) Stop() {
@@ -54,7 +51,7 @@ func (self *Loop) Stop() {
 		_thread.Stop()
 	}
 
-	self.on_stop()
+	self.onstop()
 }
 
 // ============================================================================
@@ -85,6 +82,17 @@ func (self *Loop) OnTimer(id uint64) {
 	fmt.Println("Loop.OnTimer:", id)
 }
 
+func (self *Loop) update() {
+	self.evtMgr.Update()
+	self.timerMgr.Update()
+
+	sec := time.Now().Unix()
+	if self.last != sec {
+		self.last = sec
+		// todo act.LoopUpdate()
+	}
+}
+
 // ============================================================================
 // public
 
@@ -101,19 +109,20 @@ func (self *Loop) CancelTimer(id uint64) {
 }
 
 // ============================================================================
-// private
 
-func loop_update() {
-	if _loop == nil {
+func GetLoop() *Loop {
+	return _loop
+}
+
+func Start() {
+	if _loop != nil {
 		return
 	}
 
-	_loop.evtMgr.Update()
-	_loop.timerMgr.Update()
+	_loop = &Loop{}
+	_loop.Start()
+}
 
-	sec := time.Now().Unix()
-	if _last != sec {
-		_last = sec
-		act.LoopUpdate()
-	}
+func Stop() {
+	_loop.Stop()
 }

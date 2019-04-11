@@ -4,6 +4,7 @@ import (
 	"core/log"
 	"core/tcp"
 	"core/utils"
+	"game/microsvr"
 )
 
 type msg_func = func(*Player, *tcp.Packet)
@@ -40,12 +41,17 @@ func (self *Player) on_packet(packet *tcp.Packet) {
 		log.Warning("!!! Unkonwn packat: id = %v", packet.Opcode)
 	}
 
-	self.do_packet(packet)
+	svr := microsvr.FindSvrByOpcode(packet.Opcode)
+	if svr != nil {
+		svr.PostPacket(self, packet)
+	} else {
+		self.DoPacket(packet)
+	}
 }
 
-func (self *Player) do_packet(packet *tcp.Packet) {
-	self._msg_lock.Lock()
-	defer self._msg_lock.Unlock()
+func (self *Player) DoPacket(packet *tcp.Packet) {
+	self._plr_lock.Lock()
+	defer self._plr_lock.Unlock()
 
 	defer func() {
 		if err := recover(); err != nil {

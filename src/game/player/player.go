@@ -24,7 +24,7 @@ type Player struct {
 	tf          []func()
 
 	_snd_lock *sync.Mutex
-	_msg_lock *sync.Mutex
+	_plr_lock *sync.Mutex
 }
 
 func NewPlayer() *Player {

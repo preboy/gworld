@@ -43,6 +43,7 @@ func NewTimerMgr(r ITimerMgr) *TimerMgr {
 	}
 }
 
+// may be run in other goroutine
 func (self *TimerMgr) Update() (busy bool) {
 	now := get_tick()
 	for id, timer := range self.timers {

@@ -18,11 +18,13 @@ import (
 	"game/config"
 	"game/db_mgr"
 	"game/loop"
+	"game/microsvr"
 	"game/modules/act"
 	"game/net_mgr"
 	"game/player"
 	"game/world"
 
+	_ "game/microsvr/preloader"
 	_ "game/modules/preloader"
 )
 
@@ -64,14 +66,15 @@ func main() {
 
 	config.LoadAll(true)
 
-	world.Stop()
+	world.Start()
 
 	player.LoadData()
 
+	microsvr.Start()
+
 	act.Open()
 
-	main_loop := loop.NewLoop()
-	main_loop.Start()
+	loop.Start()
 
 	log.Info("server running ...")
 
@@ -104,8 +107,11 @@ func main() {
 	log.Info("net_mgr stopping ...")
 	net_mgr.Stop()
 
-	log.Info("main_loop stopping ...")
-	main_loop.Stop()
+	log.Info("micro svrs stopping ...")
+	microsvr.Stop()
+
+	log.Info("loop stopping ...")
+	loop.Stop()
 
 	log.Info("work_service stopping ...")
 	work_service.Stop()
