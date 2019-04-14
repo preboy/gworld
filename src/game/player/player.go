@@ -12,29 +12,14 @@ import (
 )
 
 type Player struct {
-	sid         uint32
-	data        *PlayerData
-	s           ISession
-	evtMgr      *event.EventMgr
-	timerMgr    *timer.TimerMgr
-	q_packets   chan *tcp.Packet
-	last_update int64
-	run         bool
-	w           *sync.WaitGroup
-	tf          []func()
-
-	_snd_lock *sync.Mutex
-	_plr_lock *sync.Mutex
+	s    ISession
+	tf   []func()
+	sid  uint32 // slot id
+	data *PlayerData
 }
 
 func NewPlayer() *Player {
-	plr := &Player{
-		q_packets: make(chan *tcp.Packet, 0x100),
-		w:         &sync.WaitGroup{},
-		_snd_lock: &sync.Mutex{},
-		_plr_lock: &sync.Mutex{},
-	}
-
+	plr := &Player{}
 	return plr
 }
 
@@ -85,30 +70,8 @@ func (self *Player) Go() {
 
 }
 
-func (self *Player) Stop() {
-	self.run = false
-	self.w.Wait()
-}
-
-func (self *Player) IsRun() bool {
-	return self.run
-}
-
 // ============================================================================
 // private function
-
-func (self *Player) update() (busy bool) {
-	if self.evtMgr.Update() {
-		busy = true
-	}
-
-	if self.timerMgr.Update() {
-		busy = true
-	}
-
-	self.last_update = time.Now().UnixNano() / (1000 * 1000)
-	return
-}
 
 func (self *Player) Init() {
 	self.data.Init(self)

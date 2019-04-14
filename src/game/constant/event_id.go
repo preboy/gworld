@@ -11,6 +11,8 @@ const (
 	EVT_SYS_SystemStart
 	EVT_SYS_SystemReady
 
+	Evt_Auth // 用户名验证成功
+
 	// ------------------------------------------------------------------------
 	// player events
 

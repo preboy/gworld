@@ -16,11 +16,11 @@ import (
 	"game/app"
 	"game/cmd"
 	"game/config"
-	"game/db_mgr"
+	"game/dbmgr"
 	"game/loop"
 	"game/microsvr"
 	"game/modules/act"
-	"game/net_mgr"
+	"game/netmgr"
 	"game/player"
 	"game/world"
 
@@ -55,7 +55,7 @@ func main() {
 		return
 	}
 
-	db_mgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat)
+	dbmgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat)
 
 	app.LoadServerData()
 
@@ -75,7 +75,7 @@ func main() {
 
 	loop.Start()
 
-	net_mgr.Start()
+	netmgr.Start()
 
 	log.Info("server running ...")
 
@@ -132,8 +132,8 @@ func main() {
 	log.Info("timer stopping ...")
 	timer.Stop()
 
-	log.Info("db_mgr stopping ...")
-	db_mgr.Close()
+	log.Info("dbmgr stopping ...")
+	dbmgr.Close()
 
 	fmt.Println("server closed")
 	log.Stop()

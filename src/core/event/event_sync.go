@@ -45,11 +45,11 @@ func Once(evt uint32, f func(...interface{})) {
 
 func Fire(evt uint32, args ...interface{}) {
 	for _, f := range _evts[evt] {
-		f(args...)
+		f(evt, args...)
 	}
 
 	for _, f := range _once[evt] {
-		f(args...)
+		f(evt, args...)
 	}
 
 	_once[evt] = _once[evt][:0]

@@ -42,11 +42,11 @@ func (self *Socket) Stop() {
 }
 
 func (self *Socket) rt_recv() {
+	self.w.Add(1)
 	defer func() {
 		self.w.Done()
 	}()
 
-	self.w.Add(1)
 J:
 	for {
 		self.conn.SetReadDeadline(time.Now().Add(5 * time.Minute))
@@ -86,9 +86,15 @@ J:
 }
 
 func (self *Socket) rt_send() {
+	self.w.Add(1)
+	defer func() {
+		self.w.Done()
+	}()
+
+	// todo
 }
 
-// 发送数据可以另外弄一个routine
+// 发送数据可以另外弄一个goroutine
 func (self *Socket) Send(data []byte) {
 	n, err := self.conn.Write(data)
 	if err != nil {

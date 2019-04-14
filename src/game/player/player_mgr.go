@@ -5,6 +5,8 @@ import (
 
 	"core/log"
 	"game/app"
+	"game/constant"
+	"core/event"
 	"game/db_mgr"
 	"gopkg.in/mgo.v2"
 )
@@ -18,32 +20,20 @@ var (
 )
 
 /*
-服务器启动时从DB中加载所有的玩家到内存，存入_plrs_pid、_plrs_name、_plrs_acct
+服务器启动时从DB中加载一定数量的玩家到内存，存入_plrs_pid、_plrs_name
 新玩家立即存盘，并加载到内存
-登录期间的玩家存入_plrs_live、_plrs_sid，并设置玩家的run状态，玩家下线回收上述参数
-玩家上线通过_plrs_acct登录是否已登录
-游戏中可通过_plrs_live、_plrs_sid快速查找在线玩家
-游戏中可通过_plrs_acct、_plrs_name、_plrs_pid查找所有玩家
+登录期间的玩家存入_plrs_online
 */
 var (
 	// 在内存中的玩家，包括主动上线、从DB中被拉上线的
-	_plrs_sid  [MAX_PLAYER_COUNT]*Player // 运行中的玩家
-	_plrs_pid  map[string]*Player        // pid
-	_plrs_name map[string]*Player        // name
-	_plrs_acct map[string]*Player        // acct
-	_plrs_live map[string]*Player        // 已登录的玩家
+	_plrs_sid    = [MAX_PLAYER_COUNT]*Player{}                // 内存中的玩家
+	_plrs_pid    = make(map[string]*Player, MAX_PLAYER_COUNT) // pid(all players)
+	_plrs_name   = make(map[string]*Player, MAX_PLAYER_COUNT) // name
+	_plrs_online = make(map[string]*Player, MAX_PLAYER_COUNT) // pid(在线的玩家)
 )
 
-func init() {
-	_plrs_sid = [MAX_PLAYER_COUNT]*Player{}
-	_plrs_pid = make(map[string]*Player, MAX_PLAYER_COUNT)
-	_plrs_name = make(map[string]*Player, MAX_PLAYER_COUNT)
-	_plrs_acct = make(map[string]*Player, MAX_PLAYER_COUNT)
-	_plrs_live = make(map[string]*Player, MAX_PLAYER_COUNT)
-}
-
 func (self *Player) SetName(name string) {
-	// TODO checking valid & repeat
+	// TODO: checking valid & repeat
 
 	old_name := self.data.Name
 	new_name := fmt.Sprintf("%s-%s", app.GetGameId(), name)
@@ -54,14 +44,13 @@ func (self *Player) SetName(name string) {
 	_plrs_name[new_name] = self
 }
 
-func (self *Player) AssociateData(data *PlayerData) {
+func (self *Player) SetData(data *PlayerData) {
 	self.sid = uint32(query_avail_slot_index())
 	self.data = data
 
 	_plrs_sid[self.sid] = self
 	_plrs_pid[data.Pid] = self
 	_plrs_name[data.Name] = self
-	_plrs_acct[data.Acct] = self
 
 	self.on_after_load()
 }
@@ -104,51 +93,17 @@ func GetPlayerByName(name string) *Player {
 	return plr
 }
 
-func GetPlayerByAcct(acct string) *Player {
-	plr, ok := _plrs_acct[acct]
-	if !ok {
-		return nil
-	}
-	return plr
-}
-
-func IsLogin(acct string) bool {
-	plr, ok := _plrs_live[acct]
-	if ok {
+func IsOnLine(pid string) bool {
+	if plr, ok := _plrs_online[pid]; ok {
 		return plr != nil
 	}
 	return false
 }
 
-func EnterGame(acct string, s ISession) bool {
-	// 检测玩家是否已登录
-	if IsLogin(acct) {
-		return false
-	}
-
-	// 内存中查找玩家
-	plr := GetPlayerByAcct(acct)
-	if plr == nil {
-		// 新建玩家
-		plr = NewPlayer()
-		data := CreatePlayerData(acct)
-		plr.AssociateData(data)
-		plr.Save()
-	}
-
-	plr.Init()
-
-	s.SetPlayer(plr)
-	plr.SetSession(s)
-	plr.Go()
-
-	return true
-}
-
-func EachPlayer(f func(*Player)) {
-	for _, plr := range _plrs_live {
+func EachPlayer(fn func(*Player)) {
+	for _, plr := range _plrs_online {
 		if plr != nil {
-			f(plr)
+			fn(plr)
 		}
 	}
 }
@@ -169,7 +124,7 @@ func LoadData() {
 
 	for _, data := range arr {
 		plr := NewPlayer()
-		plr.AssociateData(data)
+		plr.SetData(data)
 	}
 
 	log.Info("[%d] player loaded !", len(arr))
@@ -179,3 +134,35 @@ func SaveData() {
 	// 所有玩家存盘
 	// TODO
 }
+
+// ============================================================================
+
+func init(){
+	event.On(constant.Evt_Auth, func (id uint32, args ...interface{})  {
+	// 检测玩家是否已登录
+
+	// acct string,
+	// s ISession
+
+	if IsLogin(acct) {
+		return false
+	}
+
+	// 内存中查找玩家
+	plr := GetPlayerByAcct(acct)
+	if plr == nil {
+		// 新建玩家
+		plr = NewPlayer()
+		data := CreatePlayerData(acct)
+		plr.SetData(data)
+		plr.Save()
+	}
+
+	plr.Init()
+
+	s.SetPlayer(plr)
+	plr.SetSession(s)
+})
+
+
+

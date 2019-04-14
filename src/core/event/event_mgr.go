@@ -43,7 +43,8 @@ func (self *EventMgr) Update() (busy bool) {
 			self.receiver.OnEvent(evt)
 			busy = true
 		default:
-			return
+			break
 		}
 	}
+	return
 }

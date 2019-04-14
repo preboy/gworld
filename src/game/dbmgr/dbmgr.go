@@ -1,4 +1,4 @@
-package db_mgr
+package dbmgr
 
 import (
 	"core/db"
