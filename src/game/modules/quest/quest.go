@@ -1,6 +1,7 @@
 package quest
 
 import (
+	"core/event"
 	"core/log"
 	"game/app"
 	"game/config"
@@ -72,6 +73,15 @@ func (self *quest_item_t) to_msg() *msg.QuestInfo {
 
 func NewQuest() *Quest {
 	return &Quest{}
+}
+
+func init() {
+	event.On(constant.Evt_Plr_KillMonster, func(evt uint32, args ...interface{}) {
+		plr := args[0].(iPlayer)
+		mid := args[1].(int32)
+
+		plr.GetData().Quest.OnKill(mid)
+	})
 }
 
 // ============================================================================

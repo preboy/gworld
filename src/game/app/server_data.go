@@ -3,8 +3,7 @@ package app
 import (
 	"core/db"
 	"core/log"
-	"game/db_mgr"
-
+	"game/dbmgr"
 	"os"
 	"time"
 )
@@ -21,8 +20,8 @@ type ServerData struct {
 func LoadServerData() {
 	if _sd == nil {
 		var data ServerData
-		err := db_mgr.GetDB().GetObject(
-			db_mgr.Table_name_server,
+		err := dbmgr.GetDB().GetObject(
+			dbmgr.Table_name_server,
 			1,
 			&data,
 		)
@@ -51,8 +50,8 @@ func SaveServerData() {
 
 	_sd.ServerSaveTime = time.Now().Unix()
 
-	db_mgr.GetDB().Upsert(
-		db_mgr.Table_name_server,
+	dbmgr.GetDB().Upsert(
+		dbmgr.Table_name_server,
 		1,
 		_sd,
 	)

@@ -9,12 +9,7 @@ import (
 func (self *Player) pursue() {
 
 	now := time.Now()
-	lst := time.Unix(self.last_update/1000, 0)
-
-	self.on_pursue(now.Unix() - self.last_update/1000)
-
-	fmt.Println(now)
-	fmt.Println(lst)
+	lst := self.data.LogoutTs
 
 	if now.Hour() != lst.Hour() {
 		self.on_new_hour()
@@ -35,9 +30,4 @@ func (self *Player) pursue() {
 	if now.Year() != lst.Year() {
 		self.on_new_year()
 	}
-
-}
-
-func (self *Player) on_pursue(off_sec int64) {
-	println("offline sec:", off_sec, self.data.Name)
 }

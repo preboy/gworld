@@ -12,62 +12,20 @@ import (
 )
 
 type Player struct {
-	s    ISession
-	tf   []func()
-	sid  uint32 // slot id
-	data *PlayerData
+	s      ISession
+	sid    uint32 // slot id
+	data   *PlayerData
+	online bool
 }
 
 func NewPlayer() *Player {
-	plr := &Player{}
-	return plr
+	return &Player{}
 }
 
 // ============================================================================
 
-// player event
-// 角色线程主体，与玩家网络连接生命周期一致
-// 在循环之前需要先执行<时间差操作>
-func (self *Player) Go() {
-	if self.run {
-		return
-	}
-
-	go func() {
-		self.run = true
-		self.w.Add(1)
-		_plrs_live[self.data.Acct] = self
-
-		defer func() {
-			self.w.Done()
-		}()
-
-		// 登录处理
-		if self.data.LoginTimes == 0 {
-			self.on_first_login()
-		}
-		self.data.LoginTimes++
-		self.on_login()
-
-		self.pursue()
-
-		for self.run {
-			busy := self.dispatch_packet()
-			if self.update() {
-				busy = true
-			}
-			if !busy && self.idle() {
-				time.Sleep(20 * time.Millisecond)
-			}
-		}
-
-		self.on_logout()
-		self.Save()
-		_plrs_live[self.data.Acct] = nil
-
-		println("player.Go exited:", self.data.Name)
-	}()
-
+func (self *Player) on_load() {
+	self.on_after_load()
 }
 
 // ============================================================================
@@ -75,42 +33,7 @@ func (self *Player) Go() {
 
 func (self *Player) Init() {
 	self.data.Init(self)
-	self.evtMgr = event.NewEventMgr(self)
-	self.timerMgr = timer.NewTimerMgr(self)
-	self.tf = make([]func(), 0, 4)
-}
-
-// checking whether idle or not the loop
-func (self *Player) idle() bool {
-	if len(self.q_packets) != 0 {
-		return false
-	}
-
-	if self.evtMgr.Len() != 0 {
-		return false
-	}
-
-	// timerMgr ignored
-	return true
-}
-
-func (self *Player) do_next_tick() {
-	if len(self.tf) == 0 {
-		return
-	}
-
-	defer func() {
-		if err := recover(); err != nil {
-			log.Error("PANIC on 'do_next_tick':", self.GetId())
-			log.Error("STACK TRACE:", utils.Callstack())
-		}
-	}()
-
-	for _, fn := range self.tf {
-		fn()
-	}
-
-	self.tf = self.tf[:0]
+	self.pursue()
 }
 
 // ============================================================================
@@ -118,4 +41,37 @@ func (self *Player) do_next_tick() {
 
 func (self *Player) GetSid() int {
 	return int(self.sid)
+}
+
+func (self *Player) Login(first bool) {
+	self.online = true
+	self.data.LoginTs = now()
+	self.data.LoginTimes++
+
+	pid := self.data.Pid
+	_plrs_online[pid] = self
+
+	if first {
+		event.Fire(constant.EVT_plr_LoginFirst, pid)
+	}
+
+	event.Fire(constant.EVT_plr_Login, pid)
+
+	// todo 发送玩家核心数据
+	// self.data.to_msg()
+}
+
+func (self *Player) Logout() {
+	pid := self.data.Pid
+	event.Fire(constant.EVT_plr_Logout, pid)
+	_plrs_online[pid] = nil
+
+	self.s.Disconnect()
+	self.s = nil
+	self.online = false
+	self.data.OfflineTs = now()
+}
+
+func (self *Player) IsOnLine() {
+	return self.online
 }

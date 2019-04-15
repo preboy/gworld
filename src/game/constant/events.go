@@ -16,11 +16,12 @@ const (
 	// ------------------------------------------------------------------------
 	// player events
 
-	EVT_PLR_LOGIN_FIRST
-	EVT_PLR_LOGIN
-	EVT_PLR_LOGOUT
-	EVT_PLR_LEVEL_UP
-	EVT_PLR_KILL_MONSTER
+	Evt_Plr_LoginFirst
+	Evt_Plr_Login
+	Evt_Plr_Logout
+	Evt_Plr_LevelUp
+	Evt_Plr_KillMonster
+	Evt_Plr_DataReset // 跨天重置用户数据
 
 	// ------------------------------------------------------------------------
 	// hero events

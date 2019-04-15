@@ -9,7 +9,7 @@ import (
 	"core/utils"
 	"game/app"
 	"game/config"
-	"game/db_mgr"
+	"game/dbmgr"
 )
 
 // ============================================================================
@@ -150,12 +150,12 @@ func parse_act_config() {
 func load_act_data() {
 	var arr []*ActBase
 
-	err := db_mgr.GetDB().GetAllObjects(db_mgr.Table_name_activity, &arr)
+	err := dbmgr.GetDB().GetAllObjects(dbmgr.Table_name_activity, &arr)
 	if err != nil {
 		if db.IsNotFound(err) {
-			log.Info("Loading < %v >, IsNotFound !", db_mgr.Table_name_activity)
+			log.Info("Loading < %v >, IsNotFound !", dbmgr.Table_name_activity)
 		} else {
-			log.Fatal("Loading < %v >  Fatal !!!", db_mgr.Table_name_activity)
+			log.Fatal("Loading < %v >  Fatal !!!", dbmgr.Table_name_activity)
 			return
 		}
 	} else {
@@ -190,7 +190,7 @@ func save_act_data() {
 		})
 	}
 
-	db_mgr.GetDB().Upsert(db_mgr.Table_name_activity, 1, rec)
+	dbmgr.GetDB().Upsert(dbmgr.Table_name_activity, 1, rec)
 }
 
 func check_act_state() {

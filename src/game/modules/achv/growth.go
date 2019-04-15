@@ -43,7 +43,7 @@ type growth_map_t map[int32]*growth_t
 func init() {
 	care = make(map[int32][]int32)
 
-	event.On(constant.EVT_SYS_ConfigLoaded, func(args ...interface{}) {
+	event.On(constant.EVT_SYS_ConfigLoaded, func(evt uint32, args ...interface{}) {
 		launch := args[0].(bool)
 		if launch {
 			for _, conf := range config.AchvConf.Items() {

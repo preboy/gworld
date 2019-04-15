@@ -5,8 +5,8 @@ import (
 )
 
 var (
-	_evts = map[uint32]map[int64]func(...interface{}){}
-	_once = map[uint32][]func(...interface{}){}
+	_evts = map[uint32]map[int64]func(uint32, ...interface{}){}
+	_once = map[uint32][]func(uint32, ...interface{}){}
 )
 
 var (
@@ -21,9 +21,9 @@ func seq() int64 {
 
 // ============================================================================
 
-func On(evt uint32, f func(...interface{})) int64 {
+func On(evt uint32, f func(uint32, ...interface{})) int64 {
 	if _evts[evt] == nil {
-		_evts[evt] = make(map[int64]func(...interface{}))
+		_evts[evt] = make(map[int64]func(uint32, ...interface{}))
 	}
 
 	seq := seq()
@@ -39,7 +39,7 @@ func Cancel(evt uint32, seq int64) {
 	}
 }
 
-func Once(evt uint32, f func(...interface{})) {
+func Once(evt uint32, f func(uint32, ...interface{})) {
 	_once[evt] = append(_once[evt], f)
 }
 

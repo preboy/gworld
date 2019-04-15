@@ -5,11 +5,14 @@ import (
 
 	"core/tcp"
 	"game/battle"
+	// 	"game/player"
 )
 
 type IPlayer interface {
 	GetId() string
 	GetLevel() uint32
+
+	GetData() *player.PlayerData
 
 	GetItem(id uint32) uint64
 	SetItem(id uint32, cnt uint64)

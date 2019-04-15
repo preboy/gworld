@@ -4,10 +4,12 @@ package loop
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"core/event"
 	"core/schedule"
+	"core/tcp"
 	"core/timer"
 )
 
@@ -24,6 +26,8 @@ var (
 type Loop struct {
 	q        chan bool
 	w        *sync.WaitGroup
+	run      bool
+	immed    []func()
 	last     int64
 	talks    chan *talk
 	evtMgr   *event.EventMgr
@@ -80,7 +84,7 @@ func (self *Loop) working() {
 		busy = false
 
 		select {
-		case <-self.quit:
+		case <-self.q:
 			break
 		case talk := <-self.talks:
 			self.do_talk(talk)
@@ -100,6 +104,10 @@ func (self *Loop) working() {
 			busy = true
 		}
 
+		if self.do_immed() {
+			busy = true
+		}
+
 		if !busy {
 			busy = self.do_idle()
 		}
@@ -112,21 +120,40 @@ func (self *Loop) working() {
 	self.on_stop()
 }
 
-func (self *Loop) do_update() {
+func (self *Loop) do_update() bool {
 	now := time.Now().Unix()
+
 	if self.last != now {
 		self.last = now
 
-		// do something like as ACT schedule
+		// do something as ACT schedule
+
+		return true
 	}
+
+	return false
+}
+
+func (self *Loop) do_idle() bool {
+	return false
 }
 
 func (self *Loop) do_talk(talk *talk) {
 	talk.s.DoPacket(talk.p)
 }
 
-func (self *Loop) do_idle() bool {
-	return false
+func (self *Loop) do_immed() bool {
+	if len(self.immed) == 0 {
+		return false
+	}
+
+	for _, fn := range self.immed {
+		fn()
+	}
+
+	self.immed = self.immed[:0]
+
+	return true
 }
 
 // ============================================================================
@@ -156,6 +183,11 @@ func (self *Loop) OnTimer(id uint64) {
 // ============================================================================
 // public
 
+func (self *Loop) PostEventArgs(id uint32, args ...interface{}) {
+	evt := event.NewEvent(id, args...)
+	self.PostEvent(evt)
+}
+
 func (self *Loop) PostEvent(evt *event.Event) {
 	self.evtMgr.Fire(evt)
 }
@@ -170,6 +202,10 @@ func (self *Loop) CreateTimer(i uint64, r bool, f func()) uint64 {
 
 func (self *Loop) CancelTimer(id uint64) {
 	self.timerMgr.CancelTimer(id)
+}
+
+func (self *Loop) PostImmed(fn func()) {
+	self.immed = append(self.immed, fn)
 }
 
 // ============================================================================
