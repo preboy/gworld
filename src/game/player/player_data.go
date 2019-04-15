@@ -5,7 +5,6 @@ import (
 
 	"core/db"
 	"core/log"
-	// "core/utils"
 	"game/app"
 	"game/dbmgr"
 	"game/modules/achv"
@@ -24,12 +23,12 @@ type PlayerData struct {
 	SvrId string `bson:"svrid"`
 
 	// remark:  map的键必要是字符串  加载之后，写入之前需要特别处理
-	Heros    map[uint32]*app.Hero `bson:"heros"`
-	Items    map[uint32]uint64    `bson:"items"`
-	Exp      uint64               `bson:"exp"`   // 经验
-	Level    uint32               `bson:"lv"`    // 等级
-	VipLevel uint32               `bson:"viplv"` // VIP等级
-	Male     bool                 `bson:"male"`  // 性别(默认:女)
+	Heros    hero_map_t `bson:"heros"`
+	Items    item_map_t `bson:"items"`
+	Exp      uint64     `bson:"exp"`   // 经验
+	Level    uint32     `bson:"lv"`    // 等级
+	VipLevel uint32     `bson:"viplv"` // VIP等级
+	Male     bool       `bson:"male"`  // 性别(默认:女)
 
 	CreateTs   time.Time `bson:"create_ts"`   // 创建角色时间
 	LoginTs    time.Time `bson:"login_ts"`    // 最近登录时间

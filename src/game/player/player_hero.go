@@ -3,10 +3,52 @@ package player
 import (
 	"game/app"
 	"game/battle"
+	"gopkg.in/mgo.v2/bson"
 	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
 )
+
+// ============================================================================
+// marshal
+
+type hero_map_t map[uint32]*app.Hero
+
+type hero_t struct {
+	Id   uint32
+	Hero *app.Hero
+}
+
+func (self hero_map_t) GetBSON() (interface{}, error) {
+	var arr []*hero_t
+
+	for k, v := range self {
+		arr = append(arr, &hero_t{
+			Id:   k,
+			Hero: v,
+		})
+	}
+
+	return arr, nil
+}
+
+func (self *hero_map_t) SetBSON(raw bson.Raw) error {
+	var arr []*hero_t
+
+	err := raw.Unmarshal(&arr)
+	if err != nil {
+		return err
+	}
+
+	*self = make(hero_map_t)
+	for _, v := range arr {
+		(*self)[v.Id] = v.Hero
+	}
+
+	return nil
+}
+
+// ============================================================================
 
 func (self *Player) GetHero(id uint32) *app.Hero {
 	hero, _ := self.data.Heros[id]
