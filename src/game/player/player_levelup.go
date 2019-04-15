@@ -50,6 +50,6 @@ func (self *Player) AddExp(exp uint64) {
 	// level upgrade event
 	new_lv := self.data.Level
 	if old_lv != new_lv {
-		event.Fire(constant.EVT_PLR_LEVEL_UP, old_lv, new_lv)
+		event.Fire(constant.Evt_Plr_LevelUp, old_lv, new_lv)
 	}
 }

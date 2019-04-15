@@ -1,14 +1,15 @@
 package player
 
 import (
-	"sync"
 	"time"
 
 	"core/event"
-	"core/log"
-	"core/tcp"
-	"core/timer"
-	"core/utils"
+	// "core/log"
+	// "core/tcp"
+	// "core/timer"
+	// "core/utils"
+
+	"game/constant"
 )
 
 type Player struct {
@@ -45,17 +46,17 @@ func (self *Player) GetSid() int {
 
 func (self *Player) Login(first bool) {
 	self.online = true
-	self.data.LoginTs = now()
+	self.data.LoginTs = time.Now()
 	self.data.LoginTimes++
 
 	pid := self.data.Pid
 	_plrs_online[pid] = self
 
 	if first {
-		event.Fire(constant.EVT_plr_LoginFirst, pid)
+		event.Fire(constant.Evt_Plr_LoginFirst, pid)
 	}
 
-	event.Fire(constant.EVT_plr_Login, pid)
+	event.Fire(constant.Evt_Plr_Login, pid)
 
 	// todo 发送玩家核心数据
 	// self.data.to_msg()
@@ -63,15 +64,15 @@ func (self *Player) Login(first bool) {
 
 func (self *Player) Logout() {
 	pid := self.data.Pid
-	event.Fire(constant.EVT_plr_Logout, pid)
+	event.Fire(constant.Evt_Plr_Logout, pid)
 	_plrs_online[pid] = nil
 
 	self.s.Disconnect()
 	self.s = nil
 	self.online = false
-	self.data.OfflineTs = now()
+	self.data.LogoutTs = time.Now()
 }
 
-func (self *Player) IsOnLine() {
+func (self *Player) IsOnLine() bool {
 	return self.online
 }

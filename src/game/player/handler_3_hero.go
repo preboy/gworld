@@ -1,6 +1,7 @@
 package player
 
 import (
+	"core/event"
 	"core/rand"
 	"core/tcp"
 	"game/app"
@@ -19,10 +20,11 @@ func handler_HeroLevelupRequest(plr *Player, packet *tcp.Packet) {
 
 	res.ErrorCode = ec.OK
 
+	hero := plr.GetHero(req.Id)
+
 	var lv_old, lv_new uint32
 
 	func() {
-		hero := plr.GetHero(req.Id)
 		if hero == nil {
 			res.ErrorCode = ec.Hero_Not_Activated
 			return
@@ -56,7 +58,7 @@ func handler_HeroLevelupRequest(plr *Player, packet *tcp.Packet) {
 	plr.SendPacket(protocol.MSG_SC_HeroLevelupResponse, res)
 
 	if lv_old != lv_new {
-		plr.OnPlayerLevelup(lv_old, lv_new)
+		event.Fire(constant.Evt_Hero_LevelUp, plr, req.Id, lv_old, lv_new)
 	}
 }
 

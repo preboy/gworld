@@ -132,12 +132,10 @@ func GetPlayerByName(name string) *Player {
 	return plr
 }
 
-func EachOnlinePlayer(fn func(*Player) bool) {
+func EachOnlinePlayer(fn func(*Player)) {
 	for _, plr := range _plrs_online {
 		if plr != nil {
-			if fn(plr) {
-				break
-			}
+			fn(plr)
 		}
 	}
 }

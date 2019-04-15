@@ -16,7 +16,7 @@ import (
 type iPlayer interface {
 	app.IPlayer
 
-	//
+	GetQuest() *Quest
 }
 
 // ============================================================================
@@ -80,7 +80,7 @@ func init() {
 		plr := args[0].(iPlayer)
 		mid := args[1].(int32)
 
-		plr.GetData().Quest.OnKill(mid)
+		plr.GetQuest().OnKill(mid)
 	})
 }
 

@@ -1,18 +1,13 @@
 package app
 
 import (
-	"github.com/gogo/protobuf/proto"
-
-	"core/tcp"
 	"game/battle"
-	// 	"game/player"
+	"github.com/gogo/protobuf/proto"
 )
 
 type IPlayer interface {
 	GetId() string
 	GetLevel() uint32
-
-	GetData() *player.PlayerData
 
 	GetItem(id uint32) uint64
 	SetItem(id uint32, cnt uint64)
@@ -21,6 +16,5 @@ type IPlayer interface {
 
 	CreateBattleTroop([]uint32) (*battle.BattleTroop, int)
 
-	DoPacket(packet *tcp.Packet)
 	SendPacket(opcode uint16, obj proto.Message)
 }

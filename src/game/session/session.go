@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"regexp"
 	"sync/atomic"
-	"time"
 
 	"github.com/gogo/protobuf/proto"
 
 	"core/event"
 	"core/log"
 	"core/tcp"
+	"game/constant"
 	"game/loop"
 	"game/player"
 	"public/ec"
@@ -84,7 +84,8 @@ func (self *Session) OnOpened() {
 func (self *Session) OnClosed() {
 	atomic.AddUint32(&count_of_session, ^uint32(0))
 	if self.player != nil {
-		self.player.Stop()
+		self.player.Logout()
+		self.player = nil
 	}
 }
 
@@ -148,8 +149,7 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 
 	self.SendPacket(protocol.MSG_SC_LoginResponse, &res)
 
-	loop.Get().PushEvent(event.NewEvent(constant.Evt_Auth, self.account, self))
-	// plrmgr.OnLogin(self.account)
+	loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, self.account, self))
 
 	log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
 }

@@ -17,7 +17,7 @@ var (
 func Start() {
 	addr := fmt.Sprintf("%s:%d", app.GetGameConfig().Host, app.GetGameConfig().Port)
 	server = tcp.NewTcpServer()
-	server.Start(addr, func() {
+	server.Start(addr, func(conn *net.TCPConn) {
 		s := session.NewSession()
 		socket := tcp.NewSocket(conn, s)
 		s.SetSocket(socket)

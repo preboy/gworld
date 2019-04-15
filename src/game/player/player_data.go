@@ -5,7 +5,7 @@ import (
 
 	"core/db"
 	"core/log"
-	"core/utils"
+	// "core/utils"
 	"game/app"
 	"game/dbmgr"
 	"game/modules/achv"
@@ -71,7 +71,6 @@ func (self *PlayerData) Init(plr *Player) {
 }
 
 func (self *Player) Save() {
-	self.on_before_save()
 	err := dbmgr.GetDB().UpsertByCond(
 		dbmgr.Table_name_player,
 		db.Condition{
@@ -110,29 +109,6 @@ func (self *Player) GetData() *PlayerData {
 	return self.data
 }
 
-func (self *Player) on_before_save() {
-	self.data.LastUpdate = self.last_update
-
-	data := self.GetData()
-
-	data.Heros_bson = make(map[string]*app.Hero)
-	data.Items_bson = make(map[string]uint64)
-	data.ItemsTimed_bson = make(map[string]TItemTimed)
-
-	for k, v := range data.Heros {
-		key := utils.U32toa(k)
-		data.Heros_bson[key] = v
-	}
-	for k, v := range data.Items {
-		key := utils.U32toa(k)
-		data.Items_bson[key] = v
-	}
-	for k, v := range data.ItemsTimed {
-		key := utils.U32toa(k)
-		data.ItemsTimed_bson[key] = v
-	}
-}
-
 // ============================================================================
 // exporter
 
@@ -145,7 +121,7 @@ func CreatePlayerData(acct string) *PlayerData {
 		Acct:     acct,
 		Name:     name,
 		Level:    1,
-		ServerID: app.GetGameId(),
+		SvrId:    app.GetGameId(),
 		CreateTs: now,
 	}
 

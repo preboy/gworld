@@ -26,7 +26,7 @@ const (
 	// ------------------------------------------------------------------------
 	// hero events
 
-	EVT_HERO_LEVEL_UP
+	Evt_Hero_LevelUp
 )
 
 const ()
