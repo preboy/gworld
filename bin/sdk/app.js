@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 var logger = require('morgan');
 
+require("../modules/comm");
+
 var acct = require('./routes/acct');
 
 var app = express();

@@ -11,9 +11,11 @@ import (
 var _sd *ServerData
 
 type ServerData struct {
-	ServerOpenTime int64  `bson:"server_open_time"` // 新服开启时间
-	ServerSaveTime int64  `bson:"server_save_time"` // 数据最近保存时间
-	IdSeq          uint32 `bson:"id_seq"`           // 玩家ID序列索引
+	ServerOpenTime int64    `bson:"open_ts"` // 新服开启时间
+	ServerSaveTime int64    `bson:"save_ts"` // 数据最近保存时间
+	IdSeq          uint32   `bson:"id_seq"`  // 玩家ID序列索引
+	Svr            string   `bson:"svr"`     // 当前服ID
+	SvrSet         []string `bson:"svr_set"` // 被合入的服ID
 }
 
 // 加载服务器全局数据
@@ -26,17 +28,26 @@ func LoadServerData() {
 			&data,
 		)
 
+		gameid := GetGameId()
+
 		// 新开服
 		if db.IsNotFound(err) {
 			data.ServerOpenTime = time.Now().Unix()
 			data.IdSeq = 1
+			data.Svr = gameid
 		} else if err != nil {
 			log.Error("LoadServerData: Error")
+			os.Exit(-1)
+		}
+
+		if data.Svr != gameid {
+			log.Error("gameid MISMATCHING", gameid, data.Svr)
+			os.Exit(-2)
 		}
 
 		if time.Now().Unix() < data.ServerSaveTime {
-			log.Error("时间回退了吧，这样要不得的")
-			os.Exit(-1)
+			log.Error("DATE ROLL BACK, It's fatal")
+			os.Exit(-3)
 		}
 
 		_sd = &data

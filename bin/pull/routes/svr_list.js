@@ -12,7 +12,7 @@ router.get("/", function(req, res) {
             status: 0,
         },
         game2: {
-            ip: "127.0.0.1",
+            ip: "118.24.48.149",
             port: 9002,
             name: "亢龙有悔",
             status: 0,

@@ -1,0 +1,2 @@
+
+global.print = console.log

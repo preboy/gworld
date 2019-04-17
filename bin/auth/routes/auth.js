@@ -1,15 +1,38 @@
 var express = require('express');
 var router = express.Router();
 
+const handlers = require('./handlers')
+
+const sdks = require('../../config/sdk.json')
 
 router.get('/', function(req, res) {
     let q = req.query;
 
-    res.json({
-        code:   0,
-        msg:    'auth ok'
-    });
+    let sdk = sdks[q.sdk];
+    let ret =
+    {
+        msg:  "",
+        code: -1,
+    }
 
+    if (!q.sdk || !sdk) {
+        ret.msg = `Not Found SDK: ${q.sdk}`;
+        ret.code = 1;
+        res.json(ret);
+        console.log(ret.msg);
+        return;
+    }
+
+    let h = handlers[q.sdk];
+    if (!h) {
+        ret.msg = `${q.sdk} Not Found HANDLER`;
+        ret.code = 2;
+        res.json(ret);
+        console.log(ret.msg);
+        return;
+    }
+
+    h(q, sdk, res, ret);
 });
 
 

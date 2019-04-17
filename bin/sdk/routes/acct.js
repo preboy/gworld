@@ -6,7 +6,7 @@ const generator = new TokenGenerator();
 
 const dbmgr = require('../../modules/dbmgr');
 
-let tokens = {} // uid -> [token, time]
+let tokens = {} // pseudo -> [token, time]
 
 function verify_ansi(str) {
     if(str.length == 0 || str.length > 16) {
@@ -34,27 +34,27 @@ function verify_ansi(str) {
     return true
 }
 
-function tran_name(name) {
-    // todo
-    return name
+function tran_acct(acct) {
+    return `dx_${acct}`
 }
 
 router.post('/register', function(req, res) {
     let q = req.body;
 
-    let name;
+    let acct;
     let passwd;
+
     let pass = false;
 
     do {
-        if (!q.name || !q.passwd) {
+        if (!q.acct || !q.passwd) {
             break
         }
 
-        name = q.name.toLowerCase();
+        acct = q.acct.toLowerCase();
         passwd = q.passwd;
 
-        if(!verify_ansi(name)) {
+        if(!verify_ansi(acct)) {
             break
         }
 
@@ -74,7 +74,7 @@ router.post('/register', function(req, res) {
     let db = dbmgr.get('sdk').db();
 
     var doc = {
-        _id:    name,
+        _uid:   acct,
         passwd: passwd,
     };
 
@@ -87,20 +87,20 @@ router.post('/register', function(req, res) {
 router.post('/login', function(req, res) {
     let q = req.body;
 
-    let name;
+    let acct;
     let passwd;
 
     let pass = false;
 
     do {
-        if (!q.name || !q.passwd) {
+        if (!q.acct || !q.passwd) {
             break
         }
 
-        name = q.name.toLowerCase();
+        acct = q.acct.toLowerCase();
         passwd = q.passwd;
 
-        if(!verify_ansi(name)) {
+        if(!verify_ansi(acct)) {
             break
         }
 
@@ -120,7 +120,7 @@ router.post('/login', function(req, res) {
     let db = dbmgr.get('sdk').db();
 
     var cond = {
-        _id:    name,
+        _uid:   acct,
         passwd: passwd,
     };
 
@@ -130,13 +130,13 @@ router.post('/login', function(req, res) {
         };
 
         if (r != null) {
-            let key = tran_name(r._id);
+            let key = tran_acct(r._id);
             let val = generator.generate();
             tokens[key] = [val, (new Date()).valueOf()];
 
             ret.msg = "ok";
-            ret.uid = key;
             ret.token = val;
+            ret.pseudo = key;
         }
 
         res.json(ret);
@@ -149,11 +149,11 @@ router.post('/verify', function(req, res) {
     let pass = false;
 
     do {
-        if (!q.uid || !q.token) {
+        if (!q.pseudo || !q.token) {
             break;
         }
 
-        let t = tokens[q.uid];
+        let t = tokens[q.pseudo];
         if (!t || t[0] != q.token) {
             break;
         }
@@ -165,7 +165,7 @@ router.post('/verify', function(req, res) {
 
         pass = true;
 
-        tokens[q.uid] = null;
+        tokens[q.pseudo] = null;
     }
     while(false);
 

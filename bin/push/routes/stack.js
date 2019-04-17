@@ -11,10 +11,11 @@ router.post("/", function(req, res) {
 
     do {
 
-        if ( !q.uid || !q.data) {
+        if (!q.uid || !q.uid || !q.data) {
             break;
         }
 
+        let acct = q.acct;
         let name = q.uid || "name";
         let data = q.data;
 
