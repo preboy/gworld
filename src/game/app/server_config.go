@@ -21,7 +21,8 @@ type sdk_t struct {
 }
 
 type auth_t struct {
-	Port int `json:"port"`
+	Host string `json:"host"`
+	Port int    `json:"port"`
 }
 
 type bill_t struct {

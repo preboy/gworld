@@ -22,7 +22,6 @@ type PlayerData struct {
 	Plat  string `bson:"plat"`
 	SvrId string `bson:"svrid"`
 
-	// remark:  map的键必要是字符串  加载之后，写入之前需要特别处理
 	Heros    hero_map_t `bson:"heros"`
 	Items    item_map_t `bson:"items"`
 	Exp      uint64     `bson:"exp"`   // 经验

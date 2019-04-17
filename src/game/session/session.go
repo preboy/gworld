@@ -9,10 +9,12 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	"core/event"
-	"core/log"
+	"core"
+	_ "core/event"
+	_ "core/log"
 	"core/tcp"
-	"game/constant"
+	"game/app"
+	_ "game/constant"
 	"game/loop"
 	"game/player"
 	"public/ec"
@@ -139,17 +141,35 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 	// TODO: should go to auth server to verify
 	res.ErrorCode = ec.Login_Failed
 
-	if _re.MatchString(req.Acct) {
-		if req.Pass == "1" {
-			self.auth = true
-			self.account = req.Acct
-			res.ErrorCode = ec.OK
-		}
-	}
+	go func() {
+		conf := app.GetConfig()
+		addr := fmt.Sprintf("http://%s:%d/auth?sdk=%s&pseudo=%s&token=%s&svr=%s",
+			conf.Auth.Host,
+			conf.Auth.Port,
+			req.Sdk,
+			req.Pseudo,
+			req.Token,
+			req.Svr,
+		)
 
-	self.SendPacket(protocol.MSG_SC_LoginResponse, &res)
+		ret := core.HttpGet(addr)
 
-	loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, "", self.account, self))
+		println("auth", ret)
 
-	log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
+		// log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
+
+	}()
+
+	// if _re.MatchString(req.Acct) {
+	// 	if req.Pass == "1" {
+	// 		self.auth = true
+	// 		self.account = req.Acct
+	// 		res.ErrorCode = ec.OK
+	// 	}
+	// }
+
+	// self.SendPacket(protocol.MSG_SC_LoginResponse, &res)
+
+	// loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, "", self.account, self))
+
 }

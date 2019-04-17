@@ -15,7 +15,7 @@ const dbmgr = require('../modules/dbmgr');
 function init() {
   dbmgr.init(
     [
-      ["c", config.comm.db_c, 5],
+      ["c", config.common.db_c, 5],
     ]
   );
 }
