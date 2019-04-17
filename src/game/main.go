@@ -12,7 +12,7 @@ import (
 	"core/schedule"
 	"core/timer"
 	"core/utils"
-	"core/work_service"
+	"core/work"
 	"game/app"
 	"game/cmd"
 	"game/config"
@@ -59,7 +59,7 @@ func main() {
 
 	timer.Start()
 	schedule.Start()
-	work_service.Start(4)
+	work.Start(4)
 
 	config.LoadAll(true)
 
@@ -107,8 +107,8 @@ func main() {
 	log.Info("loop stopping ...")
 	loop.Stop()
 
-	log.Info("work_service stopping ...")
-	work_service.Stop()
+	log.Info("work stopping ...")
+	work.Stop()
 
 	log.Info("player stopping ...")
 	player.SaveData()
