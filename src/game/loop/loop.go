@@ -26,7 +26,6 @@ var (
 type Loop struct {
 	q        chan bool
 	w        *sync.WaitGroup
-	run      bool
 	immed    []func()
 	last     int64
 	talks    chan *talk
@@ -59,6 +58,7 @@ func (self *Loop) start() {
 
 func (self *Loop) stop() {
 	self.q <- true
+	close(self.q)
 	self.w.Wait()
 }
 
@@ -70,52 +70,50 @@ func (self *Loop) working() {
 		self.w.Done()
 	}()
 
-	self.run = true
-	defer func() {
-		self.run = false
-	}()
-
 	self.on_start()
 
 	var busy bool
 
-	for {
+	go func() {
 
-		busy = false
+		for {
 
-		select {
-		case <-self.q:
-			break
-		case talk := <-self.talks:
-			self.do_talk(talk)
-			busy = true
-		default:
+			busy = false
+
+			select {
+			case <-self.q:
+				return
+			case talk := <-self.talks:
+				self.do_talk(talk)
+				busy = true
+			default:
+			}
+
+			if self.evtMgr.Update() {
+				busy = true
+			}
+
+			if self.timerMgr.Update() {
+				busy = true
+			}
+
+			if self.do_update() {
+				busy = true
+			}
+
+			if self.do_immed() {
+				busy = true
+			}
+
+			if !busy {
+				busy = self.do_idle()
+			}
+
+			if !busy {
+				time.Sleep(time.Duration(10) * time.Millisecond)
+			}
 		}
-
-		if self.evtMgr.Update() {
-			busy = true
-		}
-
-		if self.timerMgr.Update() {
-			busy = true
-		}
-
-		if self.do_update() {
-			busy = true
-		}
-
-		if self.do_immed() {
-			busy = true
-		}
-
-		if !busy {
-			busy = self.do_idle()
-		}
-
-		if !busy {
-			time.Sleep(time.Duration(10) * time.Millisecond)
-		}
-	}
+	}()
 
 	self.on_stop()
 }
@@ -139,7 +137,9 @@ func (self *Loop) do_idle() bool {
 }
 
 func (self *Loop) do_talk(talk *talk) {
-	talk.s.DoPacket(talk.p)
+	if talk != nil {
+		talk.s.DoPacket(talk.p)
+	}
 }
 
 func (self *Loop) do_immed() bool {
@@ -215,7 +215,7 @@ func Get() *Loop {
 }
 
 func Start() {
-	if _loop == nil {
+	if _loop != nil {
 		return
 	}
 
