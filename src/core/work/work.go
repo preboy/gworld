@@ -68,7 +68,6 @@ func (self *work_mgr) start(n int) bool {
 						return
 					} else {
 						work.do()
-						println("doing working id = ", i)
 					}
 				default:
 					self.c.L.Unlock()
@@ -101,7 +100,7 @@ func (self *work_mgr) start(n int) bool {
 func (self *work_mgr) stop() {
 	close(self.works)
 
-	// self.c.Broadcast()
+	self.c.Broadcast()
 	self.w.Wait()
 }
 
