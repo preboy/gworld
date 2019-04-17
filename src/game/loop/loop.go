@@ -24,13 +24,13 @@ var (
 // ============================================================================
 
 type Loop struct {
-	q        chan bool
-	w        *sync.WaitGroup
-	immed    []func()
-	last     int64
-	talks    chan *talk
-	evtMgr   *event.EventMgr
-	timerMgr *timer.TimerMgr
+	q         chan bool
+	w         *sync.WaitGroup
+	callbacks []func()
+	last      int64
+	talks     chan *talk
+	evtMgr    *event.EventMgr
+	timerMgr  *timer.TimerMgr
 }
 
 // ============================================================================
@@ -101,7 +101,7 @@ func (self *Loop) working() {
 				busy = true
 			}
 
-			if self.do_immed() {
+			if self.do_callback() {
 				busy = true
 			}
 
@@ -142,16 +142,16 @@ func (self *Loop) do_talk(talk *talk) {
 	}
 }
 
-func (self *Loop) do_immed() bool {
-	if len(self.immed) == 0 {
+func (self *Loop) do_callback() bool {
+	if len(self.callbacks) == 0 {
 		return false
 	}
 
-	for _, fn := range self.immed {
+	for _, fn := range self.callbacks {
 		fn()
 	}
 
-	self.immed = self.immed[:0]
+	self.callbacks = self.callbacks[:0]
 
 	return true
 }
@@ -204,8 +204,8 @@ func (self *Loop) CancelTimer(id uint64) {
 	self.timerMgr.CancelTimer(id)
 }
 
-func (self *Loop) PostImmed(fn func()) {
-	self.immed = append(self.immed, fn)
+func (self *Loop) PostCallback(fn func()) {
+	self.callbacks = append(self.callbacks, fn)
 }
 
 // ============================================================================

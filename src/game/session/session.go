@@ -149,7 +149,7 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 
 	self.SendPacket(protocol.MSG_SC_LoginResponse, &res)
 
-	loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, self.account, self))
+	loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, "", self.account, self))
 
 	log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
 }
