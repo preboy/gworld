@@ -1,3 +1,5 @@
+/bin/*.err
+/bin/*.pid
 /bin/*.log
 /bin/*.exe
 /bin/*.exe~
@@ -8,6 +10,8 @@
 /bin/client
 /bin/exporter
 /bin/exporter_map
+/bin/node_modules
+/bin/nodet.js
 /pkg
 /src/gopkg.in
 /src/github.com
@@ -18,5 +22,3 @@
 /plan/exporter_map.exe
 /gotest.go
 /src/public/protocol/proto/FILES
-/bin/node_modules
-bin/nodet.js

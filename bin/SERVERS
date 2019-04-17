@@ -1,0 +1,7 @@
+SERVERS=(
+"auth         ./auth/www"
+"pull         ./pull/www"
+"push         ./push/www"
+"sdk          ./sdk/www"
+"game2        ./game  -svr game2  -log game2.log"
+)
