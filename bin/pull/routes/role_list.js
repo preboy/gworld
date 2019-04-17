@@ -4,10 +4,8 @@ var router = express.Router();
 const config = require('../../config.json')
 
 router.get("/", function(req, res) {
-    let ret = {};
-
     if (!q.pseudo) {
-        res.json(ret);
+        res.json({});
         return
     }
 
@@ -15,9 +13,11 @@ router.get("/", function(req, res) {
         acct: q.pseudo,
     }
 
+    let db = dbmgr.get('c').db();
+
     db.collection('role_list').find(cond).toArray((err, docs) => {
         if (err) {
-            res.json(ret);
+            res.json({});
         }
 
         res.json(docs);

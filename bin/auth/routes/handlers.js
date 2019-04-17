@@ -1,6 +1,5 @@
 const request = require('request')
 
-
 const handlers = {
 
     "dx_and" : function(q, sdk, res, ret) {

@@ -1,7 +1,8 @@
 {
     "common": {
         "plat_id": "dx",
-        "debug_mode": true
+        "debug_mode": true,
+        "db_c": "mongodb://118.24.48.149:27017/wm_c?authSource=admin"
     },
 
     "sdk": {

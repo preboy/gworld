@@ -29,8 +29,6 @@
 		PingResponse
 		LoginRequest
 		LoginResponse
-		EnterGameRequest
-		EnterGameResponse
 		PlayerDataRequest
 		PlayerDataResponse
 		GMCommandRequest

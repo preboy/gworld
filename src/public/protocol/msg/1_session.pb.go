@@ -47,8 +47,10 @@ func (m *PingResponse) GetTime() uint32 {
 }
 
 type LoginRequest struct {
-	Acct string `protobuf:"bytes,1,opt,name=Acct,proto3" json:"Acct,omitempty"`
-	Pass string `protobuf:"bytes,2,opt,name=Pass,proto3" json:"Pass,omitempty"`
+	Pseudo string `protobuf:"bytes,1,opt,name=Pseudo,proto3" json:"Pseudo,omitempty"`
+	Token  string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty"`
+	Sdk    string `protobuf:"bytes,3,opt,name=Sdk,proto3" json:"Sdk,omitempty"`
+	Svr    string `protobuf:"bytes,4,opt,name=Svr,proto3" json:"Svr,omitempty"`
 }
 
 func (m *LoginRequest) Reset()                    { *m = LoginRequest{} }
@@ -56,16 +58,30 @@ func (m *LoginRequest) String() string            { return proto.CompactTextStri
 func (*LoginRequest) ProtoMessage()               {}
 func (*LoginRequest) Descriptor() ([]byte, []int) { return fileDescriptor1Session, []int{2} }
 
-func (m *LoginRequest) GetAcct() string {
+func (m *LoginRequest) GetPseudo() string {
 	if m != nil {
-		return m.Acct
+		return m.Pseudo
 	}
 	return ""
 }
 
-func (m *LoginRequest) GetPass() string {
+func (m *LoginRequest) GetToken() string {
 	if m != nil {
-		return m.Pass
+		return m.Token
+	}
+	return ""
+}
+
+func (m *LoginRequest) GetSdk() string {
+	if m != nil {
+		return m.Sdk
+	}
+	return ""
+}
+
+func (m *LoginRequest) GetSvr() string {
+	if m != nil {
+		return m.Svr
 	}
 	return ""
 }
@@ -86,37 +102,11 @@ func (m *LoginResponse) GetErrorCode() uint32 {
 	return 0
 }
 
-type EnterGameRequest struct {
-}
-
-func (m *EnterGameRequest) Reset()                    { *m = EnterGameRequest{} }
-func (m *EnterGameRequest) String() string            { return proto.CompactTextString(m) }
-func (*EnterGameRequest) ProtoMessage()               {}
-func (*EnterGameRequest) Descriptor() ([]byte, []int) { return fileDescriptor1Session, []int{4} }
-
-type EnterGameResponse struct {
-	ErrorCode uint32 `protobuf:"varint,1,opt,name=ErrorCode,proto3" json:"ErrorCode,omitempty"`
-}
-
-func (m *EnterGameResponse) Reset()                    { *m = EnterGameResponse{} }
-func (m *EnterGameResponse) String() string            { return proto.CompactTextString(m) }
-func (*EnterGameResponse) ProtoMessage()               {}
-func (*EnterGameResponse) Descriptor() ([]byte, []int) { return fileDescriptor1Session, []int{5} }
-
-func (m *EnterGameResponse) GetErrorCode() uint32 {
-	if m != nil {
-		return m.ErrorCode
-	}
-	return 0
-}
-
 func init() {
 	proto.RegisterType((*PingRequest)(nil), "msg.PingRequest")
 	proto.RegisterType((*PingResponse)(nil), "msg.PingResponse")
 	proto.RegisterType((*LoginRequest)(nil), "msg.LoginRequest")
 	proto.RegisterType((*LoginResponse)(nil), "msg.LoginResponse")
-	proto.RegisterType((*EnterGameRequest)(nil), "msg.EnterGameRequest")
-	proto.RegisterType((*EnterGameResponse)(nil), "msg.EnterGameResponse")
 }
 func (m *PingRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -179,17 +169,29 @@ func (m *LoginRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Acct) > 0 {
+	if len(m.Pseudo) > 0 {
 		dAtA[i] = 0xa
 		i++
-		i = encodeVarint1Session(dAtA, i, uint64(len(m.Acct)))
-		i += copy(dAtA[i:], m.Acct)
+		i = encodeVarint1Session(dAtA, i, uint64(len(m.Pseudo)))
+		i += copy(dAtA[i:], m.Pseudo)
 	}
-	if len(m.Pass) > 0 {
+	if len(m.Token) > 0 {
 		dAtA[i] = 0x12
 		i++
-		i = encodeVarint1Session(dAtA, i, uint64(len(m.Pass)))
-		i += copy(dAtA[i:], m.Pass)
+		i = encodeVarint1Session(dAtA, i, uint64(len(m.Token)))
+		i += copy(dAtA[i:], m.Token)
+	}
+	if len(m.Sdk) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarint1Session(dAtA, i, uint64(len(m.Sdk)))
+		i += copy(dAtA[i:], m.Sdk)
+	}
+	if len(m.Svr) > 0 {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarint1Session(dAtA, i, uint64(len(m.Svr)))
+		i += copy(dAtA[i:], m.Svr)
 	}
 	return i, nil
 }
@@ -205,47 +207,6 @@ func (m *LoginResponse) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *LoginResponse) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	if m.ErrorCode != 0 {
-		dAtA[i] = 0x8
-		i++
-		i = encodeVarint1Session(dAtA, i, uint64(m.ErrorCode))
-	}
-	return i, nil
-}
-
-func (m *EnterGameRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *EnterGameRequest) MarshalTo(dAtA []byte) (int, error) {
-	var i int
-	_ = i
-	var l int
-	_ = l
-	return i, nil
-}
-
-func (m *EnterGameResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *EnterGameResponse) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -288,11 +249,19 @@ func (m *PingResponse) Size() (n int) {
 func (m *LoginRequest) Size() (n int) {
 	var l int
 	_ = l
-	l = len(m.Acct)
+	l = len(m.Pseudo)
 	if l > 0 {
 		n += 1 + l + sov1Session(uint64(l))
 	}
-	l = len(m.Pass)
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sov1Session(uint64(l))
+	}
+	l = len(m.Sdk)
+	if l > 0 {
+		n += 1 + l + sov1Session(uint64(l))
+	}
+	l = len(m.Svr)
 	if l > 0 {
 		n += 1 + l + sov1Session(uint64(l))
 	}
@@ -300,21 +269,6 @@ func (m *LoginRequest) Size() (n int) {
 }
 
 func (m *LoginResponse) Size() (n int) {
-	var l int
-	_ = l
-	if m.ErrorCode != 0 {
-		n += 1 + sov1Session(uint64(m.ErrorCode))
-	}
-	return n
-}
-
-func (m *EnterGameRequest) Size() (n int) {
-	var l int
-	_ = l
-	return n
-}
-
-func (m *EnterGameResponse) Size() (n int) {
 	var l int
 	_ = l
 	if m.ErrorCode != 0 {
@@ -505,7 +459,7 @@ func (m *LoginRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Acct", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Pseudo", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -530,11 +484,11 @@ func (m *LoginRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Acct = string(dAtA[iNdEx:postIndex])
+			m.Pseudo = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pass", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -559,7 +513,65 @@ func (m *LoginRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Pass = string(dAtA[iNdEx:postIndex])
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sdk", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow1Session
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLength1Session
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sdk = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Svr", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow1Session
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLength1Session
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Svr = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -609,125 +621,6 @@ func (m *LoginResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: LoginResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ErrorCode", wireType)
-			}
-			m.ErrorCode = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflow1Session
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ErrorCode |= (uint32(b) & 0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skip1Session(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLength1Session
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *EnterGameRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflow1Session
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: EnterGameRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EnterGameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skip1Session(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if skippy < 0 {
-				return ErrInvalidLength1Session
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *EnterGameResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflow1Session
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: EnterGameResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EnterGameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -878,18 +771,18 @@ var (
 func init() { proto.RegisterFile("1_session.proto", fileDescriptor1Session) }
 
 var fileDescriptor1Session = []byte{
-	// 195 bytes of a gzipped FileDescriptorProto
+	// 202 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x37, 0x8c, 0x2f, 0x4e,
 	0x2d, 0x2e, 0xce, 0xcc, 0xcf, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xce, 0x2d, 0x4e,
 	0x57, 0x52, 0xe4, 0xe2, 0x0e, 0xc8, 0xcc, 0x4b, 0x0f, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11,
 	0x12, 0xe2, 0x62, 0x09, 0xc9, 0xcc, 0x4d, 0x95, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0d, 0x02, 0xb3,
-	0x95, 0x94, 0xb8, 0x78, 0x20, 0x4a, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0xb1, 0xaa, 0x31, 0xe3,
-	0xe2, 0xf1, 0xc9, 0x4f, 0xcf, 0xcc, 0x43, 0x32, 0xc7, 0x31, 0x39, 0xb9, 0x04, 0xac, 0x86, 0x33,
-	0x08, 0xcc, 0x06, 0x89, 0x05, 0x24, 0x16, 0x17, 0x4b, 0x30, 0x41, 0xc4, 0x40, 0x6c, 0x25, 0x5d,
-	0x2e, 0x5e, 0xa8, 0x3e, 0xa8, 0xe1, 0x32, 0x5c, 0x9c, 0xae, 0x45, 0x45, 0xf9, 0x45, 0xce, 0xf9,
-	0x29, 0x30, 0x1b, 0x10, 0x02, 0x4a, 0x42, 0x5c, 0x02, 0xae, 0x79, 0x25, 0xa9, 0x45, 0xee, 0x89,
-	0xb9, 0xa9, 0x50, 0xab, 0x94, 0x0c, 0xb9, 0x04, 0x91, 0xc4, 0x88, 0x31, 0xc6, 0x49, 0xe0, 0xc4,
-	0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0x21,
-	0x89, 0x0d, 0x1c, 0x24, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x24, 0xd2, 0x60, 0x94, 0x25,
-	0x01, 0x00, 0x00,
+	0x95, 0x94, 0xb8, 0x78, 0x20, 0x4a, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0xb1, 0xaa, 0x49, 0xe0,
+	0xe2, 0xf1, 0xc9, 0x4f, 0xcf, 0xcc, 0x83, 0x99, 0x23, 0xc6, 0xc5, 0x16, 0x50, 0x9c, 0x5a, 0x9a,
+	0x92, 0x0f, 0x56, 0xc5, 0x19, 0x04, 0xe5, 0x09, 0x89, 0x70, 0xb1, 0x86, 0xe4, 0x67, 0xa7, 0xe6,
+	0x49, 0x30, 0x81, 0x85, 0x21, 0x1c, 0x21, 0x01, 0x2e, 0xe6, 0xe0, 0x94, 0x6c, 0x09, 0x66, 0xb0,
+	0x18, 0x88, 0x09, 0x16, 0x29, 0x2b, 0x92, 0x60, 0x81, 0x8a, 0x94, 0x15, 0x29, 0xe9, 0x72, 0xf1,
+	0x42, 0x6d, 0x80, 0x3a, 0x43, 0x86, 0x8b, 0xd3, 0xb5, 0xa8, 0x28, 0xbf, 0xc8, 0x39, 0x3f, 0x05,
+	0xe6, 0x16, 0x84, 0x80, 0x93, 0xc0, 0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78,
+	0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0x43, 0x12, 0x1b, 0xd8, 0xd7, 0xc6, 0x80, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0xf4, 0x12, 0xbe, 0x5c, 0x08, 0x01, 0x00, 0x00,
 }

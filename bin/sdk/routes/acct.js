@@ -112,8 +112,13 @@ router.post('/login', function(req, res) {
     }
     while(false);
 
+    const ret = {
+        ret: false,
+        msg: "error",
+    }
+
     if (!pass) {
-        res.send("error");
+        res.json(ret);
         return;
     }
 
@@ -125,15 +130,12 @@ router.post('/login', function(req, res) {
     };
 
     db.collection('account').findOne(cond, {}, (err, r) => {
-        let ret = {
-            msg: "error",
-        };
-
         if (r != null) {
             let key = tran_acct(r._id);
             let val = generator.generate();
             tokens[key] = [val, (new Date()).valueOf()];
 
+            ret.ret = true;
             ret.msg = "ok";
             ret.token = val;
             ret.pseudo = key;

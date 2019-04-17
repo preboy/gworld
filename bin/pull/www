@@ -9,6 +9,19 @@ var http = require('http');
 var debug = require('debug')('pull:server');
 var config = require('../config.json')
 
+const dbmgr = require('../modules/dbmgr');
+
+// init
+function init() {
+  dbmgr.init(
+    [
+      ["c", config.comm.db_c, 5],
+    ]
+  );
+}
+
+init();
+
 /**
  * Get port from environment and store in Express.
  */
