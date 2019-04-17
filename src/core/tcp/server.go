@@ -41,10 +41,11 @@ func (server *TcpServer) Stop() {
 }
 
 func (server *TcpServer) rt_accept() {
+	server.w.Add(1)
 	defer func() {
 		server.w.Done()
 	}()
-	server.w.Add(1)
+
 	for {
 		conn, err := server.listener.AcceptTCP()
 		if err != nil {
