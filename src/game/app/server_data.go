@@ -36,17 +36,17 @@ func LoadServerData() {
 			data.IdSeq = 1
 			data.Svr = gameid
 		} else if err != nil {
-			log.Error("LoadServerData: Error")
+			log.Println("LoadServerData: Error")
 			os.Exit(-1)
 		}
 
 		if data.Svr != gameid {
-			log.Error("gameid MISMATCHING", gameid, data.Svr)
+			log.Println("gameid MISMATCHING", gameid, data.Svr)
 			os.Exit(-2)
 		}
 
 		if time.Now().Unix() < data.ServerSaveTime {
-			log.Error("DATE ROLL BACK, It's fatal")
+			log.Println("DATE ROLL BACK, It's fatal")
 			os.Exit(-3)
 		}
 
