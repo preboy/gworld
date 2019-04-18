@@ -55,7 +55,10 @@ func main() {
 
 	dbmgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat)
 
-	app.LoadServerData()
+	if !app.LoadServerData() {
+		log.Stop()
+		return
+	}
 
 	timer.Start()
 	schedule.Start()

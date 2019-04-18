@@ -4,7 +4,7 @@ import (
 	"core/db"
 	"core/log"
 	"game/dbmgr"
-	"os"
+
 	"time"
 )
 
@@ -19,7 +19,7 @@ type ServerData struct {
 }
 
 // 加载服务器全局数据
-func LoadServerData() {
+func LoadServerData() bool {
 	if _sd == nil {
 		var data ServerData
 		err := dbmgr.GetDB().GetObject(
@@ -36,22 +36,24 @@ func LoadServerData() {
 			data.IdSeq = 1
 			data.Svr = gameid
 		} else if err != nil {
-			log.Println("LoadServerData: Error")
-			os.Exit(-1)
+			log.Error("LoadServerData: Error")
+			return false
 		}
 
 		if data.Svr != gameid {
-			log.Println("gameid MISMATCHING", gameid, data.Svr)
-			os.Exit(-2)
+			log.Error("gameid MISMATCHING", gameid, data.Svr)
+			return false
 		}
 
 		if time.Now().Unix() < data.ServerSaveTime {
-			log.Println("DATE ROLL BACK, It's fatal")
-			os.Exit(-3)
+			log.Error("DATE ROLL BACK, It's fatal")
+			return false
 		}
 
 		_sd = &data
 	}
+
+	return true
 }
 
 func SaveServerData() {
