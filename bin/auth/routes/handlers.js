@@ -31,7 +31,7 @@ const handlers = {
                     return;
                 }
 
-                if (body2.ret) {
+                if (body.ret) {
                     ret.msg = "success";
                     ret.code = 0;
                 } else {

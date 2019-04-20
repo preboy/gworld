@@ -74,7 +74,7 @@ router.post('/register', function(req, res) {
     let db = dbmgr.get('sdk').db();
 
     var doc = {
-        _uid:   acct,
+        _id:    acct,
         passwd: passwd,
     };
 
@@ -125,11 +125,12 @@ router.post('/login', function(req, res) {
     let db = dbmgr.get('sdk').db();
 
     var cond = {
-        _uid:   acct,
+        _id:    acct,
         passwd: passwd,
     };
 
     db.collection('account').findOne(cond, {}, (err, r) => {
+
         if (r != null) {
             let key = tran_acct(r._id);
             let val = generator.generate();
