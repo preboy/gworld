@@ -3,12 +3,13 @@ var router = express.Router();
 
 const handlers = require('./handlers')
 
-const sdks = require('../../config/sdk.json')
+const gtab = require('../../modules/gtab');
+
 
 router.get('/', function(req, res) {
     let q = req.query;
 
-    let sdk = sdks[q.sdk];
+    let sdk = gtab.sdks[q.sdk];
     let ret =
     {
         msg:  "",

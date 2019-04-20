@@ -130,6 +130,7 @@ router.post('/login', function(req, res) {
     };
 
     db.collection('account').findOne(cond, {}, (err, r) => {
+
         if (r != null) {
             let key = tran_acct(r._id);
             let val = generator.generate();
