@@ -74,7 +74,7 @@ router.post('/register', function(req, res) {
     let db = dbmgr.get('sdk').db();
 
     var doc = {
-        _uid:   acct,
+        _id:    acct,
         passwd: passwd,
     };
 
@@ -125,7 +125,7 @@ router.post('/login', function(req, res) {
     let db = dbmgr.get('sdk').db();
 
     var cond = {
-        _uid:   acct,
+        _id:    acct,
         passwd: passwd,
     };
 

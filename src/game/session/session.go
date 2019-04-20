@@ -3,6 +3,7 @@ package session
 import (
 	"bytes"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"sync/atomic"
@@ -11,7 +12,7 @@ import (
 
 	"core"
 	_ "core/event"
-	_ "core/log"
+	"core/log"
 	"core/tcp"
 	"game/app"
 	_ "game/constant"
@@ -120,26 +121,25 @@ func (self *Session) DoPacket(packet *tcp.Packet) {
 
 // 心跳包
 func (self *Session) on_ping(packet *tcp.Packet) {
-	req := msg.PingRequest{}
-	res := msg.PingResponse{}
-	proto.Unmarshal(packet.Data, &req)
+	req := &msg.PingRequest{}
+	res := &msg.PingResponse{}
+	proto.Unmarshal(packet.Data, req)
 
 	res.Time = req.Time
-	self.SendPacket(protocol.MSG_SC_PingResponse, &res)
+	self.SendPacket(protocol.MSG_SC_PingResponse, res)
 }
 
 // 登录
 func (self *Session) on_auth(packet *tcp.Packet) {
-	req := msg.LoginRequest{}
-	res := msg.LoginResponse{}
-	proto.Unmarshal(packet.Data, &req)
+	req := &msg.LoginRequest{}
+	res := &msg.LoginResponse{}
+	proto.Unmarshal(packet.Data, req)
 
 	if self.auth {
 		return
 	}
 
 	// TODO: should go to auth server to verify
-	res.ErrorCode = ec.Login_Failed
 
 	go func() {
 		conf := app.GetConfig()
@@ -154,22 +154,29 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 
 		ret := core.HttpGet(addr)
 
-		println("auth", ret)
+		res.ErrorCode = ec.Login_Failed
 
-		// log.Debug("on_login: acct=%s, pass=%s, ok=%d", req.Acct, req.Pass, res.ErrorCode)
+		for {
+			var dat map[string]interface{}
+			if err := json.Unmarshal([]byte(ret), &dat); err == nil {
+				fmt.Println("dat", dat)
+			} else {
+				fmt.Println(err)
+				return
+			}
 
+			code := dat["code"].(float64)
+
+			if int(code) == 0 {
+				res.ErrorCode = ec.OK
+				// loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, "", self.account, self))
+			}
+
+			log.Debug("on_auth: sdk=%s, acct=%s, Token=%s, svr=%s, ret=%d", req.Sdk, req.Pseudo, req.Token, req.Svr, code)
+
+			break
+		}
+
+		self.SendPacket(protocol.MSG_SC_LoginResponse, res)
 	}()
-
-	// if _re.MatchString(req.Acct) {
-	// 	if req.Pass == "1" {
-	// 		self.auth = true
-	// 		self.account = req.Acct
-	// 		res.ErrorCode = ec.OK
-	// 	}
-	// }
-
-	// self.SendPacket(protocol.MSG_SC_LoginResponse, &res)
-
-	// loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, "", self.account, self))
-
 }
