@@ -15,7 +15,7 @@ router.get("/", function(req, res) {
 
     let db = dbmgr.get('c').db();
 
-    db.collection('role_list').find(cond).toArray((err, docs) => {
+    db.collection('player_info').find(cond).toArray((err, docs) => {
         if (err) {
             res.json({});
         }

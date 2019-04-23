@@ -53,7 +53,7 @@ func main() {
 		return
 	}
 
-	dbmgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat)
+	dbmgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat, app.GetConfig().Common.DBCenter)
 
 	if !app.LoadServerData() {
 		log.Stop()

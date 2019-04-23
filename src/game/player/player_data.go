@@ -5,6 +5,7 @@ import (
 
 	"core/db"
 	"core/log"
+	"core/utils"
 	"game/app"
 	"game/dbmgr"
 	"game/modules/achv"
@@ -12,22 +13,33 @@ import (
 	"game/modules/quest"
 )
 
+type PlayerInfo struct {
+	Acct string
+	Key  string
+	Svr  string
+	SDK  string
+	Pid  string
+	Lv   uint32
+}
+
 type PlayerData struct {
 	owner *Player
 
 	// 这里的数据就是要存入DB的数据
-	Pid   string `bson:"pid"`
-	Acct  string `bson:"acct"`
-	Name  string `bson:"name"`
-	Plat  string `bson:"plat"`
-	SvrId string `bson:"svrid"`
+	Pid  string `bson:"pid"`
+	Key  string `bson:"key"`
+	Name string `bson:"name"`
+	Acct string `bson:"acct"`
+	Plat string `bson:"plat"`
+	Svr  string `bson:"svr"`
+	SDK  string `bson:"sdk"`
 
-	Heros    hero_map_t `bson:"heros"`
-	Items    item_map_t `bson:"items"`
-	Exp      uint64     `bson:"exp"`   // 经验
-	Level    uint32     `bson:"lv"`    // 等级
-	VipLevel uint32     `bson:"viplv"` // VIP等级
-	Male     bool       `bson:"male"`  // 性别(默认:女)
+	Exp   uint64     `bson:"exp"`  // 经验
+	Lv    uint32     `bson:"lv"`   // 等级
+	Vip   uint32     `bson:"vip"`  // VIP等级
+	Male  bool       `bson:"male"` // 性别(默认:女)
+	Heros hero_map_t `bson:"heros"`
+	Items item_map_t `bson:"items"`
 
 	CreateTs   time.Time `bson:"create_ts"`   // 创建角色时间
 	LoginTs    time.Time `bson:"login_ts"`    // 最近登录时间
@@ -68,36 +80,89 @@ func (self *PlayerData) Init(plr *Player) {
 	self.Chapter.Init(plr)
 }
 
+func (self *PlayerData) to_player_info() *PlayerInfo {
+	return &PlayerInfo{
+		Acct: self.Acct,
+		Key:  self.Key,
+		Svr:  self.Svr,
+		SDK:  self.SDK,
+		Pid:  self.Pid,
+		Lv:   self.Lv,
+	}
+}
+
+// ============================================================================
+
 func (self *Player) Save() {
-	err := dbmgr.GetDB().UpsertByCond(
-		dbmgr.Table_name_player,
-		db.Condition{
-			"acct": self.data.Acct,
-		},
-		self.data,
-	)
-	if err != nil {
-		log.Error("Player.Save: Faild")
+	// player data
+	{
+		err := dbmgr.GetDB().UpsertByCond(
+			dbmgr.Table_name_player,
+			db.M{
+				"_id": self.data.Pid,
+				"key": self.data.Key,
+			},
+			self.data,
+		)
+
+		if err != nil {
+			log.Error("player data save FAILED")
+		}
+	}
+
+	// player info
+	{
+		info := self.data.to_player_info()
+
+		err := dbmgr.GetCenter().UpsertByCond(
+			dbmgr.Table_name_player_info,
+			db.M{
+				"_id": info.Pid,
+				"key": info.Key,
+			},
+			info,
+		)
+
+		if err != nil {
+			log.Error("player info save FAILED")
+		}
 	}
 }
 
 func (self *Player) AsyncSave() {
-}
 
-func (self *Player) on_after_load() {
-	// data := self.GetData()
+	data := utils.CloneBsonObject(self.data)
+	info := self.data.to_player_info()
 
-	// data.Heros = make(map[uint32]*app.Hero)
-	// data.Items = make(map[uint32]uint64)
+	go func() {
+		err := dbmgr.GetDB().UpsertByCond(
+			dbmgr.Table_name_player,
+			db.M{
+				"_id": self.data.Pid,
+				"key": self.data.Key,
+			},
+			data,
+		)
 
-	// for k, v := range data.Heros_bson {
-	// 	key := utils.Atou32(k)
-	// 	data.Heros[key] = v
-	// }
-	// for k, v := range data.Items_bson {
-	// 	key := utils.Atou32(k)
-	// 	data.Items[key] = v
-	// }
+		if err != nil {
+			log.Error("player data async save FAILED")
+		}
+	}()
+
+	go func() {
+		err := dbmgr.GetCenter().UpsertByCond(
+			dbmgr.Table_name_player_info,
+			db.M{
+				"_id": info.Pid,
+				"key": info.Key,
+			},
+			info,
+		)
+
+		if err != nil {
+			log.Error("player info async save FAILED")
+		}
+	}()
 }
 
 // ============================================================================
@@ -110,32 +175,61 @@ func (self *Player) GetData() *PlayerData {
 // ============================================================================
 // exporter
 
-func CreatePlayerData(acct string) *PlayerData {
-	now := time.Now()
-	pid, name := app.GeneralPlayerID()
-
-	data := &PlayerData{
-		Pid:      pid,
-		Acct:     acct,
-		Name:     name,
-		Level:    1,
-		SvrId:    app.GetGameId(),
-		CreateTs: now,
+func GetPlayerData(key, acct, svr, sdk string) *PlayerData {
+	data, err := load_player_data(key)
+	if err {
+		return nil
 	}
 
-	// async save
+	if data == nil {
+		data = create_player_data(key, acct, svr, sdk)
+	}
 
 	return data
 }
 
-func LoadPlayerDataFromDB(pid string) *PlayerData {
-	// todo
-	return nil
+func load_player_data(key string) (*PlayerData, bool) {
+	var data PlayerData
+
+	err := dbmgr.GetCenter().GetObjectByCond(
+		dbmgr.Table_name_player,
+		db.M{
+			"key": key,
+		},
+		&data,
+	)
+
+	if err != nil && !db.IsNotFound(err) {
+		log.Error("Loading PlayerData err: %v", err)
+		return nil, true
+	}
+
+	return &data, false
+}
+
+func create_player_data(key, acct, svr, sdk string) *PlayerData {
+	now := time.Now()
+
+	pid, name := app.GeneralPlayerID()
+
+	data := &PlayerData{
+		Pid:      pid,
+		Key:      key,
+		Name:     name,
+		Acct:     acct,
+		Plat:     app.GetPlat(),
+		Svr:      svr,
+		SDK:      sdk,
+		Lv:       1,
+		CreateTs: now,
+	}
+
+	return data
 }
 
 // ============================================================================
 // data member export
 
-func (self *Player) Getchapter() *chapter.Chapter {
+func (self *Player) GetChapter() *chapter.Chapter {
 	return self.data.Chapter
 }

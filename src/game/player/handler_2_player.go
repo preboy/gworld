@@ -28,8 +28,8 @@ func handler_PlayerDataRequest(plr *Player, packet *tcp.Packet) {
 	res.Pid = data.Pid
 	res.Sid = plr.sid
 	res.Id = req.Id
-	res.Level = data.Level
-	res.VipLevel = data.VipLevel
+	res.Level = data.Lv
+	res.VipLevel = data.Vip
 	res.Male = data.Male
 
 	for id, cnt := range data.Items {
@@ -160,13 +160,13 @@ func (self *Player) on_gm_command(args []string) int32 {
 	case "vip":
 		if len(args) > 1 {
 			val := utils.Atou32(args[1])
-			self.data.VipLevel = val
+			self.data.Vip = val
 			self.SendNotice("VipLevel: "+utils.U32toa(val), 0)
 		}
 	case "lv":
 		if len(args) > 1 {
 			val := utils.Atou32(args[1])
-			self.data.Level = val
+			self.data.Lv = val
 			self.SendNotice("Level: "+utils.U32toa(val), 0)
 		}
 	case "item":

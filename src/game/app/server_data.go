@@ -41,7 +41,7 @@ func LoadServerData() bool {
 		}
 
 		if data.Svr != gameid {
-			log.Error("gameid MISMATCHING", gameid, data.Svr)
+			log.Error("boot gameid = %s, db gameid = %s", gameid, data.Svr)
 			return false
 		}
 
@@ -72,4 +72,18 @@ func SaveServerData() {
 
 func GetServerData() *ServerData {
 	return _sd
+}
+
+func IsValidGameId(gameid string) bool {
+	if gameid == _sd.Svr {
+		return true
+	}
+
+	for _, v := range _sd.SvrSet {
+		if gameid == v {
+			return true
+		}
+	}
+
+	return false
 }

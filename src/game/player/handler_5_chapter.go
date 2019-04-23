@@ -12,7 +12,7 @@ func handler_ChapterInfoRequest(plr *Player, packet *tcp.Packet) {
 	res := &msg.ChapterInfoResponse{}
 	proto.Unmarshal(packet.Data, req)
 
-	plr.Getchapter().ChapterInfo(req, res)
+	plr.GetChapter().ChapterInfo(req, res)
 
 	plr.SendPacket(protocol.MSG_SC_ChapterInfoResponse, res)
 }
@@ -22,7 +22,7 @@ func handler_ChapterFightingRequest(plr *Player, packet *tcp.Packet) {
 	res := &msg.ChapterFightingResponse{}
 	proto.Unmarshal(packet.Data, req)
 
-	plr.Getchapter().ChapterFighting(req, res)
+	plr.GetChapter().ChapterFighting(req, res)
 
 	plr.SendPacket(protocol.MSG_SC_ChapterFightingResponse, res)
 }
@@ -32,7 +32,7 @@ func handler_ChapterRewardsRequest(plr *Player, packet *tcp.Packet) {
 	res := &msg.ChapterRewardsResponse{}
 	proto.Unmarshal(packet.Data, req)
 
-	plr.Getchapter().ChapterRewards(req, res)
+	plr.GetChapter().ChapterRewards(req, res)
 
 	plr.SendPacket(protocol.MSG_SC_ChapterRewardsResponse, res)
 }
@@ -42,7 +42,7 @@ func handler_ChapterLootRequest(plr *Player, packet *tcp.Packet) {
 	res := &msg.ChapterLootResponse{}
 	proto.Unmarshal(packet.Data, req)
 
-	plr.Getchapter().ChapterLoot(req, res)
+	plr.GetChapter().ChapterLoot(req, res)
 
 	plr.SendPacket(protocol.MSG_SC_ChapterLootResponse, res)
 }

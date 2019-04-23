@@ -1,6 +1,6 @@
 {
     "common": {
-        "plat_id": "dx",
+        "plat": "dx",
         "debug_mode": true,
         "db_c": "mongodb://118.24.48.149:27017/wm_c?authSource=admin"
     },

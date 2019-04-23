@@ -11,7 +11,7 @@ import (
 )
 
 func (self *Player) GetLevel() uint32 {
-	return self.data.Level
+	return self.data.Lv
 }
 
 func (self *Player) AddExp(exp uint64) {
@@ -20,10 +20,10 @@ func (self *Player) AddExp(exp uint64) {
 	}
 
 	self.data.Exp += exp
-	old_lv := self.data.Level
+	old_lv := self.data.Lv
 
 	for {
-		conf := config.LevelupConf.Query(self.data.Level)
+		conf := config.LevelupConf.Query(self.data.Lv)
 		if conf == nil {
 			break
 		}
@@ -35,7 +35,7 @@ func (self *Player) AddExp(exp uint64) {
 
 		if self.data.Exp >= conf.Exp {
 			self.data.Exp -= conf.Exp
-			self.data.Level++
+			self.data.Lv++
 		} else {
 			break
 		}
@@ -43,12 +43,12 @@ func (self *Player) AddExp(exp uint64) {
 
 	// notice
 	self.SendPacket(protocol.MSG_SC_PlayerExpUpdate, &msg.PlayerExpUpdate{
-		Lv:  self.data.Level,
+		Lv:  self.data.Lv,
 		Exp: self.data.Exp,
 	})
 
 	// level upgrade event
-	new_lv := self.data.Level
+	new_lv := self.data.Lv
 	if old_lv != new_lv {
 		event.Fire(constant.Evt_Plr_LevelUp, old_lv, new_lv)
 	}

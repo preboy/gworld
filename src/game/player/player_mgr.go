@@ -5,6 +5,7 @@ import (
 
 	"core/event"
 	"core/log"
+	"core/work"
 	"game/app"
 	"game/constant"
 	"game/dbmgr"
@@ -28,6 +29,7 @@ var (
 	// 在内存中的玩家，包括主动上线、从DB中被拉上线的
 	_plrs_sid    = [MAX_PLAYER_COUNT]*Player{}                // 内存中的玩家
 	_plrs_pid    = make(map[string]*Player, MAX_PLAYER_COUNT) // pid(all players)
+	_plrs_key    = make(map[string]*Player, MAX_PLAYER_COUNT) // key(acct-svr)
 	_plrs_name   = make(map[string]*Player, MAX_PLAYER_COUNT) // name
 	_plrs_online = make(map[string]*Player, MAX_PLAYER_COUNT) // pid(在线的玩家)
 )
@@ -38,31 +40,42 @@ func init() {
 	event.On(constant.Evt_Auth, func(id uint32, args ...interface{}) {
 		// 检测玩家是否已登录
 
-		pid := args[0].(string)
+		sdk := args[0].(string)
+		svr := args[2].(string)
 		acct := args[1].(string)
-		sess := args[2].(ISession)
-		first := false
+		sess := args[3].(ISession)
 
-		plr := GetPlayer(pid)
-		if plr == nil {
-			plr = NewPlayer()
-
-			data := LoadPlayerDataFromDB(pid)
-			if data == nil {
-				data = CreatePlayerData(acct)
-				first = true
+		key := fmt.Sprintf("%s-%s", acct, svr)
+		if plr, ok := _plrs_key[key]; ok {
+			if plr == nil {
+				return // loading
 			}
 
-			plr.SetData(data)
-			plr.Init()
-		} else {
+			// relogin
 			if plr.IsOnLine() {
 				plr.Logout()
 			}
-		}
 
-		plr.SetSession(sess)
-		plr.Login(first)
+			plr.SetSession(sess)
+			plr.Init()
+			plr.Login(false)
+
+		} else {
+
+			_plrs_key[key] = nil
+
+			work.Queue(func() func() {
+
+				data := GetPlayerData(key, acct, svr, sdk)
+
+				return func() {
+					plr := NewPlayer().SetData(data)
+					plr.SetSession(sess)
+					plr.Init()
+					plr.Login(false)
+				}
+			}, nil)
+		}
 	})
 }
 
@@ -78,10 +91,10 @@ func (self *Player) SetName(name string) {
 	_plrs_name[new_name] = self
 }
 
-func (self *Player) SetData(data *PlayerData) {
+func (self *Player) SetData(data *PlayerData) *Player {
 	sid := uint32(query_avail_slot_index())
 	if sid == 0 {
-		return
+		return nil
 	}
 
 	self.sid = sid
@@ -89,7 +102,10 @@ func (self *Player) SetData(data *PlayerData) {
 
 	_plrs_sid[self.sid] = self
 	_plrs_pid[data.Pid] = self
+	_plrs_key[data.Key] = self
 	_plrs_name[data.Name] = self
+
+	return self
 }
 
 // ============================================================================
@@ -155,8 +171,7 @@ func LoadData() {
 	}
 
 	for _, data := range arr {
-		plr := NewPlayer()
-		plr.SetData(data)
+		NewPlayer().SetData(data)
 	}
 
 	log.Info("[%d] player loaded !", len(arr))

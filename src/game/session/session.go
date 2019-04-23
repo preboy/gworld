@@ -8,16 +8,14 @@ import (
 	"regexp"
 	"sync/atomic"
 
-	"github.com/gogo/protobuf/proto"
-
 	"core"
-	_ "core/event"
 	"core/log"
 	"core/tcp"
 	"game/app"
-	_ "game/constant"
+	"game/constant"
 	"game/loop"
 	"game/player"
+	"github.com/gogo/protobuf/proto"
 	"public/ec"
 	"public/protocol"
 	"public/protocol/msg"
@@ -135,41 +133,41 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 	res := &msg.LoginResponse{}
 	proto.Unmarshal(packet.Data, req)
 
-	if self.auth {
-		return
-	}
-
-	// TODO: should go to auth server to verify
+	res.ErrorCode = ec.Login_Failed
 
 	go func() {
-		conf := app.GetConfig()
-		addr := fmt.Sprintf("http://%s:%d/auth?sdk=%s&pseudo=%s&token=%s&svr=%s",
-			conf.Auth.Host,
-			conf.Auth.Port,
-			req.Sdk,
-			req.Pseudo,
-			req.Token,
-			req.Svr,
-		)
-
-		ret := core.HttpGet(addr)
-
-		res.ErrorCode = ec.Login_Failed
-
 		for {
+			if self.auth {
+				break
+			}
+
+			if !app.IsValidGameId(req.Svr) {
+				break
+			}
+
+			conf := app.GetConfig()
+			addr := fmt.Sprintf("http://%s:%d/auth?sdk=%s&pseudo=%s&token=%s&svr=%s",
+				conf.Auth.Host,
+				conf.Auth.Port,
+				req.Sdk,
+				req.Pseudo,
+				req.Token,
+				req.Svr,
+			)
+
+			ret := core.HttpGet(addr)
+
 			var dat map[string]interface{}
-			if err := json.Unmarshal([]byte(ret), &dat); err == nil {
-				fmt.Println("dat", dat)
-			} else {
-				fmt.Println(err)
-				return
+			err := json.Unmarshal([]byte(ret), &dat)
+			if err != nil {
+				log.Error("From Auth json.Unmarshal err: %v", err)
+				break
 			}
 
 			code := dat["code"].(float64)
-
 			if int(code) == 0 {
 				res.ErrorCode = ec.OK
-				// loop.Get().PostEvent(event.NewEvent(constant.Evt_Auth, "", self.account, self))
+				loop.Get().PostEventArgs(constant.Evt_Auth, req.Sdk, req.Pseudo, req.Svr, self)
 			}
 
 			log.Debug("on_auth: sdk=%s, acct=%s, Token=%s, svr=%s, ret=%d", req.Sdk, req.Pseudo, req.Token, req.Svr, code)
