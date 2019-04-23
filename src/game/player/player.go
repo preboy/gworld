@@ -4,12 +4,8 @@ import (
 	"time"
 
 	"core/event"
-	// "core/log"
-	// "core/tcp"
-	// "core/timer"
-	// "core/utils"
-
 	"game/constant"
+	"public/protocol"
 )
 
 type Player struct {
@@ -43,7 +39,7 @@ func (self *Player) GetSid() int {
 	return int(self.sid)
 }
 
-func (self *Player) Login(first bool) {
+func (self *Player) Login() {
 	self.online = true
 	self.data.LoginTs = time.Now()
 	self.data.LoginTimes++
@@ -51,14 +47,15 @@ func (self *Player) Login(first bool) {
 	pid := self.data.Pid
 	_plrs_online[pid] = self
 
-	if first {
+	if self.data.LoginTimes == 1 {
 		event.Fire(constant.Evt_Plr_LoginFirst, pid)
 	}
 
 	event.Fire(constant.Evt_Plr_Login, pid)
 
-	// todo 发送玩家核心数据
-	// self.data.to_msg()
+	// 发送玩家基本数据
+	res := self.data.ToMsg()
+	self.SendPacket(protocol.MSG_SC_PlayerDataResponse, res)
 }
 
 func (self *Player) Logout() {

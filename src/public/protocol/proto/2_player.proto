@@ -22,9 +22,9 @@ message PlayerDataResponse {    // opcode: 201
     string  Name                = 2;
     string  Pid                 = 3;
     uint32  Sid                 = 4;
-    uint64  Id                  = 5;
-    uint32  Level               = 6;
-    uint32  VipLevel            = 7;
+    uint64  Exp                 = 5;
+    uint32  Lv                  = 6;
+    uint32  Vip                 = 7;
     bool    Male                = 8;
     repeated Item   Items       = 9;
     repeated Hero   Heros       = 10;

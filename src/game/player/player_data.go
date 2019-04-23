@@ -11,6 +11,7 @@ import (
 	"game/modules/achv"
 	"game/modules/chapter"
 	"game/modules/quest"
+	"public/protocol/msg"
 )
 
 type PlayerInfo struct {
@@ -89,6 +90,33 @@ func (self *PlayerData) to_player_info() *PlayerInfo {
 		Pid:  self.Pid,
 		Lv:   self.Lv,
 	}
+}
+
+func (self *PlayerData) ToMsg() *msg.PlayerDataResponse {
+	res := &msg.PlayerDataResponse{}
+
+	res.Acct = self.Acct
+	res.Name = self.Name
+	res.Pid = self.Pid
+	res.Sid = self.owner.sid
+	res.Exp = self.Exp
+	res.Lv = self.Lv
+	res.Vip = self.Vip
+	res.Male = self.Male
+
+	for id, cnt := range self.Items {
+		res.Items = append(res.Items, &msg.Item{
+			Flag: 0,
+			Id:   id,
+			Cnt:  int64(cnt),
+		})
+	}
+
+	for _, hero := range self.Heros {
+		res.Heros = append(res.Heros, hero.ToMsg())
+	}
+
+	return res
 }
 
 // ============================================================================

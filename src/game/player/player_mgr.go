@@ -58,21 +58,20 @@ func init() {
 
 			plr.SetSession(sess)
 			plr.Init()
-			plr.Login(false)
+			plr.Login()
 
 		} else {
 
 			_plrs_key[key] = nil
 
 			work.Queue(func() func() {
-
 				data := GetPlayerData(key, acct, svr, sdk)
 
 				return func() {
 					plr := NewPlayer().SetData(data)
 					plr.SetSession(sess)
 					plr.Init()
-					plr.Login(false)
+					plr.Login()
 				}
 			}, nil)
 		}
