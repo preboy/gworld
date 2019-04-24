@@ -59,6 +59,17 @@ _start()
             continue
         fi
 
+        # backup
+        if [ -e $svr_name.log ]; then
+            cat $svr_name.log >> $svr_name.log.bak
+            rm  $svr_name.log
+        fi
+
+        if [ -e $svr_name.err ]; then
+            cat $svr_name.err >> $svr_name.err.bak
+            rm  $svr_name.err
+        fi
+
         echo -n "$(printf '%-32s' "starting $svr_name ...")"
         $svr_exec &>> $svr_name.err &
         pid=$!

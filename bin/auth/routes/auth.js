@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const handlers = require('./handlers')
+const handlers = require('./auth_handlers.js')
 
 const gtab = require('../../modules/gtab');
 

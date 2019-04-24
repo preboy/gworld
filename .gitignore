@@ -2,6 +2,7 @@
 /bin/*.pid
 /bin/*.log
 /bin/*.exe
+/bin/*.bak
 /bin/*.exe~
 /bin/*.cpu
 /bin/*.memory
