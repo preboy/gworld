@@ -2,7 +2,6 @@ package act
 
 import (
 	"strings"
-	"time"
 
 	"core/db"
 	"core/log"
@@ -109,8 +108,7 @@ func parse_config_date(date string) int64 {
 	date = strings.Trim(date, " ")
 
 	if strings.HasPrefix(date, "@") {
-		t := time.Unix(app.GetServerData().ServerOpenTime, 0)
-		return utils.ParseRelativeTime(t, date).Unix()
+		return utils.ParseRelativeTime(app.GetServerData().ServerOpenTime, date).Unix()
 	} else {
 		return utils.ParseTime(date).Unix()
 	}

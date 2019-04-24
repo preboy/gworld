@@ -158,7 +158,6 @@ func (self *Player) Save() {
 }
 
 func (self *Player) AsyncSave() {
-
 	data := utils.CloneBsonObject(self.data)
 	info := self.data.to_player_info()
 
@@ -204,10 +203,7 @@ func (self *Player) GetData() *PlayerData {
 // exporter
 
 func GetPlayerData(key, acct, svr, sdk string) *PlayerData {
-	data, err := load_player_data(key)
-	if err {
-		return nil
-	}
+	data := load_player_data(key)
 
 	if data == nil {
 		data = create_player_data(key, acct, svr, sdk)
@@ -216,10 +212,9 @@ func GetPlayerData(key, acct, svr, sdk string) *PlayerData {
 	return data
 }
 
-func load_player_data(key string) (*PlayerData, bool) {
+func load_player_data(key string) *PlayerData {
 	var data PlayerData
-
-	err := dbmgr.GetCenter().GetObjectByCond(
+	err := dbmgr.GetDB().GetObjectByCond(
 		dbmgr.Table_name_player,
 		db.M{
 			"key": key,
@@ -227,12 +222,12 @@ func load_player_data(key string) (*PlayerData, bool) {
 		&data,
 	)
 
-	if err != nil && !db.IsNotFound(err) {
+	if err != nil {
 		log.Error("Loading PlayerData err: %v", err)
-		return nil, true
+		return nil
 	}
 
-	return &data, false
+	return &data
 }
 
 func create_player_data(key, acct, svr, sdk string) *PlayerData {

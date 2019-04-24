@@ -56,6 +56,10 @@ func (self *Player) Login() {
 	// 发送玩家基本数据
 	res := self.data.ToMsg()
 	self.SendPacket(protocol.MSG_SC_PlayerDataResponse, res)
+
+	if self.data.LoginTimes == 1 {
+		self.AsyncSave()
+	}
 }
 
 func (self *Player) Logout() {

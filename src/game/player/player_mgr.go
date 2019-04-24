@@ -177,6 +177,7 @@ func LoadData() {
 }
 
 func SaveData() {
-	// 所有玩家存盘
-	// TODO
+	for _, plr := range _plrs_pid {
+		plr.Save()
+	}
 }

@@ -170,7 +170,7 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 				loop.Get().PostEventArgs(constant.Evt_Auth, req.Sdk, req.Pseudo, req.Svr, self)
 			}
 
-			log.Debug("on_auth: sdk=%s, acct=%s, Token=%s, svr=%s, ret=%d", req.Sdk, req.Pseudo, req.Token, req.Svr, code)
+			log.Debug("on_auth: sdk=%s, acct=%s, Token=%s, svr=%s, ret=%d", req.Sdk, req.Pseudo, req.Token, req.Svr, int(code))
 
 			break
 		}
