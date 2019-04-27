@@ -39,7 +39,7 @@ func (self *Player) GetSid() int {
 	return int(self.sid)
 }
 
-func (self *Player) Login() {
+func (self *Player) OnLogin() {
 	self.online = true
 	self.data.LoginTs = time.Now()
 	self.data.LoginTimes++
@@ -62,14 +62,20 @@ func (self *Player) Login() {
 	}
 }
 
-func (self *Player) Logout() {
+func (self *Player) Disconnect() {
+	if self.s != nil {
+		self.s.Disconnect()
+	}
+}
+
+func (self *Player) OnLogout() {
 	pid := self.data.Pid
 	event.Fire(constant.Evt_Plr_Logout, pid)
-	_plrs_online[pid] = nil
 
-	self.s.Disconnect()
 	self.s = nil
 	self.online = false
+	_plrs_online[pid] = nil
+
 	self.data.LogoutTs = time.Now()
 }
 

@@ -15,14 +15,19 @@ var (
 )
 
 func Start() {
+
 	addr := fmt.Sprintf("%s:%d", app.GetGameConfig().Host, app.GetGameConfig().Port)
 	server = tcp.NewTcpServer()
+
 	server.Start(addr, func(conn *net.TCPConn) {
-		s := session.NewSession()
-		socket := tcp.NewSocket(conn, s)
-		s.SetSocket(socket)
-		socket.Start()
+
+		sess := session.NewSession()
+		sock := tcp.NewSocket(conn, sess)
+
+		sess.SetSocket(sock)
+		sock.Start()
 	})
+
 	log.Info("server listen on: %s", addr)
 }
 

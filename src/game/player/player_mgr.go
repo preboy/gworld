@@ -53,12 +53,12 @@ func init() {
 
 			// relogin
 			if plr.IsOnLine() {
-				plr.Logout()
+				plr.Disconnect()
 			}
 
 			plr.SetSession(sess)
 			plr.Init()
-			plr.Login()
+			plr.OnLogin()
 
 		} else {
 
@@ -71,7 +71,7 @@ func init() {
 					plr := NewPlayer().SetData(data)
 					plr.SetSession(sess)
 					plr.Init()
-					plr.Login()
+					plr.OnLogin()
 				}
 			}, nil)
 		}

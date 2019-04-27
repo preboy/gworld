@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"regexp"
 	"sync/atomic"
 
 	"core"
@@ -26,18 +25,6 @@ var count_of_session uint32
 type Session struct {
 	socket *tcp.Socket
 	player *player.Player
-
-	// session data
-	auth    bool   // 验证是否通过
-	account string // 账号名
-}
-
-var (
-	_re *regexp.Regexp
-)
-
-func init() {
-	_re = regexp.MustCompile("^test[0-9]{3}$")
 }
 
 func NewSession() *Session {
@@ -70,10 +57,7 @@ func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
 func (self *Session) Disconnect() {
 	if self.socket != nil {
 		self.socket.Stop()
-		self.socket = nil
 	}
-
-	self.player = nil
 }
 
 // ============================================================================
@@ -83,9 +67,11 @@ func (self *Session) OnOpened() {
 }
 
 func (self *Session) OnClosed() {
+	self.socket = nil
+
 	atomic.AddUint32(&count_of_session, ^uint32(0))
 	if self.player != nil {
-		self.player.Logout()
+		self.player.OnLogout()
 		self.player = nil
 	}
 }
@@ -137,7 +123,7 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 
 	go func() {
 		for {
-			if self.auth {
+			if self.player != nil {
 				break
 			}
 

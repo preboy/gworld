@@ -36,7 +36,6 @@ func GetCenter() *db.Database {
 }
 
 func Open(game, stat, center string) {
-	println(game, stat, center)
 	_db_game.Open(game, true)
 	_db_stat.Open(stat, true)
 	_db_center.Open(center, true)
