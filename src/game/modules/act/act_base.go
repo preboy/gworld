@@ -15,7 +15,7 @@ func (self *ActBase) add_term(term *act_term_t) {
 	self.terms = append(self.terms, term)
 }
 
-func (self *ActBase) check_term() bool {
+func (self *ActBase) check_terms() bool {
 	pass := true
 
 	l := len(self.terms)
@@ -47,7 +47,7 @@ func (self *ActBase) GetRawPlrData() map[string]interface{} {
 }
 
 func (self *ActBase) GetRawPlrTable(id string) interface{} {
-	d, ok := self.DataPlr[id]
+	d, ok := self.GetRawPlrData()[id]
 	if !ok {
 		d = self.NewPlrData(id)
 		self.DataPlr[id] = d
@@ -55,12 +55,12 @@ func (self *ActBase) GetRawPlrTable(id string) interface{} {
 	return d
 }
 
-func (self *ActBase) get_id() int {
+func (self *ActBase) get_id() int32 {
 	return self.Id
 }
 
-func (self *ActBase) get_stage() int32 {
-	return self.Stage
+func (self *ActBase) get_status() int32 {
+	return self.Status
 }
 
 func (self *ActBase) get_key() int64 {
@@ -68,7 +68,7 @@ func (self *ActBase) get_key() int64 {
 }
 
 func (self *ActBase) is_open() bool {
-	return self.Stage == 1
+	return self.Status == 1
 }
 
 func (self *ActBase) get_key_curr() int64 {
@@ -86,15 +86,15 @@ func (self *ActBase) set_close() {
 		self.OnClose()
 	})
 
-	self.Stage = 0
 	self.Key = 0
+	self.Status = 0
 }
 
 func (self *ActBase) set_open(key int64) {
 	self.DataSvr = self.NewSvrData()
 	self.DataPlr = make(map[string]interface{})
 
-	self.Stage = 1
+	self.Status = 1
 	self.Key = key
 
 	self.OnOpen()
@@ -114,8 +114,7 @@ func (self *ActBase) NewPlrData(id string) interface{} {
 // holdplace
 
 func (self *ActBase) OnOpen() {
-
 }
-func (self *ActBase) OnClose() {
 
+func (self *ActBase) OnClose() {
 }

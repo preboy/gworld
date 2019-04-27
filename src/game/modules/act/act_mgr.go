@@ -14,9 +14,9 @@ import (
 // ============================================================================
 
 type IAct interface {
-	get_id() int
+	get_id() int32
 	get_key() int64
-	get_stage() int32
+	get_status() int32
 	get_key_curr() int64
 
 	set_close()
@@ -25,7 +25,7 @@ type IAct interface {
 	// impl by ActBase
 	is_open() bool
 	add_term(*act_term_t)
-	check_term() bool
+	check_terms() bool
 
 	GetRawSvrData() interface{}
 	GetRawPlrData() map[string]interface{}
@@ -36,28 +36,24 @@ type IAct interface {
 }
 
 var (
-	_acts map[int]IAct
+	_acts = make(map[int32]IAct, 128)
 )
-
-func init() {
-	_acts = make(map[int]IAct)
-}
 
 // ============================================================================
 // impl for IAct & Base for real act
 
 type ActBase struct {
-	Id      int
+	Id      int32
+	Status  int32 // 0:当前关闭 1:当前打开
+	Key     int64 // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
 	DataSvr interface{}
 	DataPlr map[string]interface{}
-	Stage   int32 // 0:当前关闭 1:当前打开
-	Key     int64 // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
 
 	terms []*act_term_t
 }
 
 type act_term_t struct {
-	Seq      int
+	Seq      int32
 	OpenSec  int64 // 开启时间(单位：秒)
 	CloseSec int64 // 结束时间
 }
@@ -67,7 +63,7 @@ type act_term_t struct {
 func Open() {
 	parse_act_config()
 	load_act_data()
-	check_act_state()
+	check_act_status()
 }
 
 func Close() {
@@ -76,7 +72,7 @@ func Close() {
 
 // ============================================================================
 
-func RegAct(aid int, act IAct) {
+func RegAct(aid int32, act IAct) {
 	if _, ok := _acts[aid]; ok {
 		log.Warning("activity repeated register, aid =", aid)
 		return
@@ -85,11 +81,11 @@ func RegAct(aid int, act IAct) {
 	_acts[aid] = act
 }
 
-func FindAct(id int) IAct {
+func FindAct(id int32) IAct {
 	return _acts[id]
 }
 
-func IsOpen(id int) bool {
+func IsOpen(id int32) bool {
 	if act, ok := _acts[id]; ok {
 		return act.is_open()
 	}
@@ -131,15 +127,8 @@ func parse_act_config() {
 	})
 
 	// period checking
-	overlap := false
 	for _, act := range _acts {
-		if !act.check_term() {
-			overlap = true
-		}
-	}
-
-	if overlap {
-		panic("activity: parse_act_config")
+		act.check_terms()
 	}
 }
 
@@ -160,10 +149,10 @@ func load_act_data() {
 		for _, v := range arr {
 			if act, ok := _acts[v.Id]; ok {
 				a := act.(*ActBase)
+				a.Key = v.Key
+				a.Status = v.Status
 				a.DataSvr = v.DataSvr
 				a.DataPlr = v.DataPlr
-				a.Stage = v.Stage
-				a.Key = v.Key
 			}
 		}
 	}
@@ -181,17 +170,17 @@ func save_act_data() {
 	for _, act := range _acts {
 		rec.Acts = append(rec.Acts, &ActBase{
 			Id:      act.get_id(),
+			Status:  act.get_status(),
+			Key:     act.get_key(),
 			DataSvr: act.GetRawSvrData(),
 			DataPlr: act.GetRawPlrData(),
-			Stage:   act.get_stage(),
-			Key:     act.get_key(),
 		})
 	}
 
 	dbmgr.GetDB().Upsert(dbmgr.Table_name_activity, 1, rec)
 }
 
-func check_act_state() {
+func check_act_status() {
 	for _, act := range _acts {
 		if !act.is_open() {
 			key := act.get_key_curr()
@@ -222,5 +211,5 @@ func check_act_state() {
 // ============================================================================
 
 func LoopUpdate() {
-	check_act_state()
+	check_act_status()
 }

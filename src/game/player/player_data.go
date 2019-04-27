@@ -77,7 +77,6 @@ func (self *PlayerData) Init(plr *Player) {
 	if self.Chapter == nil {
 		self.Chapter = chapter.NewChapter()
 	}
-
 	self.Chapter.Init(plr)
 }
 
