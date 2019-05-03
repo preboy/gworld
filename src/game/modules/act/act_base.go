@@ -32,22 +32,22 @@ func (self *ActBase) check_terms() bool {
 	return pass
 }
 
-func (self *ActBase) GetRawSvrData() interface{} {
+func (self *ActBase) GetSvrDataRaw() interface{} {
 	if self.DataSvr == nil {
 		self.DataSvr = self.NewSvrData()
 	}
 	return self.DataSvr
 }
 
-func (self *ActBase) GetRawPlrData() map[string]interface{} {
+func (self *ActBase) GetPlrDataRaw() map[string]interface{} {
 	if self.DataPlr == nil {
 		self.DataPlr = make(map[string]interface{})
 	}
 	return self.DataPlr
 }
 
-func (self *ActBase) GetRawPlrTable(id string) interface{} {
-	d, ok := self.GetRawPlrData()[id]
+func (self *ActBase) GetPersonalDataRaw(id string) interface{} {
+	d, ok := self.GetPlrDataRaw()[id]
 	if !ok {
 		d = self.NewPlrData(id)
 		self.DataPlr[id] = d
@@ -103,10 +103,12 @@ func (self *ActBase) set_open(key int64) {
 // ============================================================================
 
 func (self *ActBase) NewSvrData() interface{} {
+	log.Error("act(%d) Not IMPL `NewSvrData`", self.get_id())
 	return nil
 }
 
 func (self *ActBase) NewPlrData(id string) interface{} {
+	log.Error("act(%d) Not IMPL `NewPlrData`", self.get_id())
 	return nil
 }
 

@@ -22,14 +22,14 @@ type IAct interface {
 	set_close()
 	set_open(key int64)
 
-	// impl by ActBase
 	is_open() bool
+
 	add_term(*act_term_t)
 	check_terms() bool
 
-	GetRawSvrData() interface{}
-	GetRawPlrData() map[string]interface{}
-	GetRawPlrTable(id string) interface{}
+	GetSvrDataRaw() interface{}
+	GetPlrDataRaw() map[string]interface{}
+	GetPersonalDataRaw(id string) interface{}
 
 	OnOpen()
 	OnClose()
@@ -172,8 +172,8 @@ func save_act_data() {
 			Id:      act.get_id(),
 			Status:  act.get_status(),
 			Key:     act.get_key(),
-			DataSvr: act.GetRawSvrData(),
-			DataPlr: act.GetRawPlrData(),
+			DataSvr: act.GetSvrDataRaw(),
+			DataPlr: act.GetPlrDataRaw(),
 		})
 	}
 
