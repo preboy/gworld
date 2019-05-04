@@ -1,6 +1,7 @@
 package event
 
 import (
+	"core/utils"
 	"sync/atomic"
 )
 
@@ -45,11 +46,15 @@ func Once(evt uint32, f func(uint32, ...interface{})) {
 
 func Fire(evt uint32, args ...interface{}) {
 	for _, f := range _evts[evt] {
-		f(evt, args...)
+		utils.ExecuteSafely(func() {
+			f(evt, args...)
+		})
 	}
 
 	for _, f := range _once[evt] {
-		f(evt, args...)
+		utils.ExecuteSafely(func() {
+			f(evt, args...)
+		})
 	}
 
 	_once[evt] = _once[evt][:0]

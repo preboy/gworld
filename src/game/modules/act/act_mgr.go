@@ -9,53 +9,48 @@ import (
 	"game/app"
 	"game/config"
 	"game/dbmgr"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // ============================================================================
-
-type IAct interface {
-	get_id() int32
-	get_key() int64
-	get_status() int32
-	get_key_curr() int64
-
-	set_close()
-	set_open(key int64)
-
-	is_open() bool
-
-	add_term(*act_term_t)
-	check_terms() bool
-
-	GetSvrDataRaw() interface{}
-	GetPlrDataRaw() map[string]interface{}
-	GetPersonalDataRaw(id string) interface{}
-
-	OnOpen()
-	OnClose()
-}
 
 var (
 	_acts = make(map[int32]IAct, 128)
 )
 
 // ============================================================================
-// impl for IAct & Base for real act
 
-type ActBase struct {
-	Id      int32
-	Status  int32 // 0:当前关闭 1:当前打开
-	Key     int64 // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
-	DataSvr interface{}
-	DataPlr map[string]interface{}
+type IAct interface {
+	get_id() int32
+	set_id(id int32)
 
-	terms []*act_term_t
-}
+	get_key() int64
+	set_key(key int64)
 
-type act_term_t struct {
-	Seq      int32
-	OpenSec  int64 // 开启时间(单位：秒)
-	CloseSec int64 // 结束时间
+	get_status() int32
+	set_status(status int32)
+
+	set_open(key int64)
+	set_close()
+	IsOpen() bool
+
+	add_term(*act_term_t)
+	check_terms() bool
+	get_key_term() int64
+
+	GetSvrDataRaw() interface{}
+	SetSvrDataRaw(data interface{})
+
+	GetPlrDataRaw() map[string]interface{}
+	SetPlrDataRaw(data map[string]interface{})
+
+	GetPersonalDataRaw(pid string) interface{}
+
+	NewPlrData() interface{}
+	NewSvrData() interface{}
+
+	OnOpen()
+	OnClose()
 }
 
 // ============================================================================
@@ -72,29 +67,32 @@ func Close() {
 
 // ============================================================================
 
-func RegAct(aid int32, act IAct) {
-	if _, ok := _acts[aid]; ok {
-		log.Warning("activity repeated register, aid =", aid)
+func RegAct(id int32, a IAct) {
+	if _, ok := _acts[id]; ok {
+		log.Warning("ACT(%d) repeated register !!!", id)
 		return
 	}
 
-	_acts[aid] = act
+	a.set_id(id)
+
+	_acts[id] = a
 }
 
 func FindAct(id int32) IAct {
 	return _acts[id]
 }
 
-func IsOpen(id int32) bool {
-	if act, ok := _acts[id]; ok {
-		return act.is_open()
+func ActIsOpen(id int32) bool {
+	if a, ok := _acts[id]; ok {
+		return a.IsOpen()
 	}
+
 	return false
 }
 
 func EachAct(f func(IAct)) {
-	for _, act := range _acts {
-		f(act)
+	for _, a := range _acts {
+		f(a)
 	}
 }
 
@@ -113,13 +111,13 @@ func parse_config_date(date string) int64 {
 // 加载配置，解析日期
 func parse_act_config() {
 	config.ActivityConf.ForEach(func(item *config.Activity) {
-		act := _acts[item.Id]
-		if act == nil {
+		a := _acts[item.Id]
+		if a == nil {
 			log.Warning("NOT IMPL activity: {id=%v, name=%v}", item.Id, item.Name)
 			return
 		}
 
-		act.add_term(&act_term_t{
+		a.add_term(&act_term_t{
 			Seq:      item.Seq,
 			OpenSec:  parse_config_date(item.Open),
 			CloseSec: parse_config_date(item.Close),
@@ -127,15 +125,21 @@ func parse_act_config() {
 	})
 
 	// period checking
-	for _, act := range _acts {
-		act.check_terms()
+	for _, a := range _acts {
+		a.check_terms()
 	}
 }
 
 // ============================================================================
 
 func load_act_data() {
-	var arr []*ActBase
+
+	type act_t struct {
+		_id     int32    `bson:"_id"`
+		ActBase *ActBase `bson:"actbase"`
+	}
+
+	var arr []*act_t
 
 	err := dbmgr.GetDB().GetAllObjects(dbmgr.Table_name_activity, &arr)
 	if err != nil {
@@ -146,70 +150,100 @@ func load_act_data() {
 			return
 		}
 	} else {
+
 		for _, v := range arr {
-			if act, ok := _acts[v.Id]; ok {
-				a := act.(*ActBase)
-				a.Key = v.Key
-				a.Status = v.Status
-				a.DataSvr = v.DataSvr
-				a.DataPlr = v.DataPlr
+
+			if v.ActBase == nil {
+				continue
+			}
+
+			if a, ok := _acts[v.ActBase.Id]; ok {
+				a.set_key(v.ActBase.Key)
+				a.set_status(v.ActBase.Status)
+				a.SetSvrDataRaw(Mar(a, v.ActBase.DataSvr))
+				a.SetPlrDataRaw(Mar2(a, v.ActBase.DataPlr))
 			}
 		}
 	}
 }
 
+func Mar(a IAct, in interface{}) (out interface{}) {
+	out = a.NewSvrData()
+
+	if in == nil {
+		return
+	}
+
+	data, err := bson.Marshal(in)
+	if err != nil {
+		log.Error("bson.Marshal err = %v", err)
+		return
+	}
+
+	bson.Unmarshal(data, out)
+
+	return
+}
+
+func Mar2(a IAct, in map[string]interface{}) (out map[string]interface{}) {
+	out = make(map[string]interface{})
+
+	if in == nil {
+		return
+	}
+
+	for k, v := range in {
+		d := a.NewPlrData()
+
+		data, err := bson.Marshal(v)
+		if err != nil {
+			log.Error("bson.Marshal err = %v", err)
+			return
+		}
+
+		bson.Unmarshal(data, d)
+
+		out[k] = d
+	}
+
+	return
+}
+
 func save_act_data() {
-	type act_rec_t struct {
-		Acts []*ActBase
+	for _, a := range _acts {
+		dbmgr.GetDB().Upsert(dbmgr.Table_name_activity, a.get_id(), a)
 	}
-
-	rec := &act_rec_t{
-		Acts: make([]*ActBase, 0, len(_acts)),
-	}
-
-	for _, act := range _acts {
-		rec.Acts = append(rec.Acts, &ActBase{
-			Id:      act.get_id(),
-			Status:  act.get_status(),
-			Key:     act.get_key(),
-			DataSvr: act.GetSvrDataRaw(),
-			DataPlr: act.GetPlrDataRaw(),
-		})
-	}
-
-	dbmgr.GetDB().Upsert(dbmgr.Table_name_activity, 1, rec)
 }
 
 func check_act_status() {
-	for _, act := range _acts {
-		if !act.is_open() {
-			key := act.get_key_curr()
+	for _, a := range _acts {
+		key := a.get_key_term()
+
+		if !a.IsOpen() {
 			if key == 0 {
 				// also closed, do nothing
 			} else {
 				// new team, set open
-				act.set_open(key)
+				a.set_open(key)
 			}
 		} else {
-			key := act.get_key_curr()
 			if key == 0 {
-				act.set_close()
 				// closed
+				a.set_close()
 			} else {
-				if key == act.get_key() {
+				if key == a.get_key() {
 					// some team
 				} else {
 					// another team
-					act.set_close()
-					act.set_open(key)
+					a.set_close()
+					a.set_open(key)
 				}
 			}
 		}
 	}
 }
 
-// ============================================================================
-
-func LoopUpdate() {
+func OnLoopUpdate() {
+	// schedule
 	check_act_status()
 }

@@ -10,6 +10,7 @@ import (
 	"core"
 	"core/log"
 	"core/tcp"
+	"core/utils"
 	"game/app"
 	"game/constant"
 	"game/loop"
@@ -97,7 +98,9 @@ func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 
 // running in main loop
 func (self *Session) DoPacket(packet *tcp.Packet) {
-	self.player.OnRecvPacket(packet)
+	utils.ExecuteSafely(func() {
+		self.player.OnRecvPacket(packet)
+	})
 }
 
 // ============================================================================

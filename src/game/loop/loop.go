@@ -11,6 +11,8 @@ import (
 	"core/schedule"
 	"core/tcp"
 	"core/timer"
+	"core/utils"
+	"game/modules/act"
 )
 
 const (
@@ -124,7 +126,10 @@ func (self *Loop) do_update() bool {
 	if self.last != now {
 		self.last = now
 
-		// do something as ACT schedule
+		utils.ExecuteSafely(func() {
+			// do something as ACT schedule
+			act.OnLoopUpdate()
+		})
 
 		return true
 	}
@@ -133,6 +138,16 @@ func (self *Loop) do_update() bool {
 }
 
 func (self *Loop) do_idle() bool {
+	cond := false
+
+	if cond {
+		utils.ExecuteSafely(func() {
+			// do something
+		})
+
+		return true
+	}
+
 	return false
 }
 
@@ -148,7 +163,9 @@ func (self *Loop) do_callback() bool {
 	}
 
 	for _, fn := range self.callbacks {
-		fn()
+		utils.ExecuteSafely(func() {
+			fn()
+		})
 	}
 
 	self.callbacks = self.callbacks[:0]
