@@ -140,7 +140,7 @@ func (self *ActBase) GetPlrDataRaw() map[string]interface{} {
 }
 
 func (self *ActBase) SetPlrDataRaw(data map[string]interface{}) {
-	if data == nil {
+	if data != nil {
 		self.DataPlr = data
 	}
 }

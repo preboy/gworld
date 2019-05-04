@@ -132,6 +132,51 @@ func parse_act_config() {
 
 // ============================================================================
 
+func convert_svr_data(a IAct, in interface{}) (out interface{}) {
+	out = a.NewSvrData()
+
+	if in == nil {
+		return
+	}
+
+	data, err := bson.Marshal(in)
+	if err != nil {
+		log.Error("bson.Marshal err = %v", err)
+		return
+	}
+
+	bson.Unmarshal(data, out)
+
+	return
+}
+
+func convert_plr_data(a IAct, in map[string]interface{}) (out map[string]interface{}) {
+	out = make(map[string]interface{})
+
+	if in == nil {
+		return
+	}
+
+	for k, v := range in {
+
+		d := a.NewPlrData()
+
+		data, err := bson.Marshal(v)
+		if err != nil {
+			log.Error("bson.Marshal err = %v", err)
+			return
+		}
+
+		bson.Unmarshal(data, d)
+
+		out[k] = d
+	}
+
+	return
+}
+
+// ============================================================================
+
 func load_act_data() {
 
 	type act_t struct {
@@ -160,53 +205,11 @@ func load_act_data() {
 			if a, ok := _acts[v.ActBase.Id]; ok {
 				a.set_key(v.ActBase.Key)
 				a.set_status(v.ActBase.Status)
-				a.SetSvrDataRaw(Mar(a, v.ActBase.DataSvr))
-				a.SetPlrDataRaw(Mar2(a, v.ActBase.DataPlr))
+				a.SetSvrDataRaw(convert_svr_data(a, v.ActBase.DataSvr))
+				a.SetPlrDataRaw(convert_plr_data(a, v.ActBase.DataPlr))
 			}
 		}
 	}
-}
-
-func Mar(a IAct, in interface{}) (out interface{}) {
-	out = a.NewSvrData()
-
-	if in == nil {
-		return
-	}
-
-	data, err := bson.Marshal(in)
-	if err != nil {
-		log.Error("bson.Marshal err = %v", err)
-		return
-	}
-
-	bson.Unmarshal(data, out)
-
-	return
-}
-
-func Mar2(a IAct, in map[string]interface{}) (out map[string]interface{}) {
-	out = make(map[string]interface{})
-
-	if in == nil {
-		return
-	}
-
-	for k, v := range in {
-		d := a.NewPlrData()
-
-		data, err := bson.Marshal(v)
-		if err != nil {
-			log.Error("bson.Marshal err = %v", err)
-			return
-		}
-
-		bson.Unmarshal(data, d)
-
-		out[k] = d
-	}
-
-	return
 }
 
 func save_act_data() {
