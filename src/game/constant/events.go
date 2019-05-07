@@ -28,5 +28,3 @@ const (
 
 	Evt_Hero_LevelUp
 )
-
-const ()
