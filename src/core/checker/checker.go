@@ -3,7 +3,7 @@ package checker
 type checker = func(uint32, ...interface{}) bool
 
 var (
-	_checkers = map[uint32][]checker{}
+	_checkers = make(map[uint32][]checker, 0x100)
 )
 
 // ----------------------------------------------------------------------------
