@@ -31,7 +31,7 @@ type Property struct {
 	perc  float64 // 百分比加成
 	extra float64 // 额外追加
 	total float64 // 总属性
-	daity bool
+	dirty bool
 }
 
 type PropertyGroup [C_Property_Number]Property
@@ -47,7 +47,7 @@ func (self *Property) Clear() {
 	self.perc = 0
 	self.extra = 0
 	self.total = 0
-	self.daity = true
+	self.dirty = true
 }
 
 func (self *Property) add(part uint32, val float64, add bool) {
@@ -68,15 +68,15 @@ func (self *Property) add(part uint32, val float64, add bool) {
 		self.extra += val
 	}
 
-	self.daity = true
+	self.dirty = true
 }
 
 func (self *Property) Calc() {
-	if !self.daity {
+	if !self.dirty {
 		return
 	}
 
-	self.daity = false
+	self.dirty = false
 	self.total = self.base*(1+self.perc/100) + self.extra
 
 	if self.total < 0 {
@@ -86,7 +86,7 @@ func (self *Property) Calc() {
 }
 
 func (self *Property) Value() float64 {
-	if self.daity {
+	if self.dirty {
 		self.Calc()
 	}
 
