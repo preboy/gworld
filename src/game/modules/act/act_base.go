@@ -116,6 +116,12 @@ func (self *ActBase) get_key_term() int64 {
 
 // ============================================================================
 
+func (self *ActBase) GetActBase() *ActBase {
+	return self
+}
+
+// ============================================================================
+
 func (self *ActBase) GetSvrDataRaw() interface{} {
 	if self.DataSvr == nil {
 		a := FindAct(self.Id)

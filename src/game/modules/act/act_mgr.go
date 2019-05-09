@@ -38,6 +38,8 @@ type IAct interface {
 	check_terms() bool
 	get_key_term() int64
 
+	GetActBase() *ActBase
+
 	GetSvrDataRaw() interface{}
 	SetSvrDataRaw(data interface{})
 
