@@ -43,10 +43,10 @@ type IAct interface {
 	GetSvrDataRaw() interface{}
 	SetSvrDataRaw(data interface{})
 
-	GetPlrDataRaw() map[string]interface{}
-	SetPlrDataRaw(data map[string]interface{})
+	GetTabDataRaw() map[string]interface{}
+	SetTabDataRaw(data map[string]interface{})
 
-	GetPersonalDataRaw(pid string) interface{}
+	GetPlrDataRaw(pid string) interface{}
 
 	NewPlrData() interface{}
 	NewSvrData() interface{}
@@ -152,7 +152,7 @@ func convert_svr_data(a IAct, in interface{}) (out interface{}) {
 	return
 }
 
-func convert_plr_data(a IAct, in map[string]interface{}) (out map[string]interface{}) {
+func convert_tab_data(a IAct, in map[string]interface{}) (out map[string]interface{}) {
 	out = make(map[string]interface{})
 
 	if in == nil {
@@ -208,7 +208,7 @@ func load_act_data() {
 				a.set_key(v.ActBase.Key)
 				a.set_status(v.ActBase.Status)
 				a.SetSvrDataRaw(convert_svr_data(a, v.ActBase.DataSvr))
-				a.SetPlrDataRaw(convert_plr_data(a, v.ActBase.DataPlr))
+				a.SetTabDataRaw(convert_tab_data(a, v.ActBase.DataTab))
 			}
 		}
 	}

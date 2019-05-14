@@ -60,7 +60,7 @@ func (self *act_t) GetSvrData() *data_svr_t {
 }
 
 func (self *act_t) GetPlrData(pid string) *data_plr_t {
-	return self.GetPersonalDataRaw(pid).(*data_plr_t)
+	return self.GetPlrDataRaw(pid).(*data_plr_t)
 }
 
 // ============================================================================

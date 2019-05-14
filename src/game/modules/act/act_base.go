@@ -19,7 +19,7 @@ type ActBase struct {
 	Status  int32                  `bson:"Status"` // 0:当前关闭 1:当前打开
 	Key     int64                  `bson:"Key"`    // 如果开始时间(OpenSec)未变，则表示活动仍在同一期
 	DataSvr interface{}            `bson:"DataSvr"`
-	DataPlr map[string]interface{} `bson:"DataPlr"`
+	DataTab map[string]interface{} `bson:"DataTab"`
 
 	terms []*act_term_t `bson:"-"`
 }
@@ -58,7 +58,7 @@ func (self *ActBase) set_open(key int64) {
 	a := FindAct(self.Id)
 
 	self.DataSvr = a.NewSvrData()
-	self.DataPlr = make(map[string]interface{})
+	self.DataTab = make(map[string]interface{})
 
 	self.Status = 1
 	self.Key = key
@@ -137,26 +137,26 @@ func (self *ActBase) SetSvrDataRaw(data interface{}) {
 	}
 }
 
-func (self *ActBase) GetPlrDataRaw() map[string]interface{} {
-	if self.DataPlr == nil {
-		self.DataPlr = make(map[string]interface{})
+func (self *ActBase) GetTabDataRaw() map[string]interface{} {
+	if self.DataTab == nil {
+		self.DataTab = make(map[string]interface{})
 	}
 
-	return self.DataPlr
+	return self.DataTab
 }
 
-func (self *ActBase) SetPlrDataRaw(data map[string]interface{}) {
+func (self *ActBase) SetTabDataRaw(data map[string]interface{}) {
 	if data != nil {
-		self.DataPlr = data
+		self.DataTab = data
 	}
 }
 
-func (self *ActBase) GetPersonalDataRaw(pid string) interface{} {
-	d, ok := self.GetPlrDataRaw()[pid]
+func (self *ActBase) GetPlrDataRaw(pid string) interface{} {
+	d, ok := self.GetTabDataRaw()[pid]
 	if !ok {
 		a := FindAct(self.Id)
 		d = a.NewPlrData()
-		self.DataPlr[pid] = d
+		self.DataTab[pid] = d
 	}
 
 	return d
