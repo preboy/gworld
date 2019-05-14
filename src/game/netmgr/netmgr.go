@@ -16,7 +16,7 @@ var (
 
 func Start() {
 
-	addr := fmt.Sprintf("%s:%d", app.GetGameConfig().Host, app.GetGameConfig().Port)
+	addr := fmt.Sprintf("0.0.0.0:%d", app.GetGameConfig().Port)
 	server = tcp.NewTcpServer()
 
 	server.Start(addr, func(conn *net.TCPConn) {
