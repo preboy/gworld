@@ -15,8 +15,9 @@ function load_server_list() {
         let tab = config.games[svr]
         server_list[svr] = {
             ip:     tab.host,
+            svr:    svr,
             port:   tab.port,
-            name:   svr + "111",
+            name:   svr + "'s name",
         }
     }
 }
