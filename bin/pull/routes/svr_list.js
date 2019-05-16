@@ -3,22 +3,42 @@ var router = express.Router();
 
 const config = require('../../config.json')
 
-router.get("/", function(req, res) {
-    res.json({
-        game1: {
-            ip: "127.0.0.1",
-            port: 9001,
-            name: "飞龙在天",
-            status: 0,
-        },
-        game2: {
-            ip: "118.24.48.149",
-            port: 9002,
-            name: "亢龙有悔",
-            status: 0,
+
+// ----------------------------------------------------------------------------
+
+let server_list = {}
+
+// ----------------------------------------------------------------------------
+
+function load_server_list() {
+    for (let svr in config.games) {
+        let tab = config.games[svr]
+        server_list[svr] = {
+            ip:     tab.host,
+            port:   tab.port,
+            name:   svr + "111",
         }
-    });
+    }
+}
+
+function init() {
+    load_server_list()
+}
+
+// ----------------------------------------------------------------------------
+
+router.get("/reload", function(req, res) {
+    server_list = {}
+    load_server_list()
+})
+
+
+router.get("/", function(req, res) {
+    res.json(server_list);
 });
 
 
+// ----------------------------------------------------------------------------
+
+init()
 module.exports = router;
