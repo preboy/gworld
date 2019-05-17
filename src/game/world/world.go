@@ -41,7 +41,7 @@ func init_world() {
 		if scene != nil {
 			scene.AddObject(obj)
 		} else {
-			log.Error("NOT exist scene id = %d", v.SceneId)
+			log.Error("NOT EXIST scene id = %d", v.SceneId)
 		}
 	}
 }
