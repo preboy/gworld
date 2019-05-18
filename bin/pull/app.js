@@ -7,7 +7,7 @@ require("../modules/comm");
 var reload = require('./routes/reload');
 var notice = require('./routes/notice');
 var svr_list = require('./routes/svr_list');
-var player_info = require('./routes/player_info');
+var plr_list = require('./routes/plr_list');
 
 var app = express();
 
@@ -23,7 +23,7 @@ app.use(function(req, res, next){
 app.use('/reload',      reload);
 app.use('/notice',      notice);
 app.use('/svr_list',    svr_list);
-app.use('/player_info', player_info);
+app.use('/plr_list',    plr_list);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -51,8 +51,8 @@ func handler_HeroLevelupRequest(plr *Player, packet *tcp.Packet) {
 		hero.Level++
 		lv_new = hero.Level
 		goods.Apply(plr)
-		plr.UpdateHeroToClient(req.Id)
 
+		plr.UpdateHeroToClient(req.Id)
 	}()
 
 	plr.SendPacket(protocol.MSG_SC_HeroLevelupResponse, res)

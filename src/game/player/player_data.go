@@ -16,6 +16,7 @@ import (
 
 type PlayerInfo struct {
 	Acct string
+	Name string
 	Key  string
 	Svr  string
 	SDK  string
@@ -83,6 +84,7 @@ func (self *PlayerData) Init(plr *Player) {
 func (self *PlayerData) to_player_info() *PlayerInfo {
 	return &PlayerInfo{
 		Acct: self.Acct,
+		Name: self.Name,
 		Key:  self.Key,
 		Svr:  self.Svr,
 		SDK:  self.SDK,
