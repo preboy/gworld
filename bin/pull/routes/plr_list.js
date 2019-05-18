@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-const config = require('../../config.json')
+const config = require('../../config.json');
+const dbmgr = require('../../modules/dbmgr');
 
 router.get("/", function(req, res) {
+    let q = req.query;
+
     if (!q.pseudo) {
         res.json({});
         return
