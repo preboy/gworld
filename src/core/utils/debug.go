@@ -2,10 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
-	"os"
 	"runtime/debug"
-	"time"
 )
 
 func init() {
@@ -20,7 +17,7 @@ func Callstack() string {
 func JsonPretty(v interface{}) (ret string) {
 	data, err := json.MarshalIndent(v, "", "  ")
 	if err == nil {
-		ret = data
+		ret = string(data)
 	} else {
 		ret = "JsonPretty Error !"
 	}

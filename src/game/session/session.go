@@ -53,7 +53,7 @@ func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
 
 		if app.InDebugMode() {
 			j := utils.JsonPretty(obj)
-			log.Debug("SendPacket: %d %s", opcode, self.player.GetId(), j)
+			log.Debug("SendPacket: %d, %s, %s", opcode, self.player.GetId(), j)
 		}
 	} else {
 		log.Error("SendPacket Error: failed to Marshal obj")
