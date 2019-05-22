@@ -14,12 +14,23 @@ func Callstack() string {
 	return string(debug.Stack())
 }
 
-func JsonPretty(v interface{}) (ret string) {
+func ObjectToString(v interface{}) (ret string) {
+	data, err := json.Marshal(v)
+	if err == nil {
+		ret = string(data)
+	} else {
+		ret = "ObjectToString Error !"
+	}
+
+	return
+}
+
+func ObjectToStringPretty(v interface{}) (ret string) {
 	data, err := json.MarshalIndent(v, "", "  ")
 	if err == nil {
 		ret = string(data)
 	} else {
-		ret = "JsonPretty Error !"
+		ret = "ObjectToStringPretty Error !"
 	}
 
 	return
