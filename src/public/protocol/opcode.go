@@ -7,8 +7,6 @@ const (
 	MSG_SC_PingResponse            uint16 = 101
 	MSG_CS_LoginRequest            uint16 = 102
 	MSG_SC_LoginResponse           uint16 = 103
-	MSG_CS_EnterGameRequest        uint16 = 104
-	MSG_SC_EnterGameResponse       uint16 = 105
 	MSG_CS_PlayerDataRequest       uint16 = 200
 	MSG_SC_PlayerDataResponse      uint16 = 201
 	MSG_CS_GMCommandRequest        uint16 = 202
