@@ -50,8 +50,13 @@ func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
 		binary.Write(buf, binary.LittleEndian, opcode)
 		binary.Write(buf, binary.LittleEndian, data)
 		self.socket.Send(buf.Bytes())
+
+		if app.InDebugMode() {
+			j := utils.JsonPretty(obj)
+			log.Debug("SendPacket: %d %s", opcode, self.player.GetId(), j)
+		}
 	} else {
-		fmt.Println("SendPacket Error: failed to Marshal obj")
+		log.Error("SendPacket Error: failed to Marshal obj")
 	}
 }
 
@@ -92,7 +97,7 @@ func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 	if packet.Opcode == protocol.MSG_CS_LoginRequest {
 		self.on_auth(packet)
 	} else {
-		fmt.Println("unknown packet in session:", packet.Opcode)
+		log.Error("unknown packet in session: %d", packet.Opcode)
 	}
 }
 

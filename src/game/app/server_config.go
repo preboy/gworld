@@ -78,8 +78,6 @@ func LoadConfig(file string, svr string) bool {
 	this = svr
 	conf = obj
 
-	// utils.PrintPretty(conf, "server cnfig")
-
 	for k, v := range conf.Games {
 		if k == svr {
 			game = v

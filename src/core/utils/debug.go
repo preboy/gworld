@@ -17,13 +17,13 @@ func Callstack() string {
 	return string(debug.Stack())
 }
 
-func PrintPretty(v interface{}, mark string) {
-	fmt.Printf("====== [%s] ====== (at:%s)\n", mark, time.Now())
+func JsonPretty(v interface{}) (ret string) {
 	data, err := json.MarshalIndent(v, "", "  ")
 	if err == nil {
-		data = append(data, '\n')
-		os.Stdout.Write(data)
+		ret = data
 	} else {
-		fmt.Println("PrintPretty Error:", err)
+		ret = "JsonPretty Error !"
 	}
+
+	return
 }
