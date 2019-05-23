@@ -26,13 +26,14 @@ var (
 // ============================================================================
 
 type Loop struct {
-	q         chan bool
-	w         *sync.WaitGroup
-	callbacks []func()
-	last      int64
-	talks     chan *talk
-	evtMgr    *event.EventMgr
-	timerMgr  *timer.TimerMgr
+	q        chan bool
+	w        *sync.WaitGroup
+	funcs    []func()
+	idles    []func()
+	last     int64
+	talks    chan *talk
+	evtMgr   *event.EventMgr
+	timerMgr *timer.TimerMgr
 }
 
 // ============================================================================
@@ -103,7 +104,7 @@ func (self *Loop) working() {
 				busy = true
 			}
 
-			if self.do_callback() {
+			if self.do_funcs() {
 				busy = true
 			}
 
@@ -138,17 +139,19 @@ func (self *Loop) do_update() bool {
 }
 
 func (self *Loop) do_idle() bool {
-	cond := false
+	busy := false
 
-	if cond {
-		utils.ExecuteSafely(func() {
-			// do something
-		})
-
-		return true
+	if len(self.idles) > 0 {
+		for _, fn := range self.idles {
+			utils.ExecuteSafely(func() {
+				fn()
+				busy = true
+			})
+		}
+		self.idles = self.idles[:0]
 	}
 
-	return false
+	return busy
 }
 
 func (self *Loop) do_talk(talk *talk) {
@@ -157,18 +160,18 @@ func (self *Loop) do_talk(talk *talk) {
 	}
 }
 
-func (self *Loop) do_callback() bool {
-	if len(self.callbacks) == 0 {
+func (self *Loop) do_funcs() bool {
+	if len(self.funcs) == 0 {
 		return false
 	}
 
-	for _, fn := range self.callbacks {
+	for _, fn := range self.funcs {
 		utils.ExecuteSafely(func() {
 			fn()
 		})
 	}
 
-	self.callbacks = self.callbacks[:0]
+	self.funcs = self.funcs[:0]
 
 	return true
 }
@@ -221,8 +224,12 @@ func (self *Loop) CancelTimer(id uint64) {
 	self.timerMgr.CancelTimer(id)
 }
 
-func (self *Loop) PostCallback(fn func()) {
-	self.callbacks = append(self.callbacks, fn)
+func (self *Loop) PostFunc(fn func()) {
+	self.funcs = append(self.funcs, fn)
+}
+
+func (self *Loop) PostIdle(fn func()) {
+	self.idles = append(self.idles, fn)
 }
 
 // ============================================================================

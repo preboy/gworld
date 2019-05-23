@@ -29,11 +29,11 @@ func (self *work) do() {
 	cb := self.fn()
 
 	if cb != nil {
-		loop.Get().PostCallback(cb)
+		loop.Get().PostFunc(cb)
 	}
 
 	if self.cb != nil {
-		loop.Get().PostCallback(self.cb)
+		loop.Get().PostFunc(self.cb)
 	}
 }
 
