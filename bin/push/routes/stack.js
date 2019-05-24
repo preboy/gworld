@@ -5,27 +5,14 @@ const fs = require('fs');
 
 // 客户端上传lua堆栈错误，服务端保存文件
 router.post("/", function(req, res) {
-
     let q = req.body;
-    let ret = "failed";
 
-    do {
-
-        if (!q.uid || !q.uid || !q.data) {
-            break;
-        }
-
-        let acct = q.acct;
-        let name = q.uid || "name";
-        let data = q.data;
-
-        fs.writeFileSync(name, data);
-
-        ret = "successful";
+    if (q.key && q.msg) {
+        let key = `${key}_${+new Date()}`
+        fs.writeFile(key, q.msg);
     }
-    while(false);
 
-    res.end(ret);
+    res.end("OK");
 });
 
 
