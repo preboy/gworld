@@ -195,7 +195,10 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 		Hp:   uint32(self.Prop.Value(PropType_HP)),
 		Crit: uint32(self.Prop.Value(PropType_Crit)),
 		Hurt: uint32(self.Prop.Value(PropType_Hurt)),
-		Comm: &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Level},
+	}
+
+	if self.Skill_comm != nil {
+		u.Comm = &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Level}
 	}
 
 	if self.Troop.IsAttacker() {
