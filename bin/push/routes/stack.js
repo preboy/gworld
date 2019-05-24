@@ -8,8 +8,8 @@ router.post("/", function(req, res) {
     let q = req.body;
 
     if (q.key && q.msg) {
-        let key = `${key}_${+new Date()}`
-        fs.writeFile(key, q.msg);
+        let key = `./runtime/stack/${q.key}_${+new Date()}`
+        fs.writeFile(key, q.msg, (err)=>{});
     }
 
     res.end("OK");

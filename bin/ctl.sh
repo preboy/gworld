@@ -179,6 +179,10 @@ _reload()
 
 # ---------------------------------------------------------
 
+
+mkdir -p runtime/stack
+
+
 if [ -d bin ]; then
     wdir=bin
 else

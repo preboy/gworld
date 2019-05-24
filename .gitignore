@@ -11,6 +11,7 @@
 /bin/client
 /bin/exporter
 /bin/exporter_map
+/bin/runtime
 /bin/node_modules
 /bin/nodet.js
 /pkg
