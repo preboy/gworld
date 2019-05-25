@@ -7,12 +7,13 @@ import (
 // ============================================================================
 
 type Levelup struct {
-	Lv  uint32 `json:"lv"`
-	Exp uint64 `json:"exp"`
+	Lv    uint32      `json:"lv"`
+	Exp   uint64      `json:"exp"`
+	Needs []*ItemConf `json:"needs"`
 }
 
 type LevelupTable struct {
-	items map[uint32]*Levelup
+	items []*Levelup
 }
 
 // ============================================================================
@@ -31,10 +32,9 @@ func (self *LevelupTable) Load() bool {
 		return false
 	}
 
-	self.items = make(map[uint32]*Levelup)
+	self.items = make([]*Levelup, len(arr))
 	for _, v := range arr {
-		key := v.Lv
-		self.items[key] = v
+		self.items[v.Lv-1] = v
 	}
 
 	log.Info("load [ %s ] OK", file)
@@ -42,9 +42,13 @@ func (self *LevelupTable) Load() bool {
 }
 
 func (self *LevelupTable) Query(lv uint32) *Levelup {
-	return self.items[lv]
+	if lv < 1 || int(lv) > len(self.items) {
+		return nil
+	}
+
+	return self.items[lv-1]
 }
 
-func (self *LevelupTable) Items() map[uint32]*Levelup {
+func (self *LevelupTable) Items() []*Levelup {
 	return self.items
 }

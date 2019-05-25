@@ -30,17 +30,22 @@ func handler_HeroLevelupRequest(plr *Player, packet *tcp.Packet) {
 			return
 		}
 
-		// 可否升到下一级
-		if config.HeroConf.Query(hero.Id, hero.Level+1) == nil {
+		// 不能超过角色等级
+		if hero.Lv >= plr.GetLv() {
 			res.ErrorCode = ec.Level_Exceed
 			return
 		}
 
-		conf := config.HeroConf.Query(hero.Id, hero.Level)
+		// 可否升到下一级
+		lvconf := config.LevelupConf.Query(hero.Lv + 1)
+		if lvconf == nil {
+			res.ErrorCode = ec.Conf_Invalid
+			return
+		}
 
 		// 道具数量是否足够
-		goods := app.NewItemProxy(constant.ItemLog_HeroLvUp).SetArgs(hero.Id, hero.Level+1)
-		for _, v := range conf.Needs {
+		goods := app.NewItemProxy(constant.ItemLog_HeroLvUp).SetArgs(hero.Id, hero.Lv+1)
+		for _, v := range lvconf.Needs {
 			goods.Sub(v.Id, v.Cnt)
 		}
 		if !goods.Enough(plr) {
@@ -48,9 +53,9 @@ func handler_HeroLevelupRequest(plr *Player, packet *tcp.Packet) {
 			return
 		}
 
-		lv_old = hero.Level
-		hero.Level++
-		lv_new = hero.Level
+		lv_old = hero.Lv
+		hero.Lv++
+		lv_new = hero.Lv
 		goods.Apply(plr)
 
 		plr.UpdateHeroToClient(req.Id)

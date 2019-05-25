@@ -17,12 +17,12 @@ type Unit interface {
 
 // 主动技能
 type Skill struct {
-	Id    uint32 `bson:id"`    // ID
-	Level uint32 `bson:level"` // 等级
+	Id uint32 `bson:id"` // ID
+	Lv uint32 `bson:lv"` // 等级
 }
 
 // 被动光环
 type Aura struct {
-	Id    uint32 `bson:id"`    // ID
-	Level uint32 `bson:level"` // 等级
+	Id uint32 `bson:id"` // ID
+	Lv uint32 `bson:lv"` // 等级
 }

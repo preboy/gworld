@@ -10,10 +10,6 @@ import (
 	"public/protocol/msg"
 )
 
-func (self *Player) GetLevel() uint32 {
-	return self.data.Lv
-}
-
 func (self *Player) AddExp(exp uint64) {
 	if exp == 0 {
 		return

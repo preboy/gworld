@@ -28,6 +28,7 @@ var (
 		GlobalConf,
 		GrowthConf,
 		HeroConf,
+		HeroPropConf,
 		MarketConf,
 		ItemProtoConf,
 		RefineNormalConf,
