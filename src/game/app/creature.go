@@ -10,8 +10,8 @@ type Creature struct {
 	proto *config.Creature
 }
 
-func NewCreature(id, lv uint32) *Creature {
-	proto := config.CreatureConf.Query(id, lv)
+func NewCreature(id uint32) *Creature {
+	proto := config.CreatureConf.Query(id)
 	if proto != nil {
 		return &Creature{
 			proto: proto,
@@ -42,7 +42,6 @@ func (self *Creature) ToBattleUnit() *battle.BattleUnit {
 	u := &battle.BattleUnit{
 		Base:     self,
 		Id:       self.proto.Id,
-		Lv:       self.proto.Level,
 		UnitType: uint32(self.UnitType()),
 		Prop:     battle.NewPropertyGroup(),
 	}
@@ -85,34 +84,28 @@ func CreatureTeamToBattleTroop(id uint32) *battle.BattleTroop {
 
 	var r11, r12, r13, r21, r22, r23 *battle.BattleUnit
 
-	if len(team.Row11) > 0 {
-		m := team.Row11[0]
-		r11 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if c := NewCreature(team.Row11); c != nil {
+		r11 = c.ToBattleUnit()
 	}
 
-	if len(team.Row12) > 0 {
-		m := team.Row12[0]
-		r12 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if c := NewCreature(team.Row12); c != nil {
+		r12 = c.ToBattleUnit()
 	}
 
-	if len(team.Row13) > 0 {
-		m := team.Row13[0]
-		r13 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if c := NewCreature(team.Row13); c != nil {
+		r13 = c.ToBattleUnit()
 	}
 
-	if len(team.Row21) > 0 {
-		m := team.Row21[0]
-		r21 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if c := NewCreature(team.Row21); c != nil {
+		r21 = c.ToBattleUnit()
 	}
 
-	if len(team.Row22) > 0 {
-		m := team.Row22[0]
-		r22 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if c := NewCreature(team.Row22); c != nil {
+		r22 = c.ToBattleUnit()
 	}
 
-	if len(team.Row23) > 0 {
-		m := team.Row23[0]
-		r23 = NewCreature(m.Id, m.Lv).ToBattleUnit()
+	if c := NewCreature(team.Row23); c != nil {
+		r23 = c.ToBattleUnit()
 	}
 
 	return battle.NewBattleTroop(r11, r12, r13, r21, r22, r23)

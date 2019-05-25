@@ -8,7 +8,6 @@ import (
 
 type Creature struct {
 	Id          uint32       `json:"id"`
-	Level       uint32       `json:"level"`
 	Name        string       `json:"name"`
 	Props       []*PropConf  `json:"props"`
 	SkillExtra  []*SkillConf `json:"skill_extra"`
@@ -17,7 +16,7 @@ type Creature struct {
 }
 
 type CreatureTable struct {
-	items map[uint64]*Creature
+	items map[uint32]*Creature
 }
 
 // ============================================================================
@@ -36,21 +35,19 @@ func (self *CreatureTable) Load() bool {
 		return false
 	}
 
-	self.items = make(map[uint64]*Creature)
+	self.items = make(map[uint32]*Creature)
 	for _, v := range arr {
-		key := MakeUint64(v.Id, v.Level)
-		self.items[key] = v
+		self.items[v.Id] = v
 	}
 
 	log.Info("load [ %s ] OK", file)
 	return true
 }
 
-func (self *CreatureTable) Query(id, lv uint32) *Creature {
-	key := MakeUint64(id, lv)
-	return self.items[key]
+func (self *CreatureTable) Query(id uint32) *Creature {
+	return self.items[id]
 }
 
-func (self *CreatureTable) Items() map[uint64]*Creature {
+func (self *CreatureTable) Items() map[uint32]*Creature {
 	return self.items
 }

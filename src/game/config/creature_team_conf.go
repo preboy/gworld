@@ -6,20 +6,15 @@ import (
 
 // ============================================================================
 
-type PosCreatureInfo struct {
-	Id uint32
-	Lv uint32
-}
-
 type CreatureTeam struct {
-	Id    uint32             `json:"id"`
-	Desc  string             `json:"name"`
-	Row11 []*PosCreatureInfo `json:"row11"`
-	Row12 []*PosCreatureInfo `json:"row12"`
-	Row13 []*PosCreatureInfo `json:"row13"`
-	Row21 []*PosCreatureInfo `json:"row21"`
-	Row22 []*PosCreatureInfo `json:"row22"`
-	Row23 []*PosCreatureInfo `json:"row23"`
+	Id    uint32 `json:"id"`
+	Desc  string `json:"name"`
+	Row11 uint32 `json:"row11"`
+	Row12 uint32 `json:"row12"`
+	Row13 uint32 `json:"row13"`
+	Row21 uint32 `json:"row21"`
+	Row22 uint32 `json:"row22"`
+	Row23 uint32 `json:"row23"`
 }
 
 type CreatureTeamTable struct {
@@ -53,8 +48,4 @@ func (self *CreatureTeamTable) Load() bool {
 
 func (self *CreatureTeamTable) Query(id uint32) *CreatureTeam {
 	return self.items[id]
-}
-
-func (self *CreatureTeamTable) Items() map[uint32]*CreatureTeam {
-	return self.items
 }
