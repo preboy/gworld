@@ -1,7 +1,7 @@
 
-
 let sdks = {};
-require('../config/sdk.json').forEach((v)=>{
+
+require('../sdk.json').forEach((v)=>{
     sdks[v.name] = v;
 });
 
