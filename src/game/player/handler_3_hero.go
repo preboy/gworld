@@ -32,6 +32,7 @@ func handler_HeroLevelupRequest(plr *Player, packet *tcp.Packet) {
 
 		// 可否升到下一级
 		if config.HeroConf.Query(hero.Id, hero.Level+1) == nil {
+			res.ErrorCode = ec.Level_Exceed
 			return
 		}
 
