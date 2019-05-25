@@ -1,7 +1,6 @@
 [
 	{
 		"id": 10001,
-		"level": 1,
 		"name": "木桩",
 		"skill_common": [],
 		"skill_extra": [],
@@ -17,7 +16,6 @@
 
 	{
 		"id": 10002,
-		"level": 1,
 		"name": "野兔",
 		"skill_common": [
 			{
@@ -48,7 +46,6 @@
 
 	{
 		"id": 10003,
-		"level": 1,
 		"name": "凶狼",
 		"skill_common": [
 			{
@@ -84,7 +81,6 @@
 
 	{
 		"id": 10004,
-		"level": 1,
 		"name": "阿幺",
 		"skill_common": [
 			{
@@ -125,7 +121,6 @@
 
 	{
 		"id": 10005,
-		"level": 1,
 		"name": "强盗",
 		"skill_common": [
 			{
@@ -166,7 +161,6 @@
 
 	{
 		"id": 10006,
-		"level": 1,
 		"name": "土匪",
 		"skill_common": [
 			{
@@ -202,7 +196,6 @@
 
 	{
 		"id": 10007,
-		"level": 1,
 		"name": "土匪头目",
 		"skill_common": [
 			{
@@ -238,7 +231,6 @@
 
 	{
 		"id": 10008,
-		"level": 1,
 		"name": "阿顺",
 		"skill_common": [
 			{
@@ -279,7 +271,6 @@
 
 	{
 		"id": 10009,
-		"level": 1,
 		"name": "家仆",
 		"skill_common": [
 			{
@@ -315,7 +306,6 @@
 
 	{
 		"id": 10010,
-		"level": 1,
 		"name": "打手",
 		"skill_common": [
 			{
@@ -351,7 +341,6 @@
 
 	{
 		"id": 10011,
-		"level": 1,
 		"name": "管家",
 		"skill_common": [
 			{
@@ -387,7 +376,6 @@
 
 	{
 		"id": 10012,
-		"level": 1,
 		"name": "吴财道",
 		"skill_common": [
 			{
@@ -428,7 +416,6 @@
 
 	{
 		"id": 10013,
-		"level": 1,
 		"name": "衙役",
 		"skill_common": [
 			{
@@ -464,7 +451,6 @@
 
 	{
 		"id": 10014,
-		"level": 1,
 		"name": "衙役头目",
 		"skill_common": [
 			{
@@ -500,7 +486,6 @@
 
 	{
 		"id": 10015,
-		"level": 1,
 		"name": "师爷",
 		"skill_common": [
 			{
@@ -536,7 +521,6 @@
 
 	{
 		"id": 10016,
-		"level": 1,
 		"name": "汪诗书",
 		"skill_common": [
 			{

@@ -1,7 +1,7 @@
 [
 	{
 		"id": 1001,
-		"level": 1,
+		"lv": 1,
 		"name": "英雄之刃",
 		"prepare_t": 0,
 		"effect_t": 1000,
@@ -41,7 +41,7 @@
 
 	{
 		"id": 1002,
-		"level": 1,
+		"lv": 1,
 		"name": "美人斩",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -63,7 +63,7 @@
 
 	{
 		"id": 1002,
-		"level": 2,
+		"lv": 2,
 		"name": "美人斩",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -85,7 +85,7 @@
 
 	{
 		"id": 1002,
-		"level": 3,
+		"lv": 3,
 		"name": "美人斩",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -107,7 +107,7 @@
 
 	{
 		"id": 1002,
-		"level": 4,
+		"lv": 4,
 		"name": "美人斩",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -129,7 +129,7 @@
 
 	{
 		"id": 1002,
-		"level": 5,
+		"lv": 5,
 		"name": "美人斩",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -151,7 +151,7 @@
 
 	{
 		"id": 1003,
-		"level": 1,
+		"lv": 1,
 		"name": "蛇蝎心",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -209,7 +209,7 @@
 
 	{
 		"id": 1003,
-		"level": 2,
+		"lv": 2,
 		"name": "蛇蝎心",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -267,7 +267,7 @@
 
 	{
 		"id": 1003,
-		"level": 3,
+		"lv": 3,
 		"name": "蛇蝎心",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -325,7 +325,7 @@
 
 	{
 		"id": 1003,
-		"level": 4,
+		"lv": 4,
 		"name": "蛇蝎心",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -383,7 +383,7 @@
 
 	{
 		"id": 1003,
-		"level": 5,
+		"lv": 5,
 		"name": "蛇蝎心",
 		"prepare_t": 0,
 		"effect_t": 3000,
@@ -441,7 +441,7 @@
 
 	{
 		"id": 1004,
-		"level": 1,
+		"lv": 1,
 		"name": "貂蝉之吻",
 		"prepare_t": 0,
 		"effect_t": 2000,
@@ -481,7 +481,7 @@
 
 	{
 		"id": 1004,
-		"level": 2,
+		"lv": 2,
 		"name": "貂蝉之吻",
 		"prepare_t": 0,
 		"effect_t": 2000,
@@ -521,7 +521,7 @@
 
 	{
 		"id": 1004,
-		"level": 3,
+		"lv": 3,
 		"name": "貂蝉之吻",
 		"prepare_t": 0,
 		"effect_t": 2000,
@@ -561,7 +561,7 @@
 
 	{
 		"id": 1004,
-		"level": 4,
+		"lv": 4,
 		"name": "貂蝉之吻",
 		"prepare_t": 0,
 		"effect_t": 2000,
@@ -601,7 +601,7 @@
 
 	{
 		"id": 1004,
-		"level": 5,
+		"lv": 5,
 		"name": "貂蝉之吻",
 		"prepare_t": 0,
 		"effect_t": 2000,
@@ -641,7 +641,7 @@
 
 	{
 		"id": 1005,
-		"level": 1,
+		"lv": 1,
 		"name": "天使圣光",
 		"prepare_t": 0,
 		"effect_t": 0,
@@ -700,7 +700,7 @@
 
 	{
 		"id": 1005,
-		"level": 2,
+		"lv": 2,
 		"name": "天使圣光",
 		"prepare_t": 0,
 		"effect_t": 0,
@@ -759,7 +759,7 @@
 
 	{
 		"id": 1005,
-		"level": 3,
+		"lv": 3,
 		"name": "天使圣光",
 		"prepare_t": 0,
 		"effect_t": 0,
@@ -818,7 +818,7 @@
 
 	{
 		"id": 1005,
-		"level": 4,
+		"lv": 4,
 		"name": "天使圣光",
 		"prepare_t": 0,
 		"effect_t": 0,
@@ -877,7 +877,7 @@
 
 	{
 		"id": 1005,
-		"level": 5,
+		"lv": 5,
 		"name": "天使圣光",
 		"prepare_t": 0,
 		"effect_t": 0,

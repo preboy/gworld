@@ -7,7 +7,7 @@ import (
 // ============================================================================
 
 type RefineSuper struct {
-	Level  uint32      `json:"level"`
+	Lv     uint32      `json:"lv"`
 	Props  []*PropConf `json:"props"`
 	Count  uint32      `json:"count"`
 	Prob   uint32      `json:"prob"`
@@ -15,7 +15,7 @@ type RefineSuper struct {
 }
 
 type RefineNormal struct {
-	Level uint32      `json:"level"`
+	Lv    uint32      `json:"lv"`
 	Props []*PropConf `json:"props"`
 	Count uint32      `json:"count"`
 	Prob  uint32      `json:"prob"`
@@ -48,7 +48,7 @@ func (self *RefineSuperTable) Load() bool {
 
 	self.items = make(map[uint32]*RefineSuper)
 	for _, v := range arr {
-		self.items[v.Level] = v
+		self.items[v.Lv] = v
 	}
 
 	log.Info("load [ %s ] OK", file)
@@ -75,7 +75,7 @@ func (self *RefineNormalTable) Load() bool {
 
 	self.items = make(map[uint32]*RefineNormal)
 	for _, v := range arr {
-		self.items[v.Level] = v
+		self.items[v.Lv] = v
 	}
 
 	log.Info("load [ %s ] OK", file)

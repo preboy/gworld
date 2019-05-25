@@ -67,7 +67,7 @@ func (self *BattleSkill) Cast(caster *BattleUnit, time uint32) {
 		targets = append(targets, t.Id)
 	}
 
-	self.caster.GetBattle().BattlePlayEvent_Cast(self.caster, self.proto.Id, self.proto.Level, targets)
+	self.caster.GetBattle().BattlePlayEvent_Cast(self.caster, self.proto.Id, self.proto.Lv, targets)
 
 	fmt.Printf("[%d] %s<%d> 释放了 %s\n", time, self.caster.Base.Name(), self.caster.Pos, self.proto.Name)
 }

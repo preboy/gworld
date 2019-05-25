@@ -175,7 +175,7 @@ func (self *BattleUnit) AddAura(caster *BattleUnit, id uint32, lv uint32) {
 
 func (self *BattleUnit) DelAura(id, lv uint32) {
 	for k, aura := range self.Auras_battle {
-		if aura.proto.Id == id && aura.proto.Level == lv {
+		if aura.proto.Id == id && aura.proto.Lv == lv {
 			self.Auras_battle[k] = nil
 			self.GetBattle().BattlePlayEvent_Aura(self, aura.caster, id, lv, false)
 			break
@@ -198,7 +198,7 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	}
 
 	if self.Skill_comm != nil {
-		u.Comm = &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Level}
+		u.Comm = &msg.BattleSkill{self.Skill_comm.proto.Id, self.Skill_comm.proto.Lv}
 	}
 
 	if self.Troop.IsAttacker() {
@@ -208,7 +208,7 @@ func (self *BattleUnit) ToMsg() *msg.BattleUnit {
 	for _, skill := range self.Skill_battle {
 		u.Skill = append(u.Skill, &msg.BattleSkill{
 			skill.proto.Id,
-			skill.proto.Level,
+			skill.proto.Lv,
 		})
 	}
 

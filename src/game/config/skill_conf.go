@@ -8,7 +8,7 @@ import (
 
 type Skill struct {
 	Id           uint32          `json:"id"`
-	Level        uint32          `json:"level"`
+	Lv           uint32          `json:"lv"`
 	Name         string          `json:"name"`
 	Prepare_t    uint32          `json:"prepare_t"`
 	Effect_t     uint32          `json:"effect_t"`
@@ -49,7 +49,7 @@ func (self *SkillTable) Load() bool {
 
 	self.items = make(map[uint64]*Skill)
 	for _, v := range arr {
-		key := MakeUint64(v.Id, v.Level)
+		key := MakeUint64(v.Id, v.Lv)
 		self.items[key] = v
 	}
 

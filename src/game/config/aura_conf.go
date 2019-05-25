@@ -8,7 +8,7 @@ import (
 
 type Aura struct {
 	Id        uint32      `json:"id"`
-	Level     uint32      `json:"level"`
+	Lv        uint32      `json:"lv"`
 	Name      string      `json:"name"`
 	Last_t    uint32      `json:"last_t"`
 	Itv_t     uint32      `json:"itv_t"`
@@ -41,7 +41,7 @@ func (self *AuraTable) Load() bool {
 
 	self.items = make(map[uint64]*Aura)
 	for _, v := range arr {
-		key := MakeUint64(v.Id, v.Level)
+		key := MakeUint64(v.Id, v.Lv)
 		self.items[key] = v
 	}
 

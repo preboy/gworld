@@ -174,7 +174,7 @@ func (self *AuraScript_4) OnUpdate(aura *BattleAura) {
 }
 
 func (self *AuraScript_4) OnEvent(aura *BattleAura, evt BattleCalcEvent, ctx *SkillContext) {
-	fmt.Println("AuraScript_4 Event:", aura.proto.Id, aura.proto.Level, evt)
+	fmt.Println("AuraScript_4 Event:", aura.proto.Id, aura.proto.Lv, evt)
 
 	if evt == BCE_PreBack {
 		val := aura.owner.AddHp(float64(aura.proto.Params[0]) * ctx.damage_calc)
