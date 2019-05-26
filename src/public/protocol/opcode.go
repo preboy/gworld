@@ -22,6 +22,10 @@ const (
 	MSG_SC_HeroLevelupResponse     uint16 = 301
 	MSG_CS_HeroRefineRequest       uint16 = 302
 	MSG_SC_HeroRefineResponse      uint16 = 303
+	MSG_CS_HeroAptitudeRequest     uint16 = 304
+	MSG_SC_HeroAptitudeResponse    uint16 = 305
+	MSG_CS_HeroTalentRequest       uint16 = 306
+	MSG_SC_HeroTalentResponse      uint16 = 307
 	MSG_SC_HeroInfoUpdateResponse  uint16 = 380
 	MSG_CS_QuestListRequest        uint16 = 400
 	MSG_SC_QuestListResponse       uint16 = 401

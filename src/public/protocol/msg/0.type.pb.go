@@ -44,6 +44,10 @@
 		HeroLevelupResponse
 		HeroRefineRequest
 		HeroRefineResponse
+		HeroAptitudeRequest
+		HeroAptitudeResponse
+		HeroTalentRequest
+		HeroTalentResponse
 		HeroInfoUpdateResponse
 		QuestData
 		QuestInfo

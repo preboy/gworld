@@ -172,9 +172,73 @@ func handler_HeroRefineRequest(plr *Player, packet *tcp.Packet) {
 		}
 	}()
 
+	plr.SendPacket(protocol.MSG_SC_HeroRefineResponse, res)
+
 	if res.ErrorCode == ec.OK {
 		plr.UpdateHeroToClient(req.Id)
 	}
+}
 
-	plr.SendPacket(protocol.MSG_SC_HeroRefineResponse, res)
+func handler_HeroAptitudeRequest(plr *Player, packet *tcp.Packet) {
+	req := &msg.HeroAptitudeRequest{}
+	res := &msg.HeroAptitudeResponse{}
+	proto.Unmarshal(packet.Data, req)
+
+	// TODO
+	res.ErrorCode = ec.OK
+
+	func() {
+		hero := plr.GetHero(req.Id)
+		if hero == nil {
+			res.ErrorCode = ec.Hero_Not_Activated
+			return
+		}
+
+		conf := config.HeroConf.Query(hero.Id)
+
+		if hero.Aptitude >= conf.Aptitude {
+			res.ErrorCode = ec.Level_Exceed
+			return
+		}
+
+		hero.Aptitude++
+	}()
+
+	plr.SendPacket(protocol.MSG_SC_HeroAptitudeResponse, res)
+
+	if res.ErrorCode == ec.OK {
+		plr.UpdateHeroToClient(req.Id)
+	}
+}
+
+func handler_HeroTalentRequest(plr *Player, packet *tcp.Packet) {
+	req := &msg.HeroTalentRequest{}
+	res := &msg.HeroTalentResponse{}
+	proto.Unmarshal(packet.Data, req)
+
+	// TODO
+	res.ErrorCode = ec.OK
+
+	func() {
+		hero := plr.GetHero(req.Id)
+		if hero == nil {
+			res.ErrorCode = ec.Hero_Not_Activated
+			return
+		}
+
+		conf := config.HeroConf.Query(hero.Id)
+		conf_talnet := config.HeroTalentConf.Query(conf.Talent, hero.Talent+1)
+		if conf_talnet == nil {
+			res.ErrorCode = ec.Level_Exceed
+			return
+		}
+
+		hero.Talent++
+	}()
+
+	plr.SendPacket(protocol.MSG_SC_HeroTalentResponse, res)
+
+	if res.ErrorCode == ec.OK {
+		plr.UpdateHeroToClient(req.Id)
+	}
 }

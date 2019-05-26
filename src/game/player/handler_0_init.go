@@ -13,6 +13,8 @@ func init() {
 	register_handler(protocol.MSG_CS_MarketBuyRequest, handler_MarketBuyRequest)
 	register_handler(protocol.MSG_CS_HeroLevelupRequest, handler_HeroLevelupRequest)
 	register_handler(protocol.MSG_CS_HeroRefineRequest, handler_HeroRefineRequest)
+	register_handler(protocol.MSG_CS_HeroAptitudeRequest, handler_HeroAptitudeRequest)
+	register_handler(protocol.MSG_CS_HeroTalentRequest, handler_HeroTalentRequest)
 	register_handler(protocol.MSG_CS_QuestListRequest, handler_QuestListRequest)
 	register_handler(protocol.MSG_CS_QuestOpRequest, handler_QuestOpRequest)
 	register_handler(protocol.MSG_CS_ChapterInfoRequest, handler_ChapterInfoRequest)

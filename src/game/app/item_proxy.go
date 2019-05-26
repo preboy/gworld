@@ -1,6 +1,8 @@
 package app
 
 import (
+	"core/log"
+	"game/config"
 	"public/protocol"
 	"public/protocol/msg"
 )
@@ -27,10 +29,24 @@ func (self *ItemProxy) SetArgs(args ...uint32) *ItemProxy {
 }
 
 func (self *ItemProxy) Add(id uint32, cnt uint64) {
+	if InDebugMode() {
+		conf := config.ItemProtoConf.Query(id)
+		if conf == nil {
+			log.Warning("item NOT EXIST = %v", id)
+		}
+	}
+
 	self.add[id] += cnt
 }
 
 func (self *ItemProxy) Sub(id uint32, cnt uint64) {
+	if InDebugMode() {
+		conf := config.ItemProtoConf.Query(id)
+		if conf == nil {
+			log.Warning("item NOT EXIST = %v", id)
+		}
+	}
+
 	self.sub[id] += cnt
 }
 

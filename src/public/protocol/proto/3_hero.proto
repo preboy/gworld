@@ -31,6 +31,23 @@ message HeroRefineResponse {    // opcode: 303
     uint32 Result               = 2;    // ErrorCode为0时，操作是否成功
 }
 
+message HeroAptitudeRequest {     // opcode: 304
+    uint32  Id                  = 1;
+}
+
+message HeroAptitudeResponse {    // opcode: 305
+    uint32 ErrorCode            = 1;
+    uint32 Result               = 2;    // ErrorCode为0时，操作是否成功
+}
+
+message HeroTalentRequest {     // opcode: 306
+    uint32  Id                  = 1;
+}
+
+message HeroTalentResponse {    // opcode: 307
+    uint32 ErrorCode            = 1;
+    uint32 Result               = 2;    // ErrorCode为0时，操作是否成功
+}
 
 // ----------------------------------------------------------------------------
 // update

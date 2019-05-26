@@ -94,6 +94,86 @@ func (m *HeroRefineResponse) GetResult() uint32 {
 	return 0
 }
 
+type HeroAptitudeRequest struct {
+	Id uint32 `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
+}
+
+func (m *HeroAptitudeRequest) Reset()                    { *m = HeroAptitudeRequest{} }
+func (m *HeroAptitudeRequest) String() string            { return proto.CompactTextString(m) }
+func (*HeroAptitudeRequest) ProtoMessage()               {}
+func (*HeroAptitudeRequest) Descriptor() ([]byte, []int) { return fileDescriptor3Hero, []int{4} }
+
+func (m *HeroAptitudeRequest) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+type HeroAptitudeResponse struct {
+	ErrorCode uint32 `protobuf:"varint,1,opt,name=ErrorCode,proto3" json:"ErrorCode,omitempty"`
+	Result    uint32 `protobuf:"varint,2,opt,name=Result,proto3" json:"Result,omitempty"`
+}
+
+func (m *HeroAptitudeResponse) Reset()                    { *m = HeroAptitudeResponse{} }
+func (m *HeroAptitudeResponse) String() string            { return proto.CompactTextString(m) }
+func (*HeroAptitudeResponse) ProtoMessage()               {}
+func (*HeroAptitudeResponse) Descriptor() ([]byte, []int) { return fileDescriptor3Hero, []int{5} }
+
+func (m *HeroAptitudeResponse) GetErrorCode() uint32 {
+	if m != nil {
+		return m.ErrorCode
+	}
+	return 0
+}
+
+func (m *HeroAptitudeResponse) GetResult() uint32 {
+	if m != nil {
+		return m.Result
+	}
+	return 0
+}
+
+type HeroTalentRequest struct {
+	Id uint32 `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
+}
+
+func (m *HeroTalentRequest) Reset()                    { *m = HeroTalentRequest{} }
+func (m *HeroTalentRequest) String() string            { return proto.CompactTextString(m) }
+func (*HeroTalentRequest) ProtoMessage()               {}
+func (*HeroTalentRequest) Descriptor() ([]byte, []int) { return fileDescriptor3Hero, []int{6} }
+
+func (m *HeroTalentRequest) GetId() uint32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+type HeroTalentResponse struct {
+	ErrorCode uint32 `protobuf:"varint,1,opt,name=ErrorCode,proto3" json:"ErrorCode,omitempty"`
+	Result    uint32 `protobuf:"varint,2,opt,name=Result,proto3" json:"Result,omitempty"`
+}
+
+func (m *HeroTalentResponse) Reset()                    { *m = HeroTalentResponse{} }
+func (m *HeroTalentResponse) String() string            { return proto.CompactTextString(m) }
+func (*HeroTalentResponse) ProtoMessage()               {}
+func (*HeroTalentResponse) Descriptor() ([]byte, []int) { return fileDescriptor3Hero, []int{7} }
+
+func (m *HeroTalentResponse) GetErrorCode() uint32 {
+	if m != nil {
+		return m.ErrorCode
+	}
+	return 0
+}
+
+func (m *HeroTalentResponse) GetResult() uint32 {
+	if m != nil {
+		return m.Result
+	}
+	return 0
+}
+
 type HeroInfoUpdateResponse struct {
 	Hero *Hero `protobuf:"bytes,1,opt,name=Hero" json:"Hero,omitempty"`
 }
@@ -101,7 +181,7 @@ type HeroInfoUpdateResponse struct {
 func (m *HeroInfoUpdateResponse) Reset()                    { *m = HeroInfoUpdateResponse{} }
 func (m *HeroInfoUpdateResponse) String() string            { return proto.CompactTextString(m) }
 func (*HeroInfoUpdateResponse) ProtoMessage()               {}
-func (*HeroInfoUpdateResponse) Descriptor() ([]byte, []int) { return fileDescriptor3Hero, []int{4} }
+func (*HeroInfoUpdateResponse) Descriptor() ([]byte, []int) { return fileDescriptor3Hero, []int{8} }
 
 func (m *HeroInfoUpdateResponse) GetHero() *Hero {
 	if m != nil {
@@ -115,6 +195,10 @@ func init() {
 	proto.RegisterType((*HeroLevelupResponse)(nil), "msg.HeroLevelupResponse")
 	proto.RegisterType((*HeroRefineRequest)(nil), "msg.HeroRefineRequest")
 	proto.RegisterType((*HeroRefineResponse)(nil), "msg.HeroRefineResponse")
+	proto.RegisterType((*HeroAptitudeRequest)(nil), "msg.HeroAptitudeRequest")
+	proto.RegisterType((*HeroAptitudeResponse)(nil), "msg.HeroAptitudeResponse")
+	proto.RegisterType((*HeroTalentRequest)(nil), "msg.HeroTalentRequest")
+	proto.RegisterType((*HeroTalentResponse)(nil), "msg.HeroTalentResponse")
 	proto.RegisterType((*HeroInfoUpdateResponse)(nil), "msg.HeroInfoUpdateResponse")
 }
 func (m *HeroLevelupRequest) Marshal() (dAtA []byte, err error) {
@@ -219,6 +303,108 @@ func (m *HeroRefineResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *HeroAptitudeRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *HeroAptitudeRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarint3Hero(dAtA, i, uint64(m.Id))
+	}
+	return i, nil
+}
+
+func (m *HeroAptitudeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *HeroAptitudeResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ErrorCode != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarint3Hero(dAtA, i, uint64(m.ErrorCode))
+	}
+	if m.Result != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarint3Hero(dAtA, i, uint64(m.Result))
+	}
+	return i, nil
+}
+
+func (m *HeroTalentRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *HeroTalentRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarint3Hero(dAtA, i, uint64(m.Id))
+	}
+	return i, nil
+}
+
+func (m *HeroTalentResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *HeroTalentResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.ErrorCode != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarint3Hero(dAtA, i, uint64(m.ErrorCode))
+	}
+	if m.Result != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarint3Hero(dAtA, i, uint64(m.Result))
+	}
+	return i, nil
+}
+
 func (m *HeroInfoUpdateResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -287,6 +473,48 @@ func (m *HeroRefineRequest) Size() (n int) {
 }
 
 func (m *HeroRefineResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.ErrorCode != 0 {
+		n += 1 + sov3Hero(uint64(m.ErrorCode))
+	}
+	if m.Result != 0 {
+		n += 1 + sov3Hero(uint64(m.Result))
+	}
+	return n
+}
+
+func (m *HeroAptitudeRequest) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sov3Hero(uint64(m.Id))
+	}
+	return n
+}
+
+func (m *HeroAptitudeResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.ErrorCode != 0 {
+		n += 1 + sov3Hero(uint64(m.ErrorCode))
+	}
+	if m.Result != 0 {
+		n += 1 + sov3Hero(uint64(m.Result))
+	}
+	return n
+}
+
+func (m *HeroTalentRequest) Size() (n int) {
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sov3Hero(uint64(m.Id))
+	}
+	return n
+}
+
+func (m *HeroTalentResponse) Size() (n int) {
 	var l int
 	_ = l
 	if m.ErrorCode != 0 {
@@ -635,6 +863,320 @@ func (m *HeroRefineResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *HeroAptitudeRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflow3Hero
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HeroAptitudeRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HeroAptitudeRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow3Hero
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skip3Hero(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLength3Hero
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *HeroAptitudeResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflow3Hero
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HeroAptitudeResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HeroAptitudeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ErrorCode", wireType)
+			}
+			m.ErrorCode = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow3Hero
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ErrorCode |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Result", wireType)
+			}
+			m.Result = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow3Hero
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Result |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skip3Hero(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLength3Hero
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *HeroTalentRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflow3Hero
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HeroTalentRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HeroTalentRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow3Hero
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skip3Hero(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLength3Hero
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *HeroTalentResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflow3Hero
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: HeroTalentResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: HeroTalentResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ErrorCode", wireType)
+			}
+			m.ErrorCode = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow3Hero
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ErrorCode |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Result", wireType)
+			}
+			m.Result = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflow3Hero
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Result |= (uint32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skip3Hero(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLength3Hero
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *HeroInfoUpdateResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -826,7 +1368,7 @@ var (
 func init() { proto.RegisterFile("3_hero.proto", fileDescriptor3Hero) }
 
 var fileDescriptor3Hero = []byte{
-	// 231 bytes of a gzipped FileDescriptorProto
+	// 271 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x31, 0x8e, 0xcf, 0x48,
 	0x2d, 0xca, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0xce, 0x2d, 0x4e, 0x97, 0xe2, 0x31,
 	0xd0, 0x2b, 0xa9, 0x2c, 0x48, 0x85, 0x08, 0x29, 0xa9, 0x70, 0x09, 0x79, 0xa4, 0x16, 0xe5, 0xfb,
@@ -836,10 +1378,12 @@ var fileDescriptor3Hero = []byte{
 	0xca, 0x2f, 0x72, 0xce, 0x4f, 0x49, 0x85, 0xaa, 0x46, 0x08, 0x28, 0x99, 0x73, 0x09, 0x82, 0x34,
 	0x05, 0xa5, 0xa6, 0x65, 0xe6, 0xa5, 0xe2, 0x30, 0x59, 0x48, 0x88, 0x8b, 0xc5, 0x2d, 0x27, 0x31,
 	0x5d, 0x82, 0x09, 0x2c, 0x02, 0x66, 0x2b, 0x79, 0x41, 0xdc, 0x04, 0xd3, 0x48, 0x8c, 0x65, 0x42,
-	0x62, 0x5c, 0x6c, 0x41, 0xa9, 0xc5, 0xa5, 0x39, 0x25, 0x50, 0x93, 0xa0, 0x3c, 0x25, 0x73, 0x2e,
-	0x31, 0x90, 0x59, 0x9e, 0x79, 0x69, 0xf9, 0xa1, 0x05, 0x29, 0x89, 0x25, 0x08, 0xf3, 0x64, 0xb9,
-	0x58, 0x40, 0x32, 0x60, 0xa3, 0xb8, 0x8d, 0x38, 0xf5, 0x72, 0x8b, 0xd3, 0xf5, 0xc0, 0xd6, 0x82,
-	0x85, 0x9d, 0x04, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6,
-	0x09, 0x8f, 0xe5, 0x18, 0x92, 0xd8, 0xc0, 0x21, 0x66, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0xa9,
-	0x70, 0x06, 0xc7, 0x54, 0x01, 0x00, 0x00,
+	0x62, 0x5c, 0x6c, 0x41, 0xa9, 0xc5, 0xa5, 0x39, 0x25, 0x50, 0x93, 0xa0, 0x3c, 0x25, 0x55, 0x88,
+	0xcb, 0x1d, 0x0b, 0x4a, 0x32, 0x4b, 0x4a, 0x53, 0x70, 0x39, 0x43, 0xc9, 0x87, 0x4b, 0x04, 0x55,
+	0x19, 0x45, 0x96, 0x2a, 0x43, 0x7c, 0x1e, 0x92, 0x98, 0x93, 0x9a, 0x57, 0x82, 0xcb, 0x4a, 0xa8,
+	0x2f, 0x61, 0x8a, 0x28, 0xb2, 0xd0, 0x9c, 0x4b, 0x0c, 0x64, 0x96, 0x67, 0x5e, 0x5a, 0x7e, 0x68,
+	0x41, 0x4a, 0x62, 0x09, 0xc2, 0x03, 0xb2, 0x5c, 0x2c, 0x20, 0x19, 0xb0, 0x51, 0xdc, 0x46, 0x9c,
+	0x7a, 0xb9, 0xc5, 0xe9, 0x7a, 0xe0, 0xc0, 0x05, 0x0b, 0x3b, 0x09, 0x9c, 0x78, 0x24, 0xc7, 0x78,
+	0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x24, 0xb1, 0x81, 0xd3,
+	0x85, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x9e, 0x75, 0x73, 0x57, 0x3a, 0x02, 0x00, 0x00,
 }
