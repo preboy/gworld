@@ -3,6 +3,7 @@
 		"id": 5001,
 		"name": "曹操",
 		"apm": 30,
+		"talent": 1,
 		"aptitude": 100,
 		"skill_common": [
 			{
@@ -18,6 +19,7 @@
 		"id": 5002,
 		"name": "孙权",
 		"apm": 30,
+		"talent": 2,
 		"aptitude": 100,
 		"skill_common": [
 			{
@@ -33,6 +35,7 @@
 		"id": 5003,
 		"name": "关羽",
 		"apm": 30,
+		"talent": 3,
 		"aptitude": 100,
 		"skill_common": [
 			{
@@ -48,6 +51,7 @@
 		"id": 5004,
 		"name": "魏延",
 		"apm": 30,
+		"talent": 4,
 		"aptitude": 100,
 		"skill_common": [
 			{
@@ -63,6 +67,7 @@
 		"id": 5005,
 		"name": "周瑜",
 		"apm": 30,
+		"talent": 5,
 		"aptitude": 100,
 		"skill_common": [
 			{

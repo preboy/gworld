@@ -11,6 +11,7 @@ exporter jl excel/levelup_等级表.xlsx               Levelup
 
 exporter jl excel/hero_英雄表.xlsx                  Hero
 exporter jl excel/hero_英雄表.xlsx                  HeroProp
+exporter jl excel/hero_英雄表.xlsx                  HeroTalent
 
 exporter jl excel/creature_怪物表.xlsx              Creature
 exporter jl excel/creature_team_怪物队伍表.xlsx     CreatureTeam

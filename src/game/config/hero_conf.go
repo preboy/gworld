@@ -10,6 +10,7 @@ type Hero struct {
 	Id          uint32       `json:"id"`
 	Name        string       `json:"name"`
 	Apm         uint32       `json:"apm"`
+	Talent      uint32       `json:"talent"`
 	Aptitude    uint32       `json:"aptitude"`
 	SkillCommon []*SkillConf `json:"skill_common"`
 	Skill1      uint32       `json:"skill_1"`

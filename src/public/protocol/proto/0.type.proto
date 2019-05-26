@@ -27,16 +27,17 @@ message Hero {
     uint32  Id                  = 1;
     uint32  Lv                  = 2;
     uint32  Apm                 = 3;
-    uint32  Aptitude            = 4;
-    uint32  RefineLv            = 5;
-    uint32  RefineTimes         = 6;
-    bool    RefineSuper         = 7;
-    repeated Skill  Active      = 8;
-    repeated Skill  Passive     = 9;
-    uint32  Power               = 10;
-    uint32  Status              = 11;
-    uint32  LifePoint           = 12;
-    uint32  LifePointMax        = 13;
+    uint32  Talent              = 4;
+    uint32  Aptitude            = 5;
+    uint32  RefineLv            = 6;
+    uint32  RefineTimes         = 7;
+    bool    RefineSuper         = 8;
+    repeated Skill  Active      = 9;
+    repeated Skill  Passive     = 10;
+    uint32  Power               = 11;
+    uint32  Status              = 12;
+    uint32  LifePoint           = 13;
+    uint32  LifePointMax        = 14;
 }
 
 

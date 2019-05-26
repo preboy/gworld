@@ -8,9 +8,10 @@ import (
 
 type Hero struct {
 	// 这里的数据就是要存入DB的数据
-	Id           uint32   `bson:id"`              // 配置表ID
+	Id           uint32   `bson:"id"`             // 配置表ID
 	Lv           uint32   `bson:"lv"`             // 等级(决定基础属性)
-	Aptitude     uint32   `bson:"aptitude"`       // 资质
+	Talent       uint32   `bson:"talent"`         // 天赋等级
+	Aptitude     uint32   `bson:"aptitude"`       // 资质等级
 	RefineLv     uint32   `bson:"refine_lv"`      // 精炼等级(额外提升属性)
 	RefineTimes  uint32   `bson:"refine_times"`   // 普通精炼失败次数
 	RefineSuper  bool     `bson:"refine_super"`   // 是否超级精炼(超级精炼失败则精炼等级归0，且失败无次数累计，但属性更强)
@@ -78,22 +79,40 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	}
 
 	// ------------------------------------------------------------------------
+	conf := config.HeroConf.Query(self.Id)
 
 	// 装入速度
-	for {
-		conf := config.HeroConf.Query(self.Id)
-		u.Prop.AddProps([]*config.PropConf{&config.PropConf{1, 0, conf.Apm}})
-		break
-	}
+	u.Prop.AddProps([]*config.PropConf{&config.PropConf{1, 0, conf.Apm}})
 
 	// 装入属性
 	for {
-		proto := config.HeroPropConf.Query(self.Id, self.Lv)
-		u.Prop.AddProps(proto.Props)
+		// 等级基础属性
+		prop_conf := config.HeroPropConf.Query(self.Id, self.Lv)
+		u.Prop.AddProps(prop_conf.Props)
+
+		// 资质加成
+		if self.Aptitude > 0 {
+			rate := float64(self.Aptitude) / 100
+			for _, v := range prop_conf.Props {
+				u.Prop.AddProp(v.Id, 2, v.Val*rate)
+			}
+		}
+
 		break
 	}
 
-	for { // 精炼
+	// 天赋
+	for {
+		if self.Talent > 0 {
+			talent_conf := config.HeroTalentConf.Query(conf.Talent, self.Talent)
+			u.Prop.AddProps(talent_conf.Props)
+		}
+
+		break
+	}
+
+	// 精炼
+	for {
 		if self.RefineLv == 0 {
 			break
 		}
@@ -105,10 +124,12 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 			proto := config.RefineNormalConf.Query(self.RefineLv)
 			u.Prop.AddProps(proto.Props)
 		}
+
 		break
 	}
 
-	for { // 被动技能
+	// 被动技能
+	for {
 		for i := 0; i < 4; i++ {
 			v := &self.Passive[i]
 			proto := config.SkillProtoConf.Query(v.Id, v.Lv)
@@ -116,13 +137,15 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 				u.Prop.AddProps(proto.Prop_Passive)
 			}
 		}
+
 		break
 	}
 
 	// ------------------------------------------------------------------------
 	// 装入技能
 
-	for { // 普攻
+	// 普攻
+	for {
 		proto := config.HeroConf.Query(self.Id)
 		if len(proto.SkillCommon) > 0 {
 			sc := proto.SkillCommon[0]
@@ -158,6 +181,7 @@ func (self *Hero) ToMsg() *msg.Hero {
 		Id:           self.Id,
 		Lv:           self.Lv,
 		Apm:          conf.Apm,
+		Talent:       self.Talent,
 		Aptitude:     self.Aptitude,
 		RefineLv:     self.RefineLv,
 		RefineTimes:  self.RefineTimes,

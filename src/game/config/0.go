@@ -29,6 +29,7 @@ var (
 		GrowthConf,
 		HeroConf,
 		HeroPropConf,
+		HeroTalentConf,
 		MarketConf,
 		ItemProtoConf,
 		RefineNormalConf,

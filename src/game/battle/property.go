@@ -95,6 +95,18 @@ func (self *Property) Value() float64 {
 
 // ----------------------------------------------------------------------------
 
+func (self *PropertyGroup) AddProp(id uint32, part uint32, val float64) {
+	if id <= PropType_Hurt {
+		self[id].add(part, val, true)
+	}
+}
+
+func (self *PropertyGroup) SubProp(id uint32, part uint32, val float64) {
+	if id <= PropType_Hurt {
+		self[id].add(part, val, false)
+	}
+}
+
 func (self *PropertyGroup) AddProps(props []*config.PropConf) {
 	for _, p := range props {
 		if p.Id <= PropType_Hurt {
