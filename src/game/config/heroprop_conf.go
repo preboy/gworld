@@ -8,7 +8,7 @@ import (
 
 type HeroProp struct {
 	Id    uint32      `json:"id"`
-	Lv    uint32      `json:"level"`
+	Lv    uint32      `json:"lv"`
 	Props []*PropConf `json:"props"`
 }
 

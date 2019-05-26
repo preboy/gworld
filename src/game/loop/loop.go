@@ -79,13 +79,13 @@ func (self *Loop) working() {
 
 	go func() {
 
+	OUT:
 		for {
-
 			busy = false
 
 			select {
 			case <-self.q:
-				return
+				break OUT
 			case talk := <-self.talks:
 				self.do_talk(talk)
 				busy = true
@@ -100,7 +100,7 @@ func (self *Loop) working() {
 				busy = true
 			}
 
-			if self.do_update() {
+			if self.do_update_secondly() {
 				busy = true
 			}
 
@@ -116,12 +116,12 @@ func (self *Loop) working() {
 				time.Sleep(time.Duration(10) * time.Millisecond)
 			}
 		}
-	}()
 
-	self.on_stop()
+		self.on_stop()
+	}()
 }
 
-func (self *Loop) do_update() bool {
+func (self *Loop) do_update_secondly() bool {
 	now := time.Now().Unix()
 
 	if self.last != now {

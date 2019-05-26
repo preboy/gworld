@@ -10,6 +10,7 @@ type Hero struct {
 	// 这里的数据就是要存入DB的数据
 	Id           uint32   `bson:id"`              // 配置表ID
 	Lv           uint32   `bson:"lv"`             // 等级(决定基础属性)
+	Aptitude     uint32   `bson:"aptitude"`       // 资质
 	RefineLv     uint32   `bson:"refine_lv"`      // 精炼等级(额外提升属性)
 	RefineTimes  uint32   `bson:"refine_times"`   // 普通精炼失败次数
 	RefineSuper  bool     `bson:"refine_super"`   // 是否超级精炼(超级精炼失败则精炼等级归0，且失败无次数累计，但属性更强)
@@ -82,6 +83,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	for {
 		conf := config.HeroConf.Query(self.Id)
 		u.Prop.AddProps([]*config.PropConf{&config.PropConf{1, 0, conf.Apm}})
+		break
 	}
 
 	// 装入属性
@@ -151,9 +153,12 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 }
 
 func (self *Hero) ToMsg() *msg.Hero {
-	_hero := &msg.Hero{
+	conf := config.HeroConf.Query(self.Id)
+	hero := &msg.Hero{
 		Id:           self.Id,
-		Level:        self.Lv,
+		Lv:           self.Lv,
+		Apm:          conf.Apm,
+		Aptitude:     self.Aptitude,
 		RefineLv:     self.RefineLv,
 		RefineTimes:  self.RefineTimes,
 		RefineSuper:  self.RefineSuper,
@@ -164,18 +169,18 @@ func (self *Hero) ToMsg() *msg.Hero {
 	}
 
 	for i := 0; i < 2; i++ {
-		_hero.Active = append(_hero.Active, &msg.Skill{
-			Id:    self.Active[i].Id,
-			Level: self.Active[i].Lv,
+		hero.Active = append(hero.Active, &msg.Skill{
+			Id: self.Active[i].Id,
+			Lv: self.Active[i].Lv,
 		})
 	}
 
 	for i := 0; i < 4; i++ {
-		_hero.Passive = append(_hero.Passive, &msg.Skill{
-			Id:    self.Passive[i].Id,
-			Level: self.Passive[i].Lv,
+		hero.Passive = append(hero.Passive, &msg.Skill{
+			Id: self.Passive[i].Id,
+			Lv: self.Passive[i].Lv,
 		})
 	}
 
-	return _hero
+	return hero
 }

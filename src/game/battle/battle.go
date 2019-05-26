@@ -128,7 +128,7 @@ func (self *BattleUnit) Update(time uint32) {
 		}
 		// 普攻
 		if self.Skill_curr == nil {
-			if self.Skill_comm.IsFree(time) {
+			if self.Skill_comm != nil && self.Skill_comm.IsFree(time) {
 				self.Skill_curr = self.Skill_comm
 			}
 		}

@@ -60,6 +60,13 @@ type PlayerData struct {
 func (self *PlayerData) Init(plr *Player) {
 	self.owner = plr
 
+	if self.Heros == nil {
+		self.Heros = make(hero_map_t)
+	}
+	if self.Items == nil {
+		self.Items = make(item_map_t)
+	}
+
 	if self.Growth == nil {
 		self.Growth = achv.NewGrowth()
 	}
