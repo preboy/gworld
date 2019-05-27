@@ -28,6 +28,7 @@ function init(pools) {
                     poolSize:        size,
                     reconnectTries:  Number.MAX_SAFE_INTEGER,
                     socketTimeoutMS: 0,
+                    useNewUrlParser: true,
                 },
                 (err, db) => {
                     if (!err) {
