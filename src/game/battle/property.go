@@ -1,6 +1,8 @@
 package battle
 
 import (
+	"fmt"
+
 	"core/log"
 	"game/config"
 )
@@ -23,6 +25,15 @@ const (
 const (
 	C_Property_Number = 6 // 属性总数量
 )
+
+var type_name = map[int]string{
+	PropType_HP:   "hp",
+	PropType_Apm:  "apm",
+	PropType_Atk:  "atk",
+	PropType_Def:  "def",
+	PropType_Crit: "crit",
+	PropType_Hurt: "hurt",
+}
 
 // ----------------------------------------------------------------------------
 
@@ -134,4 +145,13 @@ func (self *PropertyGroup) Value(id uint32) float64 {
 		return self[id].Value()
 	}
 	return 0
+}
+
+func (self *PropertyGroup) Dump() (ret string) {
+	ret = "{\n"
+	for i := 0; i < C_Property_Number; i++ {
+		ret += fmt.Sprintf("\t{ %s\t= %-20.2f[%-20.2f %-20.2f %-20.2f]},\n", type_name[i], self[i].Value(), self[i].base, self[i].perc, self[i].extra)
+	}
+	ret += "},\n"
+	return
 }

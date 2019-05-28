@@ -82,7 +82,7 @@ func (self *Hero) ToBattleUnit() *battle.BattleUnit {
 	conf := config.HeroConf.Query(self.Id)
 
 	// 装入速度
-	u.Prop.AddProps([]*config.PropConf{&config.PropConf{1, 0, conf.Apm}})
+	u.Prop.AddProp(1, 0, float64(conf.Apm))
 
 	// 装入属性
 	for {

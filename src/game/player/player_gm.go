@@ -57,9 +57,9 @@ func (self *Player) on_gm_command(args []string) int32 {
 		}
 
 	case "prop":
-		str_props := ""
+		str_props := "\n"
 		for _, hero := range self.data.Heros {
-			str := utils.ObjectToStringPretty(hero.ToBattleUnit()) + "\n\n"
+			str := fmt.Sprintf("%d = %s", hero.Id, hero.ToBattleUnit().Prop.Dump())
 			str_props += str
 		}
 		self.SendNotice(str_props, 0)
