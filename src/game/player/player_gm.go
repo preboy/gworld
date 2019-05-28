@@ -12,7 +12,6 @@ import (
 // ----------------------------------------------------------------------------
 
 func (self *Player) on_gm_command(args []string) int32 {
-	fmt.Println("on_gm_command:", args)
 
 	switch args[0] {
 
@@ -41,7 +40,7 @@ func (self *Player) on_gm_command(args []string) int32 {
 			ct := utils.Atou32(item[1])
 			ip.Add(id, uint64(ct))
 			ip.Apply(self)
-			println("curr:", item[0], self.GetItem(id))
+			self.SendNotice(fmt.Sprintf("curr: %s %v", item[0], self.GetItem(id)), 0)
 		}
 
 	case "hero":
@@ -65,8 +64,9 @@ func (self *Player) on_gm_command(args []string) int32 {
 		self.SendNotice(str_props, 0)
 
 	default:
-		println("unknown command:", args[0])
+		self.SendNotice(fmt.Sprintf("UNKNOWN command: %s", args[0]), 0)
 		return 0
 	}
+
 	return 1
 }

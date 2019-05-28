@@ -149,9 +149,13 @@ func (self *PropertyGroup) Value(id uint32) float64 {
 
 func (self *PropertyGroup) Dump() (ret string) {
 	ret = "{\n"
+
 	for i := 0; i < C_Property_Number; i++ {
-		ret += fmt.Sprintf("\t{ %s\t= %-20.2f[%-20.2f %-20.2f %-20.2f]},\n", type_name[i], self[i].Value(), self[i].base, self[i].perc, self[i].extra)
+		ret += fmt.Sprintf("\t{ %s\t= %-20.2f[%-20.2f %-20.2f %-20.2f]},\n",
+			type_name[i], self[i].Value(), self[i].base, self[i].perc, self[i].extra)
 	}
+
 	ret += "},\n"
+
 	return
 }
