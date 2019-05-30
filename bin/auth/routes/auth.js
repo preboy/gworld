@@ -1,9 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
-const handlers = require('./auth_handlers.js')
+let handlers_path = './auth_handlers.js';
+
+let handlers = require(handlers_path);
 
 const gtab = require('../../modules/gtab');
+
+
+router.get('/reload', function(req, res) {
+
+    let path = require.resolve(handlers_path);
+
+    delete require.cache[path];
+
+    handlers = require(handlers_path);
+
+    res.end("OK");
+}
 
 
 router.get('/', function(req, res) {
