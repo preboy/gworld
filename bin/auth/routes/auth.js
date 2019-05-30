@@ -17,7 +17,7 @@ router.get('/reload', function(req, res) {
     handlers = require(handlers_path);
 
     res.end("OK");
-}
+})
 
 
 router.get('/', function(req, res) {
