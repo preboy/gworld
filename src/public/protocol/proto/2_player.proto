@@ -60,9 +60,16 @@ message MarketBuyRequest {      // opcode: 206
 }
 
 message MarketBuyResponse {     // opcode: 207
-    uint32 ErrorCode           = 1;
+    uint32 ErrorCode            = 1;
 }
 
+message ChangeNameRequest {      // opcode: 208
+    string  Name                = 1;    // 购买的索引
+}
+
+message ChangeNameResponse {     // opcode: 209
+    uint32 ErrorCode            = 1;
+}
 
 // ----------------------------------------------------------------------------
 // update

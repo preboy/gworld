@@ -11,6 +11,7 @@ func init() {
 	register_handler(protocol.MSG_CS_GMCommandRequest, handler_GMCommandRequest)
 	register_handler(protocol.MSG_CS_UseItemRequest, handler_UseItemRequest)
 	register_handler(protocol.MSG_CS_MarketBuyRequest, handler_MarketBuyRequest)
+	register_handler(protocol.MSG_CS_ChangeNameRequest, handler_ChangeNameRequest)
 	register_handler(protocol.MSG_CS_HeroLevelupRequest, handler_HeroLevelupRequest)
 	register_handler(protocol.MSG_CS_HeroRefineRequest, handler_HeroRefineRequest)
 	register_handler(protocol.MSG_CS_HeroAptitudeRequest, handler_HeroAptitudeRequest)

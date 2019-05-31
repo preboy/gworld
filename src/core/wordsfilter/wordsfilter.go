@@ -97,6 +97,18 @@ func Filter(v string) string {
 	return string(chars_ret)
 }
 
+func IsPunctuation(str string) bool {
+	for _, b := range []byte(str) {
+		if b < 48 ||
+			(b > 57 && b < 65) ||
+			(b > 90 && b < 97) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // ============================================================================
 
 func create_node() *trie_node_t {

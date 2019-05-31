@@ -37,6 +37,8 @@
 		UseItemResponse
 		MarketBuyRequest
 		MarketBuyResponse
+		ChangeNameRequest
+		ChangeNameResponse
 		ItemUpdate
 		PlayerExpUpdate
 		NoticeUpdate

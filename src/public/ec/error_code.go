@@ -6,14 +6,19 @@ const (
 	// 基本 [0, 100)
 	// --------------------------------
 
-	OK                 = 0 // 无错误
-	Failed             = 1 // 操作失败
-	Conf_Invalid       = 2 // 配置未找到
-	Item_Unknown       = 3 // 未知道具ID
-	Item_Not_Enough    = 4 // 道具数量不足
-	Item_Unusable      = 5 // 不可使用的道具
-	Hero_Not_Activated = 6 // 未获得英雄
-	Level_Exceed       = 7 // 等级超过限制
+	OK                 = 0  // 无错误
+	Failed             = 1  // 操作失败
+	Conf_Invalid       = 2  // 配置未找到
+	Item_Unknown       = 3  // 未知道具ID
+	Item_Not_Enough    = 4  // 道具数量不足
+	Item_Unusable      = 5  // 不可使用的道具
+	Hero_Not_Activated = 6  // 未获得英雄
+	Level_Exceed       = 7  // 等级超过限制
+	NamePunctuation    = 8  // 名字包含特殊字符
+	NameSensitive      = 9  // 名字包含敏感字
+	NameLengthErr      = 10 // 长度错误
+	NameSame           = 11 // 与原名相同
+	NameConflit        = 12 // 与其他名冲突
 
 	// --------------------------------
 	// 登录 [100, 200)

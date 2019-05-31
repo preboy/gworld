@@ -15,6 +15,8 @@ const (
 	MSG_SC_UseItemResponse         uint16 = 205
 	MSG_CS_MarketBuyRequest        uint16 = 206
 	MSG_SC_MarketBuyResponse       uint16 = 207
+	MSG_CS_ChangeNameRequest       uint16 = 208
+	MSG_SC_ChangeNameResponse      uint16 = 209
 	MSG_SC_ItemUpdate              uint16 = 280
 	MSG_SC_PlayerExpUpdate         uint16 = 281
 	MSG_SC_NoticeUpdate            uint16 = 282

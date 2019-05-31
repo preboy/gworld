@@ -6,7 +6,6 @@ import (
 	"core/event"
 	"core/log"
 	"core/work"
-	"game/app"
 	"game/constant"
 	"game/dbmgr"
 	"gopkg.in/mgo.v2"
@@ -82,7 +81,7 @@ func (self *Player) SetName(name string) {
 	// TODO: checking valid & repeat
 
 	old_name := self.data.Name
-	new_name := fmt.Sprintf("%s-%s", app.GetGameId(), name)
+	new_name := fmt.Sprintf("%s-%s", self.data.Svr, name)
 
 	self.data.Name = new_name
 

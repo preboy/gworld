@@ -5,6 +5,7 @@ import (
 
 	"core/log"
 	"core/tcp"
+	"core/wordsfilter"
 	"game/app"
 	"game/config"
 	"game/constant"
@@ -123,4 +124,43 @@ func handler_MarketBuyRequest(plr *Player, packet *tcp.Packet) {
 	}()
 
 	plr.SendPacket(protocol.MSG_SC_MarketBuyResponse, res)
+}
+
+func handler_ChangeNameRequest(plr *Player, packet *tcp.Packet) {
+	req := &msg.ChangeNameRequest{}
+	res := &msg.ChangeNameResponse{}
+	proto.Unmarshal(packet.Data, req)
+
+	func() {
+		Name := strings.TrimSpace(req.Name)
+
+		if wordsfilter.IsPunctuation(Name) {
+			res.ErrorCode = ec.NamePunctuation
+			return
+		}
+
+		if wordsfilter.IsSensitive(Name) {
+			res.ErrorCode = ec.NameSensitive
+			return
+		}
+
+		// 长度
+		if len(Name) == 0 || len(Name) > constant.MaxNameLength {
+			res.ErrorCode = ec.NameLengthErr
+			return
+		}
+
+		if Name == plr.GetName() {
+			res.ErrorCode = ec.NameSame
+			return
+		}
+
+		// TODO 未作冲突检测
+
+		plr.SetName(Name)
+
+		res.ErrorCode = ec.OK
+	}()
+
+	plr.SendPacket(protocol.MSG_SC_ChangeNameResponse, res)
 }

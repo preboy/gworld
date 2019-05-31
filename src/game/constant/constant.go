@@ -7,6 +7,10 @@ const (
 	ItemID_RefineSuper  uint32 = 4112
 )
 
+const (
+	MaxNameLength = 16
+)
+
 // ============================================================================
 // act id define
 
