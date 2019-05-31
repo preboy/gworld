@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const config = require('../../config.json')
+const dbmgr = require('../../modules/dbmgr');
 
 
 // ----------------------------------------------------------------------------
@@ -24,11 +25,12 @@ function load_server_list() {
 }
 
 
-// id name stat desc
-
 function load_server_stat() {
+
     let db = dbmgr.get('c').db();
-    db.collection('server_info').find(cond).toArray((err, docs) => {
+
+    db.collection('server_info').find({}).toArray((err, docs) => {
+
         if (err) {
             return;
         }
@@ -36,7 +38,7 @@ function load_server_stat() {
         for (let i = 0; i < docs.length; i++) {
 
             let doc = docs[i];
-            let svr = doc.id;
+            let svr = doc._id;
 
             if (svr_list[svr]) {
                 svr_list[svr].name = doc.name;
@@ -48,15 +50,22 @@ function load_server_stat() {
 
 
 function init() {
-    load_server_list()
-    load_server_stat()
+    setTimeout(()=>{
+        load_server_list();
+        load_server_stat();
+    }, 2000)
 }
 
 // ----------------------------------------------------------------------------
 
 router.get("/reload", function(req, res) {
-    svr_list = {}
-    load_server_list()
+
+    svr_list = {};
+
+    load_server_list();
+    load_server_stat();
+
+    res.end("OK");
 })
 
 
@@ -68,4 +77,6 @@ router.get("/", function(req, res) {
 // ----------------------------------------------------------------------------
 
 init()
+
 module.exports = router;
+
