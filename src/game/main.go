@@ -12,6 +12,7 @@ import (
 	"core/schedule"
 	"core/timer"
 	"core/utils"
+	"core/wordsfilter"
 	"core/work"
 	"game/app"
 	"game/cmd"
@@ -63,6 +64,11 @@ func main() {
 	timer.Start()
 	schedule.Start()
 	work.Start(4)
+
+	if wordsfilter.Load("./config/filter.txt") != nil {
+		log.Error("wordsfilter.Load failed !")
+		return
+	}
 
 	config.LoadAll(true)
 

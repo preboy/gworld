@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	C_Config_Path = "./config/"
+	C_Config_Path = "./config/excel/"
 )
 
 type IConf interface {
