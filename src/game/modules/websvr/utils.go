@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"core"
-	"core/log"
-	"game/app"
+	"core/utils"
 )
 
 // ============================================================================
@@ -34,14 +32,12 @@ func r2json(r string, err error) string {
 // 	return
 // }
 
-
-
 func get_int32(req *http.Request, k string) int32 {
-	return core.Atoi32(req.FormValue(k))
+	return utils.Atoi32(req.FormValue(k))
 }
 
 func get_int64(req *http.Request, k string) int64 {
-	return core.Atoi64(req.FormValue(k))
+	return utils.Atoi64(req.FormValue(k))
 }
 
 func get_string(req *http.Request, k string) string {
@@ -50,7 +46,7 @@ func get_string(req *http.Request, k string) string {
 
 func get_int32_arr(req *http.Request, k string) (arr []int32) {
 	for _, v := range req.Form[k] {
-		arr = append(arr, core.Atoi32(v))
+		arr = append(arr, utils.Atoi32(v))
 	}
 
 	return
@@ -58,7 +54,7 @@ func get_int32_arr(req *http.Request, k string) (arr []int32) {
 
 func get_int64_arr(req *http.Request, k string) (arr []int64) {
 	for _, v := range req.Form[k] {
-		arr = append(arr, core.Atoi64(v))
+		arr = append(arr, utils.Atoi64(v))
 	}
 
 	return

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"core/log"
+	"game/app"
 )
 
 // ============================================================================
@@ -14,7 +15,7 @@ func Start() {
 
 		http.HandleFunc("/gm", dispatcher)
 
-		if http.ListenAndServe(app.GetGameConfig().WebSvr, nil) != nil {
+		if err := http.ListenAndServe(app.GetGameConfig().WebSvr, nil); err != nil {
 			log.Error("Start websvr FAILED:", err)
 		}
 	}()

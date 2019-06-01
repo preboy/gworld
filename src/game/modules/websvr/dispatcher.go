@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"core/log"
 	"game/loop"
 )
 
@@ -24,7 +25,7 @@ var dispatcher = func(w http.ResponseWriter, req *http.Request) {
 	key := req.FormValue("key")
 	h := handlers[key]
 	if h != nil {
-		loop.Push(func() {
+		loop.Get().PostFunc(func() {
 			r, err = h(req)
 			ch <- r
 			close(ch)

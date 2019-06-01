@@ -1,6 +1,7 @@
 package websvr
 
 import (
+	"errors"
 	"net/http"
 )
 

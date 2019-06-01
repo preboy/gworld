@@ -48,7 +48,7 @@ type router_t struct {
 type game_t struct {
 	Host   string `json:"host"`
 	Port   uint32 `json:"port"`
-	WebSvr uint32 `json:"web_svr"`
+	WebSvr string `json:"web_svr"`
 	DBGame string `json:"db_game"`
 	DBStat string `json:"db_stat"`
 }
