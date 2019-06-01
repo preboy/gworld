@@ -3,6 +3,8 @@ package websvr
 import (
 	"errors"
 	"net/http"
+
+	"core/utils"
 )
 
 // ============================================================================
@@ -19,13 +21,21 @@ var (
 
 // ============================================================================
 
-var handlers = map[string]func(*http.Request) (r string, err error){
+var handlers = map[string]func(*http.Request) (string, error){
 	"plrinfo": handle_plrinfo,
 }
 
 // ============================================================================
 
-func handle_plrinfo(req *http.Request) (r string, err error) {
-	r = "this is plr info ..."
+func handle_plrinfo(req *http.Request) (ret string, err error) {
+	plr, err := get_player()
+	if err != nil {
+		return
+	}
+
+	ret = utils.ObjectToString(plr)
+
 	return
 }
+
+

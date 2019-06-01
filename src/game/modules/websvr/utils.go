@@ -5,32 +5,25 @@ import (
 	"net/http"
 
 	"core/utils"
+	"game/app"
+	"game/player"
 )
 
 // ============================================================================
 
-func r2json(r string, err error) string {
+func err2json(ret string, err error) string {
 	if err == nil {
-		if r == "" {
+		if ret == "" {
 			return `{"err": ""}`
 		} else {
-			return r
+			return ret
 		}
 	} else {
 		return fmt.Sprintf(`{"err": %q}`, err)
 	}
 }
 
-// func get_player(req *http.Request) (plr *app.Player, err error) {
-// 	id := get_string(req, "plrid")
-
-// 	plr = app.PlayerMgr.LoadPlayer(id, true)
-// 	if plr == nil {
-// 		err = ErrNoPlayer
-// 	}
-
-// 	return
-// }
+// ============================================================================
 
 func get_int32(req *http.Request, k string) int32 {
 	return utils.Atoi32(req.FormValue(k))
@@ -63,6 +56,19 @@ func get_int64_arr(req *http.Request, k string) (arr []int64) {
 func get_string_arr(req *http.Request, k string) (arr []string) {
 	for _, v := range req.Form[k] {
 		arr = append(arr, v)
+	}
+
+	return
+}
+
+// ============================================================================
+
+func get_player(req *http.Request) (plr *app.IPlayer, err error) {
+	pid := get_string(req, "pid")
+
+	plr = player.GetPlayer(pid)
+	if plr == nil {
+		err = ErrNoPlayer
 	}
 
 	return

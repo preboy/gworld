@@ -8,30 +8,33 @@ import (
 	"game/loop"
 )
 
-var dispatcher = func(w http.ResponseWriter, req *http.Request) {
-	var r string
+var dispatcher = func(w http.ResponseWriter, r *http.Request) {
+	var ret string
 	var err error
 
-	err = req.ParseForm()
+	err = r.ParseForm()
 	if err != nil {
-		fmt.Fprint(w, r2json(r, err))
-		log.Error("GM request data parsing failed:", err)
+		fmt.Fprint(w, err2json(ret, err))
+		log.Error("parsing data failed: %v", err)
 		return
 	}
 
-	ch := make(chan string)
 	err = ErrNoKey
+	chn := make(chan string)
 
-	key := req.FormValue("key")
-	h := handlers[key]
-	if h != nil {
+	key := r.FormValue("key")
+	fun := handlers[key]
+
+	if fun != nil {
+
 		loop.Get().PostFunc(func() {
-			r, err = h(req)
-			ch <- r
-			close(ch)
+			ret, err = fun(r)
+			chn <- ret
+			close(chn)
 		})
-		r = <-ch
+
+		ret = <-chn
 	}
 
-	fmt.Fprint(w, r2json(r, err))
+	fmt.Fprint(w, err2json(ret, err))
 }
