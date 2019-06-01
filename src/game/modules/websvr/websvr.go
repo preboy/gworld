@@ -1,4 +1,4 @@
-package httpsvr
+package websvr
 
 import (
 	"net/http"
@@ -15,7 +15,7 @@ func Start() {
 		http.HandleFunc("/gm", dispatcher)
 
 		if http.ListenAndServe(app.GetGameConfig().WebSvr, nil) != nil {
-			log.Error("Start httpsvr FAILED:", err)
+			log.Error("Start websvr FAILED:", err)
 		}
 	}()
 }

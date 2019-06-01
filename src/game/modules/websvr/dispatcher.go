@@ -1,9 +1,10 @@
 package websvr
 
 import (
-	"core/sched/loop"
 	"fmt"
 	"net/http"
+
+	"game/loop"
 )
 
 var dispatcher = func(w http.ResponseWriter, req *http.Request) {

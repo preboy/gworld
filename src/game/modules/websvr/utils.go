@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"core"
-	"core/logger"
+	"core/log"
 	"game/app"
 )
 
@@ -23,33 +23,18 @@ func r2json(r string, err error) string {
 	}
 }
 
-func get_player(req *http.Request) (plr *app.Player, err error) {
-	id := get_string(req, "plrid")
+// func get_player(req *http.Request) (plr *app.Player, err error) {
+// 	id := get_string(req, "plrid")
 
-	plr = app.PlayerMgr.LoadPlayer(id, true)
-	if plr == nil {
-		err = ErrNoPlayer
-	}
+// 	plr = app.PlayerMgr.LoadPlayer(id, true)
+// 	if plr == nil {
+// 		err = ErrNoPlayer
+// 	}
 
-	return
-}
+// 	return
+// }
 
-func get_guild(req *http.Request) (gld *guild.Guild, err error) {
-	id := get_string(req, "gldid")
-	name := get_string(req, "gldname")
 
-	if id != "" {
-		gld = guild.GuildMgr.FindGuild(id)
-	} else if name != "" {
-		gld = guild.GuildMgr.FindGuildByName(name)
-	}
-
-	if gld == nil {
-		err = ErrNoGuild
-	}
-
-	return
-}
 
 func get_int32(req *http.Request, k string) int32 {
 	return core.Atoi32(req.FormValue(k))
