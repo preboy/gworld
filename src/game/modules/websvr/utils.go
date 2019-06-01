@@ -70,7 +70,5 @@ func get_player(req *http.Request) (plr *player.Player, err error) {
 		err = ErrNoPlayer
 	}
 
-	println(plr == nil, plr, err)
-
 	return
 }

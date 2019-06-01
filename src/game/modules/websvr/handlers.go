@@ -33,11 +33,7 @@ func handle_plrinfo(req *http.Request) (ret string, err error) {
 		return
 	}
 
-	println("plr err ", plr, err)
-
-	ret = utils.ObjectToString(plr)
-
-	println("ret", plr.GetId(), plr.GetName(), ret)
+	ret = utils.ObjectToString(plr.GetData())
 
 	return
 }
