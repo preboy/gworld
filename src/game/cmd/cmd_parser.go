@@ -40,7 +40,7 @@ func ParseCommand(cmd string) {
 
 	case "start_prof":
 		fmt.Println(utils.StartPprof("prof"))
-		
+
 	case "close_prof":
 		fmt.Println(utils.ClosePprof())
 

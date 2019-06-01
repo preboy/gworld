@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"core/utils"
-	"game/app"
 	"game/player"
 )
 
@@ -63,13 +62,15 @@ func get_string_arr(req *http.Request, k string) (arr []string) {
 
 // ============================================================================
 
-func get_player(req *http.Request) (plr *app.IPlayer, err error) {
+func get_player(req *http.Request) (plr *player.Player, err error) {
 	pid := get_string(req, "pid")
 
 	plr = player.GetPlayer(pid)
 	if plr == nil {
 		err = ErrNoPlayer
 	}
+
+	println(plr == nil, plr, err)
 
 	return
 }

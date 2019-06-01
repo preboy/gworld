@@ -131,19 +131,11 @@ func GetPlayerBySid(sid int) *Player {
 }
 
 func GetPlayer(pid string) *Player {
-	plr, ok := _plrs_pid[pid]
-	if !ok {
-		return nil
-	}
-	return plr
+	return _plrs_pid[pid]
 }
 
 func GetPlayerByName(name string) *Player {
-	plr, ok := _plrs_name[name]
-	if !ok {
-		return nil
-	}
-	return plr
+	return _plrs_name[name]
 }
 
 func EachOnlinePlayer(fn func(*Player)) {

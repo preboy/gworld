@@ -28,14 +28,16 @@ var handlers = map[string]func(*http.Request) (string, error){
 // ============================================================================
 
 func handle_plrinfo(req *http.Request) (ret string, err error) {
-	plr, err := get_player()
+	plr, err := get_player(req)
 	if err != nil {
 		return
 	}
 
+	println("plr err ", plr, err)
+
 	ret = utils.ObjectToString(plr)
+
+	println("ret", plr.GetId(), plr.GetName(), ret)
 
 	return
 }
-
-
