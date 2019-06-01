@@ -40,12 +40,14 @@
         "game1": {
             "host": "127.0.0.1",
             "port": 9001,
+            "web_svr": ":10001",
             "db_game": "mongodb://118.24.48.149:27017/wm_game1?authSource=admin",
             "db_stat": "mongodb://118.24.48.149:27017/wm_stat1?authSource=admin"
         },
         "game2": {
             "host": "118.24.48.149",
             "port": 9002,
+            "web_svr": ":10002",
             "db_game": "mongodb://118.24.48.149:27017/wm_game2?authSource=admin",
             "db_stat": "mongodb://118.24.48.149:27017/wm_stat2?authSource=admin"
         }

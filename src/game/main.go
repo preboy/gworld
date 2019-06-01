@@ -20,6 +20,7 @@ import (
 	"game/dbmgr"
 	"game/loop"
 	"game/modules/act"
+	"game/modules/websvr"
 	"game/netmgr"
 	"game/player"
 	"game/world"
@@ -81,6 +82,8 @@ func main() {
 	loop.Start()
 
 	netmgr.Start()
+
+	websvr.Start()
 
 	log.Info("server running ...")
 
