@@ -21,15 +21,22 @@ import (
 	"public/protocol/msg"
 )
 
-var count_of_session uint32
+var (
+	seq          uint32 = 1
+	all_sessions        = map[uint32]*Session{}
+)
 
 type Session struct {
+	Id     uint32
 	socket *tcp.Socket
 	player *player.Player
 }
 
+// ============================================================================
+
 func NewSession() *Session {
-	return &Session{}
+	atomic.AddUint32(&seq, 1)
+	return &Session{Id: seq}
 }
 
 func (self *Session) SetSocket(socket *tcp.Socket) {
@@ -75,13 +82,14 @@ func (self *Session) Disconnect() {
 // ============================================================================
 
 func (self *Session) OnOpened() {
-	atomic.AddUint32(&count_of_session, 1)
+	all_sessions[self.Id] = self
 }
 
 func (self *Session) OnClosed() {
+	delete(all_sessions, self.Id)
+
 	self.socket = nil
 
-	atomic.AddUint32(&count_of_session, ^uint32(0))
 	if self.player != nil {
 		self.player.OnLogout()
 		self.player = nil
@@ -177,4 +185,18 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 
 		self.SendPacket(protocol.MSG_SC_LoginResponse, res)
 	}()
+}
+
+// ============================================================================
+
+func Stop() {
+	for _, v := range all_sessions {
+		v.Disconnect()
+	}
+
+	all_sessions = nil
+}
+
+func Count() int {
+	return len(all_sessions)
 }

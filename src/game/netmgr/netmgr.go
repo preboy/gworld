@@ -35,4 +35,6 @@ func Stop() {
 	if server != nil {
 		server.Stop()
 	}
+
+	session.Stop()
 }
