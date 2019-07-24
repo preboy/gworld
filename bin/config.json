@@ -2,13 +2,13 @@
     "common": {
         "plat": "dx",
         "debug_mode": true,
-        "db_c": "mongodb://118.24.48.149:27017/wm_c?authSource=admin"
+        "db_c": "mongodb://mongouser:mongopass@118.24.48.149:27017/wm_c?authSource=admin"
     },
 
     "sdk": {
         "host": "127.0.0.1",
         "port": 8100,
-        "db_sdk": "mongodb://118.24.48.149:27017/wm_sdk?authSource=admin"
+        "db_sdk": "mongodb://mongouser:mongopass@118.24.48.149:27017/wm_sdk?authSource=admin"
     },
 
     "auth": {
@@ -41,15 +41,15 @@
             "host": "127.0.0.1",
             "port": 9001,
             "web_svr": ":10001",
-            "db_game": "mongodb://118.24.48.149:27017/wm_game1?authSource=admin",
-            "db_stat": "mongodb://118.24.48.149:27017/wm_stat1?authSource=admin"
+            "db_game": "mongodb://mongouser:mongopass@118.24.48.149:27017/wm_game1?authSource=admin",
+            "db_stat": "mongodb://mongouser:mongopass@118.24.48.149:27017/wm_stat1?authSource=admin"
         },
         "game2": {
             "host": "118.24.48.149",
             "port": 9002,
             "web_svr": ":10002",
-            "db_game": "mongodb://118.24.48.149:27017/wm_game2?authSource=admin",
-            "db_stat": "mongodb://118.24.48.149:27017/wm_stat2?authSource=admin"
+            "db_game": "mongodb://mongouser:mongopass@118.24.48.149:27017/wm_game2?authSource=admin",
+            "db_stat": "mongodb://mongouser:mongopass@118.24.48.149:27017/wm_stat2?authSource=admin"
         }
     }
 }
