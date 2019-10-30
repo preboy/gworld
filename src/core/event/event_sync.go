@@ -22,40 +22,40 @@ func seq() int64 {
 
 // ============================================================================
 
-func On(evt uint32, f func(uint32, ...interface{})) int64 {
-	if _evts[evt] == nil {
-		_evts[evt] = make(map[int64]func(uint32, ...interface{}))
+func On(id uint32, fn func(uint32, ...interface{})) int64 {
+	if _evts[id] == nil {
+		_evts[id] = make(map[int64]func(uint32, ...interface{}))
 	}
 
 	seq := seq()
 
-	_evts[evt][seq] = f
+	_evts[id][seq] = fn
 
 	return seq
 }
 
-func Cancel(evt uint32, seq int64) {
-	if _evts[evt] != nil {
-		delete(_evts[evt], seq)
+func Cancel(id uint32, seq int64) {
+	if _evts[id] != nil {
+		delete(_evts[id], seq)
 	}
 }
 
-func Once(evt uint32, f func(uint32, ...interface{})) {
-	_once[evt] = append(_once[evt], f)
+func Once(id uint32, fn func(uint32, ...interface{})) {
+	_once[id] = append(_once[id], fn)
 }
 
-func Fire(evt uint32, args ...interface{}) {
-	for _, f := range _evts[evt] {
+func Fire(id uint32, args ...interface{}) {
+	for _, fn := range _evts[id] {
 		utils.ExecuteSafely(func() {
-			f(evt, args...)
+			fn(id, args...)
 		})
 	}
 
-	for _, f := range _once[evt] {
+	for _, fn := range _once[id] {
 		utils.ExecuteSafely(func() {
-			f(evt, args...)
+			fn(id, args...)
 		})
 	}
 
-	_once[evt] = _once[evt][:0]
+	_once[id] = _once[id][:0]
 }
