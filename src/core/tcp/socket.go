@@ -19,6 +19,8 @@ type Socket struct {
 	conn *net.TCPConn
 	w    *sync.WaitGroup
 	s    ISession
+	sndq chan *[]byte
+	stop bool
 }
 
 func NewSocket(conn *net.TCPConn, s ISession) *Socket {
@@ -27,6 +29,8 @@ func NewSocket(conn *net.TCPConn, s ISession) *Socket {
 		conn: conn,
 		s:    s,
 		w:    &sync.WaitGroup{},
+		sndq: make(chan *[]byte, 128),
+		stop: false,
 	}
 }
 
@@ -37,7 +41,23 @@ func (self *Socket) Start() {
 }
 
 func (self *Socket) Stop() {
-	self.conn.Close()
+	if self.stop {
+		return
+	}
+
+	self.stop = true
+	self.s.OnClosed()
+
+	if self.sndq != nil {
+		close(self.sndq)
+		self.sndq = nil
+	}
+
+	if self.conn != nil {
+		self.conn.Close()
+		self.conn = nil
+	}
+
 	self.w.Wait()
 }
 
@@ -45,6 +65,7 @@ func (self *Socket) rt_recv() {
 	self.w.Add(1)
 	defer func() {
 		self.w.Done()
+		self.Stop()
 	}()
 
 J:
@@ -80,29 +101,51 @@ J:
 		}
 		self.s.OnRecvPacket(NewPacket(code, body))
 	}
-
-	self.s.OnClosed()
-	self.conn.Close()
 }
 
 func (self *Socket) rt_send() {
 	self.w.Add(1)
 	defer func() {
 		self.w.Done()
+		self.Stop()
 	}()
 
-	// todo
+	for {
+		select {
+		case buf, ok := <-self.sndq:
+			if !ok {
+				return
+			}
+
+			L := len(self.sndq)
+			for L > 0 && len(*buf) < 4096 {
+				*buf = append(*buf, *<-self.sndq...)
+				L--
+			}
+
+			n, err := self.conn.Write(*buf)
+			if err != nil {
+				fmt.Println("send data failed !")
+				return
+			}
+
+			if n != len(*buf) {
+				fmt.Println("send data unfinished !")
+				return
+			}
+
+			if L == 0 {
+				time.Sleep(time.Duration(100) * time.Millisecond)
+			}
+		}
+	}
 }
 
-// 发送数据可以另外弄一个goroutine
 func (self *Socket) Send(data []byte) {
-	n, err := self.conn.Write(data)
-	if err != nil {
-		fmt.Println("Write err:", err)
-		self.Stop()
-	} else if n < len(data) {
-		fmt.Println("Write dealy")
-		time.Sleep(100 * time.Millisecond)
-		self.Send(data[n:])
-	}
+	defer func() {
+		fmt.Println("Send Error !")
+		recover()
+	}()
+
+	self.sndq <- &data
 }
