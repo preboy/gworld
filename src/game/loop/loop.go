@@ -79,13 +79,13 @@ func (self *Loop) working() {
 
 	go func() {
 
-	OUT:
+	OUTER:
 		for {
 			busy = false
 
 			select {
 			case <-self.q:
-				break OUT
+				break OUTER
 			case talk := <-self.talks:
 				self.do_talk(talk)
 				busy = true

@@ -88,12 +88,15 @@ func (self *Session) OnOpened() {
 func (self *Session) OnClosed() {
 	delete(all_sessions, self.Id)
 
-	self.socket = nil
+	loop.Get().PostFunc(func() {
+		plr := self.player
+		if plr != nil {
+			plr.OnLogout()
+		}
+	})
 
-	if self.player != nil {
-		self.player.OnLogout()
-		self.player = nil
-	}
+	self.socket = nil
+	self.player = nil
 }
 
 // session interface impl
