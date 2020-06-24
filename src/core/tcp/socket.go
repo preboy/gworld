@@ -142,10 +142,11 @@ func (self *Socket) rt_send() {
 }
 
 func (self *Socket) Send(data []byte) {
-	defer func() {
-		fmt.Println("Send Error !")
-		recover()
-	}()
+	defer func() { recover() }()
 
-	self.sndq <- &data
+	select {
+	case self.sndq <- &data:
+	default:
+		println("write queue full")
+	}
 }

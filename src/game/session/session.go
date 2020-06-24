@@ -115,6 +115,18 @@ func (self *Session) OnRecvPacket(packet *tcp.Packet) {
 		self.on_auth(packet)
 	} else {
 		log.Error("unknown packet in session: %d", packet.Opcode)
+
+		/*
+			l := uint16(len(packet.Data))
+			b := make([]byte, 0, l+2+2)
+			buf := bytes.NewBuffer(b)
+
+			binary.Write(buf, binary.LittleEndian, uint16(len(packet.Data)))
+			binary.Write(buf, binary.LittleEndian, packet.Opcode)
+			binary.Write(buf, binary.LittleEndian, packet.Data)
+
+			self.socket.Send(buf.Bytes())
+		*/
 	}
 }
 
