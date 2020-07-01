@@ -10,13 +10,13 @@ func log_prefix(ty int) string {
 	case 1:
 		return "[" + get_time_string() + "] "
 	case 2:
-		return "\033[1;36m[" + get_time_string() + "] "
+		return "[" + get_time_string() + "]\033[1;36m "
 	case 3:
-		return "\033[1;33m[" + get_time_string() + "] "
+		return "[" + get_time_string() + "]\033[1;33m "
 	case 4:
-		return "\033[1;31m[" + get_time_string() + "] "
+		return "[" + get_time_string() + "]\033[1;31m "
 	case 5:
-		return "\033[1;35m[" + get_time_string() + "] "
+		return "[" + get_time_string() + "]\033[1;35m "
 	}
 	return ""
 }
