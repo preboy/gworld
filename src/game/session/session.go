@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"sync"
 	"sync/atomic"
 
 	"core"
@@ -24,6 +25,7 @@ import (
 var (
 	seq          uint32 = 1
 	all_sessions        = map[uint32]*Session{}
+	lock                = sync.Mutex{}
 )
 
 type Session struct {
@@ -82,11 +84,15 @@ func (self *Session) Disconnect() {
 // ============================================================================
 
 func (self *Session) OnOpened() {
+	lock.Lock()
 	all_sessions[self.Id] = self
+	lock.Unlock()
 }
 
 func (self *Session) OnClosed() {
+	lock.Lock()
 	delete(all_sessions, self.Id)
+	lock.Unlock()
 
 	loop.Get().PostFunc(func() {
 		plr := self.player
@@ -205,6 +211,9 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 // ============================================================================
 
 func Stop() {
+	defer lock.Unlock()
+	lock.Lock()
+
 	for _, v := range all_sessions {
 		v.Disconnect()
 	}
@@ -213,5 +222,8 @@ func Stop() {
 }
 
 func Count() int {
+	defer lock.Unlock()
+	lock.Lock()
+
 	return len(all_sessions)
 }
