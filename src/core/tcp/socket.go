@@ -3,10 +3,11 @@ package tcp
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"net"
 	"sync"
 	"time"
+
+	"core/log"
 )
 
 type ISession interface {
@@ -77,7 +78,7 @@ J:
 		for l < 4 {
 			n, err := self.conn.Read(head[l:4])
 			if err != nil || n == 0 {
-				fmt.Println("read err:", err)
+				log.GetLogger().Println("read err:", err)
 				break J
 			}
 			l += n
@@ -94,7 +95,7 @@ J:
 		for uint16(l) < size {
 			n, err := self.conn.Read(body[l:size])
 			if err != nil || n == 0 {
-				fmt.Println("read err:", err)
+				log.GetLogger().Println("read err:", err)
 				break J
 			}
 			l += n
@@ -125,12 +126,12 @@ func (self *Socket) rt_send() {
 
 			n, err := self.conn.Write(*buf)
 			if err != nil {
-				fmt.Println("send data failed !")
+				log.GetLogger().Println("send data failed !")
 				return
 			}
 
 			if n != len(*buf) {
-				fmt.Println("send data unfinished !")
+				log.GetLogger().Println("send data unfinished !")
 				return
 			}
 

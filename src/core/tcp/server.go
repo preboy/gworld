@@ -1,9 +1,10 @@
 package tcp
 
 import (
-	"fmt"
 	"net"
 	"sync"
+
+	"core/log"
 )
 
 type TcpServer struct {
@@ -49,7 +50,7 @@ func (server *TcpServer) rt_accept() {
 	for {
 		conn, err := server.listener.AcceptTCP()
 		if err != nil {
-			fmt.Println("Error AcceptTCP:", err)
+			log.GetLogger().Println("Error AcceptTCP:", err)
 			break
 		}
 		server.f(conn)
