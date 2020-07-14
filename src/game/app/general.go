@@ -20,12 +20,10 @@ func GeneralPlayerID() (string, string) {
 		_lock.Unlock()
 	}()
 
-	sd := GetServerData()
+	SeqId := GetServerData().GetSeqId()
 
-	sd.IdSeq++
-
-	pid := fmt.Sprintf("%s_%05d", GetGameId(), sd.IdSeq)
-	name := fmt.Sprintf("%s-finder_%05d", GetGameId(), sd.IdSeq)
+	pid := fmt.Sprintf("%s_%05d", GetGameId(), SeqId)
+	name := fmt.Sprintf("%s-finder_%05d", GetGameId(), SeqId)
 
 	return pid, name
 }

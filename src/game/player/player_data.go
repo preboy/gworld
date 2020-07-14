@@ -36,12 +36,14 @@ type PlayerData struct {
 	Svr  string `bson:"svr"`
 	SDK  string `bson:"sdk"`
 
-	Exp   uint64     `bson:"exp"`  // 经验
-	Lv    uint32     `bson:"lv"`   // 等级
-	Vip   uint32     `bson:"vip"`  // VIP等级
-	Male  bool       `bson:"male"` // 性别(默认:女)
-	Heros hero_map_t `bson:"heros"`
-	Items item_map_t `bson:"items"`
+	Exp  uint64 `bson:"exp"`  // 经验
+	Lv   uint32 `bson:"lv"`   // 等级
+	Vip  uint32 `bson:"vip"`  // VIP等级
+	Male bool   `bson:"male"` // 性别(默认:女)
+
+	Heros     hero_map_t     `bson:"heros"`
+	Items     item_map_t     `bson:"items"`
+	Instances instance_map_t `bson:"instances"`
 
 	CreateTs   time.Time `bson:"create_ts"`   // 创建角色时间
 	LoginTs    time.Time `bson:"login_ts"`    // 最近登录时间
@@ -65,6 +67,9 @@ func (self *PlayerData) Init(plr *Player) {
 	}
 	if self.Items == nil {
 		self.Items = make(item_map_t)
+	}
+	if self.Instances == nil {
+		self.Instances = make(instance_map_t)
 	}
 
 	if self.Growth == nil {

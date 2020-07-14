@@ -11,7 +11,7 @@ import (
 type achv_t struct {
 	Id       int32 // achv id
 	GrowthId int32
-	Token    bool
+	Taken    bool
 }
 
 type achv_map_t map[int32]*achv_t
