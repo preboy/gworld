@@ -3,6 +3,7 @@ package player
 import (
 	"game/modules/achv"
 	"game/modules/quest"
+	"game/modules/task"
 )
 
 func (self *Player) GetId() string {
@@ -27,4 +28,8 @@ func (self *Player) GetAchv() *achv.Achv {
 
 func (self *Player) GetQuest() *quest.Quest {
 	return self.data.Quest
+}
+
+func (self *Player) GetTask() *task.Task {
+	return self.data.Task
 }

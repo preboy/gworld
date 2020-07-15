@@ -6,11 +6,14 @@ import (
 	"core/db"
 	"core/log"
 	"core/utils"
+
 	"game/app"
 	"game/dbmgr"
 	"game/modules/achv"
 	"game/modules/chapter"
 	"game/modules/quest"
+	"game/modules/task"
+
 	"public/protocol/msg"
 )
 
@@ -55,6 +58,7 @@ type PlayerData struct {
 	Achv    *achv.Achv       `bson:"achv"`
 	Quest   *quest.Quest     `bson:"quest"`
 	Chapter *chapter.Chapter `bson:"chapter"`
+	Task    *task.Task       `bson:"task"`
 }
 
 // ============================================================================
@@ -91,6 +95,11 @@ func (self *PlayerData) Init(plr *Player) {
 		self.Chapter = chapter.NewChapter()
 	}
 	self.Chapter.Init(plr)
+
+	if self.Task == nil {
+		self.Task = task.NewTask()
+	}
+	self.Task.Init(plr)
 }
 
 func (self *PlayerData) to_player_info() *PlayerInfo {
