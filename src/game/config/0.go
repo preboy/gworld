@@ -43,6 +43,7 @@ var (
 		CondConf,
 		BreakConf,
 		ChapterConf,
+		TaskConf,
 	}
 )
 
@@ -68,7 +69,7 @@ func LoadAll(launch bool) {
 		}
 	}
 
-	log.Info("Loading Configs COMPLETE !!!")
+	log.Info("Loading Configs FINISHED !!!")
 
 	event.Fire(constant.EVT_SYS_ConfigLoaded, launch)
 }

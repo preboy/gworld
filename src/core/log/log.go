@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 )
 
 type Logger struct {
@@ -42,6 +43,10 @@ func (self *Logger) Error(format string, a ...interface{}) {
 func (self *Logger) Fatal(format string, a ...interface{}) {
 	s := log_prefix(5) + fmt.Sprintf(format, a...) + log_suffix()
 	self._write_string(s)
+
+	time.Sleep(time.Second * 3)
+	self.Stop()
+	panic("")
 }
 
 func (self *Logger) Go() {

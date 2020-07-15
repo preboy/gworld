@@ -49,7 +49,6 @@ func Error(format string, a ...interface{}) {
 
 func Fatal(format string, a ...interface{}) {
 	gLogger.Fatal(format, a...)
-	panic("FATAL")
 }
 
 // aux function
