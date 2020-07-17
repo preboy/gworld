@@ -24,6 +24,7 @@ exporter jl excel/item_道具表.xlsx                  Item
 exporter jl excel/market_集市表.xlsx                Market
 
 exporter jl excel/activity_活动表.xlsx              Activity
+exporter jl excel/task_个人活动表.xlsx              Task
 
 exporter jl excel/refine_精炼表.xlsx                RefineNormal
 exporter jl excel/refine_精炼表.xlsx                RefineSuper

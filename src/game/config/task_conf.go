@@ -8,11 +8,12 @@ import (
 
 type Task struct {
 	Id      uint32      `json:"id"`
+	Dur     uint32      `json:"dur"`
+	Type    uint32      `json:"type"`
+	CondId  uint32      `json:"conds"`
+	Rewards []*ItemConf `json:"rewards"`
 	Title   string      `json:"title"`
 	Desc    string      `json:"desc"`
-	Type    uint32      `json:"type"`
-	Conds   []*TaskCond `json:"conds"`
-	Rewards []*ItemConf `json:"rewards"`
 }
 
 type TaskTable struct {
