@@ -18,6 +18,7 @@ const (
 	ItemLog_HeroLvUp                    // 英雄升级
 	ItemLog_HeroRefine                  // 英雄精炼
 	ItemLog_UseItem                     // 使用道具
+	ItemLog_TaskDraw                    // 提交个人活动
 
 	ItemLog_GM = 9999 // GM发放
 )

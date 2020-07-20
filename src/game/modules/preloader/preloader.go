@@ -7,3 +7,8 @@ import (
 )
 
 // and so on
+
+import (
+	// load all task
+	_ "game/modules/task/task_001"
+)
