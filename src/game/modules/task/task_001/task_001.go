@@ -4,6 +4,8 @@ import (
 	"core/event"
 	"game/constant"
 	"game/modules/task"
+
+	"game/player"
 )
 
 // ============================================================================
@@ -49,7 +51,8 @@ func init() {
 
 	// 注册事件
 	event.On(constant.Evt_Plr_Login, func(evt uint32, args ...interface{}) {
-		plr := args[0].(task.IPlayer)
+		pid := args[0].(string)
+		plr := player.GetPlayer(pid)
 		data := _this_task.GetTaskData(plr)
 		if data == nil {
 			return

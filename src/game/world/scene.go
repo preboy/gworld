@@ -18,7 +18,7 @@ func (self *Scene) GetObject(id uint32) *Object {
 }
 
 func (self *Scene) DelObject(obj *Object) {
-	self.objs[obj.GetId()] = nil
+	delete(self.objs, obj.GetId())
 }
 
 func (self *Scene) Objects() map[uint32]*Object {

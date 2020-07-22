@@ -3,6 +3,8 @@ package task
 import (
 	"time"
 
+	"gopkg.in/mgo.v2/bson"
+
 	"core/event"
 	"core/log"
 	"game/app"
@@ -66,12 +68,46 @@ func (self *TaskItem) SetOver() {
 }
 
 // ============================================================================
+// task_map_t
+
+type task_map_t map[uint32]*TaskItem
+
+// ============================================================================
+// marshalling
+
+func (self task_map_t) GetBSON() (interface{}, error) {
+	var arr []*TaskItem
+
+	for _, v := range self {
+		arr = append(arr, v)
+	}
+
+	return arr, nil
+}
+
+func (self *task_map_t) SetBSON(raw bson.Raw) error {
+	var arr []*TaskItem
+
+	err := raw.Unmarshal(&arr)
+	if err != nil {
+		return err
+	}
+
+	*self = make(task_map_t)
+	for _, v := range arr {
+		(*self)[v.Id] = v
+	}
+
+	return nil
+}
+
+// ============================================================================
 // Task
 
 type Task struct {
 	plr IPlayer
 
-	Tasks map[uint32]*TaskItem
+	Tasks task_map_t
 }
 
 func NewTask() *Task {
@@ -81,7 +117,7 @@ func NewTask() *Task {
 func (self *Task) Init(plr IPlayer) {
 	self.plr = plr
 
-	self.Tasks = make(map[uint32]*TaskItem)
+	self.Tasks = make(task_map_t)
 }
 
 func (self *Task) Add(id uint32) bool {
