@@ -74,7 +74,7 @@ _start()
         $svr_exec &>> $svr_name.err &
         pid=$!
         echo $pid > $svr_name.pid
-        sleep 2
+        sleep 1
         if _is_running "$svr_exec" $pid; then
             echo -e "\033[32m[OK]\033[0m"
         else
