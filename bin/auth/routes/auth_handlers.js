@@ -10,7 +10,7 @@ const handlers = {
 
         request.post(
             {
-                url:  "http://118.24.48.149:8100/acct/verify",
+                url:  "http://115.159.6.66:8100/acct/verify",
                 form: form,
                 useQuerystring: true,
             },
