@@ -25,7 +25,8 @@ _is_running()
     local cmd=$1
     local pid=$2
 
-    if [ -d /proc/$pid ] && [[ "$(</proc/$pid/cmdline)" == *"${cmd// /}"* ]]; then
+    read cmdline < /proc/$pid/cmdline
+    if [ -d /proc/$pid ] && [[ "$cmdline" == *"${cmd// /}"* ]]; then
         return 0
     else
         return 1
