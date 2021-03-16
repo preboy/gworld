@@ -78,7 +78,7 @@ J:
 		for l < 4 {
 			n, err := self.conn.Read(head[l:4])
 			if err != nil || n == 0 {
-				log.GetLogger().Println("read err:", err)
+				log.Debug("read err: %s", err)
 				break J
 			}
 			l += n
@@ -95,7 +95,7 @@ J:
 		for uint16(l) < size {
 			n, err := self.conn.Read(body[l:size])
 			if err != nil || n == 0 {
-				log.GetLogger().Println("read err:", err)
+				log.Debug("read err: %s", err)
 				break J
 			}
 			l += n
@@ -126,12 +126,12 @@ func (self *Socket) rt_send() {
 
 			n, err := self.conn.Write(*buf)
 			if err != nil {
-				log.GetLogger().Println("send data failed !")
+				log.Debug("send data failed !")
 				return
 			}
 
 			if n != len(*buf) {
-				log.GetLogger().Println("send data unfinished !")
+				log.Debug("send data unfinished !")
 				return
 			}
 
