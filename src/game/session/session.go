@@ -37,8 +37,8 @@ type Session struct {
 // ============================================================================
 
 func NewSession() *Session {
-	atomic.AddUint32(&seq, 1)
-	return &Session{Id: seq}
+	new_seq := atomic.AddUint32(&seq, 1)
+	return &Session{Id: new_seq}
 }
 
 func (self *Session) SetSocket(socket *tcp.Socket) {
