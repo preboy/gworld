@@ -1,6 +1,7 @@
 #!/bin/sh
 
-export GOPATH=$(pwd)
+go env -w GO111MODULE=off
+export GOPATH=`pwd`
 echo GOPATH=$GOPATH
 
 # -----------------------------------------------------------------------------
