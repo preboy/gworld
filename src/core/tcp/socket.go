@@ -3,6 +3,7 @@ package tcp
 import (
 	"bytes"
 	"encoding/binary"
+	"io"
 	"net"
 	"sync"
 	"time"
@@ -69,37 +70,29 @@ func (self *Socket) rt_recv() {
 		self.Stop()
 	}()
 
-J:
 	for {
 		self.conn.SetReadDeadline(time.Now().Add(5 * time.Minute))
 
 		head := make([]byte, 4)
-		var l int = 0
-		for l < 4 {
-			n, err := self.conn.Read(head[l:4])
-			if err != nil || n == 0 {
-				log.Debug("read err: %s", err)
-				break J
-			}
-			l += n
+		_, e := io.ReadFull(self.conn, head)
+		if e != nil {
+			log.Debug("read head err: %s", e)
+			break
 		}
-		buff := bytes.NewReader(head)
 
 		var size uint16
 		var code uint16
+		buff := bytes.NewReader(head)
 		binary.Read(buff, binary.LittleEndian, &size)
 		binary.Read(buff, binary.LittleEndian, &code)
 
-		l = 0
 		body := make([]byte, size)
-		for uint16(l) < size {
-			n, err := self.conn.Read(body[l:size])
-			if err != nil || n == 0 {
-				log.Debug("read err: %s", err)
-				break J
-			}
-			l += n
+		_, e = io.ReadFull(self.conn, body)
+		if e != nil {
+			log.Debug("read body err: %s", e)
+			break
 		}
+
 		self.s.OnRecvPacket(NewPacket(code, body))
 	}
 }
