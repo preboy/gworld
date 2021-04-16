@@ -9,7 +9,7 @@ let _creator_tid;
 
 _creator_tid = setInterval(() => {
 
-    let c = net.createConnection(9002, "118.24.48.149", () => {   // 100.64.15.28
+    let c = net.createConnection(9002, "115.159.6.66", () => {
         sessions[c.sid] = new ss.Session(c);
     });
 
