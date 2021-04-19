@@ -1,14 +1,18 @@
 #!/bin/sh
 
-go env -w GO111MODULE=off
-export GOPATH=`pwd`
-echo GOPATH=$GOPATH
-
 # -----------------------------------------------------------------------------
 
-echo "Installing server ..."
-go install -gcflags="-N -l" game
-go install -gcflags="-N -l" router
+platform=`go env GOOS`
+
+echo "Installing server for '$platform' ..."
+
+if platform="windows";
+then
+    go build -o bin/game.exe  -gcflags="-N -l" game/main.go
+else
+    go build -o bin/game  -gcflags="-N -l" game/main.go
+fi;
+
 
 
 # -----------------------------------------------------------------------------
