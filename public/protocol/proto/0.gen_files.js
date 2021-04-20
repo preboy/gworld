@@ -41,10 +41,13 @@ function gen_handler_go() {
 `package player
 
 import (
-    "core/tcp"
+    "gworld/core/log"
+    "gworld/core/tcp"
+    "gworld/core/utils"
+    "gworld/public/protocol"
+    "gworld/public/protocol/msg"
+
     "github.com/gogo/protobuf/proto"
-    "public/protocol"
-    "public/protocol/msg"
 )
 
 `
@@ -64,6 +67,15 @@ import (
     req := &msg.${match[1]}{}
     res := &msg.${match.resp}{}
     proto.Unmarshal(packet.Data, req)
+    if err != nil {
+        log.Warning("proto.Unmarshal failed: %s", ${match[1]})
+        return
+    }
+
+    if app.InDebugMode() {
+        str := utils.ObjectToString(req)
+        log.Debug("RecvPacket: %d, %s, %s", packet.Opcode, plr.GetId(), str)
+    }
 
     // TODO
 
@@ -151,7 +163,7 @@ function gen_register_go(fn) {
 package player
 
 import (
-    "public/protocol"
+    "gworld/public/protocol"
 )
 
 func init() {
