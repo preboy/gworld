@@ -86,14 +86,16 @@ func (self *Session) Disconnect() {
 
 func (self *Session) OnOpened() {
 	lock.Lock()
+	defer lock.Unlock()
+
 	all_sessions[self.Id] = self
-	lock.Unlock()
 }
 
 func (self *Session) OnClosed() {
 	lock.Lock()
+	defer lock.Unlock()
+
 	delete(all_sessions, self.Id)
-	lock.Unlock()
 
 	loop.Get().PostFunc(func() {
 		plr := self.player
@@ -212,8 +214,8 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 // ============================================================================
 
 func Stop() {
-	defer lock.Unlock()
 	lock.Lock()
+	defer lock.Unlock()
 
 	for _, v := range all_sessions {
 		v.Disconnect()
@@ -223,8 +225,8 @@ func Stop() {
 }
 
 func Count() int {
-	defer lock.Unlock()
 	lock.Lock()
+	defer lock.Unlock()
 
 	return len(all_sessions)
 }

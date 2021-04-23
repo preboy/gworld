@@ -3,11 +3,11 @@ package loop
 // the main loop in game
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
 	"gworld/core/event"
+	"gworld/core/log"
 	"gworld/core/schedule"
 	"gworld/core/tcp"
 	"gworld/core/timer"
@@ -69,53 +69,57 @@ func (self *Loop) stop() {
 
 func (self *Loop) working() {
 	self.w.Add(1)
+
 	defer func() {
 		self.w.Done()
 	}()
 
 	self.on_start()
 
-	var busy bool
-
 	go func() {
 
-	OUTER:
-		for {
-			busy = false
+		func() {
+			var busy bool
 
-			select {
-			case <-self.q:
-				break OUTER
-			case talk := <-self.talks:
-				self.do_talk(talk)
-				busy = true
-			default:
-			}
+			for {
+				busy = false
 
-			if self.evtMgr.Update() {
-				busy = true
-			}
+				select {
+				case <-self.q:
+					return
 
-			if self.timerMgr.Update() {
-				busy = true
-			}
+				case talk := <-self.talks:
+					self.do_talk(talk)
+					busy = true
 
-			if self.do_update_secondly() {
-				busy = true
-			}
+				default:
+				}
 
-			if self.do_funcs() {
-				busy = true
-			}
+				if self.evtMgr.Update() {
+					busy = true
+				}
 
-			if !busy {
-				busy = self.do_idle()
-			}
+				if self.timerMgr.Update() {
+					busy = true
+				}
 
-			if !busy {
-				time.Sleep(time.Duration(10) * time.Millisecond)
+				if self.do_update_secondly() {
+					busy = true
+				}
+
+				if self.do_funcs() {
+					busy = true
+				}
+
+				if !busy {
+					busy = self.do_idle()
+				}
+
+				if !busy {
+					time.Sleep(time.Duration(10) * time.Millisecond)
+				}
 			}
-		}
+		}()
 
 		self.on_stop()
 	}()
@@ -197,7 +201,7 @@ func (self *Loop) OnEvent(evt *event.Event) {
 }
 
 func (self *Loop) OnTimer(id uint64) {
-	fmt.Println("Loop.OnTimer:", id)
+	log.Info("Loop.OnTimer:", id)
 }
 
 // ============================================================================

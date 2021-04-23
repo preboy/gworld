@@ -7,8 +7,10 @@ echo "Installing server for '$platform' ..."
 
 if [ $platform = "windows" ];
 then
+    go build -o bin/ddz.exe  -gcflags="-N -l" ddz/main.go
     go build -o bin/game.exe  -gcflags="-N -l" game/main.go
 else
+    go build -o bin/ddz  -gcflags="-N -l" ddz/main.go
     go build -o bin/game  -gcflags="-N -l" game/main.go
 fi;
 

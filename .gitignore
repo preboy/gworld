@@ -4,6 +4,7 @@
 /bin/*.exe
 /bin/*.bak
 /bin/*.exe~
+/bin/*.exe
 /bin/*.cpu
 /bin/*.memory
 /bin/game
@@ -29,3 +30,4 @@ note.txt
 vendor
 main.exe
 ddz.log
+ddz.exe

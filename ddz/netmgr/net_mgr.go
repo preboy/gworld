@@ -5,8 +5,8 @@ import (
 	"sync"
 
 	"gworld/core/tcp"
-	"gworld/game/player"
-	"gworld/game/session"
+	"gworld/ddz/loop"
+	"gworld/ddz/player"
 )
 
 var (
@@ -14,9 +14,9 @@ var (
 )
 
 var (
-	seq          uint32 = 1
-	all_sessions        = map[uint32]*Session{}
-	lock                = sync.Mutex{}
+	seq      uint32 = 1
+	sessions        = map[uint32]*session{}
+	lock            = sync.Mutex{}
 )
 
 type Session struct {
@@ -26,13 +26,22 @@ type Session struct {
 }
 
 // ----------------------------------------------------------------------------
+// init
+
+func init() {
+	loop.Register(func() {
+		update_chunks()
+	})
+}
+
+// ----------------------------------------------------------------------------
 // export
 
 func Init() {
 	server = tcp.NewTcpServer()
 	server.Start("0.0.0.0:12345", func(conn *net.TCPConn) {
 
-		sess := session.NewSession()
+		sess := NewSession()
 		sock := tcp.NewSocket(conn, sess)
 
 		sess.SetSocket(sock)
@@ -45,5 +54,10 @@ func Release() {
 		server.Stop()
 	}
 
-	session.Stop()
+	_lock.Lock()
+	defer _lock.Unlock()
+
+	for _, s := range sessions {
+		s.Disconnect()
+	}
 }
