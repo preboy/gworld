@@ -50,7 +50,7 @@ func (server *TcpServer) rt_accept() {
 	for {
 		conn, err := server.listener.AcceptTCP()
 		if err != nil {
-			log.GetLogger().Println("Error AcceptTCP:", err)
+			log.Println("Error AcceptTCP:", err)
 			break
 		}
 		server.f(conn)
