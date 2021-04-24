@@ -12,6 +12,9 @@ var (
 
 	// please priority queue instead
 	_timerq = []*timer_t{}
+
+	_next      = []func(){}
+	_next_once = map[string]func(){}
 )
 
 type timer_t struct {
@@ -93,5 +96,31 @@ func ClearTimer(tid int64) {
 		if t.id == tid {
 			_timerq = append(_timerq[:k], _timerq[k+1:]...)
 		}
+	}
+}
+
+func Next(fn func()) {
+	_next = append(_next, fn)
+}
+
+func NextOnce(key string, fn func()) {
+	if _, ok := _next_once[key]; !ok {
+		_next_once[key] = fn
+	}
+}
+
+func DoNext() {
+	if len(_next) > 0 {
+		for _, fn := range _next {
+			fn()
+		}
+		_next = _next[:0]
+	}
+
+	if len(_next_once) > 0 {
+		for _, fn := range _next {
+			fn()
+		}
+		_next_once = map[string]func(){}
 	}
 }

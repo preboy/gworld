@@ -1,0 +1,5 @@
+package lobby
+
+func init() {
+
+}

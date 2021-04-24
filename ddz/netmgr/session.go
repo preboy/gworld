@@ -7,9 +7,6 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/gogo/protobuf/proto"
-
-	"gworld/core/log"
 	"gworld/core/tcp"
 	"gworld/ddz/loop"
 	"gworld/ddz/player"
@@ -50,23 +47,18 @@ func (self *session) SetPlayer(player *player.Player) {
 	self.player = player
 }
 
-func (self *session) SendPacket(opcode uint16, obj proto.Message) {
+func (self *session) SendPacket(opcode uint16, data []byte) {
 	if self.socket == nil {
 		return
 	}
 
-	data, err := proto.Marshal(obj)
-	if err == nil {
-		l := uint16(len(data))
-		b := make([]byte, 0, l+2+2)
-		buf := bytes.NewBuffer(b)
-		binary.Write(buf, binary.LittleEndian, uint16(len(data)))
-		binary.Write(buf, binary.LittleEndian, opcode)
-		binary.Write(buf, binary.LittleEndian, data)
-		self.socket.Send(buf.Bytes())
-	} else {
-		log.Error("SendPacket Error: failed to Marshal obj")
-	}
+	l := uint16(len(data))
+	b := make([]byte, 0, l+2+2)
+	buf := bytes.NewBuffer(b)
+	binary.Write(buf, binary.LittleEndian, l)
+	binary.Write(buf, binary.LittleEndian, opcode)
+	binary.Write(buf, binary.LittleEndian, data)
+	self.socket.Send(buf.Bytes())
 }
 
 func (self *session) Disconnect() {
@@ -124,6 +116,7 @@ func update_chunks() {
 		select {
 		case c := <-_chunks:
 			c.s.player.OnPacket(c.p)
+			loop.DoNext()
 		default:
 			return
 		}

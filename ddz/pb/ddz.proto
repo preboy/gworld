@@ -1,0 +1,22 @@
+syntax = "proto3";
+package pb;
+
+
+message RegisterRequest {
+    enum MsgID
+    {
+        NotUsed = 0; OpCode  = 10001;
+    }
+
+    string name = 1;
+}
+
+
+message RegisterResponse {
+    enum MsgID
+    {
+        NotUsed = 0; OpCode  = 10002;
+    }
+
+    int32 ret = 1;
+}
