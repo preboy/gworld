@@ -1,7 +1,6 @@
 package lobby
 
 import (
-	"gworld/core/utils"
 	"gworld/ddz/loop"
 )
 
@@ -38,10 +37,7 @@ func update() {
 // 人数够了就创建一场斗地主比赛
 func create_match() {
 	if len(_pids) >= 3 {
-		m := &Match{
-			ID: utils.SeqU32(),
-		}
-
+		m := NewMatch()
 		m.Init(_pids[:3])
 
 		_pids = _pids[3:]
