@@ -2,40 +2,27 @@ package event
 
 import (
 	"gworld/core/utils"
-
-	"sync/atomic"
 )
 
 var (
-	_evts = map[uint32]map[int64]func(uint32, ...interface{}){}
+	_evts = map[uint32]map[uint64]func(uint32, ...interface{}){}
 	_once = map[uint32][]func(uint32, ...interface{}){}
 )
 
-var (
-	_seq int64 = 1
-)
-
 // ============================================================================
 
-func seq() int64 {
-	return atomic.AddInt64(&_seq, 1)
-}
-
-// ============================================================================
-
-func On(id uint32, fn func(uint32, ...interface{})) int64 {
+func On(id uint32, fn func(uint32, ...interface{})) uint64 {
 	if _evts[id] == nil {
-		_evts[id] = make(map[int64]func(uint32, ...interface{}))
+		_evts[id] = make(map[uint64]func(uint32, ...interface{}))
 	}
 
-	seq := seq()
-
+	seq := utils.SeqU64()
 	_evts[id][seq] = fn
 
 	return seq
 }
 
-func Cancel(id uint32, seq int64) {
+func Cancel(id uint32, seq uint64) {
 	if _evts[id] != nil {
 		delete(_evts[id], seq)
 	}

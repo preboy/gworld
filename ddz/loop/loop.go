@@ -1,12 +1,11 @@
 package loop
 
 import (
-	"sync/atomic"
+	"gworld/core/utils"
 	"time"
 )
 
 var (
-	_seq    = int64(1)
 	_once   = []func(){}
 	_update = []func(){}
 
@@ -18,17 +17,10 @@ var (
 )
 
 type timer_t struct {
-	id     int64
+	id     uint64
 	fn     func()
 	end    int64
 	repeat bool
-}
-
-// ----------------------------------------------------------------------------
-// local
-
-func new_seq() int64 {
-	return atomic.AddInt64(&_seq, 1)
 }
 
 // ----------------------------------------------------------------------------
@@ -48,7 +40,7 @@ func Run() {
 
 			// timer
 			if len(_timerq) > 0 {
-				d := map[int64]bool{}
+				d := map[uint64]bool{}
 				n := time.Now().UnixNano() / 1e6
 
 				for _, t := range _timerq {
@@ -88,10 +80,10 @@ func Register(fn func()) {
 
 func SetTimer(fn func(), delay int64, repeat bool) {
 	end := delay + time.Now().UnixNano()/1e6
-	_timerq = append(_timerq, &timer_t{new_seq(), fn, end, repeat})
+	_timerq = append(_timerq, &timer_t{utils.SeqU64(), fn, end, repeat})
 }
 
-func ClearTimer(tid int64) {
+func ClearTimer(tid uint64) {
 	for k, t := range _timerq {
 		if t.id == tid {
 			_timerq = append(_timerq[:k], _timerq[k+1:]...)
