@@ -3,10 +3,10 @@ package utils
 import "sync/atomic"
 
 var (
-	_seq32  int32  = 1
-	_seq64  int64  = 1
-	_sequ32 uint32 = 1
-	_sequ64 uint64 = 1
+	_seq32  int32  = 0
+	_seq64  int64  = 0
+	_sequ32 uint32 = 0
+	_sequ64 uint64 = 0
 )
 
 func Seq32() int32 {
