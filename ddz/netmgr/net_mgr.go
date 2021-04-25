@@ -27,7 +27,7 @@ func Init() {
 	server = tcp.NewTcpServer()
 	server.Start("0.0.0.0:12345", func(conn *net.TCPConn) {
 
-		sess := NewSession()
+		sess := new_session()
 		sock := tcp.NewSocket(conn, sess)
 
 		sess.SetSocket(sock)

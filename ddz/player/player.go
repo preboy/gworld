@@ -39,7 +39,7 @@ func Release() {
 
 type Player struct {
 	PID  string
-	Data *PlayerData
+	Data *player_data
 	Sess comp.ISession
 }
 
@@ -57,7 +57,7 @@ func (self *Player) OnUpdate() {
 }
 
 func (self *Player) OnPacket(packet *tcp.Packet) {
-	e, ok := _msg_executor[int(packet.Opcode)]
+	e, ok := _msg_executor[int32(packet.Opcode)]
 	if !ok {
 		log.Warning("Unknown packet : %s %d", self.PID, packet.Opcode)
 		return
@@ -79,7 +79,7 @@ func (self *Player) OnPacket(packet *tcp.Packet) {
 	str = utils.ObjectToString(res)
 	log.Info("SEND packet: %s, %d, %s", self.PID, packet.Opcode, str)
 
-	self.SendMessage(2, res)
+	self.SendMessage(res)
 }
 
 // ----------------------------------------------------------------------------
@@ -93,7 +93,11 @@ func (self *Player) SetSession(sess comp.ISession) {
 	self.Sess = sess
 }
 
-func (self *Player) SendMessage(opcode uint16, msg proto.Message) {
+func (self *Player) SendMessage(msg Message) {
+	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
+}
+
+func (self *Player) SendProtobufMessage(opcode uint16, msg proto.Message) {
 	if self.Sess == nil {
 		return
 	}

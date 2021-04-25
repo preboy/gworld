@@ -21,14 +21,14 @@ func init() {
 type player_manager struct {
 }
 
-func (self *player_manager) FindPlayer(pid string) comp.IPlayer {
-	return nil
-}
-
 func (self *player_manager) NewPlayer(pid string) comp.IPlayer {
 	plr := &Player{
 		PID: pid,
 	}
 
 	return plr
+}
+
+func (self *player_manager) FindPlayer(pid string) comp.IPlayer {
+	return nil
 }

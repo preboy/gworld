@@ -1,22 +1,16 @@
-syntax = "proto3";
+syntax = "proto2";
 package pb;
 
 
 message RegisterRequest {
-    enum MsgID
-    {
-        NotUsed = 0; OpCode  = 10001;
-    }
+    required int32 OP = 1 [default = 10001 ];
 
-    string name = 1;
+    required string name = 2;
 }
 
 
 message RegisterResponse {
-    enum MsgID
-    {
-        NotUsed = 0; OpCode  = 10002;
-    }
+    required int32 OP = 1 [default = 10002 ];
 
-    int32 ret = 1;
+    required int32 ret = 2;
 }

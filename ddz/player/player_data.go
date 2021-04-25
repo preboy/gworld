@@ -1,4 +1,4 @@
 package player
 
-type PlayerData struct {
+type player_data struct {
 }

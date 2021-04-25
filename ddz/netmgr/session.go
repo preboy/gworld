@@ -31,7 +31,7 @@ type session struct {
 
 // ----------------------------------------------------------------------------
 
-func NewSession() *session {
+func new_session() *session {
 	return &session{
 		Id: utils.SeqU32(),
 	}

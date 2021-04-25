@@ -2,20 +2,22 @@
 // source: ddz.proto
 
 /*
-Package pb is a generated protocol buffer package.
+	Package pb is a generated protocol buffer package.
 
-It is generated from these files:
-	ddz.proto
+	It is generated from these files:
+		ddz.proto
 
-It has these top-level messages:
-	RegisterRequest
-	RegisterResponse
+	It has these top-level messages:
+		RegisterRequest
+		RegisterResponse
 */
 package pb
 
 import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
+
+import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
 
 import io "io"
 
@@ -30,56 +32,24 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
-type RegisterRequest_MsgID int32
-
-const (
-	RegisterRequest_NotUsed RegisterRequest_MsgID = 0
-	RegisterRequest_OpCode  RegisterRequest_MsgID = 10001
-)
-
-var RegisterRequest_MsgID_name = map[int32]string{
-	0:     "NotUsed",
-	10001: "OpCode",
-}
-var RegisterRequest_MsgID_value = map[string]int32{
-	"NotUsed": 0,
-	"OpCode":  10001,
-}
-
-func (x RegisterRequest_MsgID) String() string {
-	return proto.EnumName(RegisterRequest_MsgID_name, int32(x))
-}
-func (RegisterRequest_MsgID) EnumDescriptor() ([]byte, []int) { return fileDescriptorDdz, []int{0, 0} }
-
-type RegisterResponse_MsgID int32
-
-const (
-	RegisterResponse_NotUsed RegisterResponse_MsgID = 0
-	RegisterResponse_OpCode  RegisterResponse_MsgID = 10002
-)
-
-var RegisterResponse_MsgID_name = map[int32]string{
-	0:     "NotUsed",
-	10002: "OpCode",
-}
-var RegisterResponse_MsgID_value = map[string]int32{
-	"NotUsed": 0,
-	"OpCode":  10002,
-}
-
-func (x RegisterResponse_MsgID) String() string {
-	return proto.EnumName(RegisterResponse_MsgID_name, int32(x))
-}
-func (RegisterResponse_MsgID) EnumDescriptor() ([]byte, []int) { return fileDescriptorDdz, []int{1, 0} }
-
 type RegisterRequest struct {
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	OP   *int32 `protobuf:"varint,1,req,name=OP,def=10001" json:"OP,omitempty"`
+	Name string `protobuf:"bytes,2,req,name=name" json:"name"`
 }
 
 func (m *RegisterRequest) Reset()                    { *m = RegisterRequest{} }
 func (m *RegisterRequest) String() string            { return proto.CompactTextString(m) }
 func (*RegisterRequest) ProtoMessage()               {}
 func (*RegisterRequest) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{0} }
+
+const Default_RegisterRequest_OP int32 = 10001
+
+func (m *RegisterRequest) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_RegisterRequest_OP
+}
 
 func (m *RegisterRequest) GetName() string {
 	if m != nil {
@@ -89,13 +59,23 @@ func (m *RegisterRequest) GetName() string {
 }
 
 type RegisterResponse struct {
-	Ret int32 `protobuf:"varint,1,opt,name=ret,proto3" json:"ret,omitempty"`
+	OP  *int32 `protobuf:"varint,1,req,name=OP,def=10002" json:"OP,omitempty"`
+	Ret int32  `protobuf:"varint,2,req,name=ret" json:"ret"`
 }
 
 func (m *RegisterResponse) Reset()                    { *m = RegisterResponse{} }
 func (m *RegisterResponse) String() string            { return proto.CompactTextString(m) }
 func (*RegisterResponse) ProtoMessage()               {}
 func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{1} }
+
+const Default_RegisterResponse_OP int32 = 10002
+
+func (m *RegisterResponse) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_RegisterResponse_OP
+}
 
 func (m *RegisterResponse) GetRet() int32 {
 	if m != nil {
@@ -107,8 +87,6 @@ func (m *RegisterResponse) GetRet() int32 {
 func init() {
 	proto.RegisterType((*RegisterRequest)(nil), "pb.RegisterRequest")
 	proto.RegisterType((*RegisterResponse)(nil), "pb.RegisterResponse")
-	proto.RegisterEnum("pb.RegisterRequest_MsgID", RegisterRequest_MsgID_name, RegisterRequest_MsgID_value)
-	proto.RegisterEnum("pb.RegisterResponse_MsgID", RegisterResponse_MsgID_name, RegisterResponse_MsgID_value)
 }
 func (m *RegisterRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -125,12 +103,17 @@ func (m *RegisterRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Name) > 0 {
-		dAtA[i] = 0xa
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
 		i++
-		i = encodeVarintDdz(dAtA, i, uint64(len(m.Name)))
-		i += copy(dAtA[i:], m.Name)
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
 	}
+	dAtA[i] = 0x12
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(len(m.Name)))
+	i += copy(dAtA[i:], m.Name)
 	return i, nil
 }
 
@@ -149,11 +132,16 @@ func (m *RegisterResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Ret != 0 {
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
 		dAtA[i] = 0x8
 		i++
-		i = encodeVarintDdz(dAtA, i, uint64(m.Ret))
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
 	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Ret))
 	return i, nil
 }
 
@@ -169,19 +157,21 @@ func encodeVarintDdz(dAtA []byte, offset int, v uint64) int {
 func (m *RegisterRequest) Size() (n int) {
 	var l int
 	_ = l
-	l = len(m.Name)
-	if l > 0 {
-		n += 1 + l + sovDdz(uint64(l))
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
 	}
+	l = len(m.Name)
+	n += 1 + l + sovDdz(uint64(l))
 	return n
 }
 
 func (m *RegisterResponse) Size() (n int) {
 	var l int
 	_ = l
-	if m.Ret != 0 {
-		n += 1 + sovDdz(uint64(m.Ret))
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
 	}
+	n += 1 + sovDdz(uint64(m.Ret))
 	return n
 }
 
@@ -199,6 +189,7 @@ func sozDdz(x uint64) (n int) {
 	return sovDdz(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
 func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -228,6 +219,27 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
@@ -256,6 +268,7 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+			hasFields[0] |= uint64(0x00000002)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipDdz(dAtA[iNdEx:])
@@ -271,6 +284,12 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("name")
+	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -278,6 +297,7 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -308,6 +328,27 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Ret", wireType)
 			}
 			m.Ret = 0
@@ -325,6 +366,7 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+			hasFields[0] |= uint64(0x00000002)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipDdz(dAtA[iNdEx:])
@@ -339,6 +381,12 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx += skippy
 		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("ret")
 	}
 
 	if iNdEx > l {
@@ -454,16 +502,15 @@ var (
 func init() { proto.RegisterFile("ddz.proto", fileDescriptorDdz) }
 
 var fileDescriptorDdz = []byte{
-	// 164 bytes of a gzipped FileDescriptorProto
+	// 154 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x49, 0xa9, 0xd2,
-	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0xf2, 0xe0, 0xe2, 0x0f, 0x4a, 0x4d,
-	0xcf, 0x2c, 0x2e, 0x49, 0x2d, 0x0a, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12, 0xe2, 0x62,
-	0xc9, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x02, 0xb3, 0x95, 0x14, 0xb9,
-	0x58, 0x7d, 0x8b, 0xd3, 0x3d, 0x5d, 0x84, 0xb8, 0xb9, 0xd8, 0xfd, 0xf2, 0x4b, 0x42, 0x8b, 0x53,
-	0x53, 0x04, 0x18, 0x84, 0xb8, 0xb9, 0xd8, 0xfc, 0x0b, 0x9c, 0xf3, 0x53, 0x52, 0x05, 0x26, 0xfa,
-	0x29, 0xb9, 0x73, 0x09, 0x20, 0x4c, 0x2a, 0x2e, 0xc8, 0xcf, 0x2b, 0x4e, 0x15, 0x12, 0xe0, 0x62,
-	0x2e, 0x4a, 0x2d, 0x01, 0x9b, 0xc4, 0x1a, 0x04, 0x62, 0x12, 0x34, 0x68, 0x92, 0x9f, 0x93, 0xc0,
-	0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c,
-	0x43, 0x12, 0x1b, 0xd8, 0xbd, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x62, 0x5b, 0xb0, 0xbd,
-	0xbc, 0x00, 0x00, 0x00,
+	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x72, 0xe2, 0xe2, 0x0f, 0x4a, 0x4d,
+	0xcf, 0x2c, 0x2e, 0x49, 0x2d, 0x0a, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12, 0xe5, 0x62,
+	0xf2, 0x0f, 0x90, 0x60, 0x54, 0x60, 0xd2, 0x60, 0xb5, 0x62, 0x35, 0x34, 0x30, 0x30, 0x30, 0x0c,
+	0x62, 0xf2, 0x0f, 0x10, 0x92, 0xe0, 0x62, 0xc9, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x52, 0x60, 0xd2,
+	0xe0, 0x74, 0x62, 0x39, 0x71, 0x4f, 0x9e, 0x21, 0x08, 0x2c, 0xa2, 0xe4, 0xc8, 0x25, 0x80, 0x30,
+	0xa3, 0xb8, 0x20, 0x3f, 0xaf, 0x38, 0x15, 0xd3, 0x10, 0x23, 0xb0, 0x21, 0x62, 0x5c, 0xcc, 0x45,
+	0xa9, 0x25, 0x60, 0x33, 0x58, 0xa1, 0x66, 0x80, 0x04, 0x9c, 0x04, 0x4e, 0x3c, 0x92, 0x63, 0xbc,
+	0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x00, 0x01, 0x00, 0x00,
+	0xff, 0xff, 0x9d, 0x21, 0x23, 0x0f, 0xa8, 0x00, 0x00, 0x00,
 }
