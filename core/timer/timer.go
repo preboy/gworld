@@ -2,23 +2,18 @@ package timer
 
 import (
 	"gworld/core/thread"
+	"gworld/core/utils"
 
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
 var (
-	_timer_id_seq  uint64
 	_curr_millisec uint64
 	_lock          *sync.RWMutex
 	_thread        *thread.Thread
 	_now           time.Time
 )
-
-func new_timer_id() uint64 {
-	return atomic.AddUint64(&_timer_id_seq, 1)
-}
 
 type Timer struct {
 	id       uint64
@@ -66,7 +61,7 @@ func (self *TimerMgr) Update() (busy bool) {
 }
 
 func (self *TimerMgr) CreateTimer(i uint64, r bool, f func()) uint64 {
-	id := new_timer_id()
+	id := utils.SeqU64()
 	timer := &Timer{
 		id:       id,
 		interval: i,

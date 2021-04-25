@@ -34,14 +34,6 @@ func Init() {
 func Release() {
 }
 
-func NewPlayer(pid string) *Player {
-	plr := &Player{
-		PID: pid,
-	}
-
-	return plr
-}
-
 // ----------------------------------------------------------------------------
 // Player
 
@@ -56,6 +48,8 @@ func (self *Player) OnLogin() {
 }
 
 func (self *Player) OnLogout() {
+
+	self.Sess = nil
 	delete(_plrs, self.PID)
 }
 
@@ -88,6 +82,17 @@ func (self *Player) OnPacket(packet *tcp.Packet) {
 	self.SendMessage(2, res)
 }
 
+// ----------------------------------------------------------------------------
+// member
+
+func (self *Player) GetID() string {
+	return self.PID
+}
+
+func (self *Player) SetSession(sess comp.ISession) {
+	self.Sess = sess
+}
+
 func (self *Player) SendMessage(opcode uint16, msg proto.Message) {
 	if self.Sess == nil {
 		return
@@ -100,8 +105,4 @@ func (self *Player) SendMessage(opcode uint16, msg proto.Message) {
 	}
 
 	self.Sess.SendPacket(opcode, data)
-}
-
-func (self *Player) SetSession(sess comp.ISession) {
-	self.Sess = sess
 }

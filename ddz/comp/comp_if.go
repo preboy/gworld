@@ -1,5 +1,9 @@
 package comp
 
+import (
+	"gworld/core/tcp"
+)
+
 // ----------------------------------------------------------------------------
 // local
 
@@ -9,4 +13,8 @@ type ISession interface {
 
 type IPlayer interface {
 	GetID() string
+
+	OnLogin()
+	OnLogout()
+	OnPacket(packet *tcp.Packet)
 }

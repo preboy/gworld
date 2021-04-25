@@ -5,15 +5,14 @@ import (
 	"encoding/binary"
 	"strconv"
 	"sync"
-	"sync/atomic"
 
 	"gworld/core/tcp"
+	"gworld/core/utils"
+	"gworld/ddz/comp"
 	"gworld/ddz/loop"
-	"gworld/ddz/player"
 )
 
 var (
-	_seq      = uint32(1)
 	_sessions = map[uint32]*session{}
 	_lock     = sync.Mutex{}
 	_chunks   = make(chan *chunk, 0x1000)
@@ -27,15 +26,14 @@ type chunk struct {
 type session struct {
 	Id     uint32
 	socket *tcp.Socket
-	player *player.Player
+	player comp.IPlayer
 }
 
 // ----------------------------------------------------------------------------
 
 func NewSession() *session {
-	seq := atomic.AddUint32(&_seq, 1)
 	return &session{
-		Id: seq,
+		Id: utils.SeqU32(),
 	}
 }
 
@@ -43,7 +41,7 @@ func (self *session) SetSocket(socket *tcp.Socket) {
 	self.socket = socket
 }
 
-func (self *session) SetPlayer(player *player.Player) {
+func (self *session) SetPlayer(player comp.IPlayer) {
 	self.player = player
 }
 
@@ -99,7 +97,7 @@ func (self *session) OnRecvPacket(packet *tcp.Packet) {
 		_chunks <- &chunk{self, packet}
 	} else {
 		pid := strconv.Itoa(int(self.Id))
-		plr := player.NewPlayer(pid)
+		plr := comp.PM.NewPlayer(pid)
 		self.SetPlayer(plr)
 
 		loop.Post(func() {

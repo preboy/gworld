@@ -2,28 +2,14 @@ package netmgr
 
 import (
 	"net"
-	"sync"
 
 	"gworld/core/tcp"
 	"gworld/ddz/loop"
-	"gworld/ddz/player"
 )
 
 var (
 	server *tcp.TcpServer
 )
-
-var (
-	seq      uint32 = 1
-	sessions        = map[uint32]*session{}
-	lock            = sync.Mutex{}
-)
-
-type Session struct {
-	Id     uint32
-	socket *tcp.Socket
-	player *player.Player
-}
 
 // ----------------------------------------------------------------------------
 // init
@@ -57,7 +43,7 @@ func Release() {
 	_lock.Lock()
 	defer _lock.Unlock()
 
-	for _, s := range sessions {
+	for _, s := range _sessions {
 		s.Disconnect()
 	}
 }

@@ -13,4 +13,5 @@ func Init_PlayerManager(mgr IPlayerManager) {
 
 type IPlayerManager interface {
 	FindPlayer(pid string) IPlayer
+	NewPlayer(pid string) IPlayer
 }

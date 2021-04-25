@@ -1,12 +1,11 @@
 package lobby
 
 import (
+	"gworld/core/utils"
 	"gworld/ddz/loop"
-	"sync/atomic"
 )
 
 var (
-	_seq     = uint32(1)
 	_matches = map[uint32]*Match{}
 	_pids    = []string{}
 )
@@ -40,7 +39,7 @@ func update() {
 func create_match() {
 	if len(_pids) >= 3 {
 		m := &Match{
-			ID: atomic.AddUint32(&_seq, 1),
+			ID: utils.SeqU32(),
 		}
 
 		m.Init(_pids[:3])

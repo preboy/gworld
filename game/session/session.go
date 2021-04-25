@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"sync"
-	"sync/atomic"
 
 	"github.com/gogo/protobuf/proto"
 
@@ -38,8 +37,7 @@ type Session struct {
 // ============================================================================
 
 func NewSession() *Session {
-	new_seq := atomic.AddUint32(&seq, 1)
-	return &Session{Id: new_seq}
+	return &Session{Id: utils.SeqU32()}
 }
 
 func (self *Session) SetSocket(socket *tcp.Socket) {
