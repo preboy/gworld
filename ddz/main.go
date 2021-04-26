@@ -7,6 +7,7 @@ import (
 
 	"gworld/core/log"
 	"gworld/core/utils"
+	"gworld/ddz/lobby"
 	"gworld/ddz/loop"
 	"gworld/ddz/netmgr"
 	"gworld/ddz/player"
@@ -49,6 +50,7 @@ func main() {
 // local
 
 func ddz_init() {
+	lobby.Init()
 	player.Init()
 	netmgr.Init()
 }
@@ -56,4 +58,5 @@ func ddz_init() {
 func ddz_release() {
 	netmgr.Release()
 	player.Release()
+	lobby.Release()
 }

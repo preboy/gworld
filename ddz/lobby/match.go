@@ -28,15 +28,20 @@ const (
 
 // 一个人本副牌的信息
 type deck_data struct {
-	card []int
-
-	bomb int // 炸弹数
+	cards []Card
 }
 
 type match_data struct {
 	pid  string
 	pos  SEAT
 	data *deck_data
+
+	// stat
+	score_total   int // 总分
+	win_count     int // 胜次数
+	lost_count    int // 败次数
+	load_count    int // 地主次数
+	peasant_count int // 农民次数
 }
 
 type Match struct {
@@ -46,10 +51,13 @@ type Match struct {
 	seats [SEAT_MAX]*match_data // 3个方位的pid
 	stage STAGE
 
-	deck_curr  int // 当前牌副数
+	deck_index int // 当前牌副数
 	deck_total int // 总牌副数
 
 	first_call SEAT // 首叫方位
+
+	deck_data         *deck_info_t   // 当前副数据
+	deck_data_history []*deck_info_t // 历史数据
 }
 
 func NewMatch() *Match {
@@ -62,7 +70,7 @@ func (self *Match) Init(pids []string) {
 	self.pids = pids
 	self.stage = stage_prepare
 
-	self.deck_curr = 0
+	self.deck_index = 0
 	self.deck_total = 10
 
 	self.first_call = SEAT_EAST
@@ -103,7 +111,7 @@ func (self *Match) Exist(pid string) bool {
 }
 
 func (self *Match) InitDeck() {
-	self.deck_curr++
+	self.deck_index++
 
 	for i := SEAT_EAST; i < SEAT_MAX; i++ {
 		self.seats[i].data = &deck_data{}
@@ -111,7 +119,7 @@ func (self *Match) InitDeck() {
 }
 
 func (self *Match) NextDeck() {
-	if self.deck_curr < self.deck_total {
+	if self.deck_index < self.deck_total {
 		self.Switch(stage_deal)
 	} else {
 		self.Switch(stage_over)

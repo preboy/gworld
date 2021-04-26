@@ -14,6 +14,52 @@ var (
 	FSM [stage_MAX]stage_func
 )
 
+type deck_info_t struct {
+	index int
+	start int64
+	first SEAT
+
+	deal  []*deal_info_t
+	call  []*call_info_t
+	callr *call_result_t
+	play  []*play_info_t
+	calc  *calc_info_t
+}
+
+type deal_info_t struct {
+	pos   SEAT
+	cards []Card
+}
+
+type call_info_t struct {
+	past  int64
+	pos   SEAT
+	score int // 0,1,2,3
+}
+
+type call_result_t struct {
+	lord  SEAT
+	score int
+}
+
+type play_info_t struct {
+	past  int
+	pos   SEAT
+	cards []Card // empty is PASS
+}
+
+// 结算信息
+type calc_info_t struct {
+	win    SEAT // -1 流局
+	lord   bool
+	score  int
+	spring bool
+	bomb   int
+}
+
+// ----------------------------------------------------------------------------
+// init
+
 func init() {
 	// ------------------------------------------------------------------------
 	// prepare
@@ -90,7 +136,7 @@ func init() {
 	}
 
 	FSM[stage_calc].OnLeave = func(m *Match) {
-		m.first_call = next_seat()
+		m.first_call = next_seat(m.first_call)
 		log.Info("leave calc")
 	}
 

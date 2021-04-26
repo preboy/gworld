@@ -17,12 +17,12 @@ func init() {
 		update()
 
 		for k, v := range _matches {
-			v.OnUpdate()
-
 			if v.Over() {
 				delete(_matches, k)
 				break
 			}
+
+			v.OnUpdate()
 		}
 	})
 }
@@ -64,4 +64,10 @@ func Queue(pid string) bool {
 	}
 
 	return true
+}
+
+func Init() {
+}
+
+func Release() {
 }
