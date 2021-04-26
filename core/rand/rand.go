@@ -2,15 +2,16 @@ package rand
 
 import (
 	"math/rand"
+	"time"
 )
+
+func SetSeed() {
+	rand.Seed(time.Now().Unix())
+}
 
 // returns true if x <= prob where x is a random number in [0, n)
 func RandomHitn(prob, n int) bool {
-	r := rand.Intn(n)
-	if r < prob {
-		return true
-	}
-	return false
+	return rand.Intn(n) < prob
 }
 
 // returns [a, b]

@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"gworld/core/log"
+	"gworld/core/rand"
 	"gworld/core/schedule"
 	"gworld/core/timer"
 	"gworld/core/utils"
@@ -48,6 +49,9 @@ func main() {
 			os.Stdin.Close()
 		}
 	})
+
+	// init server
+	rand.SetSeed()
 
 	if !app.LoadConfig("config.json", *arg_svr) {
 		log.Error("app.LoadServerConfig: Failed")

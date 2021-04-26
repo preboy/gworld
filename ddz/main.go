@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"gworld/core/log"
+	"gworld/core/rand"
 	"gworld/core/utils"
 	"gworld/ddz/lobby"
 	"gworld/ddz/loop"
@@ -36,6 +37,9 @@ func main() {
 		}
 	})
 
+	// init server
+	rand.SetSeed()
+
 	ddz_init()
 
 	loop.Run()
@@ -50,12 +54,14 @@ func main() {
 // local
 
 func ddz_init() {
+	// init modules
 	lobby.Init()
 	player.Init()
 	netmgr.Init()
 }
 
 func ddz_release() {
+	// release modules
 	netmgr.Release()
 	player.Release()
 	lobby.Release()

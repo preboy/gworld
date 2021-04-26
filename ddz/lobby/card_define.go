@@ -2,6 +2,7 @@ package lobby
 
 import (
 	"fmt"
+	"math/rand"
 )
 
 type CardsType int
@@ -72,7 +73,12 @@ func NewPoker() (cards []Card) {
 	cards = append(cards, Card(CardPoint_J1))
 	cards = append(cards, Card(CardPoint_J2))
 
-	// TODO sort
+	// sort:  7 times equ chaos
+	for x := 0; x < 7; x++ {
+		rand.Shuffle(len(cards), func(i, j int) {
+			cards[i], cards[j] = cards[j], cards[i]
+		})
+	}
 
 	return
 }
