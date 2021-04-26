@@ -5,9 +5,10 @@ import (
 )
 
 type stage_func struct {
-	OnEnter  func(m *Match)
-	OnUpdate func(m *Match)
-	OnLeave  func(m *Match)
+	OnEnter   func(m *Match)
+	OnUpdate  func(m *Match)
+	OnMessage func(m *Match)
+	OnLeave   func(m *Match)
 }
 
 var (
@@ -17,7 +18,6 @@ var (
 type deck_info_t struct {
 	index int
 	start int64
-	first SEAT
 
 	deal  []*deal_info_t
 	call  []*call_info_t
@@ -81,9 +81,24 @@ func init() {
 
 	FSM[stage_deal].OnEnter = func(m *Match) {
 		log.Info("enter deal")
-		m.InitDeck()
+		m.DeckOpen()
 
 		// 发牌
+		{
+			cards := NewPoker()
+
+			n := m.call_pos
+			m.seats[n].AddCards(cards[:17])
+			m.deck_data.deal = append(m.deck_data.deal, &deal_info_t{n, cards[:17]})
+
+			n = next_seat(n)
+			m.seats[n].AddCards(cards[17:34])
+			m.deck_data.deal = append(m.deck_data.deal, &deal_info_t{n, cards[17:34]})
+
+			n = next_seat(n)
+			m.seats[n].AddCards(cards[34:51])
+			m.deck_data.deal = append(m.deck_data.deal, &deal_info_t{n, cards[34:51]})
+		}
 	}
 
 	FSM[stage_deal].OnUpdate = func(m *Match) {
@@ -99,6 +114,8 @@ func init() {
 
 	FSM[stage_call].OnEnter = func(m *Match) {
 		log.Info("enter call")
+
+		m.SetActionCall(m.call_pos)
 	}
 
 	FSM[stage_call].OnUpdate = func(m *Match) {
@@ -136,7 +153,7 @@ func init() {
 	}
 
 	FSM[stage_calc].OnLeave = func(m *Match) {
-		m.first_call = next_seat(m.first_call)
+		m.DeckClosed()
 		log.Info("leave calc")
 	}
 

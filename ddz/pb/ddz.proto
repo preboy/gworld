@@ -1,16 +1,74 @@
 syntax = "proto2";
 package pb;
 
+// ----------------------------------------------------------------------------
+// login
 
 message RegisterRequest {
-    required int32 OP = 1 [default = 10001 ];
+    required int32 OP = 1 [default = 1001 ];
 
     required string name = 2;
 }
 
 
 message RegisterResponse {
-    required int32 OP = 1 [default = 10002 ];
+    required int32 OP = 1 [default = 1002 ];
 
     required int32 ret = 2;
 }
+
+
+// ----------------------------------------------------------------------------
+// ddz logic
+
+enum DDZAction {
+    CALL = 0;
+    PLAY = 1;
+}
+
+// 发牌通知
+message DealCardNotify {
+    required int32 OP = 1 [default = 2001 ];
+ 
+    required int32 pos = 2;     // 我的方位
+    repeated int32 cards = 3;   // 我的牌
+}
+
+// 采取动作广播
+message TakeActionBroadcast {
+    required int32 OP = 1 [default = 2001 ];
+
+    required int32      pos     = 2;    // 应该行动方
+    required DDZAction  action  = 3;    // 干什么
+}
+
+// 叫分请求
+message CallScoreRequest {
+    required int32 OP = 1 [default = 2001 ];
+
+    required int32 score = 2; // 叫了多少分 (0 ~ 3)
+}
+
+// 叫分回应
+message CallScoreResponse {
+    required int32 OP = 1 [default = 2001 ];
+
+    required int32 err = 2;
+}
+
+// 叫分广播
+message CallScoreBroadcast {
+    required int32 OP = 1 [default = 2001 ];
+
+    required int32 pos = 2;
+    required int32 score = 3;
+}
+
+// 叫分结果
+message CallScoreResultBroadcast {
+    required int32 OP = 1 [default = 2001 ];
+
+    required int32 lord = 2;
+    required int32 score = 3;
+}
+

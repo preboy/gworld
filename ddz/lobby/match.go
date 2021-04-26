@@ -2,6 +2,7 @@ package lobby
 
 import (
 	"gworld/core/utils"
+	"time"
 )
 
 type (
@@ -31,7 +32,9 @@ type deck_data struct {
 	cards []Card
 }
 
-type match_data struct {
+type player_data struct {
+	m *Match
+
 	pid  string
 	pos  SEAT
 	data *deck_data
@@ -48,13 +51,17 @@ type Match struct {
 	ID   uint32
 	pids []string
 
-	seats [SEAT_MAX]*match_data // 3个方位的pid
+	seats [SEAT_MAX]*player_data // 3个方位的pid
 	stage STAGE
 
 	deck_index int // 当前牌副数
 	deck_total int // 总牌副数
 
-	first_call SEAT // 首叫方位
+	host_pos   SEAT // 首叫方位
+	call_pos   SEAT // 叫分方位
+	call_score int  // 最高叫分
+
+	action_ts time.Time
 
 	deck_data         *deck_info_t   // 当前副数据
 	deck_data_history []*deck_info_t // 历史数据
@@ -73,10 +80,11 @@ func (self *Match) Init(pids []string) {
 	self.deck_index = 0
 	self.deck_total = 10
 
-	self.first_call = SEAT_EAST
+	self.host_pos = SEAT_EAST
 
 	for i := SEAT_EAST; i < SEAT_MAX; i++ {
-		self.seats[i] = &match_data{
+		self.seats[i] = &player_data{
+			m:    self,
 			pid:  pids[i],
 			pos:  i,
 			data: &deck_data{},
@@ -110,12 +118,30 @@ func (self *Match) Exist(pid string) bool {
 	return false
 }
 
-func (self *Match) InitDeck() {
+func (self *Match) DeckOpen() {
 	self.deck_index++
 
 	for i := SEAT_EAST; i < SEAT_MAX; i++ {
 		self.seats[i].data = &deck_data{}
 	}
+
+	self.deck_data = &deck_info_t{
+		index: self.deck_index,
+		start: time.Now().Unix(),
+		deal:  nil,
+		call:  nil,
+		callr: &call_result_t{},
+		play:  nil,
+		calc:  &calc_info_t{},
+	}
+
+	self.call_pos = self.host_pos
+	self.call_score = 0
+}
+
+func (self *Match) DeckClosed() {
+	self.host_pos = next_seat(self.host_pos)
+	self.deck_data_history = append(self.deck_data_history, self.deck_data)
 }
 
 func (self *Match) NextDeck() {
@@ -124,4 +150,18 @@ func (self *Match) NextDeck() {
 	} else {
 		self.Switch(stage_over)
 	}
+}
+
+func (self *Match) Broadcast() {
+
+}
+
+func (self *Match) SetActionCall(cp SEAT) {
+	self.call_pos = cp
+
+	// 设置开始时间
+	self.action_ts = time.Now()
+
+	// 广播发消息
+	self.seats[self.call_pos].SetActionCall()
 }
