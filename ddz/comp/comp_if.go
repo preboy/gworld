@@ -18,7 +18,9 @@ type IPlayer interface {
 
 	OnLogin()
 	OnLogout()
+
 	OnPacket(packet *tcp.Packet)
+	SendMessage(msg Message)
 }
 
 type Message interface {

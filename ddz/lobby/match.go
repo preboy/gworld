@@ -3,6 +3,7 @@ package lobby
 import (
 	"gworld/core/utils"
 	"gworld/ddz/comp"
+	"gworld/ddz/pb"
 	"time"
 )
 
@@ -58,14 +59,15 @@ type Match struct {
 	deck_index int // 当前牌副数
 	deck_total int // 总牌副数
 
-	host_pos   SEAT // 首叫方位
-	call_pos   SEAT // 叫分方位
-	call_score int  // 最高叫分
+	host_pos SEAT // 首叫方位
+	call_pos SEAT // 叫分方位
+
+	cards []Card
 
 	action_ts time.Time
 
-	deck_data         *deck_info_t   // 当前副数据
-	deck_data_history []*deck_info_t // 历史数据
+	deck_info         *deck_info_t   // 当前副数据
+	deck_info_history []*deck_info_t // 历史数据
 }
 
 func NewMatch() *Match {
@@ -130,23 +132,22 @@ func (self *Match) DeckOpen() {
 		self.seats[i].data = &deck_data{}
 	}
 
-	self.deck_data = &deck_info_t{
-		index: self.deck_index,
-		start: time.Now().Unix(),
-		deal:  nil,
-		call:  nil,
-		callr: &call_result_t{},
-		play:  nil,
-		calc:  &calc_info_t{},
+	self.deck_info = &deck_info_t{
+		index:     self.deck_index,
+		start:     time.Now().Unix(),
+		deal_info: nil,
+		call_info: nil,
+		caca_info: &call_calc_info_t{},
+		play_info: nil,
+		calc_info: &calc_info_t{},
 	}
 
 	self.call_pos = self.host_pos
-	self.call_score = 0
 }
 
 func (self *Match) DeckClosed() {
 	self.host_pos = next_seat(self.host_pos)
-	self.deck_data_history = append(self.deck_data_history, self.deck_data)
+	self.deck_info_history = append(self.deck_info_history, self.deck_info)
 }
 
 func (self *Match) NextDeck() {
@@ -157,16 +158,100 @@ func (self *Match) NextDeck() {
 	}
 }
 
-func (self *Match) Broadcast() {
-
+func (self *Match) Broadcast(msg comp.Message) {
+	for _, pid := range _pids {
+		plr := comp.PM.FindPlayer(pid)
+		if plr != nil {
+			plr.SendMessage(msg)
+		}
+	}
 }
 
-func (self *Match) SetActionCall(cp SEAT) {
-	self.call_pos = cp
+func (self *Match) Notify(pid string, msg comp.Message) {
+	for _, v := range _pids {
+		if v == pid {
+			plr := comp.PM.FindPlayer(pid)
+			if plr != nil {
+				plr.SendMessage(msg)
+			}
+			break
+		}
+	}
+}
+
+func (self *Match) pos_to_pid(pos SEAT) string {
+	for _, v := range self.seats {
+		if v.pos == pos {
+			return v.pid
+		}
+	}
+
+	return ""
+}
+
+func (self *Match) DealCards(pos SEAT, cards []Card) {
+
+	self.seats[pos].AddCards(cards)
+
+	self.deck_info.deal_info = append(self.deck_info.deal_info, &deal_info_t{pos, cards})
+
+	msg := &pb.DealCardNotify{
+		Pos: int32(pos),
+	}
+
+	for _, v := range cards {
+		msg.Cards = append(msg.Cards, int32(v))
+	}
+
+	pid := self.pos_to_pid(pos)
+	self.Notify(pid, msg)
+}
+
+func (self *Match) SendActionCall(pos SEAT) {
+
+	// 叫分结束
+	if len(self.deck_info.call_info) >= 3 {
+		self.CalcCall()
+		return
+	}
+
+	self.call_pos = pos
 
 	// 设置开始时间
 	self.action_ts = time.Now()
 
+	msg := &pb.CallScoreBroadcast{
+		Pos: int32(pos),
+	}
+
+	for _, v := range self.deck_info.call_info {
+		msg.History = append(msg.History, v.score)
+	}
+
 	// 广播发消息
-	self.seats[self.call_pos].SetActionCall()
+	self.Broadcast(msg)
+}
+
+func (self *Match) CalcCall() {
+	var lord SEAT
+	var score int32
+
+	for _, v := range self.deck_info.call_info {
+		if v.score > score {
+			lord = v.pos
+			score = v.score
+		}
+	}
+
+	self.deck_info.caca_info.lord = lord
+	self.deck_info.caca_info.score = score
+
+	// 打牌 or 流局
+	if score > 0 {
+		self.deck_info.caca_info.draw = false
+		self.Switch(stage_play)
+	} else {
+		self.deck_info.caca_info.draw = true
+		self.Switch(stage_calc)
+	}
 }

@@ -46,14 +46,14 @@ message Cards {
 message DealCardNotify {
     required int32      OP              = 1 [default = 2001 ];
     required int32      pos             = 2;    // 我的方位
-    required Cards      cards           = 3;    // 我的牌
+    repeated int32      cards           = 3;    // 我的牌
 }
 
 // 叫分广播
 message CallScoreBroadcast {
     required int32      OP              = 1 [default = 2002 ];
     required int32      pos             = 2;    // 该谁叫分
-    required int32      history         = 3;    // 历史叫分记录
+    repeated int32      history         = 3;    // 历史叫分记录
 }
 
 // 叫分请求
@@ -81,7 +81,7 @@ message CallScoreCalcBroadcast {
     required bool       draw            = 2;    // 是否流局 
     required int32      lord            = 3;    // 地主方位
     required int32      score           = 4;    // 最终叫分
-    required Cards      cards           = 5;    // 底牌
+    repeated int32      cards           = 5;    // 底牌
 }
 
 // 出牌广播
@@ -108,7 +108,7 @@ message PlayResponse {
 message PlayResultBroadcast {
     required int32      OP              = 1 [default = 2010 ];
     required int32      pos             = 2;
-    required Cards      cards           = 3;
+    repeated int32      cards           = 3;
 }
 
 message DeckEndBroadcast {

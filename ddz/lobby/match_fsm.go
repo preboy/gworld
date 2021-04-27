@@ -3,6 +3,8 @@ package lobby
 import (
 	"gworld/core/log"
 	"gworld/ddz/comp"
+	"gworld/ddz/pb"
+	"time"
 )
 
 type stage_func struct {
@@ -20,11 +22,11 @@ type deck_info_t struct {
 	index int
 	start int64
 
-	deal  []*deal_info_t
-	call  []*call_info_t
-	callr *call_result_t
-	play  []*play_info_t
-	calc  *calc_info_t
+	deal_info []*deal_info_t
+	call_info []*call_info_t
+	caca_info *call_calc_info_t
+	play_info []*play_info_t
+	calc_info *calc_info_t
 }
 
 type deal_info_t struct {
@@ -35,12 +37,13 @@ type deal_info_t struct {
 type call_info_t struct {
 	past  int64
 	pos   SEAT
-	score int // 0,1,2,3
+	score int32 // 0,1,2,3
 }
 
-type call_result_t struct {
+type call_calc_info_t struct {
+	draw  bool
 	lord  SEAT
-	score int
+	score int32
 }
 
 type play_info_t struct {
@@ -53,7 +56,7 @@ type play_info_t struct {
 type calc_info_t struct {
 	win    SEAT // -1 流局
 	lord   bool
-	score  int
+	score  int32
 	spring bool
 	bomb   int
 }
@@ -89,19 +92,16 @@ func init() {
 
 		// 发牌
 		{
-			cards := NewPoker()
+			m.cards = NewPoker()
 
 			n := m.call_pos
-			m.seats[n].AddCards(cards[:17])
-			m.deck_data.deal = append(m.deck_data.deal, &deal_info_t{n, cards[:17]})
+			m.DealCards(n, m.cards[:17])
 
 			n = next_seat(n)
-			m.seats[n].AddCards(cards[17:34])
-			m.deck_data.deal = append(m.deck_data.deal, &deal_info_t{n, cards[17:34]})
+			m.DealCards(n, m.cards[17:34])
 
 			n = next_seat(n)
-			m.seats[n].AddCards(cards[34:51])
-			m.deck_data.deal = append(m.deck_data.deal, &deal_info_t{n, cards[34:51]})
+			m.DealCards(n, m.cards[34:51])
 		}
 	}
 
@@ -122,18 +122,35 @@ func init() {
 	FSM[stage_call].OnEnter = func(m *Match) {
 		log.Info("enter call")
 
-		m.SetActionCall(m.call_pos)
+		m.SendActionCall(m.call_pos)
 	}
 
 	FSM[stage_call].OnLeave = func(m *Match) {
+		// 发送叫分结果
+		msg := &pb.CallScoreCalcBroadcast{
+			Draw:  m.deck_info.caca_info.draw,
+			Lord:  int32(m.deck_info.caca_info.lord),
+			Score: m.deck_info.caca_info.score,
+		}
+
+		for _, v := range m.cards[51:] {
+			msg.Cards = append(msg.Cards, int32(v))
+		}
+
+		m.Broadcast(msg)
 		log.Info("leave call")
 	}
 
 	FSM[stage_call].OnUpdate = func(m *Match) {
-
+		// 时间到了，叫0分
+		if time.Since(m.action_ts) > 15*time.Second {
+			m.deck_info.call_info = append(m.deck_info.call_info, &call_info_t{15, m.call_pos, 0})
+			m.SendActionCall(next_seat(m.call_pos))
+		}
 	}
 
 	FSM[stage_call].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+
 	}
 
 	// ------------------------------------------------------------------------
