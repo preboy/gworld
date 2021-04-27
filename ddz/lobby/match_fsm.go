@@ -2,13 +2,14 @@ package lobby
 
 import (
 	"gworld/core/log"
+	"gworld/ddz/comp"
 )
 
 type stage_func struct {
 	OnEnter   func(m *Match)
-	OnUpdate  func(m *Match)
-	OnMessage func(m *Match)
 	OnLeave   func(m *Match)
+	OnUpdate  func(m *Match)
+	OnMessage func(m *Match, pid string, req comp.Message, res comp.Message)
 }
 
 var (
@@ -68,12 +69,15 @@ func init() {
 		log.Info("enter prepare")
 	}
 
+	FSM[stage_prepare].OnLeave = func(m *Match) {
+		log.Info("leave prepare")
+	}
+
 	FSM[stage_prepare].OnUpdate = func(m *Match) {
 		m.Switch(stage_deal)
 	}
 
-	FSM[stage_prepare].OnLeave = func(m *Match) {
-		log.Info("leave prepare")
+	FSM[stage_prepare].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 	}
 
 	// ------------------------------------------------------------------------
@@ -101,12 +105,15 @@ func init() {
 		}
 	}
 
+	FSM[stage_deal].OnLeave = func(m *Match) {
+		log.Info("leave deal")
+	}
+
 	FSM[stage_deal].OnUpdate = func(m *Match) {
 		m.Switch(stage_call)
 	}
 
-	FSM[stage_deal].OnLeave = func(m *Match) {
-		log.Info("leave deal")
+	FSM[stage_deal].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 	}
 
 	// ------------------------------------------------------------------------
@@ -118,12 +125,15 @@ func init() {
 		m.SetActionCall(m.call_pos)
 	}
 
+	FSM[stage_call].OnLeave = func(m *Match) {
+		log.Info("leave call")
+	}
+
 	FSM[stage_call].OnUpdate = func(m *Match) {
 
 	}
 
-	FSM[stage_call].OnLeave = func(m *Match) {
-		log.Info("leave call")
+	FSM[stage_call].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 	}
 
 	// ------------------------------------------------------------------------
@@ -133,12 +143,15 @@ func init() {
 		log.Info("enter play")
 	}
 
+	FSM[stage_play].OnLeave = func(m *Match) {
+		log.Info("leave play")
+	}
+
 	FSM[stage_play].OnUpdate = func(m *Match) {
 
 	}
 
-	FSM[stage_play].OnLeave = func(m *Match) {
-		log.Info("leave play")
+	FSM[stage_play].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 	}
 
 	// ------------------------------------------------------------------------
@@ -148,13 +161,16 @@ func init() {
 		log.Info("enter calc")
 	}
 
+	FSM[stage_calc].OnLeave = func(m *Match) {
+		m.DeckClosed()
+		log.Info("leave calc")
+	}
+
 	FSM[stage_calc].OnUpdate = func(m *Match) {
 		m.NextDeck()
 	}
 
-	FSM[stage_calc].OnLeave = func(m *Match) {
-		m.DeckClosed()
-		log.Info("leave calc")
+	FSM[stage_calc].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 	}
 
 	// ------------------------------------------------------------------------
@@ -164,12 +180,15 @@ func init() {
 		log.Info("enter over")
 	}
 
+	FSM[stage_over].OnLeave = func(m *Match) {
+		log.Info("leave over")
+	}
+
 	FSM[stage_over].OnUpdate = func(m *Match) {
 
 	}
 
-	FSM[stage_over].OnLeave = func(m *Match) {
-		log.Info("leave over")
+	FSM[stage_over].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 	}
 }
 

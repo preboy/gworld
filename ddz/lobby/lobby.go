@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"gworld/ddz/comp"
 	"gworld/ddz/loop"
 )
 
@@ -31,11 +32,7 @@ func init() {
 // local
 
 func update() {
-	create_match()
-}
-
-// 人数够了就创建一场斗地主比赛
-func create_match() {
+	// 人数够了就创建一场斗地主比赛
 	if len(_pids) >= 3 {
 		m := NewMatch()
 		m.Init(_pids[:3])
@@ -47,6 +44,12 @@ func create_match() {
 
 // ----------------------------------------------------------------------------
 // export
+
+func Init() {
+}
+
+func Release() {
+}
 
 func Queue(pid string) bool {
 	// in queue
@@ -63,11 +66,14 @@ func Queue(pid string) bool {
 		}
 	}
 
+	_pids = append(_pids, pid)
 	return true
 }
 
-func Init() {
-}
-
-func Release() {
+func OnMessage(pid string, req comp.Message, res comp.Message) {
+	for _, v := range _matches {
+		if v.Exist(pid) {
+			v.OnMessage(pid, req, res)
+		}
+	}
 }

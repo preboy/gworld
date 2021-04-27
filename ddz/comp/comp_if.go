@@ -2,6 +2,8 @@ package comp
 
 import (
 	"gworld/core/tcp"
+
+	"github.com/gogo/protobuf/proto"
 )
 
 // ----------------------------------------------------------------------------
@@ -12,9 +14,14 @@ type ISession interface {
 }
 
 type IPlayer interface {
-	GetID() string
+	GetPID() string
 
 	OnLogin()
 	OnLogout()
 	OnPacket(packet *tcp.Packet)
+}
+
+type Message interface {
+	proto.Message
+	GetOP() int32
 }

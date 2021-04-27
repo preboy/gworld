@@ -16,13 +16,22 @@ Broadcast   :服务端群发广播
 
 message RegisterRequest {
     required int32      OP              = 1 [default = 1001 ];
-    required string     name            = 2;
+    required string     name            = 2;    // 账号
+    required string     pass            = 3;    // 密码
 }
-
 
 message RegisterResponse {
     required int32      OP              = 1 [default = 1002 ];
-    required int32      ret             = 2;
+    required int32      errCode         = 2;
+}
+
+message JoinRequest {
+    required int32      OP              = 1 [default = 1003 ];
+}
+
+message JoinResponse {
+    required int32      OP              = 1 [default = 1004 ];
+    required int32      errCode         = 2;
 }
 
 

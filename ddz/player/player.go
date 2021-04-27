@@ -74,7 +74,7 @@ func (self *Player) OnPacket(packet *tcp.Packet) {
 	str := utils.ObjectToString(req)
 	log.Info("RECV packet: %s, %d, %s", self.PID, packet.Opcode, str)
 
-	e.h(req, res)
+	e.h(self, req, res)
 
 	str = utils.ObjectToString(res)
 	log.Info("SEND packet: %s, %d, %s", self.PID, packet.Opcode, str)
@@ -85,7 +85,7 @@ func (self *Player) OnPacket(packet *tcp.Packet) {
 // ----------------------------------------------------------------------------
 // member
 
-func (self *Player) GetID() string {
+func (self *Player) GetPID() string {
 	return self.PID
 }
 
@@ -93,7 +93,7 @@ func (self *Player) SetSession(sess comp.ISession) {
 	self.Sess = sess
 }
 
-func (self *Player) SendMessage(msg Message) {
+func (self *Player) SendMessage(msg comp.Message) {
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 

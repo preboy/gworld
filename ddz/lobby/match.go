@@ -2,6 +2,7 @@ package lobby
 
 import (
 	"gworld/core/utils"
+	"gworld/ddz/comp"
 	"time"
 )
 
@@ -96,6 +97,10 @@ func (self *Match) Init(pids []string) {
 
 func (self *Match) OnUpdate() {
 	FSM[self.stage].OnUpdate(self)
+}
+
+func (self *Match) OnMessage(pid string, req comp.Message, res comp.Message) {
+	FSM[self.stage].OnMessage(self, pid, req, res)
 }
 
 func (self *Match) Switch(stage STAGE) {
