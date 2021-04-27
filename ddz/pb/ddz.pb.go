@@ -10,6 +10,18 @@
 	It has these top-level messages:
 		RegisterRequest
 		RegisterResponse
+		Cards
+		DealCardNotify
+		CallScoreBroadcast
+		CallScoreRequest
+		CallScoreResponse
+		CallScoreResultBroadcast
+		CallScoreCalcBroadcast
+		PlayBroadcast
+		PlayRequest
+		PlayResponse
+		PlayResultBroadcast
+		DeckEndBroadcast
 */
 package pb
 
@@ -33,7 +45,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
 type RegisterRequest struct {
-	OP   *int32 `protobuf:"varint,1,req,name=OP,def=10001" json:"OP,omitempty"`
+	OP   *int32 `protobuf:"varint,1,req,name=OP,def=1001" json:"OP,omitempty"`
 	Name string `protobuf:"bytes,2,req,name=name" json:"name"`
 }
 
@@ -42,7 +54,7 @@ func (m *RegisterRequest) String() string            { return proto.CompactTextS
 func (*RegisterRequest) ProtoMessage()               {}
 func (*RegisterRequest) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{0} }
 
-const Default_RegisterRequest_OP int32 = 10001
+const Default_RegisterRequest_OP int32 = 1001
 
 func (m *RegisterRequest) GetOP() int32 {
 	if m != nil && m.OP != nil {
@@ -59,7 +71,7 @@ func (m *RegisterRequest) GetName() string {
 }
 
 type RegisterResponse struct {
-	OP  *int32 `protobuf:"varint,1,req,name=OP,def=10002" json:"OP,omitempty"`
+	OP  *int32 `protobuf:"varint,1,req,name=OP,def=1002" json:"OP,omitempty"`
 	Ret int32  `protobuf:"varint,2,req,name=ret" json:"ret"`
 }
 
@@ -68,7 +80,7 @@ func (m *RegisterResponse) String() string            { return proto.CompactText
 func (*RegisterResponse) ProtoMessage()               {}
 func (*RegisterResponse) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{1} }
 
-const Default_RegisterResponse_OP int32 = 10002
+const Default_RegisterResponse_OP int32 = 1002
 
 func (m *RegisterResponse) GetOP() int32 {
 	if m != nil && m.OP != nil {
@@ -84,9 +96,405 @@ func (m *RegisterResponse) GetRet() int32 {
 	return 0
 }
 
+type Cards struct {
+	Cards []int32 `protobuf:"varint,1,rep,name=cards" json:"cards,omitempty"`
+}
+
+func (m *Cards) Reset()                    { *m = Cards{} }
+func (m *Cards) String() string            { return proto.CompactTextString(m) }
+func (*Cards) ProtoMessage()               {}
+func (*Cards) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{2} }
+
+func (m *Cards) GetCards() []int32 {
+	if m != nil {
+		return m.Cards
+	}
+	return nil
+}
+
+// 发牌通知
+type DealCardNotify struct {
+	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2001" json:"OP,omitempty"`
+	Pos   int32  `protobuf:"varint,2,req,name=pos" json:"pos"`
+	Cards *Cards `protobuf:"bytes,3,req,name=cards" json:"cards,omitempty"`
+}
+
+func (m *DealCardNotify) Reset()                    { *m = DealCardNotify{} }
+func (m *DealCardNotify) String() string            { return proto.CompactTextString(m) }
+func (*DealCardNotify) ProtoMessage()               {}
+func (*DealCardNotify) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{3} }
+
+const Default_DealCardNotify_OP int32 = 2001
+
+func (m *DealCardNotify) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_DealCardNotify_OP
+}
+
+func (m *DealCardNotify) GetPos() int32 {
+	if m != nil {
+		return m.Pos
+	}
+	return 0
+}
+
+func (m *DealCardNotify) GetCards() *Cards {
+	if m != nil {
+		return m.Cards
+	}
+	return nil
+}
+
+// 采取动作广播
+type CallScoreBroadcast struct {
+	OP      *int32 `protobuf:"varint,1,req,name=OP,def=2002" json:"OP,omitempty"`
+	Pos     int32  `protobuf:"varint,2,req,name=pos" json:"pos"`
+	History int32  `protobuf:"varint,3,req,name=history" json:"history"`
+}
+
+func (m *CallScoreBroadcast) Reset()                    { *m = CallScoreBroadcast{} }
+func (m *CallScoreBroadcast) String() string            { return proto.CompactTextString(m) }
+func (*CallScoreBroadcast) ProtoMessage()               {}
+func (*CallScoreBroadcast) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{4} }
+
+const Default_CallScoreBroadcast_OP int32 = 2002
+
+func (m *CallScoreBroadcast) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_CallScoreBroadcast_OP
+}
+
+func (m *CallScoreBroadcast) GetPos() int32 {
+	if m != nil {
+		return m.Pos
+	}
+	return 0
+}
+
+func (m *CallScoreBroadcast) GetHistory() int32 {
+	if m != nil {
+		return m.History
+	}
+	return 0
+}
+
+// 叫分请求
+type CallScoreRequest struct {
+	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2003" json:"OP,omitempty"`
+	Score int32  `protobuf:"varint,2,req,name=score" json:"score"`
+}
+
+func (m *CallScoreRequest) Reset()                    { *m = CallScoreRequest{} }
+func (m *CallScoreRequest) String() string            { return proto.CompactTextString(m) }
+func (*CallScoreRequest) ProtoMessage()               {}
+func (*CallScoreRequest) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{5} }
+
+const Default_CallScoreRequest_OP int32 = 2003
+
+func (m *CallScoreRequest) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_CallScoreRequest_OP
+}
+
+func (m *CallScoreRequest) GetScore() int32 {
+	if m != nil {
+		return m.Score
+	}
+	return 0
+}
+
+// 叫分回应
+type CallScoreResponse struct {
+	OP      *int32 `protobuf:"varint,1,req,name=OP,def=2004" json:"OP,omitempty"`
+	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
+}
+
+func (m *CallScoreResponse) Reset()                    { *m = CallScoreResponse{} }
+func (m *CallScoreResponse) String() string            { return proto.CompactTextString(m) }
+func (*CallScoreResponse) ProtoMessage()               {}
+func (*CallScoreResponse) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{6} }
+
+const Default_CallScoreResponse_OP int32 = 2004
+
+func (m *CallScoreResponse) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_CallScoreResponse_OP
+}
+
+func (m *CallScoreResponse) GetErrCode() int32 {
+	if m != nil {
+		return m.ErrCode
+	}
+	return 0
+}
+
+// 叫分广播
+type CallScoreResultBroadcast struct {
+	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2005" json:"OP,omitempty"`
+	Pos   int32  `protobuf:"varint,2,req,name=pos" json:"pos"`
+	Score int32  `protobuf:"varint,3,req,name=score" json:"score"`
+}
+
+func (m *CallScoreResultBroadcast) Reset()                    { *m = CallScoreResultBroadcast{} }
+func (m *CallScoreResultBroadcast) String() string            { return proto.CompactTextString(m) }
+func (*CallScoreResultBroadcast) ProtoMessage()               {}
+func (*CallScoreResultBroadcast) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{7} }
+
+const Default_CallScoreResultBroadcast_OP int32 = 2005
+
+func (m *CallScoreResultBroadcast) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_CallScoreResultBroadcast_OP
+}
+
+func (m *CallScoreResultBroadcast) GetPos() int32 {
+	if m != nil {
+		return m.Pos
+	}
+	return 0
+}
+
+func (m *CallScoreResultBroadcast) GetScore() int32 {
+	if m != nil {
+		return m.Score
+	}
+	return 0
+}
+
+// 叫分结算广播
+type CallScoreCalcBroadcast struct {
+	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2006" json:"OP,omitempty"`
+	Draw  bool   `protobuf:"varint,2,req,name=draw" json:"draw"`
+	Lord  int32  `protobuf:"varint,3,req,name=lord" json:"lord"`
+	Score int32  `protobuf:"varint,4,req,name=score" json:"score"`
+	Cards *Cards `protobuf:"bytes,5,req,name=cards" json:"cards,omitempty"`
+}
+
+func (m *CallScoreCalcBroadcast) Reset()                    { *m = CallScoreCalcBroadcast{} }
+func (m *CallScoreCalcBroadcast) String() string            { return proto.CompactTextString(m) }
+func (*CallScoreCalcBroadcast) ProtoMessage()               {}
+func (*CallScoreCalcBroadcast) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{8} }
+
+const Default_CallScoreCalcBroadcast_OP int32 = 2006
+
+func (m *CallScoreCalcBroadcast) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_CallScoreCalcBroadcast_OP
+}
+
+func (m *CallScoreCalcBroadcast) GetDraw() bool {
+	if m != nil {
+		return m.Draw
+	}
+	return false
+}
+
+func (m *CallScoreCalcBroadcast) GetLord() int32 {
+	if m != nil {
+		return m.Lord
+	}
+	return 0
+}
+
+func (m *CallScoreCalcBroadcast) GetScore() int32 {
+	if m != nil {
+		return m.Score
+	}
+	return 0
+}
+
+func (m *CallScoreCalcBroadcast) GetCards() *Cards {
+	if m != nil {
+		return m.Cards
+	}
+	return nil
+}
+
+// 出牌广播
+type PlayBroadcast struct {
+	OP      *int32   `protobuf:"varint,1,req,name=OP,def=2007" json:"OP,omitempty"`
+	Pos     int32    `protobuf:"varint,2,req,name=pos" json:"pos"`
+	First   bool     `protobuf:"varint,3,req,name=first" json:"first"`
+	History []*Cards `protobuf:"bytes,4,rep,name=history" json:"history,omitempty"`
+}
+
+func (m *PlayBroadcast) Reset()                    { *m = PlayBroadcast{} }
+func (m *PlayBroadcast) String() string            { return proto.CompactTextString(m) }
+func (*PlayBroadcast) ProtoMessage()               {}
+func (*PlayBroadcast) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{9} }
+
+const Default_PlayBroadcast_OP int32 = 2007
+
+func (m *PlayBroadcast) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_PlayBroadcast_OP
+}
+
+func (m *PlayBroadcast) GetPos() int32 {
+	if m != nil {
+		return m.Pos
+	}
+	return 0
+}
+
+func (m *PlayBroadcast) GetFirst() bool {
+	if m != nil {
+		return m.First
+	}
+	return false
+}
+
+func (m *PlayBroadcast) GetHistory() []*Cards {
+	if m != nil {
+		return m.History
+	}
+	return nil
+}
+
+// 出牌请求
+type PlayRequest struct {
+	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2008" json:"OP,omitempty"`
+	Cards *Cards `protobuf:"bytes,2,req,name=cards" json:"cards,omitempty"`
+}
+
+func (m *PlayRequest) Reset()                    { *m = PlayRequest{} }
+func (m *PlayRequest) String() string            { return proto.CompactTextString(m) }
+func (*PlayRequest) ProtoMessage()               {}
+func (*PlayRequest) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{10} }
+
+const Default_PlayRequest_OP int32 = 2008
+
+func (m *PlayRequest) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_PlayRequest_OP
+}
+
+func (m *PlayRequest) GetCards() *Cards {
+	if m != nil {
+		return m.Cards
+	}
+	return nil
+}
+
+// 出牌回应
+type PlayResponse struct {
+	OP      *int32 `protobuf:"varint,1,req,name=OP,def=2009" json:"OP,omitempty"`
+	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
+}
+
+func (m *PlayResponse) Reset()                    { *m = PlayResponse{} }
+func (m *PlayResponse) String() string            { return proto.CompactTextString(m) }
+func (*PlayResponse) ProtoMessage()               {}
+func (*PlayResponse) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{11} }
+
+const Default_PlayResponse_OP int32 = 2009
+
+func (m *PlayResponse) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_PlayResponse_OP
+}
+
+func (m *PlayResponse) GetErrCode() int32 {
+	if m != nil {
+		return m.ErrCode
+	}
+	return 0
+}
+
+// 出牌结果通知
+type PlayResultBroadcast struct {
+	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2010" json:"OP,omitempty"`
+	Pos   int32  `protobuf:"varint,2,req,name=pos" json:"pos"`
+	Cards *Cards `protobuf:"bytes,3,req,name=cards" json:"cards,omitempty"`
+}
+
+func (m *PlayResultBroadcast) Reset()                    { *m = PlayResultBroadcast{} }
+func (m *PlayResultBroadcast) String() string            { return proto.CompactTextString(m) }
+func (*PlayResultBroadcast) ProtoMessage()               {}
+func (*PlayResultBroadcast) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{12} }
+
+const Default_PlayResultBroadcast_OP int32 = 2010
+
+func (m *PlayResultBroadcast) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_PlayResultBroadcast_OP
+}
+
+func (m *PlayResultBroadcast) GetPos() int32 {
+	if m != nil {
+		return m.Pos
+	}
+	return 0
+}
+
+func (m *PlayResultBroadcast) GetCards() *Cards {
+	if m != nil {
+		return m.Cards
+	}
+	return nil
+}
+
+type DeckEndBroadcast struct {
+	OP    *int32  `protobuf:"varint,1,req,name=OP,def=2011" json:"OP,omitempty"`
+	Score []int32 `protobuf:"varint,2,rep,name=score" json:"score,omitempty"`
+}
+
+func (m *DeckEndBroadcast) Reset()                    { *m = DeckEndBroadcast{} }
+func (m *DeckEndBroadcast) String() string            { return proto.CompactTextString(m) }
+func (*DeckEndBroadcast) ProtoMessage()               {}
+func (*DeckEndBroadcast) Descriptor() ([]byte, []int) { return fileDescriptorDdz, []int{13} }
+
+const Default_DeckEndBroadcast_OP int32 = 2011
+
+func (m *DeckEndBroadcast) GetOP() int32 {
+	if m != nil && m.OP != nil {
+		return *m.OP
+	}
+	return Default_DeckEndBroadcast_OP
+}
+
+func (m *DeckEndBroadcast) GetScore() []int32 {
+	if m != nil {
+		return m.Score
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*RegisterRequest)(nil), "pb.RegisterRequest")
 	proto.RegisterType((*RegisterResponse)(nil), "pb.RegisterResponse")
+	proto.RegisterType((*Cards)(nil), "pb.Cards")
+	proto.RegisterType((*DealCardNotify)(nil), "pb.DealCardNotify")
+	proto.RegisterType((*CallScoreBroadcast)(nil), "pb.CallScoreBroadcast")
+	proto.RegisterType((*CallScoreRequest)(nil), "pb.CallScoreRequest")
+	proto.RegisterType((*CallScoreResponse)(nil), "pb.CallScoreResponse")
+	proto.RegisterType((*CallScoreResultBroadcast)(nil), "pb.CallScoreResultBroadcast")
+	proto.RegisterType((*CallScoreCalcBroadcast)(nil), "pb.CallScoreCalcBroadcast")
+	proto.RegisterType((*PlayBroadcast)(nil), "pb.PlayBroadcast")
+	proto.RegisterType((*PlayRequest)(nil), "pb.PlayRequest")
+	proto.RegisterType((*PlayResponse)(nil), "pb.PlayResponse")
+	proto.RegisterType((*PlayResultBroadcast)(nil), "pb.PlayResultBroadcast")
+	proto.RegisterType((*DeckEndBroadcast)(nil), "pb.DeckEndBroadcast")
 }
 func (m *RegisterRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
@@ -145,6 +553,425 @@ func (m *RegisterResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *Cards) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Cards) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Cards) > 0 {
+		for _, num := range m.Cards {
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintDdz(dAtA, i, uint64(num))
+		}
+	}
+	return i, nil
+}
+
+func (m *DealCardNotify) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DealCardNotify) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Pos))
+	if m.Cards == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	} else {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(m.Cards.Size()))
+		n1, err := m.Cards.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n1
+	}
+	return i, nil
+}
+
+func (m *CallScoreBroadcast) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CallScoreBroadcast) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Pos))
+	dAtA[i] = 0x18
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.History))
+	return i, nil
+}
+
+func (m *CallScoreRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CallScoreRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Score))
+	return i, nil
+}
+
+func (m *CallScoreResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CallScoreResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.ErrCode))
+	return i, nil
+}
+
+func (m *CallScoreResultBroadcast) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CallScoreResultBroadcast) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Pos))
+	dAtA[i] = 0x18
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Score))
+	return i, nil
+}
+
+func (m *CallScoreCalcBroadcast) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *CallScoreCalcBroadcast) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	if m.Draw {
+		dAtA[i] = 1
+	} else {
+		dAtA[i] = 0
+	}
+	i++
+	dAtA[i] = 0x18
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Lord))
+	dAtA[i] = 0x20
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Score))
+	if m.Cards == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	} else {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(m.Cards.Size()))
+		n2, err := m.Cards.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n2
+	}
+	return i, nil
+}
+
+func (m *PlayBroadcast) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PlayBroadcast) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Pos))
+	dAtA[i] = 0x18
+	i++
+	if m.First {
+		dAtA[i] = 1
+	} else {
+		dAtA[i] = 0
+	}
+	i++
+	if len(m.History) > 0 {
+		for _, msg := range m.History {
+			dAtA[i] = 0x22
+			i++
+			i = encodeVarintDdz(dAtA, i, uint64(msg.Size()))
+			n, err := msg.MarshalTo(dAtA[i:])
+			if err != nil {
+				return 0, err
+			}
+			i += n
+		}
+	}
+	return i, nil
+}
+
+func (m *PlayRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PlayRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	if m.Cards == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	} else {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(m.Cards.Size()))
+		n3, err := m.Cards.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n3
+	}
+	return i, nil
+}
+
+func (m *PlayResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PlayResponse) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.ErrCode))
+	return i, nil
+}
+
+func (m *PlayResultBroadcast) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PlayResultBroadcast) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	dAtA[i] = 0x10
+	i++
+	i = encodeVarintDdz(dAtA, i, uint64(m.Pos))
+	if m.Cards == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	} else {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(m.Cards.Size()))
+		n4, err := m.Cards.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n4
+	}
+	return i, nil
+}
+
+func (m *DeckEndBroadcast) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeckEndBroadcast) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.OP == nil {
+		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	} else {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintDdz(dAtA, i, uint64(*m.OP))
+	}
+	if len(m.Score) > 0 {
+		for _, num := range m.Score {
+			dAtA[i] = 0x10
+			i++
+			i = encodeVarintDdz(dAtA, i, uint64(num))
+		}
+	}
+	return i, nil
+}
+
 func encodeVarintDdz(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -172,6 +999,157 @@ func (m *RegisterResponse) Size() (n int) {
 		n += 1 + sovDdz(uint64(*m.OP))
 	}
 	n += 1 + sovDdz(uint64(m.Ret))
+	return n
+}
+
+func (m *Cards) Size() (n int) {
+	var l int
+	_ = l
+	if len(m.Cards) > 0 {
+		for _, e := range m.Cards {
+			n += 1 + sovDdz(uint64(e))
+		}
+	}
+	return n
+}
+
+func (m *DealCardNotify) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.Pos))
+	if m.Cards != nil {
+		l = m.Cards.Size()
+		n += 1 + l + sovDdz(uint64(l))
+	}
+	return n
+}
+
+func (m *CallScoreBroadcast) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.Pos))
+	n += 1 + sovDdz(uint64(m.History))
+	return n
+}
+
+func (m *CallScoreRequest) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.Score))
+	return n
+}
+
+func (m *CallScoreResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.ErrCode))
+	return n
+}
+
+func (m *CallScoreResultBroadcast) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.Pos))
+	n += 1 + sovDdz(uint64(m.Score))
+	return n
+}
+
+func (m *CallScoreCalcBroadcast) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 2
+	n += 1 + sovDdz(uint64(m.Lord))
+	n += 1 + sovDdz(uint64(m.Score))
+	if m.Cards != nil {
+		l = m.Cards.Size()
+		n += 1 + l + sovDdz(uint64(l))
+	}
+	return n
+}
+
+func (m *PlayBroadcast) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.Pos))
+	n += 2
+	if len(m.History) > 0 {
+		for _, e := range m.History {
+			l = e.Size()
+			n += 1 + l + sovDdz(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *PlayRequest) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	if m.Cards != nil {
+		l = m.Cards.Size()
+		n += 1 + l + sovDdz(uint64(l))
+	}
+	return n
+}
+
+func (m *PlayResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.ErrCode))
+	return n
+}
+
+func (m *PlayResultBroadcast) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	n += 1 + sovDdz(uint64(m.Pos))
+	if m.Cards != nil {
+		l = m.Cards.Size()
+		n += 1 + l + sovDdz(uint64(l))
+	}
+	return n
+}
+
+func (m *DeckEndBroadcast) Size() (n int) {
+	var l int
+	_ = l
+	if m.OP != nil {
+		n += 1 + sovDdz(uint64(*m.OP))
+	}
+	if len(m.Score) > 0 {
+		for _, e := range m.Score {
+			n += 1 + sovDdz(uint64(e))
+		}
+	}
 	return n
 }
 
@@ -394,6 +1372,1508 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *Cards) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Cards: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Cards: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType == 0 {
+				var v int32
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowDdz
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= (int32(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Cards = append(m.Cards, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowDdz
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= (int(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthDdz
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				for iNdEx < postIndex {
+					var v int32
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowDdz
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Cards = append(m.Cards, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cards", wireType)
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DealCardNotify) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DealCardNotify: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DealCardNotify: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
+			}
+			m.Pos = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Pos |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cards", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDdz
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Cards == nil {
+				m.Cards = &Cards{}
+			}
+			if err := m.Cards.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+			hasFields[0] |= uint64(0x00000004)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
+	}
+	if hasFields[0]&uint64(0x00000004) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CallScoreBroadcast) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CallScoreBroadcast: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CallScoreBroadcast: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
+			}
+			m.Pos = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Pos |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field History", wireType)
+			}
+			m.History = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.History |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000004)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
+	}
+	if hasFields[0]&uint64(0x00000004) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("history")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CallScoreRequest) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CallScoreRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CallScoreRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
+			}
+			m.Score = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Score |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("score")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CallScoreResponse) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CallScoreResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CallScoreResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
+			}
+			m.ErrCode = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ErrCode |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CallScoreResultBroadcast) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CallScoreResultBroadcast: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CallScoreResultBroadcast: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
+			}
+			m.Pos = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Pos |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
+			}
+			m.Score = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Score |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000004)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
+	}
+	if hasFields[0]&uint64(0x00000004) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("score")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *CallScoreCalcBroadcast) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: CallScoreCalcBroadcast: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: CallScoreCalcBroadcast: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Draw", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Draw = bool(v != 0)
+			hasFields[0] |= uint64(0x00000002)
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Lord", wireType)
+			}
+			m.Lord = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Lord |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000004)
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
+			}
+			m.Score = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Score |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000008)
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cards", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDdz
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Cards == nil {
+				m.Cards = &Cards{}
+			}
+			if err := m.Cards.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+			hasFields[0] |= uint64(0x00000010)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("draw")
+	}
+	if hasFields[0]&uint64(0x00000004) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("lord")
+	}
+	if hasFields[0]&uint64(0x00000008) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("score")
+	}
+	if hasFields[0]&uint64(0x00000010) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PlayBroadcast) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PlayBroadcast: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PlayBroadcast: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
+			}
+			m.Pos = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Pos |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field First", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.First = bool(v != 0)
+			hasFields[0] |= uint64(0x00000004)
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field History", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDdz
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.History = append(m.History, &Cards{})
+			if err := m.History[len(m.History)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
+	}
+	if hasFields[0]&uint64(0x00000004) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("first")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PlayRequest) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PlayRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PlayRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cards", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDdz
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Cards == nil {
+				m.Cards = &Cards{}
+			}
+			if err := m.Cards.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+			hasFields[0] |= uint64(0x00000002)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PlayResponse) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PlayResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PlayResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
+			}
+			m.ErrCode = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ErrCode |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PlayResultBroadcast) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PlayResultBroadcast: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PlayResultBroadcast: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
+			}
+			m.Pos = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Pos |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			hasFields[0] |= uint64(0x00000002)
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Cards", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDdz
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Cards == nil {
+				m.Cards = &Cards{}
+			}
+			if err := m.Cards.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+			hasFields[0] |= uint64(0x00000004)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+	if hasFields[0]&uint64(0x00000002) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
+	}
+	if hasFields[0]&uint64(0x00000004) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("cards")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeckEndBroadcast) Unmarshal(dAtA []byte) error {
+	var hasFields [1]uint64
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDdz
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeckEndBroadcast: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeckEndBroadcast: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OP", wireType)
+			}
+			var v int32
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDdz
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.OP = &v
+			hasFields[0] |= uint64(0x00000001)
+		case 2:
+			if wireType == 0 {
+				var v int32
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowDdz
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= (int32(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Score = append(m.Score, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowDdz
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= (int(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthDdz
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				for iNdEx < postIndex {
+					var v int32
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowDdz
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Score = append(m.Score, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDdz(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDdz
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+	if hasFields[0]&uint64(0x00000001) == 0 {
+		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func skipDdz(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
@@ -502,15 +2982,35 @@ var (
 func init() { proto.RegisterFile("ddz.proto", fileDescriptorDdz) }
 
 var fileDescriptorDdz = []byte{
-	// 154 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x49, 0xa9, 0xd2,
-	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x72, 0xe2, 0xe2, 0x0f, 0x4a, 0x4d,
-	0xcf, 0x2c, 0x2e, 0x49, 0x2d, 0x0a, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12, 0xe5, 0x62,
-	0xf2, 0x0f, 0x90, 0x60, 0x54, 0x60, 0xd2, 0x60, 0xb5, 0x62, 0x35, 0x34, 0x30, 0x30, 0x30, 0x0c,
-	0x62, 0xf2, 0x0f, 0x10, 0x92, 0xe0, 0x62, 0xc9, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x52, 0x60, 0xd2,
-	0xe0, 0x74, 0x62, 0x39, 0x71, 0x4f, 0x9e, 0x21, 0x08, 0x2c, 0xa2, 0xe4, 0xc8, 0x25, 0x80, 0x30,
-	0xa3, 0xb8, 0x20, 0x3f, 0xaf, 0x38, 0x15, 0xd3, 0x10, 0x23, 0xb0, 0x21, 0x62, 0x5c, 0xcc, 0x45,
-	0xa9, 0x25, 0x60, 0x33, 0x58, 0xa1, 0x66, 0x80, 0x04, 0x9c, 0x04, 0x4e, 0x3c, 0x92, 0x63, 0xbc,
-	0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x00, 0x01, 0x00, 0x00,
-	0xff, 0xff, 0x9d, 0x21, 0x23, 0x0f, 0xa8, 0x00, 0x00, 0x00,
+	// 476 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0x4d, 0x8e, 0xd3, 0x30,
+	0x1c, 0xc5, 0x27, 0x4e, 0xa2, 0xa1, 0xff, 0xe1, 0xa3, 0x84, 0xaa, 0x8a, 0x90, 0xc8, 0x44, 0x61,
+	0xd3, 0x55, 0x95, 0x86, 0x6f, 0x16, 0x08, 0xda, 0xb2, 0x60, 0xc3, 0x54, 0xe1, 0x00, 0xc8, 0x8d,
+	0x3d, 0x50, 0x11, 0xea, 0x60, 0x7b, 0x84, 0xca, 0x82, 0x33, 0x70, 0x03, 0xae, 0x33, 0x4b, 0x4e,
+	0x80, 0x50, 0xb9, 0x08, 0x8a, 0x33, 0x6e, 0x12, 0x5a, 0x17, 0xa4, 0xd9, 0x35, 0xcf, 0xd6, 0xfb,
+	0xbd, 0xbf, 0xfd, 0x5c, 0xe8, 0x10, 0xf2, 0x65, 0x58, 0x70, 0x26, 0x99, 0x87, 0x8a, 0x79, 0xf4,
+	0x02, 0x6e, 0xa4, 0xf4, 0xdd, 0x42, 0x48, 0xca, 0x53, 0xfa, 0xe9, 0x8c, 0x0a, 0xe9, 0xf5, 0x00,
+	0x9d, 0xcc, 0x7c, 0x2b, 0x44, 0x03, 0xf7, 0xa9, 0x33, 0x8a, 0xe3, 0x51, 0x8a, 0x4e, 0x66, 0x9e,
+	0x0f, 0xce, 0x12, 0x7f, 0xa4, 0x3e, 0x0a, 0xd1, 0xa0, 0x33, 0x76, 0xce, 0x7f, 0x1e, 0x1f, 0xa4,
+	0x4a, 0x89, 0x9e, 0x43, 0xb7, 0xb6, 0x10, 0x05, 0x5b, 0x0a, 0xba, 0xe5, 0x91, 0x28, 0x8f, 0x3e,
+	0xd8, 0x9c, 0x4a, 0x65, 0xe1, 0x5e, 0x58, 0x94, 0x42, 0x74, 0x07, 0xdc, 0x09, 0xe6, 0x44, 0x78,
+	0x3d, 0x70, 0xb3, 0xf2, 0x87, 0x6f, 0x85, 0xf6, 0xc0, 0x4d, 0xab, 0x8f, 0xe8, 0x2d, 0x5c, 0x9f,
+	0x52, 0x9c, 0x97, 0x5b, 0x5e, 0x33, 0xb9, 0x38, 0x5d, 0xb5, 0xed, 0x13, 0x1d, 0xb1, 0x0f, 0x76,
+	0xc1, 0x44, 0xdb, 0xbe, 0x60, 0xc2, 0x3b, 0xd6, 0xae, 0x76, 0x88, 0x06, 0x47, 0x49, 0x67, 0x58,
+	0xcc, 0x87, 0x8a, 0xa7, 0x01, 0x73, 0xf0, 0x26, 0x38, 0xcf, 0xdf, 0x64, 0x8c, 0xd3, 0x31, 0x67,
+	0x98, 0x64, 0xf8, 0xef, 0x73, 0x48, 0x1a, 0x33, 0xec, 0x84, 0x04, 0x70, 0xf8, 0x7e, 0x21, 0x24,
+	0xe3, 0x2b, 0x85, 0xd1, 0x6b, 0x5a, 0x8c, 0xa6, 0xd0, 0xdd, 0x30, 0x76, 0x9e, 0x74, 0x12, 0xc7,
+	0xf7, 0x14, 0xe1, 0x36, 0xb8, 0xa2, 0xdc, 0xd5, 0x62, 0x54, 0x52, 0xf4, 0x0a, 0x6e, 0x36, 0x5c,
+	0x76, 0x1d, 0x76, 0x12, 0xc7, 0xf7, 0x95, 0x4d, 0x00, 0x87, 0x94, 0xf3, 0x09, 0x23, 0x6d, 0x23,
+	0x2d, 0x46, 0x04, 0xfc, 0xa6, 0xd5, 0x59, 0x2e, 0xcd, 0xa3, 0x3f, 0xd8, 0x3b, 0xfa, 0x26, 0xb0,
+	0xbd, 0x1d, 0xf8, 0xbb, 0x05, 0xfd, 0x0d, 0x66, 0x82, 0xf3, 0xcc, 0x0c, 0x79, 0xa8, 0x7b, 0x46,
+	0x38, 0xfe, 0xac, 0x28, 0x57, 0x74, 0xcf, 0x4a, 0xa5, 0x5c, 0xc9, 0x19, 0x27, 0x2d, 0x8a, 0x52,
+	0xea, 0x00, 0xce, 0x56, 0x80, 0xfa, 0xf2, 0x5d, 0xc3, 0xe5, 0x7f, 0x85, 0x6b, 0xb3, 0x1c, 0xaf,
+	0xcc, 0xb9, 0x1e, 0xfd, 0x6b, 0xf8, 0xd3, 0x05, 0x17, 0x52, 0xc5, 0xd2, 0x81, 0x2b, 0xc9, 0xbb,
+	0x5b, 0x77, 0xc2, 0x09, 0xed, 0x36, 0xbd, 0x51, 0x8c, 0xa3, 0x92, 0x6f, 0xea, 0xc4, 0x63, 0x45,
+	0xdf, 0x4c, 0x81, 0x0c, 0x53, 0x4c, 0xe1, 0x6a, 0xe5, 0x62, 0xe8, 0xc4, 0x93, 0xff, 0xec, 0xc4,
+	0xad, 0x0b, 0x97, 0x7d, 0x75, 0x18, 0xc5, 0x97, 0x7b, 0x6e, 0xcf, 0xa0, 0x3b, 0xa5, 0xd9, 0x87,
+	0x97, 0x4b, 0x62, 0x46, 0x54, 0x2f, 0xba, 0x57, 0x3f, 0x05, 0xf5, 0x7f, 0xa0, 0x3e, 0xc6, 0xdd,
+	0xf3, 0x75, 0x60, 0xfd, 0x58, 0x07, 0xd6, 0xaf, 0x75, 0x60, 0x7d, 0xfb, 0x1d, 0x1c, 0xfc, 0x09,
+	0x00, 0x00, 0xff, 0xff, 0x1f, 0x11, 0xa1, 0x0a, 0xd5, 0x04, 0x00, 0x00,
 }

@@ -5,70 +5,94 @@ package pb;
 // login
 
 message RegisterRequest {
-    required int32 OP = 1 [default = 1001 ];
-
-    required string name = 2;
+    required int32      OP              = 1 [default = 1001 ];
+    required string     name            = 2;
 }
 
 
 message RegisterResponse {
-    required int32 OP = 1 [default = 1002 ];
-
-    required int32 ret = 2;
+    required int32      OP              = 1 [default = 1002 ];
+    required int32      ret             = 2;
 }
 
 
 // ----------------------------------------------------------------------------
 // ddz logic
 
-enum DDZAction {
-    CALL = 0;
-    PLAY = 1;
+message Cards {
+    repeated int32      cards           = 1;    // 一手牌
 }
 
 // 发牌通知
 message DealCardNotify {
-    required int32 OP = 1 [default = 2001 ];
- 
-    required int32 pos = 2;     // 我的方位
-    repeated int32 cards = 3;   // 我的牌
+    required int32      OP              = 1 [default = 2001 ];
+    required int32      pos             = 2;    // 我的方位
+    required Cards      cards           = 3;    // 我的牌
 }
 
 // 采取动作广播
-message TakeActionBroadcast {
-    required int32 OP = 1 [default = 2001 ];
-
-    required int32      pos     = 2;    // 应该行动方
-    required DDZAction  action  = 3;    // 干什么
+message CallScoreBroadcast {
+    required int32      OP              = 1 [default = 2002 ];
+    required int32      pos             = 2;    // 该谁叫分
+    required int32      history         = 3;    // 历史叫分记录
 }
 
 // 叫分请求
 message CallScoreRequest {
-    required int32 OP = 1 [default = 2001 ];
-
-    required int32 score = 2; // 叫了多少分 (0 ~ 3)
+    required int32      OP              = 1 [default = 2003 ];
+    required int32      score           = 2;    // 叫了多少分 (0 ~ 3)
 }
 
 // 叫分回应
 message CallScoreResponse {
-    required int32 OP = 1 [default = 2001 ];
-
-    required int32 err = 2;
+    required int32      OP              = 1 [default = 2004 ];
+    required int32      errCode         = 2;    // 叫分结果
 }
 
 // 叫分广播
-message CallScoreBroadcast {
-    required int32 OP = 1 [default = 2001 ];
-
-    required int32 pos = 2;
-    required int32 score = 3;
-}
-
-// 叫分结果
 message CallScoreResultBroadcast {
-    required int32 OP = 1 [default = 2001 ];
-
-    required int32 lord = 2;
-    required int32 score = 3;
+    required int32      OP              = 1 [default = 2005 ];
+    required int32      pos             = 2;    // 谁
+    required int32      score           = 3;    // 叫了多少分
 }
 
+// 叫分结算广播
+message CallScoreCalcBroadcast {
+    required int32      OP              = 1 [default = 2006 ];
+    required bool       draw            = 2;    // 是否流局 
+    required int32      lord            = 3;    // 地主方位
+    required int32      score           = 4;    // 最终叫分
+    required Cards      cards           = 5;    // 底牌
+}
+
+// 出牌广播
+message PlayBroadcast {
+    required int32      OP              = 1 [default = 2007 ];
+    required int32      pos             = 2;    // 位置
+    required bool       first           = 3;    // 首出
+    repeated Cards      history         = 4;    // 本轮历史出牌记录
+}
+
+// 出牌请求
+message PlayRequest {
+    required int32      OP              = 1 [default = 2008 ];
+    required Cards      cards           = 2;
+}
+
+// 出牌回应
+message PlayResponse {
+    required int32      OP              = 1 [default = 2009 ];
+    required int32      errCode         = 2;    // 出牌结果
+}
+
+// 出牌结果通知
+message PlayResultBroadcast {
+    required int32      OP              = 1 [default = 2010 ];
+    required int32      pos             = 2;
+    required Cards      cards           = 3;
+}
+
+message DeckEndBroadcast {
+    required int32      OP              = 1 [default = 2011 ];
+    repeated int32      score           = 2;    // 东南西得分
+}
