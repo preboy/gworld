@@ -1,10 +1,12 @@
 package lobby
 
 import (
+	"time"
+
 	"gworld/core/utils"
 	"gworld/ddz/comp"
+	"gworld/ddz/loop"
 	"gworld/ddz/pb"
-	"time"
 )
 
 type (
@@ -99,6 +101,7 @@ func (self *Match) Init(pids []string) {
 
 func (self *Match) OnUpdate() {
 	FSM[self.stage].OnUpdate(self)
+	loop.DoNext()
 }
 
 func (self *Match) OnMessage(pid string, req comp.Message, res comp.Message) {
