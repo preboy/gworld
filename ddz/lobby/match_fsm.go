@@ -3,6 +3,8 @@ package lobby
 import (
 	"gworld/core/log"
 	"gworld/ddz/comp"
+	"gworld/ddz/gconst"
+	"gworld/ddz/loop"
 	"gworld/ddz/pb"
 	"time"
 )
@@ -151,6 +153,51 @@ func init() {
 
 	FSM[stage_call].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
 
+		switch req.GetOP() {
+		case pb.Default_CallScoreRequest_OP:
+			{
+				r := req.(*pb.CallScoreRequest)
+				s := res.(*pb.CallScoreResponse)
+
+				// 收到消息
+				pos, ok := m.pid_to_pos(pid)
+				if !ok {
+					s.ErrCode = gconst.Err_CallPid
+					return
+				}
+
+				if pos != m.call_pos {
+					s.ErrCode = gconst.Err_CallPos
+					return
+				}
+
+				if r.Score < 0 && r.Score > 3 {
+					s.ErrCode = gconst.Er_CallScore
+					return
+				}
+
+				// 检测分数是否合法
+				for _, v := range m.deck_info.call_info {
+					if v.score > 0 && r.Score <= v.score {
+						s.ErrCode = gconst.Er_CallScore2
+						return
+					}
+				}
+
+				s.ErrCode = gconst.Err_OK
+
+				loop.Next(func() {
+					m.Broadcast(&pb.CallScoreResultBroadcast{
+						Pos:   int32(pos),
+						Score: r.Score,
+					})
+
+					m.SendActionCall(next_seat(m.call_pos))
+				})
+			}
+		default:
+			break
+		}
 	}
 
 	// ------------------------------------------------------------------------
@@ -158,6 +205,17 @@ func init() {
 
 	FSM[stage_play].OnEnter = func(m *Match) {
 		log.Info("enter play")
+
+		m.play_pos = m.deck_info.caca_info.lord
+		m.play_idx = 0
+		m.pass_cnt = 0
+
+		m.action_ts = time.Now()
+
+		m.Broadcast(&pb.PlayBroadcast{
+			Pos:   int32(m.play_pos),
+			First: m.play_idx == 0,
+		})
 	}
 
 	FSM[stage_play].OnLeave = func(m *Match) {
@@ -165,10 +223,67 @@ func init() {
 	}
 
 	FSM[stage_play].OnUpdate = func(m *Match) {
+		// 默认出牌
+		if time.Since(m.action_ts) < 15*time.Second {
+			return
+		}
 
+		req := &pb.PlayRequest{}
+		res := &pb.PlayResponse{}
+
+		pid, ok := m.pos_to_pid(m.play_pos)
+		if !ok {
+			panic("Invalid play pos")
+		}
+
+		// 首家出最小牌 非首家不出牌
+		if m.play_idx == 0 {
+			for _, v := range m.seats[m.play_pos].GetDefaultCards() {
+				req.Cards.Cards = append(req.Cards.Cards, int32(v))
+			}
+		} else {
+			// req.Cards = nil
+		}
+
+		FSM[stage_play].OnMessage(m, pid, req, res)
 	}
 
 	FSM[stage_play].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+
+		switch req.GetOP() {
+		case pb.Default_PlayRequest_OP:
+			{
+				r := req.(*pb.CallScoreRequest)
+				s := res.(*pb.CallScoreResponse)
+
+				pos, ok := m.pid_to_pos(pid)
+				if !ok {
+					panic("invalid pid to play")
+				}
+
+				if pos != m.play_pos {
+					s.ErrCode = gconst.Err_NotYourTurn
+					return
+				}
+
+				// 牌型检测
+				if m.play_idx == 0 {
+					// 是否手上有这些牌
+					// 是否合法的牌型
+
+				} else {
+					// 是否手上有这些牌
+					// 是否合法的牌型
+					// 是否与首家牌型相同
+
+				}
+
+				s.ErrCode = gconst.Err_OK
+			}
+		default:
+			break
+		}
+
 	}
 
 	// ------------------------------------------------------------------------
@@ -215,7 +330,7 @@ func init() {
 func next_seat(seat SEAT) SEAT {
 	seat++
 
-	if seat == SEAT_MAX {
+	if seat >= SEAT_MAX {
 		seat = SEAT_EAST
 	}
 

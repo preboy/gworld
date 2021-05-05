@@ -64,6 +64,10 @@ type Match struct {
 	host_pos SEAT // 首叫方位
 	call_pos SEAT // 叫分方位
 
+	play_pos SEAT  // 当前出牌的位置
+	play_idx int32 // 出牌顺序(round)
+	pass_cnt int32 // pass数量
+
 	cards []Card
 
 	action_ts time.Time
@@ -182,14 +186,24 @@ func (self *Match) Notify(pid string, msg comp.Message) {
 	}
 }
 
-func (self *Match) pos_to_pid(pos SEAT) string {
+func (self *Match) pos_to_pid(pos SEAT) (string, bool) {
 	for _, v := range self.seats {
 		if v.pos == pos {
-			return v.pid
+			return v.pid, true
 		}
 	}
 
-	return ""
+	return "", false
+}
+
+func (self *Match) pid_to_pos(pid string) (SEAT, bool) {
+	for _, v := range self.seats {
+		if v.pid == pid {
+			return v.pos, true
+		}
+	}
+
+	return SEAT_MAX, false
 }
 
 func (self *Match) DealCards(pos SEAT, cards []Card) {
@@ -206,14 +220,15 @@ func (self *Match) DealCards(pos SEAT, cards []Card) {
 		msg.Cards = append(msg.Cards, int32(v))
 	}
 
-	pid := self.pos_to_pid(pos)
-	self.Notify(pid, msg)
+	if pid, ok := self.pos_to_pid(pos); ok {
+		self.Notify(pid, msg)
+	}
 }
 
 func (self *Match) SendActionCall(pos SEAT) {
 
 	// 叫分结束
-	if len(self.deck_info.call_info) >= 3 {
+	if len(self.deck_info.call_info) >= int(SEAT_MAX) {
 		self.CalcCall()
 		return
 	}
