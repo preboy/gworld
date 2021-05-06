@@ -76,6 +76,10 @@ func (c Card) Point() int {
 	return int(c) / 1000
 }
 
+func (c Card) Value() int32 {
+	return int32(c)
+}
+
 func (c Card) Valid() bool {
 	if c == CardPoint_J1 || c == CardPoint_J2 {
 		return true

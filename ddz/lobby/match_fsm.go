@@ -238,11 +238,8 @@ func init() {
 
 		// 首家出最小牌 非首家不出牌
 		if m.play_idx == 0 {
-			for _, v := range m.seats[m.play_pos].GetDefaultCards() {
-				req.Cards.Cards = append(req.Cards.Cards, int32(v))
-			}
-		} else {
-			// req.Cards = nil
+			cards := m.seats[m.play_pos].GetDefaultCards()
+			req.Cards = cards_to_int32(cards)
 		}
 
 		FSM[stage_play].OnMessage(m, pid, req, res)
