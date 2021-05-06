@@ -5,28 +5,6 @@ import (
 	"math/rand"
 )
 
-type CardsType int
-
-const (
-	CardsTypeNIL              CardsType = iota + 0 // 非法
-	CardsTypeA                                     // 单牌
-	CardsTypeAA                                    // 一对
-	CardsTypeJJ                                    // 王炸
-	CardsTypeAAA                                   // 三不带
-	CardsTypeAAAX                                  // 三带单
-	CardsTypeAAAXX                                 // 三带对
-	CardsTypeAAAA                                  // 炸弹
-	CardsTypeAAAAXY                                // 四带二
-	CardsTypeAAAAXXYY                              // 四带二对
-	CardsTypeABCDE                                 // 顺子(大于5)
-	CardsTypeAABBCC                                // 顺对
-	CardsTypeAAABBB                                // 飞机
-	CardsTypeAAABBBXY                              // 飞机带单
-	CardsTypeAAABBBXXYY                            // 飞机带对
-	CardsTypeAAAABBBBXYZM                          // 飞机顺带单
-	CardsTypeAAAABBBBXXYYZZMM                      // 飞机顺带对
-)
-
 const (
 	CardType_Heart   = 1 // 红
 	CardType_Spade   = 2 // 黑
@@ -85,6 +63,10 @@ func NewPoker() (cards []Card) {
 
 // ----------------------------------------------------------------------------
 // member
+
+func NewCard(v int32) Card {
+	return Card(v)
+}
 
 func (c Card) Type() int {
 	return int(c) % 1000

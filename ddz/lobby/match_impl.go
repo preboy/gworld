@@ -8,21 +8,18 @@ func (self *player_data) AddCards(cards []Card) {
 
 // 获取最小的牌
 func (self *player_data) GetDefaultCards() (ret []Card) {
-
 	sort.Slice(self.data.cards, func(i, j int) bool {
 		return self.data.cards[i] > self.data.cards[j]
 	})
 
 	l := len(self.data.cards)
-
 	ret = self.data.cards[l-1 : l]
-
 	self.data.cards = self.data.cards[:l-1]
 
 	return
 }
 
-func remove(cards []Card, card Card) (left []Card, e bool) {
+func remove_card(cards []Card, card Card) (left []Card, e bool) {
 	for k, v := range cards {
 		if v == card {
 			e = true
@@ -36,7 +33,7 @@ func remove(cards []Card, card Card) (left []Card, e bool) {
 }
 
 // 是否手上有这些牌
-func (self *player_data) ExistCards(cards []Card) bool {
+func (self *player_data) ExistCards(cards []int32) bool {
 	if len(cards) == 0 {
 		panic("nil cards")
 	}
@@ -47,12 +44,12 @@ func (self *player_data) ExistCards(cards []Card) bool {
 	}
 
 	for _, v := range cards {
-		left, exist := remove(local, v)
-		local = left
-
-		if !exist {
+		l, e := remove_card(local, Card(v))
+		if !e {
 			return false
 		}
+
+		local = l
 	}
 
 	return true

@@ -172,14 +172,14 @@ func init() {
 				}
 
 				if r.Score < 0 && r.Score > 3 {
-					s.ErrCode = gconst.Er_CallScore
+					s.ErrCode = gconst.Err_CallScore
 					return
 				}
 
 				// 检测分数是否合法
 				for _, v := range m.deck_info.call_info {
 					if v.score > 0 && r.Score <= v.score {
-						s.ErrCode = gconst.Er_CallScore2
+						s.ErrCode = gconst.Err_CallScore2
 						return
 					}
 				}
@@ -253,8 +253,8 @@ func init() {
 		switch req.GetOP() {
 		case pb.Default_PlayRequest_OP:
 			{
-				r := req.(*pb.CallScoreRequest)
-				s := res.(*pb.CallScoreResponse)
+				r := req.(*pb.PlayRequest)
+				s := res.(*pb.PlayResponse)
 
 				pos, ok := m.pid_to_pos(pid)
 				if !ok {
@@ -268,14 +268,27 @@ func init() {
 
 				// 牌型检测
 				if m.play_idx == 0 {
+					// 首家不能为空
+					if len(r.Cards) == 0 {
+						s.ErrCode = gconst.Err_CardNull
+						return
+					}
+
 					// 是否手上有这些牌
+					if !m.seats[pos].ExistCards(r.Cards) {
+						s.ErrCode = gconst.Err_CardNotExist
+						return
+					}
+
 					// 是否合法的牌型
+
+					// 删除手牌
 
 				} else {
 					// 是否手上有这些牌
 					// 是否合法的牌型
+					// 是否为PASS
 					// 是否与首家牌型相同
-
 				}
 
 				s.ErrCode = gconst.Err_OK

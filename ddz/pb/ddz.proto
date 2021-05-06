@@ -95,7 +95,7 @@ message PlayBroadcast {
 // 出牌请求
 message PlayRequest {
     required int32      OP              = 1 [default = 2008 ];
-    required Cards      cards           = 2;
+    repeated int32      cards           = 2;
 }
 
 // 出牌回应
