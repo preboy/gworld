@@ -25,20 +25,57 @@ const (
 )
 
 type Analyse struct {
-	Data map[int][]Card // point -> cards
+	Cards map[int32][]Card // point -> cards
 }
 
 type CardsInfo struct {
-	Type   CardsType // 牌类型
-	APoint int       // 主牌最大点
-	XPoint int       // 副牌最大点
+	Type CardsType // 牌类型
+	Max  int32     // 主牌最大点
+	Len  int32     // 主牌长度(SEQ)
+}
+
+type AnalyseItem struct {
+	Point int32
+	Count int32
+}
+
+// ----------------------------------------------------------------------------
+
+func NewAnalyse(cards []Card) *Analyse {
+	a := &Analyse{
+		Cards: map[int32][]Card{},
+	}
+
+	for _, c := range cards {
+		p := c.Point()
+		a.Cards[p] = append(a.Cards[p], c)
+	}
+
+	return a
+}
+
+func (self *Analyse) Points() (ret []*AnalyseItem) {
+	for p, v := range self.Cards {
+		ret = append(ret, &AnalyseItem{p, int32(len(v))})
+	}
+
+	// sort
+	sort.Slice(ret, func(i, j int) bool {
+		if ret[i].Count != ret[j].Count {
+			return ret[i].Count > ret[j].Count
+		}
+
+		return ret[i].Point > ret[j].Point
+	})
+
+	return
 }
 
 // ----------------------------------------------------------------------------
 
 func cards_from_int32(cards []int32) (ret []Card, valid bool) {
 	for _, v := range cards {
-		c := NewCard(v)
+		c := NewCardFromValue(v)
 		ret = append(ret, c)
 
 		if !c.Valid() {
@@ -52,7 +89,7 @@ func cards_from_int32(cards []int32) (ret []Card, valid bool) {
 
 func cards_to_int32(cards []Card) (ret []int32) {
 	for _, c := range cards {
-		ret = append(ret, int32(c))
+		ret = append(ret, c.Value())
 	}
 
 	return
@@ -67,12 +104,7 @@ func cards_sort(cards []Card) {
 func get_cards_info(cards []Card) *CardsInfo {
 	cards_sort(cards)
 
-	points := map[int][]Card{}
-
-	for _, c := range cards {
-		p := c.Point()
-		points[p] = append(points[p], c)
-	}
+	// a := NewAnalyse(cards)
 
 	ci := &CardsInfo{
 		Type: CardsTypeNIL,
@@ -81,10 +113,10 @@ func get_cards_info(cards []Card) *CardsInfo {
 	switch len(cards) {
 
 	case 1: // CardsTypeA
-		ci.APoint = cards[0].Point()
+		ci.Max = cards[0].Point()
 
 	case 2: // CardsTypeJJ
-		if cards[0] == CardPoint_J2 && cards[1] == CardPoint_J1 {
+		if cards[0].Value() == CardValue_J2 && cards[1].Value() == CardValue_J1 {
 			ci.Type = CardsTypeJJ
 		}
 

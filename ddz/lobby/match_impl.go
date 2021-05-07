@@ -27,7 +27,7 @@ func (self *player_data) ExistCards(cards []int32) bool {
 	}
 
 	for _, v := range cards {
-		l, e := remove_card(local, Card(v))
+		l, e := remove_card(local, NewCardFromValue(v))
 		if !e {
 			return false
 		}

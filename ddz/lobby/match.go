@@ -217,7 +217,7 @@ func (self *Match) DealCards(pos SEAT, cards []Card) {
 	}
 
 	for _, v := range cards {
-		msg.Cards = append(msg.Cards, int32(v))
+		msg.Cards = append(msg.Cards, v.Value())
 	}
 
 	if pid, ok := self.pos_to_pid(pos); ok {

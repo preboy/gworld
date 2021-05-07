@@ -136,7 +136,7 @@ func init() {
 		}
 
 		for _, v := range m.cards[51:] {
-			msg.Cards = append(msg.Cards, int32(v))
+			msg.Cards = append(msg.Cards, v.Value())
 		}
 
 		m.Broadcast(msg)

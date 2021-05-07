@@ -6,50 +6,50 @@ import (
 )
 
 const (
-	CardType_Heart   = 1 // 红
-	CardType_Spade   = 2 // 黑
-	CardType_Diamond = 3 // 方
-	CardType_Club    = 4 // 梅
+	CardColor_Heart   int32 = 1 // 红
+	CardColor_Spade   int32 = 2 // 黑
+	CardColor_Diamond int32 = 3 // 方
+	CardColor_Club    int32 = 4 // 梅
 )
 
 const (
-	CardPoint_3 = 3
-	CardPoint_4 = 4
-	CardPoint_5 = 5
-	CardPoint_6 = 6
-	CardPoint_7 = 7
-	CardPoint_8 = 8
-	CardPoint_9 = 9
-	CardPoint_T = 10
-	CardPoint_J = 11
-	CardPoint_Q = 12
-	CardPoint_K = 13
-	CardPoint_A = 14
-	CardPoint_2 = 16
-
-	CardPoint_J1 = 18000
-	CardPoint_J2 = 20000
+	CardPoint_3 int32 = 3
+	CardPoint_4 int32 = 4
+	CardPoint_5 int32 = 5
+	CardPoint_6 int32 = 6
+	CardPoint_7 int32 = 7
+	CardPoint_8 int32 = 8
+	CardPoint_9 int32 = 9
+	CardPoint_T int32 = 10
+	CardPoint_J int32 = 11
+	CardPoint_Q int32 = 12
+	CardPoint_K int32 = 13
+	CardPoint_A int32 = 14
+	CardPoint_2 int32 = 16
 )
 
-type Card int
+const (
+	CardValue_J1 int32 = 18000
+	CardValue_J2 int32 = 20000
+)
+
+type Card int32
 
 func NewPoker() (cards []Card) {
 	// 3 ~ A * 4
 	for p := CardPoint_3; p <= CardPoint_A; p++ {
-		for t := CardType_Heart; t <= CardType_Club; t++ {
-			v := p*1000 + t
-			cards = append(cards, Card(v))
+		for c := CardColor_Heart; c <= CardColor_Club; c++ {
+			cards = append(cards, NewCard(c, p))
 		}
 	}
 	// 2 * 4
-	for t := CardType_Heart; t <= CardType_Club; t++ {
-		v := CardPoint_2*1000 + t
-		cards = append(cards, Card(v))
+	for c := CardColor_Heart; c <= CardColor_Club; c++ {
+		cards = append(cards, NewCard(c, CardPoint_2))
 	}
 
 	// Joker1 Joker2
-	cards = append(cards, Card(CardPoint_J1))
-	cards = append(cards, Card(CardPoint_J2))
+	cards = append(cards, NewCardFromValue(CardValue_J1))
+	cards = append(cards, NewCardFromValue(CardValue_J2))
 
 	// sort:  7 times equ chaos
 	for x := 0; x < 7; x++ {
@@ -64,16 +64,28 @@ func NewPoker() (cards []Card) {
 // ----------------------------------------------------------------------------
 // member
 
-func NewCard(v int32) Card {
+func NewCardFromValue(v int32) Card {
 	return Card(v)
 }
 
-func (c Card) Type() int {
-	return int(c) % 1000
+func NewCard(color int32, point int32) Card {
+	if color < CardColor_Heart || color > CardColor_Club {
+		panic("NewCard:	invalid color")
+	}
+
+	if color < CardPoint_3 || color > CardPoint_2 || color == 15 {
+		panic("NewCard:	invalid point")
+	}
+
+	return NewCardFromValue(point*1000 + color)
 }
 
-func (c Card) Point() int {
-	return int(c) / 1000
+func (c Card) Color() int32 {
+	return c.Value() % 1000
+}
+
+func (c Card) Point() int32 {
+	return c.Value() / 1000
 }
 
 func (c Card) Value() int32 {
@@ -81,14 +93,16 @@ func (c Card) Value() int32 {
 }
 
 func (c Card) Valid() bool {
-	if c == CardPoint_J1 || c == CardPoint_J2 {
+	v := c.Value()
+
+	if v == CardValue_J1 || v == CardValue_J2 {
 		return true
 	}
 
-	t := c.Type()
+	t := c.Color()
 	p := c.Point()
 
-	if t < CardType_Heart || t > CardType_Club {
+	if t < CardColor_Heart || t > CardColor_Club {
 		return false
 	}
 
@@ -100,36 +114,36 @@ func (c Card) Valid() bool {
 }
 
 func (c Card) ToString() string {
-	if c == Card(CardPoint_J1) {
+	if c.Value() == CardValue_J1 {
 		return "Joker1"
 	}
 
-	if c == Card(CardPoint_J2) {
+	if c.Value() == CardValue_J2 {
 		return "Joker2"
 	}
 
-	return fmt.Sprintf("%s%s", stringify_type(c.Type()), stringify_point(c.Point()))
+	return fmt.Sprintf("%s%s", stringify_type(c.Color()), stringify_point(c.Point()))
 }
 
 // ----------------------------------------------------------------------------
 // local
 
-func stringify_type(v int) string {
+func stringify_type(v int32) string {
 	switch v {
-	case CardType_Heart:
+	case CardColor_Heart:
 		return "♥"
-	case CardType_Spade:
+	case CardColor_Spade:
 		return "♠"
-	case CardType_Diamond:
+	case CardColor_Diamond:
 		return "♦"
-	case CardType_Club:
+	case CardColor_Club:
 		return "♣"
 	default:
 		panic(fmt.Sprintf("errType=%d", v))
 	}
 }
 
-func stringify_point(v int) string {
+func stringify_point(v int32) string {
 	switch v {
 	case CardPoint_3:
 		return "3"
