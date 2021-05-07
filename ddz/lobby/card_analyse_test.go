@@ -6,12 +6,21 @@ import (
 )
 
 func TestAnalyse(t *testing.T) {
-	cards := []Card{15002, 15003, 15000, 15001, 12001}
-
-	a := NewAnalyse(cards)
-
-	for _, v := range a.Points() {
-		fmt.Println(v.Point, v.Count)
+	arr := []int32{
+		3001,
+		3001,
+		4001,
+		4001,
+		5001,
+		5001,
 	}
 
+	cards, ok := cards_from_int32(arr)
+	if !ok {
+		t.Fatal("invalid card")
+	}
+
+	ci := get_cards_info(cards)
+
+	fmt.Println(ci.ToString())
 }
