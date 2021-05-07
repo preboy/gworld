@@ -34,7 +34,7 @@ type CardsInfo struct {
 	Len  int32     // 主牌长度(SEQ)
 }
 
-type AnalyseItem struct {
+type AnalysedPoint struct {
 	Point int32
 	Count int32
 }
@@ -54,19 +54,21 @@ func NewAnalyse(cards []Card) *Analyse {
 	return a
 }
 
-func (self *Analyse) Points() (ret []*AnalyseItem) {
+func (self *Analyse) GetPoints() (ret []*AnalysedPoint) {
 	for p, v := range self.Cards {
-		ret = append(ret, &AnalyseItem{p, int32(len(v))})
+		ret = append(ret, &AnalysedPoint{p, int32(len(v))})
 	}
 
 	// sort
-	sort.Slice(ret, func(i, j int) bool {
-		if ret[i].Count != ret[j].Count {
-			return ret[i].Count > ret[j].Count
-		}
+	if len(ret) > 1 {
+		sort.Slice(ret, func(i, j int) bool {
+			if ret[i].Count != ret[j].Count {
+				return ret[i].Count > ret[j].Count
+			}
 
-		return ret[i].Point > ret[j].Point
-	})
+			return ret[i].Point > ret[j].Point
+		})
+	}
 
 	return
 }
@@ -104,15 +106,20 @@ func cards_sort(cards []Card) {
 func get_cards_info(cards []Card) *CardsInfo {
 	cards_sort(cards)
 
-	// a := NewAnalyse(cards)
+	a := NewAnalyse(cards)
+	points := a.GetPoints()
+	cnt_points := int32(len(points))
 
 	ci := &CardsInfo{
 		Type: CardsTypeNIL,
 	}
 
-	switch len(cards) {
+	cnt_cards := int32(len(cards))
+
+	switch cnt_cards {
 
 	case 1: // CardsTypeA
+		ci.Type = CardsTypeA
 		ci.Max = cards[0].Point()
 
 	case 2: // CardsTypeJJ
@@ -121,12 +128,41 @@ func get_cards_info(cards []Card) *CardsInfo {
 		}
 
 	case 3: // CardsTypeAAA
+		if cnt_points == 1 {
+			ci.Type = CardsTypeAAA
+			ci.Max = points[0].Point
+		}
 
 	case 4: // CardsTypeAAAA CardsTypeAAAX
+		if cnt_points == 1 {
+			ci.Type = CardsTypeAAAA
+			ci.Max = points[0].Point
+			break
+		}
+
+		if cnt_points == 2 && points[0].Count == 3 {
+			ci.Type = CardsTypeAAAX
+			ci.Max = points[0].Point
+		}
 
 	case 5: // CardsTypeA_SEQ CardsTypeAAAXX
+		if Is_CardsTypeA_SEQ(points, cnt_cards, ci) {
+			break
+		}
+
+		if cnt_points == 2 && points[0].Count == 3 {
+			ci.Type = CardsTypeAAAXX
+			ci.Max = points[0].Point
+		}
 
 	case 6: // CardsTypeA_SEQ CardsTypeAA_SEQ CardsTypeAAA_SEQ CardsTypeAAAAXY
+		if Is_CardsTypeA_SEQ(points, cnt_cards, ci) {
+			break
+		}
+
+		if Is_CardsTypeAA_SEQ(points, cnt_cards, ci) {
+			break
+		}
 
 	case 7: // CardsTypeA_SEQ
 
@@ -155,4 +191,45 @@ func get_cards_info(cards []Card) *CardsInfo {
 	}
 
 	return ci
+}
+
+func Is_CardsTypeA_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInfo) bool {
+	cnt_points := int32(len(points))
+	seq_length := cnt_cards
+
+	b := cnt_points == seq_length &&
+		points[0].Point-points[cnt_points-1].Point == seq_length-1
+
+	if b {
+		ci.Type = CardsTypeA_SEQ
+		ci.Max = points[0].Point
+		ci.Len = seq_length
+	}
+
+	return b
+}
+
+func Is_CardsTypeAA_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInfo) bool {
+	cnt_points := int32(len(points))
+	seq_length := cnt_cards / 2
+
+	if cnt_points != seq_length {
+		return false
+	}
+
+	for i := int32(0); i < cnt_points; i++ {
+		if points[i].Count != 2 {
+			return false
+		}
+	}
+
+	b := points[0].Point-points[cnt_points-1].Point == seq_length-1
+
+	if b {
+		ci.Type = CardsTypeAA_SEQ
+		ci.Max = points[0].Point
+		ci.Len = seq_length
+	}
+
+	return b
 }
