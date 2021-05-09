@@ -64,9 +64,10 @@ type Match struct {
 	host_pos SEAT // 首叫方位
 	call_pos SEAT // 叫分方位
 
-	play_pos SEAT  // 当前出牌的位置
-	play_idx int32 // 出牌顺序(round)
-	pass_cnt int32 // pass数量
+	play_pos SEAT       // 当前出牌的位置
+	play_idx int32      // 出牌顺序(round)
+	pass_cnt int32      // pass数量
+	play_ci  *CardsInfo // 牌型
 
 	cards []Card
 
@@ -272,4 +273,69 @@ func (self *Match) CalcCall() {
 		self.deck_info.caca_info.draw = true
 		self.Switch(stage_calc)
 	}
+}
+
+func (self *Match) IsVictory() bool {
+	return self.seats[self.play_pos].IsVictory()
+}
+
+// 玩家出牌
+func (self *Match) PlayHand(cards []Card, ci *CardsInfo) {
+	pos := self.play_pos
+
+	// 删除手牌
+	self.seats[pos].RemoveCards(cards)
+
+	self.play_ci = ci
+	self.pass_cnt = 0
+	self.play_idx++
+
+	// 通知谁出了牌
+	self.Broadcast(&pb.PlayResultBroadcast{
+		Pos:   int32(self.play_pos),
+		Cards: cards_to_int32(cards),
+	})
+
+	self.deck_info.play_info = append(self.deck_info.play_info, &play_info_t{})
+
+	// 判断胜负
+	if self.IsVictory() {
+		loop.Next(func() {
+			self.Switch(stage_calc)
+		})
+
+		return
+	}
+
+	self.play_pos = next_seat(self.play_pos)
+
+	// 通知下一家出牌
+	self.Broadcast(&pb.PlayBroadcast{
+		Pos:   int32(self.play_pos),
+		First: self.play_idx == 0,
+	})
+}
+
+func (self *Match) PlayPass() {
+	self.play_idx++
+	self.pass_cnt++
+
+	if self.pass_cnt == 2 {
+		self.play_idx = 0
+		self.pass_cnt = 0
+	}
+
+	// 通知谁出了牌
+	self.Broadcast(&pb.PlayResultBroadcast{
+		Pos:   int32(self.play_pos),
+		Cards: nil,
+	})
+
+	self.play_pos = next_seat(self.play_pos)
+
+	// 通知下一家出牌
+	self.Broadcast(&pb.PlayBroadcast{
+		Pos:   int32(self.play_pos),
+		First: self.play_idx == 0,
+	})
 }

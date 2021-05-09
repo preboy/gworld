@@ -263,6 +263,27 @@ func init() {
 					return
 				}
 
+				var valid bool
+				var cards []Card
+				var ci *CardsInfo = &CardsInfo{}
+
+				if len(r.Cards) != 0 {
+					// 是否合法的牌
+					cards, valid = cards_from_int32(r.Cards)
+					if !valid {
+						s.ErrCode = gconst.Err_CardInvalid
+						return
+					}
+
+					// 是否手上有这些牌
+					if !m.seats[pos].ExistCards(cards) {
+						s.ErrCode = gconst.Err_CardNotExist
+						return
+					}
+
+					ci = get_cards_info(cards)
+				}
+
 				// 牌型检测
 				if m.play_idx == 0 {
 					// 首家不能为空
@@ -271,21 +292,26 @@ func init() {
 						return
 					}
 
-					// 是否手上有这些牌
-					if !m.seats[pos].ExistCards(r.Cards) {
-						s.ErrCode = gconst.Err_CardNotExist
+					// 是否合法的牌型
+					if ci.Type == CardsTypeNIL {
+						s.ErrCode = gconst.Err_CardTypeInvalid
 						return
 					}
 
-					// 是否合法的牌型
-
-					// 删除手牌
+					m.PlayHand(cards, ci)
 
 				} else {
-					// 是否手上有这些牌
-					// 是否合法的牌型
-					// 是否为PASS
-					// 是否与首家牌型相同
+					if len(r.Cards) == 0 {
+						m.PlayPass()
+					} else {
+						// 是否合法的牌型
+						if ci.Type != m.play_ci.Type || ci.Max <= m.play_ci.Max || ci.Len != m.play_ci.Len {
+							s.ErrCode = gconst.Err_CardTypeInvalid
+							return
+						}
+
+						m.PlayHand(cards, ci)
+					}
 				}
 
 				s.ErrCode = gconst.Err_OK
@@ -301,6 +327,10 @@ func init() {
 
 	FSM[stage_calc].OnEnter = func(m *Match) {
 		log.Info("enter calc")
+
+		// 结算信息
+		msg := &pb.DeckEndBroadcast{}
+		m.Broadcast(msg)
 	}
 
 	FSM[stage_calc].OnLeave = func(m *Match) {

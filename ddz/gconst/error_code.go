@@ -20,5 +20,7 @@ const (
 	// play
 	Err_NotYourTurn
 	Err_CardNull
+	Err_CardInvalid
 	Err_CardNotExist
+	Err_CardTypeInvalid
 )

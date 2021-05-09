@@ -16,7 +16,7 @@ func (self *player_data) GetDefaultCards() (ret []Card) {
 }
 
 // 是否手上有这些牌
-func (self *player_data) ExistCards(cards []int32) bool {
+func (self *player_data) ExistCards(cards []Card) bool {
 	if len(cards) == 0 {
 		panic("nil cards")
 	}
@@ -26,8 +26,8 @@ func (self *player_data) ExistCards(cards []int32) bool {
 		local = append(local, v)
 	}
 
-	for _, v := range cards {
-		l, e := remove_card(local, NewCardFromValue(v))
+	for _, c := range cards {
+		l, e := remove_card(local, c)
 		if !e {
 			return false
 		}
@@ -38,10 +38,35 @@ func (self *player_data) ExistCards(cards []int32) bool {
 	return true
 }
 
+func (self *player_data) RemoveCards(cards []Card) {
+	if len(cards) == 0 {
+		return
+	}
+
+	new_cards := []Card{}
+
+	for _, c := range self.data.cards {
+		if !exist_card(cards, c) {
+			new_cards = append(new_cards, c)
+		}
+	}
+
+	self.data.cards = new_cards
+}
+
+func (self *player_data) IsVictory() bool {
+	return len(self.data.cards) == 0
+}
+
 // ----------------------------------------------------------------------------
 // local
-func valid_cards(cards []Card) bool {
 
+func exist_card(cards []Card, c Card) bool {
+	for _, v := range cards {
+		if v == c {
+			return true
+		}
+	}
 	return false
 }
 

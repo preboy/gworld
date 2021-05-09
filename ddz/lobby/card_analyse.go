@@ -85,11 +85,11 @@ func (self *CardsInfo) ToString() string {
 func cards_from_int32(cards []int32) (ret []Card, valid bool) {
 	for _, v := range cards {
 		c := NewCardFromValue(v)
-		ret = append(ret, c)
-
 		if !c.Valid() {
 			return
 		}
+
+		ret = append(ret, c)
 	}
 
 	valid = true
