@@ -1,62 +1,63 @@
-package lobby
+package smatch
 
 import (
 	"gworld/core/log"
 	"gworld/ddz/comp"
 	"gworld/ddz/gconst"
+	"gworld/ddz/lobby/poker"
 	"gworld/ddz/loop"
 	"gworld/ddz/pb"
 	"time"
 )
 
 type stage_func struct {
-	OnEnter   func(m *Match)
-	OnLeave   func(m *Match)
-	OnUpdate  func(m *Match)
-	OnMessage func(m *Match, pid string, req comp.Message, res comp.Message)
+	OnEnter   func(t *Table)
+	OnLeave   func(t *Table)
+	OnUpdate  func(t *Table)
+	OnMessage func(t *Table, pid string, req comp.IMessage, res comp.IMessage)
 }
 
 var (
-	FSM [stage_MAX]stage_func
+	FSM [stage_max]stage_func
 )
 
 type deck_info_t struct {
-	index int
+	index int32
 	start int64
 
 	deal_info []*deal_info_t
 	call_info []*call_info_t
-	caca_info *call_calc_info_t
+	caca_info *cacl_info_t
 	play_info []*play_info_t
 	calc_info *calc_info_t
 }
 
 type deal_info_t struct {
-	pos   SEAT
-	cards []Card
+	pos   seat
+	cards []poker.Card
 }
 
 type call_info_t struct {
 	past  int64
-	pos   SEAT
+	pos   seat
 	score int32 // 0,1,2,3
 }
 
-type call_calc_info_t struct {
+type cacl_info_t struct {
 	draw  bool
-	lord  SEAT
+	lord  seat
 	score int32
 }
 
 type play_info_t struct {
 	past  int
-	pos   SEAT
-	cards []Card // empty is PASS
+	pos   seat
+	cards []poker.Card // empty is PASS
 }
 
 // 结算信息
 type calc_info_t struct {
-	win    SEAT // -1 流局
+	win    seat // -1 流局
 	lord   bool
 	score  int32
 	spring bool
@@ -70,88 +71,88 @@ func init() {
 	// ------------------------------------------------------------------------
 	// prepare
 
-	FSM[stage_prepare].OnEnter = func(m *Match) {
+	FSM[stage_wait].OnEnter = func(t *Table) {
 		log.Info("enter prepare")
 	}
 
-	FSM[stage_prepare].OnLeave = func(m *Match) {
+	FSM[stage_wait].OnLeave = func(t *Table) {
 		log.Info("leave prepare")
 	}
 
-	FSM[stage_prepare].OnUpdate = func(m *Match) {
-		m.Switch(stage_deal)
+	FSM[stage_wait].OnUpdate = func(t *Table) {
+		t.Switch(stage_deal)
 	}
 
-	FSM[stage_prepare].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+	FSM[stage_wait].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {
 	}
 
 	// ------------------------------------------------------------------------
 	// deal
 
-	FSM[stage_deal].OnEnter = func(m *Match) {
+	FSM[stage_deal].OnEnter = func(t *Table) {
 		log.Info("enter deal")
-		m.DeckOpen()
+		t.DeckOpen()
 
 		// 发牌
 		{
-			m.cards = NewPoker()
+			t.cards = poker.CreatePoker()
 
-			n := m.call_pos
-			m.DealCards(n, m.cards[:17])
-
-			n = next_seat(n)
-			m.DealCards(n, m.cards[17:34])
+			n := t.call_pos
+			t.DealCards(n, t.cards[:17])
 
 			n = next_seat(n)
-			m.DealCards(n, m.cards[34:51])
+			t.DealCards(n, t.cards[17:34])
+
+			n = next_seat(n)
+			t.DealCards(n, t.cards[34:51])
 		}
 	}
 
-	FSM[stage_deal].OnLeave = func(m *Match) {
+	FSM[stage_deal].OnLeave = func(t *Table) {
 		log.Info("leave deal")
 	}
 
-	FSM[stage_deal].OnUpdate = func(m *Match) {
-		m.Switch(stage_call)
+	FSM[stage_deal].OnUpdate = func(t *Table) {
+		t.Switch(stage_call)
 	}
 
-	FSM[stage_deal].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+	FSM[stage_deal].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {
 	}
 
 	// ------------------------------------------------------------------------
 	// call
 
-	FSM[stage_call].OnEnter = func(m *Match) {
+	FSM[stage_call].OnEnter = func(t *Table) {
 		log.Info("enter call")
 
-		m.SendActionCall(m.call_pos)
+		t.SendActionCall(t.call_pos)
 	}
 
-	FSM[stage_call].OnLeave = func(m *Match) {
+	FSM[stage_call].OnLeave = func(t *Table) {
 		// 发送叫分结果
 		msg := &pb.CallScoreCalcBroadcast{
-			Draw:  m.deck_info.caca_info.draw,
-			Lord:  int32(m.deck_info.caca_info.lord),
-			Score: m.deck_info.caca_info.score,
+			Draw:  t.deck_info.caca_info.draw,
+			Lord:  int32(t.deck_info.caca_info.lord),
+			Score: t.deck_info.caca_info.score,
 		}
 
-		for _, v := range m.cards[51:] {
+		for _, v := range t.cards[51:] {
 			msg.Cards = append(msg.Cards, v.Value())
 		}
 
-		m.Broadcast(msg)
+		t.Broadcast(msg)
 		log.Info("leave call")
 	}
 
-	FSM[stage_call].OnUpdate = func(m *Match) {
+	FSM[stage_call].OnUpdate = func(t *Table) {
 		// 时间到了，叫0分
-		if time.Since(m.action_ts) > 15*time.Second {
-			m.deck_info.call_info = append(m.deck_info.call_info, &call_info_t{15, m.call_pos, 0})
-			m.SendActionCall(next_seat(m.call_pos))
+		if time.Since(t.action_ts) > 15*time.Second {
+			t.deck_info.call_info = append(t.deck_info.call_info, &call_info_t{15, t.call_pos, 0})
+			t.SendActionCall(next_seat(t.call_pos))
 		}
 	}
 
-	FSM[stage_call].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+	FSM[stage_call].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {
 
 		switch req.GetOP() {
 		case pb.Default_CallScoreRequest_OP:
@@ -160,13 +161,13 @@ func init() {
 				s := res.(*pb.CallScoreResponse)
 
 				// 收到消息
-				pos, ok := m.pid_to_pos(pid)
+				pos, ok := t.pid_to_pos(pid)
 				if !ok {
 					s.ErrCode = gconst.Err_CallPid
 					return
 				}
 
-				if pos != m.call_pos {
+				if pos != t.call_pos {
 					s.ErrCode = gconst.Err_CallPos
 					return
 				}
@@ -177,7 +178,7 @@ func init() {
 				}
 
 				// 检测分数是否合法
-				for _, v := range m.deck_info.call_info {
+				for _, v := range t.deck_info.call_info {
 					if v.score > 0 && r.Score <= v.score {
 						s.ErrCode = gconst.Err_CallScore2
 						return
@@ -187,12 +188,12 @@ func init() {
 				s.ErrCode = gconst.Err_OK
 
 				loop.Next(func() {
-					m.Broadcast(&pb.CallScoreResultBroadcast{
+					t.Broadcast(&pb.CallScoreResultBroadcast{
 						Pos:   int32(pos),
 						Score: r.Score,
 					})
 
-					m.SendActionCall(next_seat(m.call_pos))
+					t.SendActionCall(next_seat(t.call_pos))
 				})
 			}
 		default:
@@ -203,49 +204,49 @@ func init() {
 	// ------------------------------------------------------------------------
 	// play
 
-	FSM[stage_play].OnEnter = func(m *Match) {
+	FSM[stage_play].OnEnter = func(t *Table) {
 		log.Info("enter play")
 
-		m.play_pos = m.deck_info.caca_info.lord
-		m.play_idx = 0
-		m.pass_cnt = 0
+		t.play_pos = t.deck_info.caca_info.lord
+		t.play_idx = 0
+		t.play_pass = 0
 
-		m.action_ts = time.Now()
+		t.action_ts = time.Now()
 
-		m.Broadcast(&pb.PlayBroadcast{
-			Pos:   int32(m.play_pos),
-			First: m.play_idx == 0,
+		t.Broadcast(&pb.PlayBroadcast{
+			Pos:   int32(t.play_pos),
+			First: t.play_idx == 0,
 		})
 	}
 
-	FSM[stage_play].OnLeave = func(m *Match) {
+	FSM[stage_play].OnLeave = func(t *Table) {
 		log.Info("leave play")
 	}
 
-	FSM[stage_play].OnUpdate = func(m *Match) {
+	FSM[stage_play].OnUpdate = func(t *Table) {
 		// 默认出牌
-		if time.Since(m.action_ts) < 15*time.Second {
+		if time.Since(t.action_ts) < 15*time.Second {
 			return
 		}
 
 		req := &pb.PlayRequest{}
 		res := &pb.PlayResponse{}
 
-		pid, ok := m.pos_to_pid(m.play_pos)
+		pid, ok := t.pos_to_pid(t.play_pos)
 		if !ok {
 			panic("Invalid play pos")
 		}
 
 		// 首家出最小牌 非首家不出牌
-		if m.play_idx == 0 {
-			cards := m.seats[m.play_pos].GetDefaultCards()
-			req.Cards = cards_to_int32(cards)
+		if t.play_idx == 0 {
+			cards := t.seats[t.play_pos].GetDefaultCards()
+			req.Cards = poker.CardsToInt32(cards)
 		}
 
-		FSM[stage_play].OnMessage(m, pid, req, res)
+		FSM[stage_play].OnMessage(t, pid, req, res)
 	}
 
-	FSM[stage_play].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+	FSM[stage_play].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {
 
 		switch req.GetOP() {
 		case pb.Default_PlayRequest_OP:
@@ -253,39 +254,39 @@ func init() {
 				r := req.(*pb.PlayRequest)
 				s := res.(*pb.PlayResponse)
 
-				pos, ok := m.pid_to_pos(pid)
+				pos, ok := t.pid_to_pos(pid)
 				if !ok {
 					panic("invalid pid to play")
 				}
 
-				if pos != m.play_pos {
+				if pos != t.play_pos {
 					s.ErrCode = gconst.Err_NotYourTurn
 					return
 				}
 
 				var valid bool
-				var cards []Card
-				var ci *CardsInfo = &CardsInfo{}
+				var cards []poker.Card
+				var ci *poker.CardsInfo = &poker.CardsInfo{}
 
 				if len(r.Cards) != 0 {
 					// 是否合法的牌
-					cards, valid = cards_from_int32(r.Cards)
+					cards, valid = poker.CardsFromInt32(r.Cards)
 					if !valid {
 						s.ErrCode = gconst.Err_CardInvalid
 						return
 					}
 
 					// 是否手上有这些牌
-					if !m.seats[pos].ExistCards(cards) {
+					if !t.seats[pos].ExistCards(cards) {
 						s.ErrCode = gconst.Err_CardNotExist
 						return
 					}
 
-					ci = get_cards_info(cards)
+					ci = poker.CardsAnalyse(cards)
 				}
 
 				// 牌型检测
-				if m.play_idx == 0 {
+				if t.play_idx == 0 {
 					// 首家不能为空
 					if len(r.Cards) == 0 {
 						s.ErrCode = gconst.Err_CardNull
@@ -293,24 +294,24 @@ func init() {
 					}
 
 					// 是否合法的牌型
-					if ci.Type == CardsTypeNIL {
+					if ci.Type == poker.CardsTypeNIL {
 						s.ErrCode = gconst.Err_CardTypeInvalid
 						return
 					}
 
-					m.PlayHand(cards, ci)
+					t.PlayHand(cards, ci)
 
 				} else {
 					if len(r.Cards) == 0 {
-						m.PlayPass()
+						t.PlayPass()
 					} else {
 						// 是否合法的牌型
-						if ci.Type != m.play_ci.Type || ci.Max <= m.play_ci.Max || ci.Len != m.play_ci.Len {
+						if ci.Type != t.play_cards.Type || ci.Max <= t.play_cards.Max || ci.Len != t.play_cards.Len {
 							s.ErrCode = gconst.Err_CardTypeInvalid
 							return
 						}
 
-						m.PlayHand(cards, ci)
+						t.PlayHand(cards, ci)
 					}
 				}
 
@@ -325,53 +326,53 @@ func init() {
 	// ------------------------------------------------------------------------
 	// calc
 
-	FSM[stage_calc].OnEnter = func(m *Match) {
+	FSM[stage_calc].OnEnter = func(t *Table) {
 		log.Info("enter calc")
 
 		// 结算信息
 		msg := &pb.DeckEndBroadcast{}
-		m.Broadcast(msg)
+		t.Broadcast(msg)
 	}
 
-	FSM[stage_calc].OnLeave = func(m *Match) {
-		m.DeckClosed()
+	FSM[stage_calc].OnLeave = func(t *Table) {
+		t.DeckClosed()
 		log.Info("leave calc")
 	}
 
-	FSM[stage_calc].OnUpdate = func(m *Match) {
-		m.NextDeck()
+	FSM[stage_calc].OnUpdate = func(t *Table) {
+		t.NextDeck()
 	}
 
-	FSM[stage_calc].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+	FSM[stage_calc].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {
 	}
 
 	// ------------------------------------------------------------------------
 	// over
 
-	FSM[stage_over].OnEnter = func(m *Match) {
+	FSM[stage_over].OnEnter = func(t *Table) {
 		log.Info("enter over")
 	}
 
-	FSM[stage_over].OnLeave = func(m *Match) {
+	FSM[stage_over].OnLeave = func(t *Table) {
 		log.Info("leave over")
 	}
 
-	FSM[stage_over].OnUpdate = func(m *Match) {
+	FSM[stage_over].OnUpdate = func(t *Table) {
 
 	}
 
-	FSM[stage_over].OnMessage = func(m *Match, pid string, req comp.Message, res comp.Message) {
+	FSM[stage_over].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {
 	}
 }
 
 // ============================================================================
 // local
 
-func next_seat(seat SEAT) SEAT {
+func next_seat(seat seat) seat {
 	seat++
 
-	if seat >= SEAT_MAX {
-		seat = SEAT_EAST
+	if seat >= seat_max {
+		seat = seat_east
 	}
 
 	return seat

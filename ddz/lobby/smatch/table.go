@@ -1,75 +1,54 @@
-package lobby
+package smatch
 
 import (
 	"time"
 
-	"gworld/core/utils"
 	"gworld/ddz/comp"
+	"gworld/ddz/lobby/poker"
 	"gworld/ddz/loop"
 	"gworld/ddz/pb"
 )
 
 type (
-	SEAT  int
-	STAGE int
+	seat  = int32
+	stage = int32
 )
 
 const (
-	SEAT_EAST  SEAT = 0
-	SEAT_SOUTH SEAT = 1
-	SEAT_WEST  SEAT = 2
-	SEAT_MAX   SEAT = 3
+	seat_east  seat = 0
+	seat_south seat = 1
+	seat_west  seat = 2
+	seat_max
 )
 
 const (
-	stage_prepare STAGE = iota + 0 // 未开始
-	stage_deal                     // 发牌
-	stage_call                     // 叫分
-	stage_play                     // 出牌
-	stage_calc                     // 结算
-	stage_over                     // 已结束
-	stage_MAX
+	stage_wait stage = iota + 0 // 未开始
+	stage_deal                  // 发牌
+	stage_call                  // 叫分
+	stage_play                  // 出牌
+	stage_calc                  // 结算
+	stage_over                  // 已结束
+	stage_max
 )
 
-// 一个人本副牌的信息
-type deck_data struct {
-	cards []Card
-}
+type Table struct {
+	m *SMatch
 
-type player_data struct {
-	m *Match
+	seats [seat_max]*gambler // 3个方位的pid
 
-	pid  string
-	pos  SEAT
-	data *deck_data
+	stage stage
 
-	// stat
-	score_total   int // 总分
-	win_count     int // 胜次数
-	lost_count    int // 败次数
-	load_count    int // 地主次数
-	peasant_count int // 农民次数
-}
+	deck_index int32 // 当前牌副数
 
-type Match struct {
-	ID   uint32
-	pids []string
+	host_pos seat // 首叫方位
+	call_pos seat // 叫分方位
 
-	seats [SEAT_MAX]*player_data // 3个方位的pid
-	stage STAGE
+	play_pos   seat             // 当前出牌的位置
+	play_idx   int32            // 出牌顺序(round)
+	play_pass  int32            // pass数量
+	play_cards *poker.CardsInfo // 牌型
 
-	deck_index int // 当前牌副数
-	deck_total int // 总牌副数
-
-	host_pos SEAT // 首叫方位
-	call_pos SEAT // 叫分方位
-
-	play_pos SEAT       // 当前出牌的位置
-	play_idx int32      // 出牌顺序(round)
-	pass_cnt int32      // pass数量
-	play_ci  *CardsInfo // 牌型
-
-	cards []Card
+	cards []poker.Card
 
 	action_ts time.Time
 
@@ -77,66 +56,77 @@ type Match struct {
 	deck_info_history []*deck_info_t // 历史数据
 }
 
-func NewMatch() *Match {
-	return &Match{
-		ID: utils.SeqU32(),
-	}
-}
-
-func (self *Match) Init(pids []string) {
-	self.pids = pids
-	self.stage = stage_prepare
-
-	self.deck_index = 0
-	self.deck_total = 10
-
-	self.host_pos = SEAT_EAST
-
-	for i := SEAT_EAST; i < SEAT_MAX; i++ {
-		self.seats[i] = &player_data{
-			m:    self,
-			pid:  pids[i],
-			pos:  i,
-			data: &deck_data{},
-		}
-	}
-
-	FSM[self.stage].OnEnter(self)
-}
-
-func (self *Match) OnUpdate() {
+func (self *Table) OnUpdate() {
 	FSM[self.stage].OnUpdate(self)
 	loop.DoNext()
 }
 
-func (self *Match) OnMessage(pid string, req comp.Message, res comp.Message) {
+func (self *Table) OnMessage(pid string, req comp.IMessage, res comp.IMessage) {
 	FSM[self.stage].OnMessage(self, pid, req, res)
 }
 
-func (self *Match) Switch(stage STAGE) {
+func (self *Table) Init() {
+	self.stage = stage_wait
+
+	self.deck_index = 0
+
+	self.host_pos = seat_east
+
+}
+
+func (self *Table) Sit(pid string) bool {
+	join := false
+
+	for i := seat_east; i < seat_max; i++ {
+		if self.seats[i] != nil {
+			continue
+		}
+
+		self.seats[i] = &gambler{
+			m:    self,
+			pid:  pid,
+			pos:  i,
+			data: &deck_data{},
+		}
+
+		join = true
+		break
+	}
+
+	if !join {
+		return false
+	}
+
+	// 坐满之后自动开启
+	full := true
+	for i := seat_east; i < seat_max; i++ {
+		if self.seats[i] == nil {
+			full = false
+			break
+		}
+	}
+
+	if full {
+		FSM[self.stage].OnEnter(self)
+	}
+
+	return true
+}
+
+func (self *Table) Switch(stage stage) {
 	FSM[self.stage].OnLeave(self)
 	self.stage = stage
 	FSM[self.stage].OnEnter(self)
 }
 
-func (self *Match) Over() bool {
+func (self *Table) Over() bool {
 	return self.stage == stage_over
 }
 
-func (self *Match) Exist(pid string) bool {
-	for _, v := range self.pids {
-		if v == pid {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (self *Match) DeckOpen() {
+func (self *Table) DeckOpen() {
 	self.deck_index++
 
-	for i := SEAT_EAST; i < SEAT_MAX; i++ {
+	for i := seat_east; i < seat_max; i++ {
 		self.seats[i].data = &deck_data{}
 	}
 
@@ -145,7 +135,7 @@ func (self *Match) DeckOpen() {
 		start:     time.Now().Unix(),
 		deal_info: nil,
 		call_info: nil,
-		caca_info: &call_calc_info_t{},
+		caca_info: &cacl_info_t{},
 		play_info: nil,
 		calc_info: &calc_info_t{},
 	}
@@ -153,20 +143,20 @@ func (self *Match) DeckOpen() {
 	self.call_pos = self.host_pos
 }
 
-func (self *Match) DeckClosed() {
+func (self *Table) DeckClosed() {
 	self.host_pos = next_seat(self.host_pos)
 	self.deck_info_history = append(self.deck_info_history, self.deck_info)
 }
 
-func (self *Match) NextDeck() {
-	if self.deck_index < self.deck_total {
+func (self *Table) NextDeck() {
+	if self.deck_index < self.m.conf.total_deck {
 		self.Switch(stage_deal)
 	} else {
 		self.Switch(stage_over)
 	}
 }
 
-func (self *Match) Broadcast(msg comp.Message) {
+func (self *Table) Broadcast(msg comp.IMessage) {
 	for _, pid := range _pids {
 		plr := comp.PM.FindPlayer(pid)
 		if plr != nil {
@@ -175,7 +165,7 @@ func (self *Match) Broadcast(msg comp.Message) {
 	}
 }
 
-func (self *Match) Notify(pid string, msg comp.Message) {
+func (self *Table) Notify(pid string, msg comp.IMessage) {
 	for _, v := range _pids {
 		if v == pid {
 			plr := comp.PM.FindPlayer(pid)
@@ -187,7 +177,7 @@ func (self *Match) Notify(pid string, msg comp.Message) {
 	}
 }
 
-func (self *Match) pos_to_pid(pos SEAT) (string, bool) {
+func (self *Table) pos_to_pid(pos seat) (string, bool) {
 	for _, v := range self.seats {
 		if v.pos == pos {
 			return v.pid, true
@@ -197,17 +187,17 @@ func (self *Match) pos_to_pid(pos SEAT) (string, bool) {
 	return "", false
 }
 
-func (self *Match) pid_to_pos(pid string) (SEAT, bool) {
+func (self *Table) pid_to_pos(pid string) (seat, bool) {
 	for _, v := range self.seats {
 		if v.pid == pid {
 			return v.pos, true
 		}
 	}
 
-	return SEAT_MAX, false
+	return seat_max, false
 }
 
-func (self *Match) DealCards(pos SEAT, cards []Card) {
+func (self *Table) DealCards(pos seat, cards []poker.Card) {
 
 	self.seats[pos].AddCards(cards)
 
@@ -226,10 +216,10 @@ func (self *Match) DealCards(pos SEAT, cards []Card) {
 	}
 }
 
-func (self *Match) SendActionCall(pos SEAT) {
+func (self *Table) SendActionCall(pos seat) {
 
 	// 叫分结束
-	if len(self.deck_info.call_info) >= int(SEAT_MAX) {
+	if len(self.deck_info.call_info) >= int(seat_max) {
 		self.CalcCall()
 		return
 	}
@@ -251,8 +241,8 @@ func (self *Match) SendActionCall(pos SEAT) {
 	self.Broadcast(msg)
 }
 
-func (self *Match) CalcCall() {
-	var lord SEAT
+func (self *Table) CalcCall() {
+	var lord seat
 	var score int32
 
 	for _, v := range self.deck_info.call_info {
@@ -275,25 +265,25 @@ func (self *Match) CalcCall() {
 	}
 }
 
-func (self *Match) IsVictory() bool {
+func (self *Table) IsVictory() bool {
 	return self.seats[self.play_pos].IsVictory()
 }
 
 // 玩家出牌
-func (self *Match) PlayHand(cards []Card, ci *CardsInfo) {
+func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	pos := self.play_pos
 
 	// 删除手牌
 	self.seats[pos].RemoveCards(cards)
 
-	self.play_ci = ci
-	self.pass_cnt = 0
 	self.play_idx++
+	self.play_pass = 0
+	self.play_cards = ci
 
 	// 通知谁出了牌
 	self.Broadcast(&pb.PlayResultBroadcast{
 		Pos:   int32(self.play_pos),
-		Cards: cards_to_int32(cards),
+		Cards: poker.CardsToInt32(cards),
 	})
 
 	self.deck_info.play_info = append(self.deck_info.play_info, &play_info_t{})
@@ -316,13 +306,13 @@ func (self *Match) PlayHand(cards []Card, ci *CardsInfo) {
 	})
 }
 
-func (self *Match) PlayPass() {
+func (self *Table) PlayPass() {
 	self.play_idx++
-	self.pass_cnt++
+	self.play_pass++
 
-	if self.pass_cnt == 2 {
+	if self.play_pass == 2 {
 		self.play_idx = 0
-		self.pass_cnt = 0
+		self.play_pass = 0
 	}
 
 	// 通知谁出了牌

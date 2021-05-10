@@ -1,11 +1,11 @@
-package lobby
+package poker
 
 import (
 	"fmt"
 	"sort"
 )
 
-type CardsType int
+type CardsType int32
 
 const (
 	CardsTypeNIL          CardsType = iota + 0 // 非法
@@ -81,8 +81,9 @@ func (self *CardsInfo) ToString() string {
 }
 
 // ----------------------------------------------------------------------------
+// local
 
-func cards_from_int32(cards []int32) (ret []Card, valid bool) {
+func CardsFromInt32(cards []int32) (ret []Card, valid bool) {
 	for _, v := range cards {
 		c := NewCardFromValue(v)
 		if !c.Valid() {
@@ -96,7 +97,7 @@ func cards_from_int32(cards []int32) (ret []Card, valid bool) {
 	return
 }
 
-func cards_to_int32(cards []Card) (ret []int32) {
+func CardsToInt32(cards []Card) (ret []int32) {
 	for _, c := range cards {
 		ret = append(ret, c.Value())
 	}
@@ -104,18 +105,18 @@ func cards_to_int32(cards []Card) (ret []int32) {
 	return
 }
 
-func cards_sort(cards []Card) {
+func CardsSort(cards []Card) {
 	sort.Slice(cards, func(i, j int) bool {
-		return cards[i] > cards[j]
+		return cards[i].Value() > cards[j].Value()
 	})
 }
 
-func get_cards_info(cards []Card) *CardsInfo {
-	cards_sort(cards)
+func CardsAnalyse(cards []Card) *CardsInfo {
+	CardsSort(cards)
 
 	a := NewAnalyse(cards)
 	points := a.GetPoints()
-	cnt_points := int32(len(points))
+	cnt_points := len(points)
 
 	ci := &CardsInfo{
 		Type: CardsTypeNIL,

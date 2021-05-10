@@ -8,8 +8,8 @@ import (
 	"gworld/ddz/pb"
 )
 
-type handler = func(*Player, comp.Message, comp.Message)
-type creator = func() (comp.Message, comp.Message)
+type handler = func(*Player, comp.IMessage, comp.IMessage)
+type creator = func() (comp.IMessage, comp.IMessage)
 
 var (
 	_msg_executor = map[int32]*executor_t{}
@@ -27,22 +27,22 @@ func init() {
 	// NOTE: 手写易出错, 此处注册的内容最好自动生成 (目前暂无此工具)
 
 	_msg_executor[pb.Default_RegisterRequest_OP] = &executor_t{
-		c: func() (comp.Message, comp.Message) { return &pb.RegisterRequest{}, &pb.RegisterResponse{} },
+		c: func() (comp.IMessage, comp.IMessage) { return &pb.RegisterRequest{}, &pb.RegisterResponse{} },
 		h: handler_register,
 	}
 
 	_msg_executor[pb.Default_JoinRequest_OP] = &executor_t{
-		c: func() (comp.Message, comp.Message) { return &pb.JoinRequest{}, &pb.JoinResponse{} },
+		c: func() (comp.IMessage, comp.IMessage) { return &pb.JoinRequest{}, &pb.JoinResponse{} },
 		h: handler_join,
 	}
 
 	_msg_executor[pb.Default_CallScoreRequest_OP] = &executor_t{
-		c: func() (comp.Message, comp.Message) { return &pb.CallScoreRequest{}, &pb.CallScoreResponse{} },
+		c: func() (comp.IMessage, comp.IMessage) { return &pb.CallScoreRequest{}, &pb.CallScoreResponse{} },
 		h: handler_callscore,
 	}
 
 	_msg_executor[pb.Default_PlayRequest_OP] = &executor_t{
-		c: func() (comp.Message, comp.Message) { return &pb.PlayRequest{}, &pb.PlayResponse{} },
+		c: func() (comp.IMessage, comp.IMessage) { return &pb.PlayRequest{}, &pb.PlayResponse{} },
 		h: handler_play,
 	}
 }
@@ -50,7 +50,7 @@ func init() {
 // ----------------------------------------------------------------------------
 // handlers
 
-func handler_register(plr *Player, req comp.Message, res comp.Message) {
+func handler_register(plr *Player, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.RegisterRequest)
 	s := req.(*pb.RegisterResponse)
 
@@ -59,7 +59,7 @@ func handler_register(plr *Player, req comp.Message, res comp.Message) {
 	s.ErrCode = gconst.Err_OK
 }
 
-func handler_join(plr *Player, req comp.Message, res comp.Message) {
+func handler_join(plr *Player, req comp.IMessage, res comp.IMessage) {
 	// r := req.(*pb.JoinRequest)
 	s := req.(*pb.JoinResponse)
 
@@ -70,10 +70,10 @@ func handler_join(plr *Player, req comp.Message, res comp.Message) {
 	}
 }
 
-func handler_callscore(plr *Player, req comp.Message, res comp.Message) {
+func handler_callscore(plr *Player, req comp.IMessage, res comp.IMessage) {
 	lobby.OnMessage(plr.GetPID(), req, res)
 }
 
-func handler_play(plr *Player, req comp.Message, res comp.Message) {
+func handler_play(plr *Player, req comp.IMessage, res comp.IMessage) {
 	lobby.OnMessage(plr.GetPID(), req, res)
 }

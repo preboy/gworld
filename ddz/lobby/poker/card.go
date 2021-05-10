@@ -1,8 +1,7 @@
-package lobby
+package poker
 
 import (
 	"fmt"
-	"math/rand"
 )
 
 const (
@@ -33,36 +32,10 @@ const (
 	CardValue_J2 int32 = 20000
 )
 
-type Card int32
-
-func NewPoker() (cards []Card) {
-	// 3 ~ A * 4
-	for p := CardPoint_3; p <= CardPoint_A; p++ {
-		for c := CardColor_Heart; c <= CardColor_Club; c++ {
-			cards = append(cards, NewCard(c, p))
-		}
-	}
-	// 2 * 4
-	for c := CardColor_Heart; c <= CardColor_Club; c++ {
-		cards = append(cards, NewCard(c, CardPoint_2))
-	}
-
-	// Joker1 Joker2
-	cards = append(cards, NewCardFromValue(CardValue_J1))
-	cards = append(cards, NewCardFromValue(CardValue_J2))
-
-	// sort:  7 times equ chaos
-	for x := 0; x < 7; x++ {
-		rand.Shuffle(len(cards), func(i, j int) {
-			cards[i], cards[j] = cards[j], cards[i]
-		})
-	}
-
-	return
-}
-
 // ----------------------------------------------------------------------------
-// member
+// Card
+
+type Card int32
 
 func NewCardFromValue(v int32) Card {
 	return Card(v)

@@ -1,4 +1,4 @@
-package lobby
+package poker
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ func TestAnalyse(t *testing.T) {
 		5001,
 	}
 
-	cards, ok := cards_from_int32(arr)
+	cards, ok := CardsFromInt32(arr)
 	if !ok {
 		t.Fatal("invalid card")
 	}

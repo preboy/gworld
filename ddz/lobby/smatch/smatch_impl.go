@@ -1,12 +1,14 @@
-package lobby
+package smatch
 
-func (self *player_data) AddCards(cards []Card) {
+import "gworld/ddz/lobby/poker"
+
+func (self *gambler) AddCards(cards []poker.Card) {
 	self.data.cards = append(self.data.cards, cards...)
 }
 
 // 获取最小的牌
-func (self *player_data) GetDefaultCards() (ret []Card) {
-	cards_sort(self.data.cards)
+func (self *gambler) GetDefaultCards() (ret []poker.Card) {
+	poker.CardsSort(self.data.cards)
 
 	l := len(self.data.cards)
 	ret = self.data.cards[l-1 : l]
@@ -16,12 +18,12 @@ func (self *player_data) GetDefaultCards() (ret []Card) {
 }
 
 // 是否手上有这些牌
-func (self *player_data) ExistCards(cards []Card) bool {
+func (self *gambler) ExistCards(cards []poker.Card) bool {
 	if len(cards) == 0 {
 		panic("nil cards")
 	}
 
-	local := []Card{}
+	local := []poker.Card{}
 	for _, v := range self.data.cards {
 		local = append(local, v)
 	}
@@ -38,12 +40,12 @@ func (self *player_data) ExistCards(cards []Card) bool {
 	return true
 }
 
-func (self *player_data) RemoveCards(cards []Card) {
+func (self *gambler) RemoveCards(cards []poker.Card) {
 	if len(cards) == 0 {
 		return
 	}
 
-	new_cards := []Card{}
+	new_cards := []poker.Card{}
 
 	for _, c := range self.data.cards {
 		if !exist_card(cards, c) {
@@ -54,14 +56,14 @@ func (self *player_data) RemoveCards(cards []Card) {
 	self.data.cards = new_cards
 }
 
-func (self *player_data) IsVictory() bool {
+func (self *gambler) IsVictory() bool {
 	return len(self.data.cards) == 0
 }
 
 // ----------------------------------------------------------------------------
 // local
 
-func exist_card(cards []Card, c Card) bool {
+func exist_card(cards []poker.Card, c poker.Card) bool {
 	for _, v := range cards {
 		if v == c {
 			return true
@@ -70,7 +72,7 @@ func exist_card(cards []Card, c Card) bool {
 	return false
 }
 
-func remove_card(cards []Card, card Card) (left []Card, e bool) {
+func remove_card(cards []poker.Card, card poker.Card) (left []poker.Card, e bool) {
 	for k, v := range cards {
 		if v == card {
 			e = true

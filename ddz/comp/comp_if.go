@@ -20,10 +20,20 @@ type IPlayer interface {
 	OnLogout()
 
 	OnPacket(packet *tcp.Packet)
-	SendMessage(msg Message)
+	SendMessage(msg IMessage)
 }
 
-type Message interface {
+type IMatch interface {
+	GetMID() uint32
+	GetName() string
+
+	IsOver() bool
+
+	OnUpdate()
+	OnMessage(pid string, req IMessage, res IMessage)
+}
+
+type IMessage interface {
 	proto.Message
 	GetOP() int32
 }

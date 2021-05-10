@@ -93,7 +93,7 @@ func (self *Player) SetSession(sess comp.ISession) {
 	self.Sess = sess
 }
 
-func (self *Player) SendMessage(msg comp.Message) {
+func (self *Player) SendMessage(msg comp.IMessage) {
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 
