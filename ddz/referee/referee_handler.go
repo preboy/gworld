@@ -26,8 +26,8 @@ type executor_t struct {
 
 func init() {
 	// NOTE: 手写易出错, 此处注册的内容最好自动生成 (目前暂无此工具)
-	_msg_executor[1] = &executor_t{
-		c: func() (comp.IMessage, comp.IMessage) { return &pb.RegisterRequest{}, &pb.RegisterResponse{} },
+	_msg_executor[pb.Default_CreateMatchRequest_OP] = &executor_t{
+		c: func() (comp.IMessage, comp.IMessage) { return &pb.CreateMatchRequest{}, &pb.CreateMatchResponse{} },
 		h: handler_create_match,
 	}
 }
@@ -42,7 +42,7 @@ func handler_create_match(plr *Referee, req comp.IMessage, res comp.IMessage) {
 	log.Info("create match: %v %v %v", r.TotalDeck, r.MatchName, r.Gamblers)
 
 	if len(r.Gamblers) != 3 {
-		s.ErrCode gconst.Err_GamblerCount
+		s.ErrCode = gconst.Err_GamblerCount
 		return
 	}
 
