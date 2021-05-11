@@ -157,20 +157,20 @@ func (self *Table) NextDeck() {
 }
 
 func (self *Table) Broadcast(msg comp.IMessage) {
-	for _, pid := range _pids {
-		plr := comp.PM.FindPlayer(pid)
-		if plr != nil {
-			plr.SendMessage(msg)
+	for _, v := range self.seats {
+		gbr := comp.GM.FindGambler(v.pid)
+		if gbr != nil {
+			gbr.SendMessage(msg)
 		}
 	}
 }
 
 func (self *Table) Notify(pid string, msg comp.IMessage) {
-	for _, v := range _pids {
-		if v == pid {
-			plr := comp.PM.FindPlayer(pid)
-			if plr != nil {
-				plr.SendMessage(msg)
+	for _, v := range self.seats {
+		if v.pid == pid {
+			gbr := comp.GM.FindGambler(v.pid)
+			if gbr != nil {
+				gbr.SendMessage(msg)
 			}
 			break
 		}

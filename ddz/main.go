@@ -8,10 +8,11 @@ import (
 	"gworld/core/log"
 	"gworld/core/rand"
 	"gworld/core/utils"
+	"gworld/ddz/gambler"
 	"gworld/ddz/lobby"
 	"gworld/ddz/loop"
 	"gworld/ddz/netmgr"
-	"gworld/ddz/player"
+	"gworld/ddz/referee"
 )
 
 var (
@@ -56,13 +57,15 @@ func main() {
 func ddz_init() {
 	// init modules
 	lobby.Init()
-	player.Init()
+	gambler.Init()
+	referee.Init()
 	netmgr.Init()
 }
 
 func ddz_release() {
 	// release modules
 	netmgr.Release()
-	player.Release()
+	gambler.Release()
+	referee.Release()
 	lobby.Release()
 }

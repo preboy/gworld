@@ -1,4 +1,4 @@
-package player
+package gambler
 
 import (
 	"gworld/core/log"
@@ -8,7 +8,7 @@ import (
 	"gworld/ddz/pb"
 )
 
-type handler = func(*Player, comp.IMessage, comp.IMessage)
+type handler = func(*Gambler, comp.IMessage, comp.IMessage)
 type creator = func() (comp.IMessage, comp.IMessage)
 
 var (
@@ -50,7 +50,7 @@ func init() {
 // ----------------------------------------------------------------------------
 // handlers
 
-func handler_register(plr *Player, req comp.IMessage, res comp.IMessage) {
+func handler_register(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.RegisterRequest)
 	s := req.(*pb.RegisterResponse)
 
@@ -59,21 +59,21 @@ func handler_register(plr *Player, req comp.IMessage, res comp.IMessage) {
 	s.ErrCode = gconst.Err_OK
 }
 
-func handler_join(plr *Player, req comp.IMessage, res comp.IMessage) {
+func handler_join(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	// r := req.(*pb.JoinRequest)
-	s := req.(*pb.JoinResponse)
+	// s := req.(*pb.JoinResponse)
 
-	if lobby.Queue(plr.GetPID()) {
-		s.ErrCode = gconst.Err_OK
-	} else {
-		s.ErrCode = gconst.Err_InLobbyOrMatch
-	}
+	// if lobby.Queue(plr.GetPID()) {
+	// 	s.ErrCode = gconst.Err_OK
+	// } else {
+	// 	s.ErrCode = gconst.Err_InLobbyOrMatch
+	// }
 }
 
-func handler_callscore(plr *Player, req comp.IMessage, res comp.IMessage) {
+func handler_callscore(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	lobby.OnMessage(plr.GetPID(), req, res)
 }
 
-func handler_play(plr *Player, req comp.IMessage, res comp.IMessage) {
+func handler_play(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	lobby.OnMessage(plr.GetPID(), req, res)
 }

@@ -1,34 +1,34 @@
-package player
+package referee
 
 import (
 	"gworld/ddz/comp"
 )
 
 var (
-	_plr_mgr = &player_manager{}
+	_rfr_mgr = &referee_manager{}
 )
 
 // ----------------------------------------------------------------------------
 // init
 
 func init() {
-	comp.Init_PlayerManager(_plr_mgr)
+	comp.Init_RefereeManager(_rfr_mgr)
 }
 
 // ----------------------------------------------------------------------------
 // player_mgr
 
-type player_manager struct {
+type referee_manager struct {
 }
 
-func (self *player_manager) NewPlayer(pid string) comp.IPlayer {
-	plr := &Player{
+func (self *referee_manager) NewReferee(pid string) comp.IReferee {
+	plr := &Referee{
 		PID: pid,
 	}
 
 	return plr
 }
 
-func (self *player_manager) FindPlayer(pid string) comp.IPlayer {
+func (self *referee_manager) FindReferee(pid string) comp.IReferee {
 	return nil
 }

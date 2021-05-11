@@ -1,4 +1,4 @@
-package player
+package gambler
 
 import (
 	"gworld/core/log"
@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	_plrs = map[string]*Player{}
+	_gbrs = map[string]*Gambler{}
 )
 
 // ----------------------------------------------------------------------------
@@ -19,7 +19,7 @@ var (
 
 func init() {
 	loop.Register(func() {
-		for _, plr := range _plrs {
+		for _, plr := range _gbrs {
 			plr.OnUpdate()
 		}
 	})
@@ -35,28 +35,27 @@ func Release() {
 }
 
 // ----------------------------------------------------------------------------
-// Player
+// Gambler
 
-type Player struct {
+type Gambler struct {
 	PID  string
-	Data *player_data
+	Data *gambler_data
 	Sess comp.ISession
 }
 
-func (self *Player) OnLogin() {
-	_plrs[self.PID] = self
+func (self *Gambler) OnLogin() {
+	_gbrs[self.PID] = self
 }
 
-func (self *Player) OnLogout() {
-
+func (self *Gambler) OnLogout() {
 	self.Sess = nil
-	delete(_plrs, self.PID)
+	delete(_gbrs, self.PID)
 }
 
-func (self *Player) OnUpdate() {
+func (self *Gambler) OnUpdate() {
 }
 
-func (self *Player) OnPacket(packet *tcp.Packet) {
+func (self *Gambler) OnPacket(packet *tcp.Packet) {
 	e, ok := _msg_executor[int32(packet.Opcode)]
 	if !ok {
 		log.Warning("Unknown packet : %s %d", self.PID, packet.Opcode)
@@ -85,19 +84,19 @@ func (self *Player) OnPacket(packet *tcp.Packet) {
 // ----------------------------------------------------------------------------
 // member
 
-func (self *Player) GetPID() string {
+func (self *Gambler) GetPID() string {
 	return self.PID
 }
 
-func (self *Player) SetSession(sess comp.ISession) {
+func (self *Gambler) SetSession(sess comp.ISession) {
 	self.Sess = sess
 }
 
-func (self *Player) SendMessage(msg comp.IMessage) {
+func (self *Gambler) SendMessage(msg comp.IMessage) {
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 
-func (self *Player) SendProtobufMessage(opcode uint16, msg proto.Message) {
+func (self *Gambler) SendProtobufMessage(opcode uint16, msg proto.Message) {
 	if self.Sess == nil {
 		return
 	}

@@ -1,15 +1,28 @@
 package netmgr
 
 import (
-	"net"
+	"strconv"
+	"sync"
 
 	"gworld/core/tcp"
+	"gworld/ddz/comp"
 	"gworld/ddz/loop"
 )
 
 var (
-	server *tcp.TcpServer
+	_gambler_mgr *session_mgr_t
+	_referee_mgr *session_mgr_t
 )
+
+var (
+	_gambler_chunks = make(chan *chunk, 0x1000)
+	_referee_chunks = make(chan *chunk, 0x1000)
+)
+
+type chunk struct {
+	s *session
+	p *tcp.Packet
+}
 
 // ----------------------------------------------------------------------------
 // init
@@ -24,26 +37,72 @@ func init() {
 // export
 
 func Init() {
-	server = tcp.NewTcpServer()
-	server.Start("0.0.0.0:12345", func(conn *net.TCPConn) {
+	// gambler
+	_gambler_mgr = &session_mgr_t{
+		lock:     &sync.Mutex{},
+		server:   tcp.NewTcpServer(),
+		sessions: map[uint32]*session{},
+	}
 
-		sess := new_session()
-		sock := tcp.NewSocket(conn, sess)
+	_gambler_mgr.SetDispatcher(func(s *session, p *tcp.Packet) {
+		if s.player != nil {
+			_gambler_chunks <- &chunk{s, p}
+		} else {
+			pid := strconv.Itoa(int(s.Id))
+			plr := comp.GM.NewGambler(pid)
+			s.SetPlayer(plr)
 
-		sess.SetSocket(sock)
-		sock.Start()
+			loop.Post(func() {
+				plr.OnLogin()
+			})
+		}
 	})
+
+	_gambler_mgr.Init("0.0.0.0:12345")
+
+	// referee
+	_referee_mgr = &session_mgr_t{
+		lock:     &sync.Mutex{},
+		server:   tcp.NewTcpServer(),
+		sessions: map[uint32]*session{},
+	}
+
+	_referee_mgr.SetDispatcher(func(s *session, p *tcp.Packet) {
+		if s.player != nil {
+			_referee_chunks <- &chunk{s, p}
+		} else {
+			pid := strconv.Itoa(int(s.Id))
+			plr := comp.RM.NewReferee(pid)
+			s.SetPlayer(plr)
+
+			loop.Post(func() {
+				plr.OnLogin()
+			})
+		}
+	})
+
+	_referee_mgr.Init("0.0.0.0:12346")
 }
 
 func Release() {
-	if server != nil {
-		server.Stop()
-	}
+	_gambler_mgr.Release()
+	_referee_mgr.Release()
+}
 
-	_lock.Lock()
-	defer _lock.Unlock()
+// ----------------------------------------------------------------------------
+// local
 
-	for _, s := range _sessions {
-		s.Disconnect()
+func update_chunks() {
+	for {
+		select {
+		case c := <-_gambler_chunks:
+			c.s.player.OnPacket(c.p)
+			loop.DoNext()
+		case c := <-_referee_chunks:
+			c.s.player.OnPacket(c.p)
+			loop.DoNext()
+		default:
+			return
+		}
 	}
 }

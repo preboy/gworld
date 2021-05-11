@@ -23,6 +23,14 @@ type IPlayer interface {
 	SendMessage(msg IMessage)
 }
 
+type IGambler interface {
+	IPlayer
+}
+
+type IReferee interface {
+	IPlayer
+}
+
 type IMatch interface {
 	GetMID() uint32
 	GetName() string
