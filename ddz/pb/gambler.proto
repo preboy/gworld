@@ -16,8 +16,7 @@ Broadcast   :服务端群发广播
 
 message RegisterRequest {
     required int32      OP              = 1 [default = 1001 ];
-    required string     name            = 2;    // 账号
-    required string     pass            = 3;    // 密码
+    required string     name            = 2;    // 昵称
 }
 
 message RegisterResponse {
@@ -25,11 +24,12 @@ message RegisterResponse {
     required int32      errCode         = 2;
 }
 
-message JoinRequest {
+message SitRequest {
     required int32      OP              = 1 [default = 1003 ];
+    required uint32     match_id        = 2;    // 比赛ID
 }
 
-message JoinResponse {
+message SitResponse {
     required int32      OP              = 1 [default = 1004 ];
     required int32      errCode         = 2;
 }

@@ -15,9 +15,9 @@ type (
 )
 
 const (
-	seat_east  seat = 0
-	seat_south seat = 1
-	seat_west  seat = 2
+	seat_east seat = iota + 0
+	seat_south
+	seat_west
 	seat_max
 )
 
@@ -34,15 +34,17 @@ const (
 type Table struct {
 	m *SMatch
 
-	seats [seat_max]*gambler // 3个方位的pid
+	seats [seat_max]*gambler_table_t // 3个方位的pid
 
 	stage stage
 
 	deck_index int32 // 当前牌副数
+	host_pos   seat  // 首叫方位
 
-	host_pos seat // 首叫方位
+	// call
 	call_pos seat // 叫分方位
 
+	// play
 	play_pos   seat             // 当前出牌的位置
 	play_idx   int32            // 出牌顺序(round)
 	play_pass  int32            // pass数量
@@ -67,11 +69,8 @@ func (self *Table) OnMessage(pid string, req comp.IMessage, res comp.IMessage) {
 
 func (self *Table) Init() {
 	self.stage = stage_wait
-
-	self.deck_index = 0
-
 	self.host_pos = seat_east
-
+	self.deck_index = 0
 }
 
 func (self *Table) Sit(pid string) bool {
@@ -82,7 +81,7 @@ func (self *Table) Sit(pid string) bool {
 			continue
 		}
 
-		self.seats[i] = &gambler{
+		self.seats[i] = &gambler_table_t{
 			m:    self,
 			pid:  pid,
 			pos:  i,
@@ -119,7 +118,7 @@ func (self *Table) Switch(stage stage) {
 	FSM[self.stage].OnEnter(self)
 }
 
-func (self *Table) Over() bool {
+func (self *Table) IsOver() bool {
 	return self.stage == stage_over
 }
 
@@ -149,7 +148,7 @@ func (self *Table) DeckClosed() {
 }
 
 func (self *Table) NextDeck() {
-	if self.deck_index < self.m.conf.total_deck {
+	if self.deck_index < self.m.conf.TotalDeck {
 		self.Switch(stage_deal)
 	} else {
 		self.Switch(stage_over)
@@ -158,20 +157,14 @@ func (self *Table) NextDeck() {
 
 func (self *Table) Broadcast(msg comp.IMessage) {
 	for _, v := range self.seats {
-		gbr := comp.GM.FindGambler(v.pid)
-		if gbr != nil {
-			gbr.SendMessage(msg)
-		}
+		v.SendMessage(msg)
 	}
 }
 
 func (self *Table) Notify(pid string, msg comp.IMessage) {
 	for _, v := range self.seats {
 		if v.pid == pid {
-			gbr := comp.GM.FindGambler(v.pid)
-			if gbr != nil {
-				gbr.SendMessage(msg)
-			}
+			v.SendMessage(msg)
 			break
 		}
 	}

@@ -19,6 +19,7 @@ func Init_RefereeManager(mgr IRefereeManager) {
 type IGamblerManager interface {
 	NewGambler(pid string) IGambler
 	FindGambler(pid string) IGambler
+	ExistGambler(name string) bool
 }
 
 type IRefereeManager interface {

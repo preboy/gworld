@@ -39,6 +39,7 @@ func Release() {
 
 type Referee struct {
 	PID  string
+	Name string
 	Data *referee_data
 	Sess tcp.ISession
 }
@@ -86,6 +87,10 @@ func (self *Referee) OnPacket(packet *tcp.Packet) {
 
 func (self *Referee) GetPID() string {
 	return self.PID
+}
+
+func (self *Referee) GetName() string {
+	return self.Name
 }
 
 func (self *Referee) SetSession(sess tcp.ISession) {

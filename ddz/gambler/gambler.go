@@ -39,6 +39,7 @@ func Release() {
 
 type Gambler struct {
 	PID  string
+	Name string
 	Data *gambler_data
 	Sess tcp.ISession
 }
@@ -83,9 +84,16 @@ func (self *Gambler) OnPacket(packet *tcp.Packet) {
 
 // ----------------------------------------------------------------------------
 // member
+func (self *Gambler) Init() {
+	self.Data = &gambler_data{}
+}
 
 func (self *Gambler) GetPID() string {
 	return self.PID
+}
+
+func (self *Gambler) GetName() string {
+	return self.Name
 }
 
 func (self *Gambler) SetSession(sess tcp.ISession) {

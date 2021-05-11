@@ -1,0 +1,27 @@
+syntax = "proto2";
+package pb;
+
+
+/*
+消息后缀说明：
+Notify      :服务端向单个客户端发通知
+Request     :客户端向服务器发请求
+Response    :服务端回应客户端的请求
+Broadcast   :服务端群发广播
+*/
+
+
+// ----------------------------------------------------------------------------
+// create
+
+message CreateMatchRequest {
+    required int32      OP              = 1 [default = 7001 ];
+    required int32      TotalDeck       = 2;
+    required string     MatchName       = 3;
+    repeated string     Gamblers        = 4;
+}
+
+message CreateMatchResponse {
+    required int32      OP              = 1 [default = 7001 ];
+    required int32      errCode         = 2;
+}

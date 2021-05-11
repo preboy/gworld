@@ -11,6 +11,7 @@ import (
 
 type IPlayer interface {
 	GetPID() string
+	GetName() string
 
 	OnLogin()
 	OnLogout()
@@ -35,6 +36,8 @@ type IMatch interface {
 
 	OnUpdate()
 	OnMessage(pid string, req IMessage, res IMessage)
+
+	Sit(pid string) bool
 }
 
 type IMessage interface {

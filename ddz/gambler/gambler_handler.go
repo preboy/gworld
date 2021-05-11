@@ -31,9 +31,9 @@ func init() {
 		h: handler_register,
 	}
 
-	_msg_executor[pb.Default_JoinRequest_OP] = &executor_t{
-		c: func() (comp.IMessage, comp.IMessage) { return &pb.JoinRequest{}, &pb.JoinResponse{} },
-		h: handler_join,
+	_msg_executor[pb.Default_SitRequest_OP] = &executor_t{
+		c: func() (comp.IMessage, comp.IMessage) { return &pb.SitRequest{}, &pb.SitResponse{} },
+		h: handler_sit,
 	}
 
 	_msg_executor[pb.Default_CallScoreRequest_OP] = &executor_t{
@@ -54,26 +54,47 @@ func handler_register(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.RegisterRequest)
 	s := req.(*pb.RegisterResponse)
 
-	log.Info("login with: %s %s", r.Name, r.Pass)
+	log.Info("register with: %s", r.Name)
 
-	s.ErrCode = gconst.Err_OK
+	if comp.GM.ExistGambler(r.Name) {
+		s.ErrCode = gconst.Err_Error
+	} else {
+		s.ErrCode = gconst.Err_OK
+		plr.Name = r.Name
+	}
 }
 
-func handler_join(plr *Gambler, req comp.IMessage, res comp.IMessage) {
-	// r := req.(*pb.JoinRequest)
-	// s := req.(*pb.JoinResponse)
+func handler_sit(plr *Gambler, req comp.IMessage, res comp.IMessage) {
+	r := req.(*pb.SitRequest)
+	s := req.(*pb.SitResponse)
 
-	// if lobby.Queue(plr.GetPID()) {
-	// 	s.ErrCode = gconst.Err_OK
-	// } else {
-	// 	s.ErrCode = gconst.Err_InLobbyOrMatch
-	// }
+	m := lobby.GetMatch(r.MatchId)
+	if m == nil {
+		s.ErrCode = gconst.Err_MatchNotExist
+		return
+	}
+
+	if m.Sit(plr.GetPID()) {
+		plr.Data.MatchID = r.MatchId
+	}
 }
 
 func handler_callscore(plr *Gambler, req comp.IMessage, res comp.IMessage) {
-	lobby.OnMessage(plr.GetPID(), req, res)
+	mid := plr.Data.MatchID
+	if mid != 0 {
+		m := lobby.GetMatch(mid)
+		if m != nil {
+			m.OnMessage(plr.GetPID(), req, res)
+		}
+	}
 }
 
 func handler_play(plr *Gambler, req comp.IMessage, res comp.IMessage) {
-	lobby.OnMessage(plr.GetPID(), req, res)
+	mid := plr.Data.MatchID
+	if mid != 0 {
+		m := lobby.GetMatch(mid)
+		if m != nil {
+			m.OnMessage(plr.GetPID(), req, res)
+		}
+	}
 }

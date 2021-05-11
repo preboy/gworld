@@ -1,5 +1,8 @@
 @echo off
 
-protoc --gogofaster_out=. ddz.proto
+del *.pb.go
+
+protoc --gogofaster_out=. gambler.proto
+protoc --gogofaster_out=. referee.proto
 
 pause
