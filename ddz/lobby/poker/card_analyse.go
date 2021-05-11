@@ -76,6 +76,10 @@ func (self *Analyse) GetPoints() (ret []*AnalysedPoint) {
 	return
 }
 
+func (self *CardsInfo) IsBomb() bool {
+	return self.Type == CardsTypeAAAA || self.Type == CardsTypeJJ
+}
+
 func (self *CardsInfo) ToString() string {
 	return fmt.Sprintf("%v %v %v", self.Type, self.Max, self.Len)
 }

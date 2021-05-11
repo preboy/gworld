@@ -50,7 +50,8 @@ type Table struct {
 	play_pass  int32            // pass数量
 	play_cards *poker.CardsInfo // 牌型
 
-	cards []poker.Card
+	bombs int32        // 炸弹数
+	cards []poker.Card // 本副牌
 
 	action_ts time.Time
 
@@ -124,6 +125,7 @@ func (self *Table) IsOver() bool {
 
 func (self *Table) DeckOpen() {
 	self.deck_index++
+	self.bombs = 0
 
 	for i := seat_east; i < seat_max; i++ {
 		self.seats[i].data = &deck_data{}
@@ -265,6 +267,10 @@ func (self *Table) IsVictory() bool {
 // 玩家出牌
 func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	pos := self.play_pos
+
+	if ci.IsBomb() {
+		self.bombs++
+	}
 
 	// 删除手牌
 	self.seats[pos].RemoveCards(cards)

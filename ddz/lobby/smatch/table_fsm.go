@@ -300,7 +300,6 @@ func init() {
 					}
 
 					t.PlayHand(cards, ci)
-
 				} else {
 					if len(r.Cards) == 0 {
 						t.PlayPass()
@@ -329,8 +328,38 @@ func init() {
 	FSM[stage_calc].OnEnter = func(t *Table) {
 		log.Info("enter calc")
 
-		// 结算信息
 		msg := &pb.DeckEndBroadcast{}
+
+		// 结算信息
+
+		lord_win := false
+		if t.play_pos == t.deck_info.caca_info.lord {
+			lord_win = true
+		}
+
+		score := t.deck_info.caca_info.score
+		if t.bombs > 0 {
+			score *= t.bombs
+		}
+
+		for k, _ := range t.seats {
+			pos := int32(k)
+
+			if pos == t.deck_info.caca_info.lord {
+				score *= 2
+
+				if !lord_win {
+					score = 0 - score
+				}
+			} else {
+				if lord_win {
+					score = 0 - score
+				}
+			}
+
+			msg.Score = append(msg.Score, score)
+		}
+
 		t.Broadcast(msg)
 	}
 
