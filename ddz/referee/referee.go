@@ -40,7 +40,7 @@ func Release() {
 type Referee struct {
 	PID  string
 	Data *referee_data
-	Sess comp.ISession
+	Sess tcp.ISession
 }
 
 func (self *Referee) OnLogin() {
@@ -88,7 +88,7 @@ func (self *Referee) GetPID() string {
 	return self.PID
 }
 
-func (self *Referee) SetSession(sess comp.ISession) {
+func (self *Referee) SetSession(sess tcp.ISession) {
 	self.Sess = sess
 }
 

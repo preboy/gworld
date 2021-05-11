@@ -48,16 +48,20 @@ func (self *Session) SetPlayer(player *player.Player) {
 	self.player = player
 }
 
-func (self *Session) SendPacket(opcode uint16, obj proto.Message) {
+func (self *Session) SendPacket(opcode uint16, data []byte) {
+	l := uint16(len(data))
+	b := make([]byte, 0, l+2+2)
+	buf := bytes.NewBuffer(b)
+	binary.Write(buf, binary.LittleEndian, uint16(len(data)))
+	binary.Write(buf, binary.LittleEndian, opcode)
+	binary.Write(buf, binary.LittleEndian, data)
+	self.socket.Send(buf.Bytes())
+}
+
+func (self *Session) SendProtobufMessage(opcode uint16, obj proto.Message) {
 	data, err := proto.Marshal(obj)
 	if err == nil {
-		l := uint16(len(data))
-		b := make([]byte, 0, l+2+2)
-		buf := bytes.NewBuffer(b)
-		binary.Write(buf, binary.LittleEndian, uint16(len(data)))
-		binary.Write(buf, binary.LittleEndian, opcode)
-		binary.Write(buf, binary.LittleEndian, data)
-		self.socket.Send(buf.Bytes())
+		self.SendPacket(opcode, data)
 
 		if app.InDebugMode() {
 			str := utils.ObjectToString(obj)
@@ -154,7 +158,7 @@ func (self *Session) on_ping(packet *tcp.Packet) {
 	proto.Unmarshal(packet.Data, req)
 
 	res.Time = req.Time
-	self.SendPacket(protocol.MSG_SC_PingResponse, res)
+	self.SendProtobufMessage(protocol.MSG_SC_PingResponse, res)
 }
 
 // 登录
@@ -205,7 +209,7 @@ func (self *Session) on_auth(packet *tcp.Packet) {
 			break
 		}
 
-		self.SendPacket(protocol.MSG_SC_LoginResponse, res)
+		self.SendProtobufMessage(protocol.MSG_SC_LoginResponse, res)
 	}()
 }
 

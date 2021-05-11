@@ -40,7 +40,7 @@ func Release() {
 type Gambler struct {
 	PID  string
 	Data *gambler_data
-	Sess comp.ISession
+	Sess tcp.ISession
 }
 
 func (self *Gambler) OnLogin() {
@@ -88,7 +88,7 @@ func (self *Gambler) GetPID() string {
 	return self.PID
 }
 
-func (self *Gambler) SetSession(sess comp.ISession) {
+func (self *Gambler) SetSession(sess tcp.ISession) {
 	self.Sess = sess
 }
 

@@ -15,6 +15,7 @@ type ISession interface {
 	OnRecvPacket(packet *Packet)
 	OnOpened()
 	OnClosed()
+	SendPacket(opcode uint16, data []byte)
 }
 
 type Socket struct {
