@@ -8,6 +8,8 @@
 /bin/*.cpu
 /bin/*.memory
 /bin/ddz
+/bin/ddz_rr
+/bin/ddz_ai
 /bin/game
 /bin/router
 /bin/client
@@ -29,6 +31,3 @@
 /.vscode
 note.txt
 vendor
-main.exe
-ddz.log
-ddz.exe

@@ -6,6 +6,7 @@ import (
 
 	"gworld/core/tcp"
 	"gworld/ddz/comp"
+	"gworld/ddz/config"
 	"gworld/ddz/loop"
 )
 
@@ -58,7 +59,7 @@ func Init() {
 		}
 	})
 
-	_gambler_mgr.Init("0.0.0.0:12345")
+	_gambler_mgr.Init(config.Get().Addr4Gambler)
 
 	// referee
 	_referee_mgr = &session_mgr_t{
@@ -81,7 +82,7 @@ func Init() {
 		}
 	})
 
-	_referee_mgr.Init("0.0.0.0:12346")
+	_referee_mgr.Init(config.Get().Addr4Referee)
 }
 
 func Release() {

@@ -1,7 +1,7 @@
 package wordsfilter
 
 import (
-	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -21,7 +21,7 @@ type trie_node_t struct {
 // ============================================================================
 
 func Load(fn string) error {
-	buf, err := ioutil.ReadFile(fn)
+	buf, err := os.ReadFile(fn)
 	if err != nil {
 		return err
 	}

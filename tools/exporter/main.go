@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/tealeg/xlsx"
-	"io/ioutil"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/tealeg/xlsx"
 )
 
 // field := "Rewards#ItemID_ItemCt_Type"
@@ -343,9 +343,9 @@ func main() {
 		f.WriteString("]\n")
 
 		// valid checking
-		data, err := ioutil.ReadFile(file_name)
+		data, err := os.ReadFile(file_name)
 		if err != nil {
-			fmt.Println("ioutil.ReadFile:", err)
+			fmt.Println("os.ReadFile:", err)
 		}
 
 		// v := map[string]interface{}{}

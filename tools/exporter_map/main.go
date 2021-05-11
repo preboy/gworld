@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/tealeg/xlsx"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/tealeg/xlsx"
 )
 
 func expand_json_map(field, text string) (string, string) {
@@ -275,9 +275,9 @@ func main() {
 		f.WriteString("]\n")
 
 		// valid checking
-		data, err := ioutil.ReadFile(file_name)
+		data, err := os.ReadFile(file_name)
 		if err != nil {
-			fmt.Println("ioutil.ReadFile:", err)
+			fmt.Println("os.ReadFile:", err)
 		}
 
 		// v := map[string]interface{}{}

@@ -5,4 +5,5 @@
 echo "clear ..."
 go clean -cache
 
-./build.sh
+./ddz_build.sh
+./game_build.sh

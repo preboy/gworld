@@ -8,6 +8,7 @@ import (
 	"gworld/core/log"
 	"gworld/core/rand"
 	"gworld/core/utils"
+	"gworld/ddz/config"
 	"gworld/ddz/gambler"
 	"gworld/ddz/lobby"
 	"gworld/ddz/loop"
@@ -37,6 +38,10 @@ func main() {
 			close(quit)
 		}
 	})
+
+	if err := config.Load(); err != nil {
+		panic(err)
+	}
 
 	// init server
 	rand.SetSeed()

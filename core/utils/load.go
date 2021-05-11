@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"gworld/core/log"
-
 	"encoding/json"
-	"io/ioutil"
+	"os"
+
+	"gworld/core/log"
 )
 
 var (
@@ -13,7 +13,7 @@ var (
 )
 
 func load_from_json(file string, arr interface{}) bool {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		log.Error("loading [%s] failed! err = %s", file, err)
 		return false
