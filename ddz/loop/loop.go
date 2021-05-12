@@ -6,7 +6,6 @@ import (
 )
 
 var (
-	_once   = []func(){}
 	_update = []func(){}
 
 	// please priority queue instead
@@ -28,50 +27,20 @@ type timer_t struct {
 
 func Run() {
 	go func() {
-
 		for {
-			// post
-			if len(_once) > 0 {
-				for _, fn := range _once {
-					fn()
-				}
-				_once = _once[:0]
-			}
-
 			// timer
-			if len(_timerq) > 0 {
-				d := map[uint64]bool{}
-				n := time.Now().UnixNano() / 1e6
-
-				for _, t := range _timerq {
-					if n >= t.end {
-						t.fn()
-						if !t.repeat {
-							d[t.id] = true
-						}
-					}
-				}
-
-				// delete
-				if len(d) > 0 {
-					for k := range d {
-						ClearTimer(k)
-					}
-				}
-			}
+			do_timer()
 
 			// update
 			for _, fn := range _update {
 				fn()
 			}
 
+			DoNext()
+
 			time.Sleep(10 * time.Millisecond)
 		}
 	}()
-}
-
-func Post(fn func()) {
-	_once = append(_once, fn)
 }
 
 func Register(fn func()) {
@@ -114,5 +83,33 @@ func DoNext() {
 			fn()
 		}
 		_next_once = map[string]func(){}
+	}
+}
+
+// ----------------------------------------------------------------------------
+// local
+
+func do_timer() {
+	if len(_timerq) == 0 {
+		return
+	}
+
+	d := map[uint64]bool{}
+	n := time.Now().UnixNano() / 1e6
+
+	for _, t := range _timerq {
+		if n >= t.end {
+			t.fn()
+			if !t.repeat {
+				d[t.id] = true
+			}
+		}
+	}
+
+	// delete
+	if len(d) > 0 {
+		for k := range d {
+			ClearTimer(k)
+		}
 	}
 }
