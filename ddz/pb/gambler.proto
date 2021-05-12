@@ -68,7 +68,7 @@ message CallScoreResponse {
     required int32      errCode         = 2;    // 叫分结果
 }
 
-// 叫分广播
+// 叫分结果广播
 message CallScoreResultBroadcast {
     optional int32      OP              = 1 [default = 2005 ];
     required int32      pos             = 2;    // 谁
