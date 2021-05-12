@@ -85,7 +85,7 @@ func (self *CardsInfo) ToString() string {
 }
 
 // ----------------------------------------------------------------------------
-// local
+// export
 
 func CardsFromInt32(cards []int32) (ret []Card, valid bool) {
 	for _, v := range cards {
@@ -107,6 +107,18 @@ func CardsToInt32(cards []Card) (ret []int32) {
 	}
 
 	return
+}
+
+func CardsToString(cards []Card) string {
+	ret := "["
+
+	for _, c := range cards {
+		ret += c.ToString()
+		ret += ","
+	}
+
+	ret += "]"
+	return ret
 }
 
 func CardsSort(cards []Card) {

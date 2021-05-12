@@ -5,6 +5,7 @@ import (
 	"gworld/ddz/comp"
 	"gworld/ddz/gconst"
 	"gworld/ddz/pb"
+	"gworld/ddz_ai/args"
 )
 
 type handler = func(*connector, comp.IMessage)
@@ -83,27 +84,38 @@ func handler_Register(c *connector, res comp.IMessage) {
 
 	if s.ErrCode != gconst.Err_OK {
 		block.Signal()
+		return
 	}
+
+	c.SendMessage(&pb.SitRequest{
+		MatchId: uint32(args.MatchID),
+	})
 }
 
 func handler_SitResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.SitResponse)
-	_ = s
+
+	if s.ErrCode != gconst.Err_OK {
+		block.Signal()
+		return
+	}
 }
 
 func handler_DealCardNotify(c *connector, res comp.IMessage) {
 	s := res.(*pb.DealCardNotify)
-	_ = s
+	ai.Init(c, s.Pos, s.Cards)
 }
 
 func handler_CallScoreBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreBroadcast)
-	_ = s
+
+	ai.CallScoreBroadcast(s.Pos, s.History)
 }
 
 func handler_CallScoreResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResultBroadcast)
-	_ = s
+
+	ai.CallScoreResult(s.Pos, s.Score)
 }
 
 func handler_CallScoreCalcBroadcast(c *connector, res comp.IMessage) {
