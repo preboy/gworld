@@ -31,9 +31,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
-
 import io "io"
+import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -47,7 +46,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
 type RegisterRequest struct {
-	OP   *int32 `protobuf:"varint,1,req,name=OP,def=1001" json:"OP,omitempty"`
+	OP   *int32 `protobuf:"varint,1,opt,name=OP,def=1001" json:"OP,omitempty"`
 	Name string `protobuf:"bytes,2,req,name=name" json:"name"`
 }
 
@@ -73,7 +72,7 @@ func (m *RegisterRequest) GetName() string {
 }
 
 type RegisterResponse struct {
-	OP      *int32 `protobuf:"varint,1,req,name=OP,def=1002" json:"OP,omitempty"`
+	OP      *int32 `protobuf:"varint,1,opt,name=OP,def=1002" json:"OP,omitempty"`
 	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
 }
 
@@ -99,7 +98,7 @@ func (m *RegisterResponse) GetErrCode() int32 {
 }
 
 type SitRequest struct {
-	OP      *int32 `protobuf:"varint,1,req,name=OP,def=1003" json:"OP,omitempty"`
+	OP      *int32 `protobuf:"varint,1,opt,name=OP,def=1003" json:"OP,omitempty"`
 	MatchId uint32 `protobuf:"varint,2,req,name=match_id,json=matchId" json:"match_id"`
 }
 
@@ -125,7 +124,7 @@ func (m *SitRequest) GetMatchId() uint32 {
 }
 
 type SitResponse struct {
-	OP      *int32 `protobuf:"varint,1,req,name=OP,def=1004" json:"OP,omitempty"`
+	OP      *int32 `protobuf:"varint,1,opt,name=OP,def=1004" json:"OP,omitempty"`
 	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
 }
 
@@ -168,7 +167,7 @@ func (m *Cards) GetCards() []int32 {
 
 // 发牌通知
 type DealCardNotify struct {
-	OP    *int32  `protobuf:"varint,1,req,name=OP,def=2001" json:"OP,omitempty"`
+	OP    *int32  `protobuf:"varint,1,opt,name=OP,def=2001" json:"OP,omitempty"`
 	Pos   int32   `protobuf:"varint,2,req,name=pos" json:"pos"`
 	Cards []int32 `protobuf:"varint,3,rep,name=cards" json:"cards,omitempty"`
 }
@@ -203,7 +202,7 @@ func (m *DealCardNotify) GetCards() []int32 {
 
 // 叫分广播
 type CallScoreBroadcast struct {
-	OP      *int32  `protobuf:"varint,1,req,name=OP,def=2002" json:"OP,omitempty"`
+	OP      *int32  `protobuf:"varint,1,opt,name=OP,def=2002" json:"OP,omitempty"`
 	Pos     int32   `protobuf:"varint,2,req,name=pos" json:"pos"`
 	History []int32 `protobuf:"varint,3,rep,name=history" json:"history,omitempty"`
 }
@@ -238,7 +237,7 @@ func (m *CallScoreBroadcast) GetHistory() []int32 {
 
 // 叫分请求
 type CallScoreRequest struct {
-	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2003" json:"OP,omitempty"`
+	OP    *int32 `protobuf:"varint,1,opt,name=OP,def=2003" json:"OP,omitempty"`
 	Score int32  `protobuf:"varint,2,req,name=score" json:"score"`
 }
 
@@ -265,7 +264,7 @@ func (m *CallScoreRequest) GetScore() int32 {
 
 // 叫分回应
 type CallScoreResponse struct {
-	OP      *int32 `protobuf:"varint,1,req,name=OP,def=2004" json:"OP,omitempty"`
+	OP      *int32 `protobuf:"varint,1,opt,name=OP,def=2004" json:"OP,omitempty"`
 	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
 }
 
@@ -292,7 +291,7 @@ func (m *CallScoreResponse) GetErrCode() int32 {
 
 // 叫分广播
 type CallScoreResultBroadcast struct {
-	OP    *int32 `protobuf:"varint,1,req,name=OP,def=2005" json:"OP,omitempty"`
+	OP    *int32 `protobuf:"varint,1,opt,name=OP,def=2005" json:"OP,omitempty"`
 	Pos   int32  `protobuf:"varint,2,req,name=pos" json:"pos"`
 	Score int32  `protobuf:"varint,3,req,name=score" json:"score"`
 }
@@ -327,7 +326,7 @@ func (m *CallScoreResultBroadcast) GetScore() int32 {
 
 // 叫分结算广播
 type CallScoreCalcBroadcast struct {
-	OP    *int32  `protobuf:"varint,1,req,name=OP,def=2006" json:"OP,omitempty"`
+	OP    *int32  `protobuf:"varint,1,opt,name=OP,def=2006" json:"OP,omitempty"`
 	Draw  bool    `protobuf:"varint,2,req,name=draw" json:"draw"`
 	Lord  int32   `protobuf:"varint,3,req,name=lord" json:"lord"`
 	Score int32   `protobuf:"varint,4,req,name=score" json:"score"`
@@ -378,7 +377,7 @@ func (m *CallScoreCalcBroadcast) GetCards() []int32 {
 
 // 出牌广播
 type PlayBroadcast struct {
-	OP      *int32   `protobuf:"varint,1,req,name=OP,def=2007" json:"OP,omitempty"`
+	OP      *int32   `protobuf:"varint,1,opt,name=OP,def=2007" json:"OP,omitempty"`
 	Pos     int32    `protobuf:"varint,2,req,name=pos" json:"pos"`
 	First   bool     `protobuf:"varint,3,req,name=first" json:"first"`
 	History []*Cards `protobuf:"bytes,4,rep,name=history" json:"history,omitempty"`
@@ -421,7 +420,7 @@ func (m *PlayBroadcast) GetHistory() []*Cards {
 
 // 出牌请求
 type PlayRequest struct {
-	OP    *int32  `protobuf:"varint,1,req,name=OP,def=2008" json:"OP,omitempty"`
+	OP    *int32  `protobuf:"varint,1,opt,name=OP,def=2008" json:"OP,omitempty"`
 	Cards []int32 `protobuf:"varint,2,rep,name=cards" json:"cards,omitempty"`
 }
 
@@ -448,7 +447,7 @@ func (m *PlayRequest) GetCards() []int32 {
 
 // 出牌回应
 type PlayResponse struct {
-	OP      *int32 `protobuf:"varint,1,req,name=OP,def=2009" json:"OP,omitempty"`
+	OP      *int32 `protobuf:"varint,1,opt,name=OP,def=2009" json:"OP,omitempty"`
 	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
 }
 
@@ -475,7 +474,7 @@ func (m *PlayResponse) GetErrCode() int32 {
 
 // 出牌结果通知
 type PlayResultBroadcast struct {
-	OP    *int32  `protobuf:"varint,1,req,name=OP,def=2010" json:"OP,omitempty"`
+	OP    *int32  `protobuf:"varint,1,opt,name=OP,def=2010" json:"OP,omitempty"`
 	Pos   int32   `protobuf:"varint,2,req,name=pos" json:"pos"`
 	Cards []int32 `protobuf:"varint,3,rep,name=cards" json:"cards,omitempty"`
 }
@@ -509,7 +508,7 @@ func (m *PlayResultBroadcast) GetCards() []int32 {
 }
 
 type DeckEndBroadcast struct {
-	OP    *int32  `protobuf:"varint,1,req,name=OP,def=2011" json:"OP,omitempty"`
+	OP    *int32  `protobuf:"varint,1,opt,name=OP,def=2011" json:"OP,omitempty"`
 	Score []int32 `protobuf:"varint,2,rep,name=score" json:"score,omitempty"`
 }
 
@@ -567,9 +566,7 @@ func (m *RegisterRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -596,9 +593,7 @@ func (m *RegisterResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -624,9 +619,7 @@ func (m *SitRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -652,9 +645,7 @@ func (m *SitResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -705,9 +696,7 @@ func (m *DealCardNotify) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -740,9 +729,7 @@ func (m *CallScoreBroadcast) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -775,9 +762,7 @@ func (m *CallScoreRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -803,9 +788,7 @@ func (m *CallScoreResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -831,9 +814,7 @@ func (m *CallScoreResultBroadcast) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -862,9 +843,7 @@ func (m *CallScoreCalcBroadcast) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -908,9 +887,7 @@ func (m *PlayBroadcast) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -956,9 +933,7 @@ func (m *PlayRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -988,9 +963,7 @@ func (m *PlayResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -1016,9 +989,7 @@ func (m *PlayResultBroadcast) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -1051,9 +1022,7 @@ func (m *DeckEndBroadcast) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintGambler(dAtA, i, uint64(*m.OP))
@@ -1340,7 +1309,6 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
@@ -1370,7 +1338,7 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -1387,9 +1355,6 @@ func (m *RegisterRequest) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("name")
 	}
 
@@ -1448,7 +1413,6 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
@@ -1468,7 +1432,7 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -1485,9 +1449,6 @@ func (m *RegisterResponse) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
 	}
 
@@ -1546,7 +1507,6 @@ func (m *SitRequest) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field MatchId", wireType)
@@ -1566,7 +1526,7 @@ func (m *SitRequest) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -1583,9 +1543,6 @@ func (m *SitRequest) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("match_id")
 	}
 
@@ -1644,7 +1601,6 @@ func (m *SitResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
@@ -1664,7 +1620,7 @@ func (m *SitResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -1681,9 +1637,6 @@ func (m *SitResponse) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
 	}
 
@@ -1854,7 +1807,6 @@ func (m *DealCardNotify) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
@@ -1874,7 +1826,7 @@ func (m *DealCardNotify) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType == 0 {
 				var v int32
@@ -1953,9 +1905,6 @@ func (m *DealCardNotify) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
 	}
 
@@ -2014,7 +1963,6 @@ func (m *CallScoreBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
@@ -2034,7 +1982,7 @@ func (m *CallScoreBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType == 0 {
 				var v int32
@@ -2113,9 +2061,6 @@ func (m *CallScoreBroadcast) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
 	}
 
@@ -2174,7 +2119,6 @@ func (m *CallScoreRequest) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
@@ -2194,7 +2138,7 @@ func (m *CallScoreRequest) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -2211,9 +2155,6 @@ func (m *CallScoreRequest) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("score")
 	}
 
@@ -2272,7 +2213,6 @@ func (m *CallScoreResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
@@ -2292,7 +2232,7 @@ func (m *CallScoreResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -2309,9 +2249,6 @@ func (m *CallScoreResponse) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
 	}
 
@@ -2370,7 +2307,6 @@ func (m *CallScoreResultBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
@@ -2390,7 +2326,7 @@ func (m *CallScoreResultBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
@@ -2410,7 +2346,7 @@ func (m *CallScoreResultBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000004)
+			hasFields[0] |= uint64(0x00000002)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -2427,12 +2363,9 @@ func (m *CallScoreResultBroadcast) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
 	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
+	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("score")
 	}
 
@@ -2491,7 +2424,6 @@ func (m *CallScoreCalcBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Draw", wireType)
@@ -2512,7 +2444,7 @@ func (m *CallScoreCalcBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.Draw = bool(v != 0)
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Lord", wireType)
@@ -2532,7 +2464,7 @@ func (m *CallScoreCalcBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000004)
+			hasFields[0] |= uint64(0x00000002)
 		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Score", wireType)
@@ -2552,7 +2484,7 @@ func (m *CallScoreCalcBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000008)
+			hasFields[0] |= uint64(0x00000004)
 		case 5:
 			if wireType == 0 {
 				var v int32
@@ -2631,15 +2563,12 @@ func (m *CallScoreCalcBroadcast) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("draw")
 	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
+	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("lord")
 	}
-	if hasFields[0]&uint64(0x00000008) == 0 {
+	if hasFields[0]&uint64(0x00000004) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("score")
 	}
 
@@ -2698,7 +2627,6 @@ func (m *PlayBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
@@ -2718,7 +2646,7 @@ func (m *PlayBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field First", wireType)
@@ -2739,7 +2667,7 @@ func (m *PlayBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.First = bool(v != 0)
-			hasFields[0] |= uint64(0x00000004)
+			hasFields[0] |= uint64(0x00000002)
 		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field History", wireType)
@@ -2787,12 +2715,9 @@ func (m *PlayBroadcast) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
 	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
+	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("first")
 	}
 
@@ -2802,7 +2727,6 @@ func (m *PlayBroadcast) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *PlayRequest) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2851,7 +2775,6 @@ func (m *PlayRequest) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType == 0 {
 				var v int32
@@ -2929,9 +2852,6 @@ func (m *PlayRequest) Unmarshal(dAtA []byte) error {
 			iNdEx += skippy
 		}
 	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
 
 	if iNdEx > l {
 		return io.ErrUnexpectedEOF
@@ -2988,7 +2908,6 @@ func (m *PlayResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
@@ -3008,7 +2927,7 @@ func (m *PlayResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGambler(dAtA[iNdEx:])
@@ -3025,9 +2944,6 @@ func (m *PlayResponse) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
 	}
 
@@ -3086,7 +3002,6 @@ func (m *PlayResultBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Pos", wireType)
@@ -3106,7 +3021,7 @@ func (m *PlayResultBroadcast) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType == 0 {
 				var v int32
@@ -3185,9 +3100,6 @@ func (m *PlayResultBroadcast) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("pos")
 	}
 
@@ -3197,7 +3109,6 @@ func (m *PlayResultBroadcast) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *DeckEndBroadcast) Unmarshal(dAtA []byte) error {
-	var hasFields [1]uint64
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3246,7 +3157,6 @@ func (m *DeckEndBroadcast) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType == 0 {
 				var v int32
@@ -3323,9 +3233,6 @@ func (m *DeckEndBroadcast) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx += skippy
 		}
-	}
-	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
 	}
 
 	if iNdEx > l {
@@ -3449,7 +3356,7 @@ var fileDescriptorGambler = []byte{
 	0xf9, 0x04, 0x08, 0x95, 0x2f, 0x82, 0xe2, 0xd4, 0x4d, 0x4a, 0xe7, 0x52, 0x71, 0xab, 0x9f, 0xda,
 	0xbf, 0xe7, 0xf9, 0xbf, 0x04, 0x9a, 0x17, 0x68, 0x32, 0xce, 0x08, 0xeb, 0xe6, 0x8c, 0x0a, 0xea,
 	0x9a, 0xf9, 0x38, 0x78, 0x05, 0x77, 0x62, 0x72, 0x91, 0x72, 0x41, 0x58, 0x4c, 0x3e, 0x5f, 0x11,
-	0x2e, 0xdc, 0x03, 0x30, 0x4f, 0x47, 0x9e, 0xd1, 0x36, 0x3b, 0xce, 0x0b, 0xbb, 0xdf, 0xeb, 0xf5,
+	0x2e, 0xdc, 0x03, 0x30, 0x4f, 0x47, 0x9e, 0xd1, 0x36, 0x3a, 0xce, 0x0b, 0xbb, 0xdf, 0xeb, 0xf5,
 	0x63, 0xf3, 0x74, 0xe4, 0x7a, 0x60, 0x4f, 0xd1, 0x84, 0x78, 0x66, 0xdb, 0xec, 0xec, 0x0f, 0xec,
 	0xeb, 0x9f, 0x47, 0x3b, 0xb1, 0x54, 0x82, 0x37, 0xd0, 0xaa, 0x10, 0x3c, 0xa7, 0x53, 0x4e, 0xd6,
 	0x18, 0xa1, 0x64, 0xf8, 0xb0, 0x4b, 0x18, 0x8b, 0x28, 0x2e, 0x31, 0xce, 0x02, 0xa3, 0xc4, 0x20,
@@ -3472,6 +3379,6 @@ var fileDescriptorGambler = []byte{
 	0x35, 0xd3, 0x3f, 0xde, 0x6a, 0xfa, 0xef, 0xe1, 0xde, 0x82, 0xb2, 0x69, 0xf0, 0xfd, 0xde, 0x7f,
 	0x7c, 0x47, 0x2f, 0xa1, 0x35, 0x24, 0xc9, 0xa7, 0xd7, 0x53, 0xac, 0xe7, 0xf6, 0x55, 0x81, 0x6a,
 	0xd3, 0xe5, 0x7b, 0x79, 0x18, 0xb4, 0xae, 0xe7, 0xbe, 0xf1, 0x63, 0xee, 0x1b, 0xbf, 0xe6, 0xbe,
-	0xf1, 0xed, 0xb7, 0xbf, 0xf3, 0x27, 0x00, 0x00, 0xff, 0xff, 0xfa, 0xdb, 0x13, 0xfc, 0x39, 0x05,
+	0xf1, 0xed, 0xb7, 0xbf, 0xf3, 0x27, 0x00, 0x00, 0xff, 0xff, 0x23, 0x9d, 0x04, 0x52, 0x39, 0x05,
 	0x00, 0x00,
 }

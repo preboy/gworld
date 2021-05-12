@@ -20,6 +20,7 @@ func (self *session_mgr_t) Init(addr string) {
 		sess := new_session()
 		sock := tcp.NewSocket(conn, sess)
 		sess.SetSocket(sock)
+		sess.SetMgr(self)
 		sock.Start()
 	})
 }

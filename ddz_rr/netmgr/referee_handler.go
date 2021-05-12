@@ -5,14 +5,13 @@ import (
 	"gworld/ddz/comp"
 	"gworld/ddz/gconst"
 	"gworld/ddz/pb"
-	"os"
 	"strconv"
 
 	"os/exec"
 )
 
-type handler = func(*connector, comp.IMessage, comp.IMessage)
-type creator = func() (comp.IMessage, comp.IMessage)
+type handler = func(*connector, comp.IMessage)
+type creator = func() comp.IMessage
 
 var (
 	_msg_executor = map[int32]*executor_t{}
@@ -27,8 +26,8 @@ type executor_t struct {
 // init
 
 func init() {
-	_msg_executor[pb.Default_CreateMatchRequest_OP] = &executor_t{
-		c: func() (comp.IMessage, comp.IMessage) { return &pb.CreateMatchRequest{}, &pb.CreateMatchRequest{} },
+	_msg_executor[pb.Default_CreateMatchResponse_OP] = &executor_t{
+		c: func() comp.IMessage { return &pb.CreateMatchResponse{} },
 		h: handler_create_match,
 	}
 }
@@ -36,23 +35,20 @@ func init() {
 // ----------------------------------------------------------------------------
 // handlers
 
-func handler_create_match(c *connector, req comp.IMessage, res comp.IMessage) {
-	r := req.(*pb.CreateMatchRequest)
-	s := req.(*pb.CreateMatchResponse)
+func handler_create_match(c *connector, res comp.IMessage) {
+	s := res.(*pb.CreateMatchResponse)
 
-	log.Info("create match response: %s %d", r.MatchName, s.ErrCode)
+	log.Info("create match response: %v", s.ErrCode)
 
 	if s.ErrCode == gconst.Err_OK {
-		for i := 0; i < len(r.Gamblers); i++ {
-			cmd := exec.Command("ddz_ai.exe", strconv.Itoa(int(s.MatchID)), r.Gamblers[i])
+		for i := 0; i < len(s.Gamblers); i++ {
+			cmd := exec.Command("ddz_ai.exe", strconv.Itoa(int(s.MatchID)), s.Gamblers[i])
 			err := cmd.Run()
 			if err != nil {
-				log.Info("load ddz_ai failed: %d %s", s.MatchID, r.Gamblers[i])
+				log.Info("load ddz_ai failed: %v %v", s.MatchID, s.Gamblers[i])
 			} else {
-				log.Info("load ddz_ai ok: %d %s", s.MatchID, r.Gamblers[i])
+				log.Info("load ddz_ai ok: %v %v", s.MatchID, s.Gamblers[i])
 			}
 		}
 	}
-
-	os.Exit(0)
 }

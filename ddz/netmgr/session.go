@@ -35,6 +35,7 @@ func (self *session) SetSocket(socket *tcp.Socket) {
 
 func (self *session) SetPlayer(player comp.IPlayer) {
 	self.player = player
+	player.SetSession(self)
 }
 
 func (self *session) SendPacket(opcode uint16, data []byte) {

@@ -36,21 +36,16 @@ func referee_handler(c *connector, p *tcp.Packet) {
 		return
 	}
 
-	req, res := e.c()
+	res := e.c()
 
-	err := proto.Unmarshal(p.Data, req)
+	err := proto.Unmarshal(p.Data, res)
 	if err != nil {
-		log.Error("proto.Unmarshal ERROR: %s %d", c.id, p.Opcode)
+		log.Error("proto.Unmarshal ERROR: %v %v", c.id, p.Opcode)
 		return
 	}
 
-	str := utils.ObjectToString(req)
-	log.Info("RECV packet: %s, %d, %s", c.id, p.Opcode, str)
+	str := utils.ObjectToString(res)
+	log.Info("RECV packet: %v, %v, %v", c.id, p.Opcode, str)
 
-	e.h(c, req, res)
-
-	str = utils.ObjectToString(res)
-	log.Info("SEND packet: %s, %d, %s", c.id, p.Opcode, str)
-
-	c.SendMessage(res)
+	e.h(c, res)
 }

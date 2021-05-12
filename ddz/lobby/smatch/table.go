@@ -93,24 +93,7 @@ func (self *Table) Sit(pid string) bool {
 		break
 	}
 
-	if !join {
-		return false
-	}
-
-	// 坐满之后自动开启
-	full := true
-	for i := seat_east; i < seat_max; i++ {
-		if self.seats[i] == nil {
-			full = false
-			break
-		}
-	}
-
-	if full {
-		FSM[self.stage].OnEnter(self)
-	}
-
-	return true
+	return join
 }
 
 func (self *Table) Switch(stage stage) {

@@ -15,22 +15,22 @@ Broadcast   :服务端群发广播
 // login
 
 message RegisterRequest {
-    required int32      OP              = 1 [default = 1001 ];
+    optional int32      OP              = 1 [default = 1001 ];
     required string     name            = 2;    // 昵称
 }
 
 message RegisterResponse {
-    required int32      OP              = 1 [default = 1002 ];
+    optional int32      OP              = 1 [default = 1002 ];
     required int32      errCode         = 2;
 }
 
 message SitRequest {
-    required int32      OP              = 1 [default = 1003 ];
+    optional int32      OP              = 1 [default = 1003 ];
     required uint32     match_id        = 2;    // 比赛ID
 }
 
 message SitResponse {
-    required int32      OP              = 1 [default = 1004 ];
+    optional int32      OP              = 1 [default = 1004 ];
     required int32      errCode         = 2;
 }
 
@@ -44,40 +44,40 @@ message Cards {
 
 // 发牌通知
 message DealCardNotify {
-    required int32      OP              = 1 [default = 2001 ];
+    optional int32      OP              = 1 [default = 2001 ];
     required int32      pos             = 2;    // 我的方位
     repeated int32      cards           = 3;    // 我的牌
 }
 
 // 叫分广播
 message CallScoreBroadcast {
-    required int32      OP              = 1 [default = 2002 ];
+    optional int32      OP              = 1 [default = 2002 ];
     required int32      pos             = 2;    // 该谁叫分
     repeated int32      history         = 3;    // 历史叫分记录
 }
 
 // 叫分请求
 message CallScoreRequest {
-    required int32      OP              = 1 [default = 2003 ];
+    optional int32      OP              = 1 [default = 2003 ];
     required int32      score           = 2;    // 叫了多少分 (0 ~ 3)
 }
 
 // 叫分回应
 message CallScoreResponse {
-    required int32      OP              = 1 [default = 2004 ];
+    optional int32      OP              = 1 [default = 2004 ];
     required int32      errCode         = 2;    // 叫分结果
 }
 
 // 叫分广播
 message CallScoreResultBroadcast {
-    required int32      OP              = 1 [default = 2005 ];
+    optional int32      OP              = 1 [default = 2005 ];
     required int32      pos             = 2;    // 谁
     required int32      score           = 3;    // 叫了多少分
 }
 
 // 叫分结算广播
 message CallScoreCalcBroadcast {
-    required int32      OP              = 1 [default = 2006 ];
+    optional int32      OP              = 1 [default = 2006 ];
     required bool       draw            = 2;    // 是否流局 
     required int32      lord            = 3;    // 地主方位
     required int32      score           = 4;    // 最终叫分
@@ -86,7 +86,7 @@ message CallScoreCalcBroadcast {
 
 // 出牌广播
 message PlayBroadcast {
-    required int32      OP              = 1 [default = 2007 ];
+    optional int32      OP              = 1 [default = 2007 ];
     required int32      pos             = 2;    // 位置
     required bool       first           = 3;    // 首出
     repeated Cards      history         = 4;    // 本轮历史出牌记录
@@ -94,24 +94,24 @@ message PlayBroadcast {
 
 // 出牌请求
 message PlayRequest {
-    required int32      OP              = 1 [default = 2008 ];
+    optional int32      OP              = 1 [default = 2008 ];
     repeated int32      cards           = 2;
 }
 
 // 出牌回应
 message PlayResponse {
-    required int32      OP              = 1 [default = 2009 ];
+    optional int32      OP              = 1 [default = 2009 ];
     required int32      errCode         = 2;    // 出牌结果
 }
 
 // 出牌结果通知
 message PlayResultBroadcast {
-    required int32      OP              = 1 [default = 2010 ];
+    optional int32      OP              = 1 [default = 2010 ];
     required int32      pos             = 2;
     repeated int32      cards           = 3;
 }
 
 message DeckEndBroadcast {
-    required int32      OP              = 1 [default = 2011 ];
+    optional int32      OP              = 1 [default = 2011 ];
     repeated int32      score           = 2;    // 东南西得分
 }

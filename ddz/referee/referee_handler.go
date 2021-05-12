@@ -37,7 +37,7 @@ func init() {
 
 func handler_create_match(plr *Referee, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.CreateMatchRequest)
-	s := req.(*pb.CreateMatchResponse)
+	s := res.(*pb.CreateMatchResponse)
 
 	log.Info("create match: %v %v %v", r.TotalDeck, r.MatchName, r.Gamblers)
 
@@ -53,6 +53,8 @@ func handler_create_match(plr *Referee, req comp.IMessage, res comp.IMessage) {
 	})
 
 	lobby.AddMatch(m)
+
+	s.Gamblers = r.Gamblers
 
 	s.ErrCode = gconst.Err_OK
 }

@@ -106,8 +106,8 @@ func (self *connector) SendMessage(msg comp.IMessage) {
 
 func (self *connector) SendProtobufMessage(opcode uint16, msg proto.Message) {
 	data, err := proto.Marshal(msg)
-	if err == nil {
-		log.Error("proto.Marshal ERROR: %s %d", self.id, opcode)
+	if err != nil {
+		log.Error("proto.Marshal ERROR: %v %v %v", self.id, opcode, err)
 		return
 	}
 

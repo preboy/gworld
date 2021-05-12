@@ -80,7 +80,18 @@ func init() {
 	}
 
 	FSM[stage_wait].OnUpdate = func(t *Table) {
-		t.Switch(stage_deal)
+		// 坐满之后自动开启
+		full := true
+		for i := seat_east; i < seat_max; i++ {
+			if t.seats[i] == nil {
+				full = false
+				break
+			}
+		}
+
+		if full {
+			t.Switch(stage_deal)
+		}
 	}
 
 	FSM[stage_wait].OnMessage = func(t *Table, pid string, req comp.IMessage, res comp.IMessage) {

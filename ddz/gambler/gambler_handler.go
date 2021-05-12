@@ -52,7 +52,7 @@ func init() {
 
 func handler_register(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.RegisterRequest)
-	s := req.(*pb.RegisterResponse)
+	s := res.(*pb.RegisterResponse)
 
 	log.Info("register with: %s", r.Name)
 
@@ -66,7 +66,7 @@ func handler_register(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 
 func handler_sit(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.SitRequest)
-	s := req.(*pb.SitResponse)
+	s := res.(*pb.SitResponse)
 
 	m := lobby.GetMatch(r.MatchId)
 	if m == nil {

@@ -69,9 +69,8 @@ func Init() {
 	}
 
 	_referee_mgr.SetDispatcher(func(s *session, p *tcp.Packet) {
-		if s.player != nil {
-			_referee_chunks <- &chunk{s, p}
-		} else {
+
+		if s.player == nil {
 			pid := strconv.Itoa(int(s.Id))
 			plr := comp.RM.NewReferee(pid)
 			s.SetPlayer(plr)
@@ -80,6 +79,8 @@ func Init() {
 				plr.OnLogin()
 			})
 		}
+
+		_referee_chunks <- &chunk{s, p}
 	})
 
 	_referee_mgr.Init(config.Get().Addr4Referee)

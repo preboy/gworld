@@ -15,14 +15,15 @@ Broadcast   :服务端群发广播
 // create
 
 message CreateMatchRequest {
-    required int32      OP              = 1 [default = 7001 ];
+    optional int32      OP              = 1 [default = 7001 ];
     required int32      TotalDeck       = 2;
     required string     MatchName       = 3;
     repeated string     Gamblers        = 4;
 }
 
 message CreateMatchResponse {
-    required int32      OP              = 1 [default = 7001 ];
+    optional int32      OP              = 1 [default = 7002 ];
     required int32      errCode         = 2;
     required int32      MatchID         = 3;
+    repeated string     Gamblers        = 4;
 }

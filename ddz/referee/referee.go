@@ -46,11 +46,14 @@ type Referee struct {
 
 func (self *Referee) OnLogin() {
 	_rfrs[self.PID] = self
+	log.Info("referee login")
 }
 
 func (self *Referee) OnLogout() {
 	self.Sess = nil
 	delete(_rfrs, self.PID)
+
+	log.Info("referee logout")
 }
 
 func (self *Referee) OnUpdate() {
@@ -59,7 +62,7 @@ func (self *Referee) OnUpdate() {
 func (self *Referee) OnPacket(packet *tcp.Packet) {
 	e, ok := _msg_executor[int32(packet.Opcode)]
 	if !ok {
-		log.Warning("Unknown packet : %s %d", self.PID, packet.Opcode)
+		log.Warning("referee Unknown packet : %v %d", self.PID, packet.Opcode)
 		return
 	}
 
@@ -67,17 +70,17 @@ func (self *Referee) OnPacket(packet *tcp.Packet) {
 
 	err := proto.Unmarshal(packet.Data, req)
 	if err != nil {
-		log.Error("proto.Unmarshal ERROR: %s %d", self.PID, packet.Opcode)
+		log.Error("referee proto.Unmarshal ERROR: %v, %v, %v", self.PID, packet.Opcode, err)
 		return
 	}
 
 	str := utils.ObjectToString(req)
-	log.Info("RECV packet: %s, %d, %s", self.PID, packet.Opcode, str)
+	log.Info("referee RECV packet: %v, %v, %v", self.PID, req.GetOP(), str)
 
 	e.h(self, req, res)
 
 	str = utils.ObjectToString(res)
-	log.Info("SEND packet: %s, %d, %s", self.PID, packet.Opcode, str)
+	log.Info("referee SEND packet: %v, %v, %v", self.PID, res.GetOP(), str)
 
 	self.SendMessage(res)
 }
@@ -107,8 +110,8 @@ func (self *Referee) SendProtobufMessage(opcode uint16, msg proto.Message) {
 	}
 
 	data, err := proto.Marshal(msg)
-	if err == nil {
-		log.Error("proto.Marshal ERROR: %s %d", self.PID, opcode)
+	if err != nil {
+		log.Error("proto.Marshal ERROR: %v %v %v", self.PID, opcode, err)
 		return
 	}
 

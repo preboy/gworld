@@ -59,7 +59,7 @@ func (self *Gambler) OnUpdate() {
 func (self *Gambler) OnPacket(packet *tcp.Packet) {
 	e, ok := _msg_executor[int32(packet.Opcode)]
 	if !ok {
-		log.Warning("Unknown packet : %s %d", self.PID, packet.Opcode)
+		log.Warning("gambler Unknown packet : %v %v", self.PID, packet.Opcode)
 		return
 	}
 
@@ -67,17 +67,17 @@ func (self *Gambler) OnPacket(packet *tcp.Packet) {
 
 	err := proto.Unmarshal(packet.Data, req)
 	if err != nil {
-		log.Error("proto.Unmarshal ERROR: %s %d", self.PID, packet.Opcode)
+		log.Error("gambler proto.Unmarshal ERROR: %v %v", self.PID, packet.Opcode)
 		return
 	}
 
 	str := utils.ObjectToString(req)
-	log.Info("RECV packet: %s, %d, %s", self.PID, packet.Opcode, str)
+	log.Info("gambler RECV packet: %v, %v, %v", self.PID, req.GetOP(), str)
 
 	e.h(self, req, res)
 
 	str = utils.ObjectToString(res)
-	log.Info("SEND packet: %s, %d, %s", self.PID, packet.Opcode, str)
+	log.Info("gambler SEND packet: %v, %v, %v", self.PID, res.GetOP(), str)
 
 	self.SendMessage(res)
 }
@@ -110,8 +110,8 @@ func (self *Gambler) SendProtobufMessage(opcode uint16, msg proto.Message) {
 	}
 
 	data, err := proto.Marshal(msg)
-	if err == nil {
-		log.Error("proto.Marshal ERROR: %s %d", self.PID, opcode)
+	if err != nil {
+		log.Error("proto.Marshal ERROR: %v %v %v", self.PID, opcode, err)
 		return
 	}
 

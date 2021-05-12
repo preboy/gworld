@@ -13,6 +13,8 @@ type IPlayer interface {
 	GetPID() string
 	GetName() string
 
+	SetSession(tcp.ISession)
+
 	OnLogin()
 	OnLogout()
 

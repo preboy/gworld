@@ -17,9 +17,8 @@ import proto "github.com/gogo/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
-
 import io "io"
+import github_com_gogo_protobuf_proto "github.com/gogo/protobuf/proto"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -33,7 +32,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
 type CreateMatchRequest struct {
-	OP        *int32   `protobuf:"varint,1,req,name=OP,def=7001" json:"OP,omitempty"`
+	OP        *int32   `protobuf:"varint,1,opt,name=OP,def=7001" json:"OP,omitempty"`
 	TotalDeck int32    `protobuf:"varint,2,req,name=TotalDeck" json:"TotalDeck"`
 	MatchName string   `protobuf:"bytes,3,req,name=MatchName" json:"MatchName"`
 	Gamblers  []string `protobuf:"bytes,4,rep,name=Gamblers" json:"Gamblers,omitempty"`
@@ -75,9 +74,10 @@ func (m *CreateMatchRequest) GetGamblers() []string {
 }
 
 type CreateMatchResponse struct {
-	OP      *int32 `protobuf:"varint,1,req,name=OP,def=7001" json:"OP,omitempty"`
-	ErrCode int32  `protobuf:"varint,2,req,name=errCode" json:"errCode"`
-	MatchID int32  `protobuf:"varint,3,req,name=MatchID" json:"MatchID"`
+	OP       *int32   `protobuf:"varint,1,opt,name=OP,def=7002" json:"OP,omitempty"`
+	ErrCode  int32    `protobuf:"varint,2,req,name=errCode" json:"errCode"`
+	MatchID  int32    `protobuf:"varint,3,req,name=MatchID" json:"MatchID"`
+	Gamblers []string `protobuf:"bytes,4,rep,name=Gamblers" json:"Gamblers,omitempty"`
 }
 
 func (m *CreateMatchResponse) Reset()                    { *m = CreateMatchResponse{} }
@@ -85,7 +85,7 @@ func (m *CreateMatchResponse) String() string            { return proto.CompactT
 func (*CreateMatchResponse) ProtoMessage()               {}
 func (*CreateMatchResponse) Descriptor() ([]byte, []int) { return fileDescriptorReferee, []int{1} }
 
-const Default_CreateMatchResponse_OP int32 = 7001
+const Default_CreateMatchResponse_OP int32 = 7002
 
 func (m *CreateMatchResponse) GetOP() int32 {
 	if m != nil && m.OP != nil {
@@ -108,6 +108,13 @@ func (m *CreateMatchResponse) GetMatchID() int32 {
 	return 0
 }
 
+func (m *CreateMatchResponse) GetGamblers() []string {
+	if m != nil {
+		return m.Gamblers
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*CreateMatchRequest)(nil), "pb.CreateMatchRequest")
 	proto.RegisterType((*CreateMatchResponse)(nil), "pb.CreateMatchResponse")
@@ -127,9 +134,7 @@ func (m *CreateMatchRequest) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintReferee(dAtA, i, uint64(*m.OP))
@@ -174,9 +179,7 @@ func (m *CreateMatchResponse) MarshalTo(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.OP == nil {
-		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	} else {
+	if m.OP != nil {
 		dAtA[i] = 0x8
 		i++
 		i = encodeVarintReferee(dAtA, i, uint64(*m.OP))
@@ -187,6 +190,21 @@ func (m *CreateMatchResponse) MarshalTo(dAtA []byte) (int, error) {
 	dAtA[i] = 0x18
 	i++
 	i = encodeVarintReferee(dAtA, i, uint64(m.MatchID))
+	if len(m.Gamblers) > 0 {
+		for _, s := range m.Gamblers {
+			dAtA[i] = 0x22
+			i++
+			l = len(s)
+			for l >= 1<<7 {
+				dAtA[i] = uint8(uint64(l)&0x7f | 0x80)
+				l >>= 7
+				i++
+			}
+			dAtA[i] = uint8(l)
+			i++
+			i += copy(dAtA[i:], s)
+		}
+	}
 	return i, nil
 }
 
@@ -225,6 +243,12 @@ func (m *CreateMatchResponse) Size() (n int) {
 	}
 	n += 1 + sovReferee(uint64(m.ErrCode))
 	n += 1 + sovReferee(uint64(m.MatchID))
+	if len(m.Gamblers) > 0 {
+		for _, s := range m.Gamblers {
+			l = len(s)
+			n += 1 + l + sovReferee(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -291,7 +315,6 @@ func (m *CreateMatchRequest) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TotalDeck", wireType)
@@ -311,7 +334,7 @@ func (m *CreateMatchRequest) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field MatchName", wireType)
@@ -341,7 +364,7 @@ func (m *CreateMatchRequest) Unmarshal(dAtA []byte) error {
 			}
 			m.MatchName = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-			hasFields[0] |= uint64(0x00000004)
+			hasFields[0] |= uint64(0x00000002)
 		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Gamblers", wireType)
@@ -387,12 +410,9 @@ func (m *CreateMatchRequest) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("TotalDeck")
 	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
+	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("MatchName")
 	}
 
@@ -451,7 +471,6 @@ func (m *CreateMatchResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.OP = &v
-			hasFields[0] |= uint64(0x00000001)
 		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ErrCode", wireType)
@@ -471,7 +490,7 @@ func (m *CreateMatchResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000002)
+			hasFields[0] |= uint64(0x00000001)
 		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field MatchID", wireType)
@@ -491,7 +510,36 @@ func (m *CreateMatchResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			hasFields[0] |= uint64(0x00000004)
+			hasFields[0] |= uint64(0x00000002)
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Gamblers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowReferee
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthReferee
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Gamblers = append(m.Gamblers, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipReferee(dAtA[iNdEx:])
@@ -508,12 +556,9 @@ func (m *CreateMatchResponse) Unmarshal(dAtA []byte) error {
 		}
 	}
 	if hasFields[0]&uint64(0x00000001) == 0 {
-		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("OP")
-	}
-	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("errCode")
 	}
-	if hasFields[0]&uint64(0x00000004) == 0 {
+	if hasFields[0]&uint64(0x00000002) == 0 {
 		return github_com_gogo_protobuf_proto.NewRequiredNotSetError("MatchID")
 	}
 
@@ -630,19 +675,19 @@ var (
 func init() { proto.RegisterFile("referee.proto", fileDescriptorReferee) }
 
 var fileDescriptorReferee = []byte{
-	// 213 bytes of a gzipped FileDescriptorProto
+	// 222 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x4a, 0x4d, 0x4b,
 	0x2d, 0x4a, 0x4d, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0xea, 0x63,
 	0xe4, 0x12, 0x72, 0x2e, 0x4a, 0x4d, 0x2c, 0x49, 0xf5, 0x4d, 0x2c, 0x49, 0xce, 0x08, 0x4a, 0x2d,
-	0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12, 0xe1, 0x62, 0xf2, 0x0f, 0x90, 0x60, 0x54, 0x60, 0xd2, 0x60,
+	0x2c, 0x4d, 0x2d, 0x2e, 0x11, 0x12, 0xe1, 0x62, 0xf2, 0x0f, 0x90, 0x60, 0x54, 0x60, 0xd4, 0x60,
 	0xb5, 0x62, 0x31, 0x37, 0x30, 0x30, 0x0c, 0x62, 0xf2, 0x0f, 0x10, 0x52, 0xe2, 0xe2, 0x0c, 0xc9,
-	0x2f, 0x49, 0xcc, 0x71, 0x49, 0x4d, 0xce, 0x96, 0x60, 0x02, 0x49, 0x3a, 0xb1, 0x9c, 0xb8, 0x27,
-	0xcf, 0x10, 0x84, 0x10, 0x06, 0xa9, 0x01, 0x9b, 0xe4, 0x97, 0x98, 0x9b, 0x2a, 0xc1, 0xac, 0xc0,
-	0xa4, 0xc1, 0x09, 0x53, 0x03, 0x17, 0x16, 0x92, 0xe2, 0xe2, 0x70, 0x4f, 0xcc, 0x4d, 0xca, 0x49,
-	0x2d, 0x2a, 0x96, 0x60, 0x51, 0x60, 0xd6, 0xe0, 0x0c, 0x82, 0xf3, 0x95, 0xb2, 0xb9, 0x84, 0x51,
-	0xdc, 0x53, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x8a, 0xc3, 0x41, 0x72, 0x5c, 0xec, 0xa9, 0x45, 0x45,
-	0xce, 0xf9, 0x29, 0xa9, 0x28, 0xce, 0x81, 0x09, 0x82, 0xe4, 0xc1, 0xc6, 0x78, 0xba, 0x80, 0x9d,
-	0x02, 0x97, 0x87, 0x0a, 0x3a, 0x09, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83,
-	0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x00, 0x02, 0x00, 0x00, 0xff, 0xff, 0x45, 0xa4, 0xfb,
-	0x6b, 0x23, 0x01, 0x00, 0x00,
+	0x2f, 0x49, 0xcc, 0x71, 0x49, 0x4d, 0xce, 0x96, 0x60, 0x52, 0x60, 0xd2, 0x60, 0x75, 0x62, 0x39,
+	0x71, 0x4f, 0x9e, 0x21, 0x08, 0x21, 0x0c, 0x52, 0x03, 0x36, 0xc9, 0x2f, 0x31, 0x37, 0x55, 0x82,
+	0x59, 0x81, 0x49, 0x83, 0x13, 0xa6, 0x06, 0x2e, 0x2c, 0x24, 0xc5, 0xc5, 0xe1, 0x9e, 0x98, 0x9b,
+	0x94, 0x93, 0x5a, 0x54, 0x2c, 0xc1, 0xa2, 0xc0, 0xac, 0xc1, 0x19, 0x04, 0xe7, 0x2b, 0xb5, 0x33,
+	0x72, 0x09, 0xa3, 0x38, 0xa8, 0xb8, 0x20, 0x3f, 0xaf, 0x38, 0x15, 0xc3, 0x45, 0x46, 0x60, 0x17,
+	0xc9, 0x71, 0xb1, 0xa7, 0x16, 0x15, 0x39, 0xe7, 0xa7, 0xa4, 0xa2, 0xb8, 0x07, 0x26, 0x08, 0x92,
+	0x07, 0x1b, 0xe3, 0xe9, 0x02, 0x76, 0x0b, 0x5c, 0x1e, 0x2a, 0x88, 0xcf, 0x25, 0x4e, 0x02, 0x27,
+	0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c,
+	0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xe5, 0x3f, 0xb8, 0x4b, 0x40, 0x01, 0x00, 0x00,
 }
