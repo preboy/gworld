@@ -43,9 +43,23 @@ func (self *AILogic) CallScoreBroadcast(pos int32, score []int32) {
 	// me
 }
 
-func (self *AILogic) CallScoreResult(pos int32, score int32) {
+func (self *AILogic) CallScoreResultBroadcast(pos int32, score int32) {
 	//
 	log.Info("%v 叫了 %v 分", pos_to_string(pos), score)
+}
+
+func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, arr []int32) {
+
+	if draw {
+		log.Info("流局")
+	} else {
+		cards, _ := poker.CardsFromInt32(arr)
+		log.Info("%v 是地主，叫了 %v 分, %v", pos_to_string(lord), score, poker.CardsToString(cards))
+	}
+}
+
+func (self *AILogic) PlayBroadcast(pos int32, first bool) {
+	log.Info("该 %v 出牌了，首出：%v", pos_to_string(pos), first)
 }
 
 // ----------------------------------------------------------------------------

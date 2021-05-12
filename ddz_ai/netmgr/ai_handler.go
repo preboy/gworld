@@ -115,17 +115,17 @@ func handler_CallScoreBroadcast(c *connector, res comp.IMessage) {
 func handler_CallScoreResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResultBroadcast)
 
-	ai.CallScoreResult(s.Pos, s.Score)
+	ai.CallScoreResultBroadcast(s.Pos, s.Score)
 }
 
 func handler_CallScoreCalcBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreCalcBroadcast)
-	_ = s
+	ai.CallScoreCalcBroadcast(s.Draw, s.Lord, s.Score, s.Cards)
 }
 
 func handler_PlayBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayBroadcast)
-	_ = s
+	ai.PlayBroadcast(s.Pos, s.First)
 }
 
 func handler_PlayResponse(c *connector, res comp.IMessage) {
