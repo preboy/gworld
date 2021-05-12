@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	_once   = []func(){}
 	_update = []func(){}
 
 	// please priority queue instead
@@ -28,6 +29,10 @@ type timer_t struct {
 func Run() {
 	go func() {
 		for {
+
+			// once
+			do_once()
+
 			// timer
 			do_timer()
 
@@ -45,6 +50,10 @@ func Run() {
 
 func Register(fn func()) {
 	_update = append(_update, fn)
+}
+
+func Post(fn func()) {
+	_once = append(_once, fn)
 }
 
 func SetTimer(fn func(), delay int64, repeat bool) {
@@ -88,6 +97,18 @@ func DoNext() {
 
 // ----------------------------------------------------------------------------
 // local
+
+func do_once() {
+	if len(_once) == 0 {
+		return
+	}
+
+	for _, fn := range _once {
+		fn()
+	}
+
+	_once = _once[:0]
+}
 
 func do_timer() {
 	if len(_timerq) == 0 {

@@ -24,4 +24,5 @@ message CreateMatchRequest {
 message CreateMatchResponse {
     required int32      OP              = 1 [default = 7001 ];
     required int32      errCode         = 2;
+    required int32      MatchID         = 3;
 }

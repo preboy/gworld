@@ -13,18 +13,18 @@ func Connect(host string) (*net.TCPConn, error) {
 	return net.DialTCP("tcp", nil, addr)
 }
 
-func AsyncConnect(host string, cb func(*net.TCPConn, uint32)) uint32 {
+func AsyncConnect(host string, cb func(*net.TCPConn, error)) uint32 {
 	id := utils.SeqU32()
 	go func() {
 		addr, err := net.ResolveTCPAddr("tcp4", host)
 		if err != nil {
-			cb(nil, id)
+			cb(nil, err)
 		} else {
 			conn, err := net.DialTCP("tcp", nil, addr)
 			if err == nil {
-				cb(conn, id)
+				cb(conn, nil)
 			} else {
-				cb(nil, id)
+				cb(nil, err)
 			}
 		}
 	}()

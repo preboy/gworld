@@ -20,7 +20,7 @@ func TestAnalyse(t *testing.T) {
 		t.Fatal("invalid card")
 	}
 
-	ci := get_cards_info(cards)
+	ci := CardsAnalyse(cards)
 
 	fmt.Println(ci.ToString())
 }

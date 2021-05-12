@@ -1,10 +1,11 @@
 package main
 
 import (
-	"gworld/core/loop"
+	"gworld/core/log"
 	"gworld/core/tcp"
 	"gworld/ddz/config"
-	"gworld/game/loop"
+	"gworld/ddz/loop"
+	"gworld/ddz_rr/netmgr"
 )
 
 type session struct {
@@ -27,24 +28,17 @@ var (
 )
 
 func main() {
+	log.Start("ddz_rr.log")
+
 	if err := config.Load(); err != nil {
 		panic(err)
 	}
 
-	loop.Start()
+	netmgr.Init()
 
-	sess := &session{}
-
-	{
-		conn, err := tcp.Connect(config.Get().Addr4Referee)
-		if err != nil {
-			panic(err)
-		}
-
-		sock := tcp.NewSocket(conn, sess)
-		sock.Start()
-	}
+	loop.Run()
 
 	<-quit
 
+	netmgr.Release()
 }
