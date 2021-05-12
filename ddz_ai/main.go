@@ -1,14 +1,11 @@
 package main
 
 import (
+	"gworld/core/block"
 	"gworld/core/log"
 	"gworld/ddz/loop"
 	"gworld/ddz_ai/args"
 	"gworld/ddz_ai/netmgr"
-)
-
-var (
-	quit = make(chan bool)
 )
 
 func main() {
@@ -28,7 +25,7 @@ func main() {
 
 	loop.Run()
 
-	<-quit
+	block.Wait()
 
 	netmgr.Init()
 }

@@ -1,7 +1,9 @@
 package netmgr
 
 import (
+	"gworld/core/block"
 	"gworld/ddz/comp"
+	"gworld/ddz/gconst"
 	"gworld/ddz/pb"
 )
 
@@ -70,7 +72,6 @@ func init() {
 		c: func() comp.IMessage { return &pb.DeckEndBroadcast{} },
 		h: handler_DeckEndBroadcast,
 	}
-
 }
 
 // ----------------------------------------------------------------------------
@@ -79,6 +80,10 @@ func init() {
 func handler_Register(c *connector, res comp.IMessage) {
 	s := res.(*pb.RegisterResponse)
 	_ = s
+
+	if s.ErrCode != gconst.Err_OK {
+		block.Signal()
+	}
 }
 
 func handler_SitResponse(c *connector, res comp.IMessage) {

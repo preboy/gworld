@@ -5,6 +5,7 @@ import (
 	"os"
 	"syscall"
 
+	"gworld/core/block"
 	"gworld/core/log"
 	"gworld/core/rand"
 	"gworld/core/utils"
@@ -16,10 +17,6 @@ import (
 	"gworld/ddz/referee"
 )
 
-var (
-	quit = make(chan bool)
-)
-
 // ----------------------------------------------------------------------------
 // main
 
@@ -28,6 +25,8 @@ func main() {
 	flag.Parse()
 
 	log.Start(*arg_log)
+	defer log.Stop()
+
 	log.Info("DDZ starting ...")
 
 	utils.RegisterSignalHandler(func(sig os.Signal) {
@@ -35,7 +34,7 @@ func main() {
 		if sig == syscall.SIGHUP {
 			// reserved
 		} else {
-			close(quit)
+			block.Signal()
 		}
 	})
 
@@ -49,7 +48,7 @@ func main() {
 	ddz_init()
 
 	loop.Run()
-	<-quit
+	block.Wait()
 
 	ddz_release()
 

@@ -4,12 +4,18 @@ import (
 	"gworld/core/log"
 	"gworld/core/tcp"
 	"gworld/core/utils"
+	"gworld/ddz/pb"
+	"gworld/ddz_ai/args"
 
 	"github.com/gogo/protobuf/proto"
 )
 
 func ai_event_opened(c *connector) {
 	log.Info("ai opened")
+
+	c.SendMessage(&pb.RegisterRequest{
+		Name: args.NickName,
+	})
 }
 
 func ai_event_closed(c *connector) {

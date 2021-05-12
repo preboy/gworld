@@ -39,6 +39,8 @@ func main() {
 	flag.Parse()
 
 	log.Start(*arg_log)
+	defer log.Stop()
+
 	log.Info("server start ...")
 
 	utils.RegisterSignalHandler(func(sig os.Signal) {
@@ -55,14 +57,12 @@ func main() {
 
 	if !app.LoadConfig("config.json", *arg_svr) {
 		log.Error("app.LoadServerConfig: Failed")
-		log.Stop()
 		return
 	}
 
 	dbmgr.Open(app.GetGameConfig().DBGame, app.GetGameConfig().DBStat, app.GetConfig().Common.DBCenter)
 
 	if !app.LoadServerData() {
-		log.Stop()
 		return
 	}
 
@@ -145,5 +145,4 @@ func main() {
 	dbmgr.Close()
 
 	fmt.Println("server closed")
-	log.Stop()
 }
