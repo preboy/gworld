@@ -1,6 +1,7 @@
 package lobby
 
 import (
+	"gworld/core/log"
 	"gworld/ddz/comp"
 	"gworld/ddz/loop"
 )
@@ -38,6 +39,8 @@ func Release() {
 
 func AddMatch(m comp.IMatch) {
 	_matches[m.GetMID()] = m
+
+	log.Info("AddMatch %v", m)
 }
 
 func DelMatch(mid uint32) {

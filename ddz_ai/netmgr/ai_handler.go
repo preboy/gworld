@@ -2,6 +2,7 @@ package netmgr
 
 import (
 	"gworld/core/block"
+	"gworld/core/log"
 	"gworld/ddz/comp"
 	"gworld/ddz/gconst"
 	"gworld/ddz/pb"
@@ -42,6 +43,11 @@ func init() {
 	_msg_executor[pb.Default_CallScoreBroadcast_OP] = &executor_t{
 		c: func() comp.IMessage { return &pb.CallScoreBroadcast{} },
 		h: handler_CallScoreBroadcast,
+	}
+
+	_msg_executor[pb.Default_CallScoreResponse_OP] = &executor_t{
+		c: func() comp.IMessage { return &pb.CallScoreResponse{} },
+		h: handler_CallScoreResponse,
 	}
 
 	_msg_executor[pb.Default_CallScoreResultBroadcast_OP] = &executor_t{
@@ -88,7 +94,7 @@ func handler_Register(c *connector, res comp.IMessage) {
 	}
 
 	c.SendMessage(&pb.SitRequest{
-		MatchId: uint32(args.MatchID),
+		MatchName: args.MatchName,
 	})
 }
 
@@ -108,13 +114,20 @@ func handler_DealCardNotify(c *connector, res comp.IMessage) {
 
 func handler_CallScoreBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreBroadcast)
-
 	ai.CallScoreBroadcast(s.Pos, s.History)
+}
+
+func handler_CallScoreResponse(c *connector, res comp.IMessage) {
+	s := res.(*pb.CallScoreResponse)
+	if s.ErrCode != gconst.Err_OK {
+		log.Info("叫分OK")
+	} else {
+		log.Info("叫分Error")
+	}
 }
 
 func handler_CallScoreResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResultBroadcast)
-
 	ai.CallScoreResultBroadcast(s.Pos, s.Score)
 }
 

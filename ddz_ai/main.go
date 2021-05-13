@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"gworld/core/block"
 	"gworld/core/log"
 	"gworld/ddz/loop"
@@ -9,22 +11,23 @@ import (
 )
 
 func main() {
-	log.Start("ddz_ai.log")
-	defer log.Stop()
-
-	log.Info("I'am ddz_ai")
-
 	if !args.Parse() {
-		log.Info("Args parse failed")
+		fmt.Println("Args parse failed")
 		return
 	}
 
-	log.Info("boot with %v %v", args.MatchID, args.NickName)
+	var logname = "ddz_ai_"
+	logname += args.NickName
+	logname += ".log"
+
+	log.Start(logname)
+	defer log.Stop()
+
+	log.Info("boot with %v %v", args.NickName, args.MatchName)
 
 	netmgr.Init()
 
 	loop.Run()
-
 	block.Wait()
 
 	netmgr.Init()

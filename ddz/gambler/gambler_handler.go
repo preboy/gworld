@@ -68,15 +68,18 @@ func handler_sit(plr *Gambler, req comp.IMessage, res comp.IMessage) {
 	r := req.(*pb.SitRequest)
 	s := res.(*pb.SitResponse)
 
-	m := lobby.GetMatch(r.MatchId)
+	m := lobby.GetMatchByName(r.MatchName)
 	if m == nil {
 		s.ErrCode = gconst.Err_MatchNotExist
 		return
 	}
 
 	if m.Sit(plr.GetPID()) {
-		plr.Data.MatchID = r.MatchId
+		plr.Data.MatchID = m.GetMID()
+		plr.Data.MatchName = m.GetName()
 	}
+
+	s.ErrCode = gconst.Err_OK
 }
 
 func handler_callscore(plr *Gambler, req comp.IMessage, res comp.IMessage) {

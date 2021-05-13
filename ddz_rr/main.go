@@ -16,8 +16,7 @@ func main() {
 	netmgr.Init()
 
 	loop.Run()
-
-	block.Signal()
+	block.Wait()
 
 	netmgr.Release()
 }

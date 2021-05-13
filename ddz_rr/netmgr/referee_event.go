@@ -12,7 +12,7 @@ import (
 func referee_event_opened(c *connector) {
 	msg := &pb.CreateMatchRequest{
 		TotalDeck: 10,
-		MatchName: "dev-test",
+		MatchName: "dev_test",
 		Gamblers:  []string{"name_1", "name_2", "name_3"},
 	}
 

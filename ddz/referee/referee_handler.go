@@ -54,6 +54,7 @@ func handler_create_match(plr *Referee, req comp.IMessage, res comp.IMessage) {
 
 	lobby.AddMatch(m)
 
+	s.MatchID = int32(m.GetMID())
 	s.Gamblers = r.Gamblers
 
 	s.ErrCode = gconst.Err_OK

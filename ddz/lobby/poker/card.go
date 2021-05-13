@@ -46,7 +46,7 @@ func NewCard(color int32, point int32) Card {
 		panic("NewCard:	invalid color")
 	}
 
-	if color < CardPoint_3 || color > CardPoint_2 || color == 15 {
+	if point < CardPoint_3 || point > CardPoint_2 || point == 15 {
 		panic("NewCard:	invalid point")
 	}
 
