@@ -354,25 +354,37 @@ func init() {
 			lord_win = true
 		}
 
-		score := t.deck_info.caca_info.score
+		base_score := t.deck_info.caca_info.score
 		if t.bombs > 0 {
-			score *= t.bombs
+			base_score *= t.bombs
 		}
 
-		for k, _ := range t.seats {
+		log.Debug("calc = %v", lord_win)
+
+		for k := range t.seats {
 			pos := int32(k)
+			score := base_score
+
+			log.Debug("pos = %v", pos)
 
 			if pos == t.deck_info.caca_info.lord {
 				score *= 2
+
+				log.Debug("is lord")
 
 				if !lord_win {
 					score = 0 - score
 				}
 			} else {
+
+				log.Debug("not lord")
+
 				if lord_win {
 					score = 0 - score
 				}
 			}
+
+			log.Debug("total  %v %v", pos, score)
 
 			msg.Score = append(msg.Score, score)
 		}

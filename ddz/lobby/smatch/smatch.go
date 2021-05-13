@@ -46,6 +46,8 @@ func NewSMatch(conf *SMatchConf) *SMatch {
 		gamblers: map[string]*gambler_match_t{},
 	}
 
+	m.table.m = m
+
 	return m
 }
 

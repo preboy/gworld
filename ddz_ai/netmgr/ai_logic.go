@@ -46,7 +46,7 @@ func (self *AILogic) CallScoreBroadcast(pos int32, score []int32) {
 
 	if pos == self.pos {
 		msg := &pb.CallScoreRequest{
-			Score: rand.Int31n(3),
+			Score: rand.Int31n(4),
 		}
 		self.c.SendMessage(msg)
 	}

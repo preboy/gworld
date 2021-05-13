@@ -76,9 +76,6 @@ func (self *Gambler) OnPacket(packet *tcp.Packet) {
 
 	e.h(self, req, res)
 
-	str = utils.ObjectToString(res)
-	log.Info("gambler SEND packet: %v, %v, %v", self.PID, res.GetOP(), str)
-
 	self.SendMessage(res)
 }
 
@@ -101,6 +98,9 @@ func (self *Gambler) SetSession(sess tcp.ISession) {
 }
 
 func (self *Gambler) SendMessage(msg comp.IMessage) {
+	str := utils.ObjectToString(msg)
+	log.Info("gambler SEND packet: %v, %v, %v", self.PID, msg.GetOP(), str)
+
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 

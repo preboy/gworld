@@ -79,9 +79,6 @@ func (self *Referee) OnPacket(packet *tcp.Packet) {
 
 	e.h(self, req, res)
 
-	str = utils.ObjectToString(res)
-	log.Info("referee SEND packet: %v, %v, %v", self.PID, res.GetOP(), str)
-
 	self.SendMessage(res)
 }
 
@@ -101,6 +98,9 @@ func (self *Referee) SetSession(sess tcp.ISession) {
 }
 
 func (self *Referee) SendMessage(msg comp.IMessage) {
+	str := utils.ObjectToString(msg)
+	log.Info("referee SEND packet: %v, %v, %v", self.PID, msg.GetOP(), str)
+
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 
