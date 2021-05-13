@@ -147,6 +147,8 @@ func init() {
 			Score: t.deck_info.caca_info.score,
 		}
 
+		t.seats[t.deck_info.caca_info.lord].AddCards(t.cards[51:])
+
 		for _, v := range t.cards[51:] {
 			msg.Cards = append(msg.Cards, v.Value())
 		}
@@ -191,10 +193,14 @@ func init() {
 				// 检测分数是否合法
 				for _, v := range t.deck_info.call_info {
 					if v.score > 0 && r.Score <= v.score {
-						s.ErrCode = gconst.Err_CallScore2
-						return
+						// s.ErrCode = gconst.Err_CallScore2
+						// return
+						r.Score = 0
 					}
 				}
+
+				delay := time.Since(t.action_ts).Seconds()
+				t.deck_info.call_info = append(t.deck_info.call_info, &call_info_t{int64(delay), pos, r.Score})
 
 				s.ErrCode = gconst.Err_OK
 

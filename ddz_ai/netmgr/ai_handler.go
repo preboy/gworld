@@ -119,7 +119,7 @@ func handler_CallScoreBroadcast(c *connector, res comp.IMessage) {
 
 func handler_CallScoreResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResponse)
-	if s.ErrCode != gconst.Err_OK {
+	if s.ErrCode == gconst.Err_OK {
 		log.Info("叫分OK")
 	} else {
 		log.Info("叫分Error")

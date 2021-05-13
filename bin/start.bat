@@ -1,5 +1,10 @@
 @echo off
 
+
+taskkill /f /im ddz_ai.exe
+taskkill /f /im ddz_rr.exe
+
+
 start ddz_rr.exe
 
 timeout 1

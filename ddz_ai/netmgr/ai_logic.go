@@ -42,7 +42,7 @@ func (self *AILogic) Init(c *connector, pos int32, arr []int32) {
 }
 
 func (self *AILogic) CallScoreBroadcast(pos int32, score []int32) {
-	log.Info("该 %v 叫分了, %v %v", pos_to_string(pos), score)
+	log.Info("该 %v 叫分了, %v", pos_to_string(pos), score)
 
 	if pos == self.pos {
 		msg := &pb.CallScoreRequest{
@@ -57,7 +57,6 @@ func (self *AILogic) CallScoreResultBroadcast(pos int32, score int32) {
 }
 
 func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, arr []int32) {
-
 	if draw {
 		log.Info("流局")
 		return
@@ -88,13 +87,14 @@ func (self *AILogic) PlayBroadcast(pos int32, first bool) {
 
 	if first {
 		l := len(self.cards)
+		cards = self.cards[l-1:]
 		self.cards = self.cards[:l-1]
 	}
 
 	msg.Cards = poker.CardsToInt32(cards)
 
-	log.Info("出牌:", poker.CardsToString(cards))
-	log.Info("剩下的牌为:", poker.CardsToString(self.cards))
+	log.Info("出牌: %v", poker.CardsToString(cards))
+	log.Info("剩下的牌为: %v", poker.CardsToString(self.cards))
 
 	self.c.SendMessage(msg)
 }
@@ -113,7 +113,7 @@ func (self *AILogic) PlayResultBroadcast(pos int32, arr []int32) {
 }
 
 func (self *AILogic) DeckEndBroadcast(score []int32) {
-	log.Info("结算: ", score)
+	log.Info("结算: %v", score)
 }
 
 // ----------------------------------------------------------------------------
