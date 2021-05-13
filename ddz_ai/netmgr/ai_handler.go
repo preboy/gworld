@@ -130,15 +130,15 @@ func handler_PlayBroadcast(c *connector, res comp.IMessage) {
 
 func handler_PlayResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayResponse)
-	_ = s
+	ai.PlayResponse(s.ErrCode)
 }
 
 func handler_PlayResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayResultBroadcast)
-	_ = s
+	ai.PlayResultBroadcast(s.Pos, s.Cards)
 }
 
 func handler_DeckEndBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.DeckEndBroadcast)
-	_ = s
+	ai.DeckEndBroadcast(s.Score)
 }

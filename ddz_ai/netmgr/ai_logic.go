@@ -3,6 +3,7 @@ package netmgr
 import (
 	"gworld/core/block"
 	"gworld/core/log"
+	"gworld/ddz/gconst"
 	"gworld/ddz/lobby/poker"
 	"strconv"
 )
@@ -60,6 +61,23 @@ func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, 
 
 func (self *AILogic) PlayBroadcast(pos int32, first bool) {
 	log.Info("该 %v 出牌了，首出：%v", pos_to_string(pos), first)
+}
+
+func (self *AILogic) PlayResponse(err_code int32) {
+	if err_code == gconst.Err_OK {
+		log.Info("出牌返回OK")
+	} else {
+		log.Info("出牌返回 ERR")
+	}
+}
+
+func (self *AILogic) PlayResultBroadcast(pos int32, arr []int32) {
+	cards, _ := poker.CardsFromInt32(arr)
+	log.Info("%v 出牌 ：%v", pos_to_string(pos), poker.CardsToString(cards))
+}
+
+func (self *AILogic) DeckEndBroadcast(score []int32) {
+	log.Info("结算: ", score)
 }
 
 // ----------------------------------------------------------------------------
