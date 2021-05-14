@@ -7,6 +7,7 @@ import (
 
 	"gworld/core/log"
 	"gworld/core/tcp"
+	"gworld/core/utils"
 	"gworld/ddz/comp"
 
 	"github.com/gogo/protobuf/proto"
@@ -101,6 +102,9 @@ func (self *connector) SendPacket(opcode uint16, data []byte) {
 }
 
 func (self *connector) SendMessage(msg comp.IMessage) {
+	str := utils.ObjectToString(msg)
+	log.Info("rr SEND packet: %v, %v, %v", self.id, msg.GetOP(), str)
+
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 
