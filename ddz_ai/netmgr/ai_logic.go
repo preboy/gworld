@@ -34,6 +34,8 @@ func (self *AILogic) Init(c *connector, pos int32, arr []int32) {
 		return
 	}
 
+	poker.CardsSort(cards)
+
 	self.c = c
 	self.pos = pos
 	self.cards = cards
@@ -63,12 +65,14 @@ func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, 
 	}
 
 	cards, _ := poker.CardsFromInt32(arr)
-	log.Info("%v 是地主，叫了 %v 分, %v", pos_to_string(lord), score, poker.CardsToString(cards))
+	log.Info("%v 是地主，叫了 %v 分, 底牌: %v", pos_to_string(lord), score, poker.CardsToString(cards))
 
 	// me
 	cards_lord, _ := poker.CardsFromInt32(arr)
 	if lord == self.pos {
 		self.cards = append(self.cards, cards_lord...)
+		poker.CardsSort(self.cards)
+		log.Info("%v 的地主牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
 	}
 }
 
