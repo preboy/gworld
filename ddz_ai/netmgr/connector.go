@@ -103,7 +103,7 @@ func (self *connector) SendPacket(opcode uint16, data []byte) {
 
 func (self *connector) SendMessage(msg comp.IMessage) {
 	str := utils.ObjectToString(msg)
-	log.Info("ai SEND packet: %v, %v, %v", self.id, msg.GetOP(), str)
+	log.Info("SEND packet: %v, %v, %v", self.id, msg.GetOP(), str)
 
 	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }

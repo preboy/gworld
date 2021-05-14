@@ -80,7 +80,7 @@ func (self *Table) Init(id int32, m *SMatch) {
 	self.host_pos = seat_east
 	self.deck_index = 0
 
-	logname := fmt.Sprintf("%v_(%v)_%v.log", m.GetMID(), m.GetName(), self.id)
+	logname := fmt.Sprintf("ddz_%v_(%v)_%v.log", m.GetMID(), m.GetName(), self.id)
 	self.l = log.NewLogger(logname, false)
 }
 
