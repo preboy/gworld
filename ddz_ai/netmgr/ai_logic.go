@@ -130,8 +130,6 @@ func pos_to_string(pos int32) string {
 		return "<南>"
 	case 2:
 		return "<西>"
-	case 3:
-		return "<北>"
 	default:
 		panic("方位错误" + strconv.Itoa(int(pos)))
 	}

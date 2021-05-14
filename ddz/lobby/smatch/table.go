@@ -1,8 +1,10 @@
 package smatch
 
 import (
+	"fmt"
 	"time"
 
+	"gworld/core/log"
 	"gworld/ddz/comp"
 	"gworld/ddz/lobby/poker"
 	"gworld/ddz/loop"
@@ -33,6 +35,9 @@ const (
 
 type Table struct {
 	m *SMatch
+	l *log.Logger
+
+	id int32
 
 	seats [seat_max]*gambler_table_t // 3个方位的pid
 
@@ -68,10 +73,19 @@ func (self *Table) OnMessage(pid string, req comp.IMessage, res comp.IMessage) {
 	FSM[self.stage].OnMessage(self, pid, req, res)
 }
 
-func (self *Table) Init() {
+func (self *Table) Init(id int32, m *SMatch) {
+	self.m = m
+	self.id = id
 	self.stage = stage_wait
 	self.host_pos = seat_east
 	self.deck_index = 0
+
+	logname := fmt.Sprintf("%v_(%v)_%v.log", m.GetMID(), m.GetName(), self.id)
+	self.l = log.NewLogger(logname, false)
+}
+
+func (self *Table) Release() {
+	self.l.Stop()
 }
 
 func (self *Table) Sit(pid string) bool {
@@ -178,6 +192,7 @@ func (self *Table) pid_to_pos(pid string) (seat, bool) {
 func (self *Table) DealCards(pos seat, cards []poker.Card) {
 
 	self.seats[pos].AddCards(cards)
+	self.l.Info("%v 拿到的手牌为：%v", pos_to_string(pos), poker.CardsToString(self.seats[pos].data.cards))
 
 	self.deck_info.deal_info = append(self.deck_info.deal_info, &deal_info_t{pos, cards})
 
@@ -203,6 +218,8 @@ func (self *Table) SendActionCall(pos seat) {
 	}
 
 	self.call_pos = pos
+
+	self.l.Info("%v 开始叫分", pos_to_string(pos))
 
 	// 设置开始时间
 	self.action_ts = time.Now()
@@ -236,11 +253,14 @@ func (self *Table) CalcCall() {
 	// 打牌 or 流局
 	if score > 0 {
 		self.deck_info.caca_info.draw = false
+		self.l.Info("叫分结算: %v 是地主，叫了 %v 分，底牌是: %v", pos_to_string(lord), score, poker.CardsToString(self.cards[51:]))
 		self.Switch(stage_play)
 	} else {
 		self.deck_info.caca_info.draw = true
+		self.l.Info("叫分结算: 流局")
 		self.Switch(stage_calc)
 	}
+
 }
 
 func (self *Table) IsVictory() bool {
@@ -268,6 +288,9 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 		Cards: poker.CardsToInt32(cards),
 	})
 
+	self.l.Info("%v 出牌：%v", pos_to_string(pos), poker.CardsToString(cards))
+	self.l.Info("%v 剩余的牌为: %v", pos_to_string(self.play_pos), poker.CardsToString(self.seats[self.play_pos].data.cards))
+
 	self.deck_info.play_info = append(self.deck_info.play_info, &play_info_t{})
 
 	// 判断胜负
@@ -286,6 +309,8 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 		Pos:   int32(self.play_pos),
 		First: self.play_idx == 0,
 	})
+
+	self.l.Info("该 %v 出牌了， 首出：%v", pos_to_string(self.play_pos), self.play_idx == 0)
 }
 
 func (self *Table) PlayPass() {
@@ -303,6 +328,9 @@ func (self *Table) PlayPass() {
 		Cards: nil,
 	})
 
+	self.l.Info("%v PASS", pos_to_string(self.play_pos))
+	self.l.Info("%v 剩余的牌为: %v", pos_to_string(self.play_pos), poker.CardsToString(self.seats[self.play_pos].data.cards))
+
 	self.play_pos = next_seat(self.play_pos)
 
 	// 通知下一家出牌
@@ -310,4 +338,6 @@ func (self *Table) PlayPass() {
 		Pos:   int32(self.play_pos),
 		First: self.play_idx == 0,
 	})
+
+	self.l.Info("该 %v 出牌了， 首出：%v", pos_to_string(self.play_pos), self.play_idx == 0)
 }

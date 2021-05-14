@@ -22,6 +22,7 @@ type gambler_table_t struct {
 
 func (self *gambler_table_t) AddCards(cards []poker.Card) {
 	self.data.cards = append(self.data.cards, cards...)
+	poker.CardsSort(self.data.cards)
 }
 
 // 获取最小的牌
@@ -30,7 +31,6 @@ func (self *gambler_table_t) GetDefaultCards() (ret []poker.Card) {
 
 	l := len(self.data.cards)
 	ret = self.data.cards[l-1 : l]
-	self.data.cards = self.data.cards[:l-1]
 
 	return
 }
@@ -72,6 +72,7 @@ func (self *gambler_table_t) RemoveCards(cards []poker.Card) {
 	}
 
 	self.data.cards = new_cards
+	poker.CardsSort(self.data.cards)
 }
 
 func (self *gambler_table_t) IsVictory() bool {

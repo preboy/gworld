@@ -1,12 +1,12 @@
 package smatch
 
 import (
-	"gworld/core/log"
 	"gworld/ddz/comp"
 	"gworld/ddz/gconst"
 	"gworld/ddz/lobby/poker"
 	"gworld/ddz/loop"
 	"gworld/ddz/pb"
+	"strconv"
 	"time"
 )
 
@@ -72,11 +72,12 @@ func init() {
 	// prepare
 
 	FSM[stage_wait].OnEnter = func(t *Table) {
-		log.Info("enter prepare")
+		t.l.Info("enter prepare")
+		t.l.Info("本桌比赛开始，共 %v 副", t.m.conf.TotalDeck)
 	}
 
 	FSM[stage_wait].OnLeave = func(t *Table) {
-		log.Info("leave prepare")
+		t.l.Info("leave prepare")
 	}
 
 	FSM[stage_wait].OnUpdate = func(t *Table) {
@@ -101,7 +102,9 @@ func init() {
 	// deal
 
 	FSM[stage_deal].OnEnter = func(t *Table) {
-		log.Info("enter deal")
+		t.l.Info("enter deal")
+		t.l.Info("第 %v 副开始了", t.deck_index+1)
+
 		t.DeckOpen()
 
 		// 发牌
@@ -120,7 +123,7 @@ func init() {
 	}
 
 	FSM[stage_deal].OnLeave = func(t *Table) {
-		log.Info("leave deal")
+		t.l.Info("leave deal")
 	}
 
 	FSM[stage_deal].OnUpdate = func(t *Table) {
@@ -134,7 +137,7 @@ func init() {
 	// call
 
 	FSM[stage_call].OnEnter = func(t *Table) {
-		log.Info("enter call")
+		t.l.Info("enter call")
 
 		t.SendActionCall(t.call_pos)
 	}
@@ -147,20 +150,23 @@ func init() {
 			Score: t.deck_info.caca_info.score,
 		}
 
-		t.seats[t.deck_info.caca_info.lord].AddCards(t.cards[51:])
+		if !t.deck_info.caca_info.draw {
+			t.seats[t.deck_info.caca_info.lord].AddCards(t.cards[51:])
+		}
 
 		for _, v := range t.cards[51:] {
 			msg.Cards = append(msg.Cards, v.Value())
 		}
 
 		t.Broadcast(msg)
-		log.Info("leave call")
+		t.l.Info("leave call")
 	}
 
 	FSM[stage_call].OnUpdate = func(t *Table) {
 		// 时间到了，叫0分
 		if time.Since(t.action_ts) > 15*time.Second {
 			t.deck_info.call_info = append(t.deck_info.call_info, &call_info_t{15, t.call_pos, 0})
+			t.l.Info("%v 叫分超时，默认叫0分", pos_to_string(t.call_pos))
 			t.SendActionCall(next_seat(t.call_pos))
 		}
 	}
@@ -201,6 +207,7 @@ func init() {
 
 				delay := time.Since(t.action_ts).Seconds()
 				t.deck_info.call_info = append(t.deck_info.call_info, &call_info_t{int64(delay), pos, r.Score})
+				t.l.Info("%v 叫了 %v 分", pos_to_string(pos), r.Score)
 
 				s.ErrCode = gconst.Err_OK
 
@@ -222,7 +229,7 @@ func init() {
 	// play
 
 	FSM[stage_play].OnEnter = func(t *Table) {
-		log.Info("enter play")
+		t.l.Info("enter play")
 
 		t.play_pos = t.deck_info.caca_info.lord
 		t.play_idx = 0
@@ -234,10 +241,12 @@ func init() {
 			Pos:   int32(t.play_pos),
 			First: t.play_idx == 0,
 		})
+
+		t.l.Info("该 %v 出牌了， 首出：%v", pos_to_string(t.play_pos), t.play_idx == 0)
 	}
 
 	FSM[stage_play].OnLeave = func(t *Table) {
-		log.Info("leave play")
+		t.l.Info("leave play")
 	}
 
 	FSM[stage_play].OnUpdate = func(t *Table) {
@@ -343,7 +352,7 @@ func init() {
 	// calc
 
 	FSM[stage_calc].OnEnter = func(t *Table) {
-		log.Info("enter calc")
+		t.l.Info("enter calc")
 
 		msg := &pb.DeckEndBroadcast{}
 
@@ -380,11 +389,13 @@ func init() {
 		}
 
 		t.Broadcast(msg)
+
+		t.l.Info("本副结束: 得分 %v", msg.Score)
 	}
 
 	FSM[stage_calc].OnLeave = func(t *Table) {
 		t.DeckClosed()
-		log.Info("leave calc")
+		t.l.Info("leave calc")
 	}
 
 	FSM[stage_calc].OnUpdate = func(t *Table) {
@@ -398,11 +409,12 @@ func init() {
 	// over
 
 	FSM[stage_over].OnEnter = func(t *Table) {
-		log.Info("enter over")
+		t.l.Info("enter over")
+		t.l.Info("比赛结束")
 	}
 
 	FSM[stage_over].OnLeave = func(t *Table) {
-		log.Info("leave over")
+		t.l.Info("leave over")
 	}
 
 	FSM[stage_over].OnUpdate = func(t *Table) {
@@ -424,4 +436,20 @@ func next_seat(seat seat) seat {
 	}
 
 	return seat
+}
+
+// local
+func pos_to_string(pos int32) string {
+	switch pos {
+	case 0:
+		return "<东>"
+	case 1:
+		return "<南>"
+	case 2:
+		return "<西>"
+	case 3:
+		return "<北>"
+	default:
+		panic("方位错误" + strconv.Itoa(int(pos)))
+	}
 }
