@@ -31,3 +31,10 @@
 /.vscode
 note.txt
 vendor
+bin_ddz/*.exe
+bin_ddz/*.exe~
+bin_ddz/*.log
+bin_ddz/ddz
+bin_ddz/ddz_ai
+bin_ddz/ddz_rr
+
