@@ -21,7 +21,7 @@ func (self *Block) Wait() {
 	<-self.quit
 }
 
-func (self *Block) Signal() {
+func (self *Block) Done() {
 	close(self.quit)
 }
 
@@ -32,6 +32,6 @@ func Wait() {
 	_block.Wait()
 }
 
-func Signal() {
-	_block.Signal()
+func Done() {
+	_block.Done()
 }

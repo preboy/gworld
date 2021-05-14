@@ -34,7 +34,7 @@ func main() {
 		if sig == syscall.SIGHUP {
 			// reserved
 		} else {
-			block.Signal()
+			block.Done()
 		}
 	})
 

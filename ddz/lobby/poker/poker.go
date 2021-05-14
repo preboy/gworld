@@ -30,6 +30,12 @@ func CreatePoker() (cards []Card) {
 // ----------------------------------------------------------------------------
 // local
 
+func int_random(arr []int) {
+	rand.Shuffle(len(arr), func(i, j int) {
+		arr[i], arr[j] = arr[j], arr[i]
+	})
+}
+
 func cards_random(cards []Card) {
 	rand.Shuffle(len(cards), func(i, j int) {
 		cards[i], cards[j] = cards[j], cards[i]

@@ -89,7 +89,7 @@ func handler_Register(c *connector, res comp.IMessage) {
 	_ = s
 
 	if s.ErrCode != gconst.Err_OK {
-		block.Signal()
+		block.Done()
 		return
 	}
 
@@ -102,7 +102,7 @@ func handler_SitResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.SitResponse)
 
 	if s.ErrCode != gconst.Err_OK {
-		block.Signal()
+		block.Done()
 		return
 	}
 }

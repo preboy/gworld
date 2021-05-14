@@ -112,7 +112,7 @@ func init() {
 			t.cards = poker.CreatePoker()
 
 			n := t.call_pos
-			t.DealCards(n, t.cards[:17])
+			t.DealCards(n, t.cards[0:17])
 
 			n = next_seat(n)
 			t.DealCards(n, t.cards[17:34])

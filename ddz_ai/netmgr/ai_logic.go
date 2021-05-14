@@ -30,7 +30,7 @@ func (self *AILogic) Init(c *connector, pos int32, arr []int32) {
 	cards, valid := poker.CardsFromInt32(arr)
 	if !valid {
 		log.Info("fuck server")
-		block.Signal()
+		block.Done()
 		return
 	}
 
