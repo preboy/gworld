@@ -18,13 +18,19 @@ func TestA45(t *testing.T) {
 func TestPokerBuild(t *testing.T) {
 	rand.Seed(time.Now().Unix())
 
-	b := NewPokerBuild()
-	b.Build_CardsTypeA_SEQ(3, 7)
+	for i := 0; i < 10; i++ {
+		b := NewPokerBuild()
+		b.Build_ABCDE(3, 7)
+		b.Build_AAABBB(3, 4)
+		b.Build_AABBCC(3, 8)
+		b.Build_AAAA(3)
 
-	cards := b.Done()
+		cards := b.Finish()
 
-	fmt.Println(CardsToString(cards[:17]))
-	fmt.Println(CardsToString(cards[17:34]))
-	fmt.Println(CardsToString(cards[34:51]))
-	fmt.Println(CardsToString(cards[51:]))
+		fmt.Println("------------------------------------------")
+		fmt.Println(CardsToString(cards[:17]))
+		fmt.Println(CardsToString(cards[17:34]))
+		fmt.Println(CardsToString(cards[34:51]))
+		fmt.Println(CardsToString(cards[51:]))
+	}
 }

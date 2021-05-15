@@ -52,7 +52,7 @@ func (self card_wall) init() {
 }
 
 func (self card_wall) exist_seq(p2 int32, length int32, cnt int) bool {
-	for i := p2 - length + 1; i <= length; i++ {
+	for i := p2 - length + 1; i <= p2; i++ {
 		if len(self[i]) < cnt {
 			return false
 		}
@@ -60,7 +60,7 @@ func (self card_wall) exist_seq(p2 int32, length int32, cnt int) bool {
 	return true
 }
 
-func (self card_wall) expect_a_seq(length int32) (ret []Card) {
+func (self card_wall) expect_abcde(length int32) (ret []Card) {
 	if length < 5 {
 		return
 	}
@@ -70,13 +70,13 @@ func (self card_wall) expect_a_seq(length int32) (ret []Card) {
 
 	set := []int32{}
 	for i := p1; i <= p2; i++ {
-		if self.exist_seq(p1, length, 1) {
+		if self.exist_seq(i, length, 1) {
 			set = append(set, i)
 		}
 	}
 
 	if len(set) == 0 {
-		return self.expect_a_seq(length - 1)
+		return self.expect_abcde(length - 1)
 	}
 
 	r := rand.Intn(len(set))
@@ -86,6 +86,102 @@ func (self card_wall) expect_a_seq(length int32) (ret []Card) {
 		l, c := cards_remove(self[i])
 		ret = append(ret, c)
 		self[i] = l
+	}
+
+	return
+}
+
+func (self card_wall) expect_aabbcc_seq(length int32) (ret []Card) {
+	if length < 3 {
+		return
+	}
+
+	p1 := 3 + length - 1
+	p2 := int32(14)
+
+	set := []int32{}
+	for i := p1; i <= p2; i++ {
+		if self.exist_seq(i, length, 2) {
+			set = append(set, i)
+		}
+	}
+
+	if len(set) == 0 {
+		return self.expect_aabbcc_seq(length - 1)
+	}
+
+	r := rand.Intn(len(set))
+	v := set[r]
+
+	for i := v - length + 1; i <= v; i++ {
+		for j := 0; j < 2; j++ {
+			l, c := cards_remove(self[i])
+			ret = append(ret, c)
+			self[i] = l
+		}
+	}
+
+	return
+}
+
+func (self card_wall) expect_aaa_seq(length int32) (ret []Card) {
+	if length < 1 {
+		return
+	}
+
+	p1 := 3 + length - 1
+	p2 := int32(14)
+
+	set := []int32{}
+	for i := p1; i <= p2; i++ {
+		if self.exist_seq(i, length, 3) {
+			set = append(set, i)
+		}
+	}
+
+	if len(set) == 0 {
+		return self.expect_aaa_seq(length - 1)
+	}
+
+	r := rand.Intn(len(set))
+	v := set[r]
+
+	for i := v - length + 1; i <= v; i++ {
+		for j := 0; j < 3; j++ {
+			l, c := cards_remove(self[i])
+			ret = append(ret, c)
+			self[i] = l
+		}
+	}
+
+	return
+}
+
+func (self card_wall) expect_aaaa() (ret []Card) {
+
+	set := []int32{}
+
+	for i := CardPoint_3; i <= CardPoint_2; i++ {
+		if i == 15 {
+			continue
+		}
+
+		if self.exist_seq(i, 1, 4) {
+			set = append(set, i)
+		}
+	}
+
+	if len(set) == 0 {
+		return
+	}
+
+	r := rand.Intn(len(set))
+	v := set[r]
+
+	for i := 0; i < 4; i++ {
+		l, c := cards_remove(self[v])
+		ret = append(ret, c)
+		self[v] = l
 	}
 
 	return
@@ -119,30 +215,40 @@ func cards_append(src []Card, add []Card) (r []Card, b bool) {
 	return
 }
 
-func (self *poker_build) Done() (ret []Card) {
-	seats := [3][]Card{}
+func (self *poker_build) Finish() (ret []Card) {
+
+	var (
+		seats      = [3][]Card{}
+		cards_left = []Card{}
+	)
 
 	// draw -> seat
 	for _, cards := range self.draw {
 		seq := []int{0, 1, 2}
 		int_random(seq)
 
+		b := false
 		for i := 0; i < len(seq); i++ {
 			p := seq[i]
 
-			r, b := cards_append(seats[p], cards)
+			r := []Card{}
+			r, b = cards_append(seats[p], cards)
 			if b {
 				seats[p] = r
 				break
 			}
 		}
+
+		if !b {
+			cards_left = append(cards_left, cards...)
+		}
 	}
 
 	// wall -> seat
-	var cards_left []Card
-
 	for _, arr := range self.wall {
-		cards_left = append(cards_left, arr...)
+		if len(arr) > 0 {
+			cards_left = append(cards_left, arr...)
+		}
 	}
 
 	cards_random(cards_left)
@@ -151,6 +257,10 @@ func (self *poker_build) Done() (ret []Card) {
 
 		l1 := 17 - len(seats[i])
 		l2 := len(cards_left)
+
+		if l2 == 0 {
+			break
+		}
 
 		seats[i] = append(seats[i], cards_left[l2-l1:l2]...)
 		cards_left = cards_left[:l2-l1]
@@ -164,7 +274,7 @@ func (self *poker_build) Done() (ret []Card) {
 	return
 }
 
-func (self *poker_build) Build_CardsTypeA_SEQ(count int32, length int32) bool {
+func (self *poker_build) Build_ABCDE(count int32, length int32) bool {
 	// args checking
 	{
 		if count <= 0 || count > 5 {
@@ -179,7 +289,72 @@ func (self *poker_build) Build_CardsTypeA_SEQ(count int32, length int32) bool {
 	for i := int32(0); i < count; i++ {
 		l := random_angle_45(5, length)
 
-		cards := self.wall.expect_a_seq(l)
+		cards := self.wall.expect_abcde(l)
+		if len(cards) != 0 {
+			self.draw = append(self.draw, cards)
+		}
+	}
+
+	return true
+}
+
+func (self *poker_build) Build_AABBCC(count int32, length int32) bool {
+	// args checking
+	{
+		if count <= 0 || count > 4 {
+			return false
+		}
+
+		if length < 3 || length > 8 {
+			return false
+		}
+	}
+
+	for i := int32(0); i < count; i++ {
+		l := random_angle_45(3, length)
+
+		cards := self.wall.expect_aabbcc_seq(l)
+		if len(cards) != 0 {
+			self.draw = append(self.draw, cards)
+		}
+	}
+
+	return true
+}
+
+func (self *poker_build) Build_AAABBB(count int32, length int32) bool {
+	// args checking
+	{
+		if count <= 0 || count > 4 {
+			return false
+		}
+
+		if length < 1 || length > 5 {
+			return false
+		}
+	}
+
+	for i := int32(0); i < count; i++ {
+		l := random_angle_45(1, length)
+
+		cards := self.wall.expect_aaa_seq(l)
+		if len(cards) != 0 {
+			self.draw = append(self.draw, cards)
+		}
+	}
+
+	return true
+}
+
+// 不包括双王
+func (self *poker_build) Build_AAAA(count int32) bool {
+
+	if count <= 0 || count > 12 {
+		return false
+	}
+
+	for i := int32(0); i < count; i++ {
+		cards := self.wall.expect_aaaa()
 		if len(cards) != 0 {
 			self.draw = append(self.draw, cards)
 		}
