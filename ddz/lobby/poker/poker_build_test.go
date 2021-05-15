@@ -27,6 +27,10 @@ func TestPokerBuild(t *testing.T) {
 
 		cards := b.Finish()
 
+		if len(cards) != 54 {
+			t.Fail()
+		}
+
 		fmt.Println("------------------------------------------")
 		fmt.Println(CardsToString(cards[:17]))
 		fmt.Println(CardsToString(cards[17:34]))

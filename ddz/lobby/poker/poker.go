@@ -2,6 +2,21 @@ package poker
 
 import "math/rand"
 
+type BuildType = int32
+
+const (
+	BuildType_ABCDE BuildType = iota + 0
+	BuildType_AAABBB
+	BuildType_AABBCC
+	BuildType_AAAA
+)
+
+type BuildParam struct {
+	BType  BuildType
+	Count  int32
+	Length int32
+}
+
 // ----------------------------------------------------------------------------
 // export
 
@@ -25,6 +40,25 @@ func CreatePoker() (cards []Card) {
 	cards_shuffle(cards)
 
 	return
+}
+
+func BuildPoker(params []*BuildParam) (cards []Card) {
+	b := NewPokerBuild()
+
+	for _, v := range params {
+		switch v.BType {
+		case BuildType_ABCDE:
+			b.Build_ABCDE(v.Count, v.Length)
+		case BuildType_AAABBB:
+			b.Build_AAABBB(v.Count, v.Length)
+		case BuildType_AABBCC:
+			b.Build_AABBCC(v.Count, v.Length)
+		case BuildType_AAAA:
+			b.Build_AAAA(v.Count)
+		}
+	}
+
+	return b.Finish()
 }
 
 // ----------------------------------------------------------------------------
