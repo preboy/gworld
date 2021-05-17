@@ -42,6 +42,7 @@ func (self *AILogic) on_calc() {
 
 func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
 	if self.pos == pos {
+		self.cards, _ = poker.CardsRemove(self.cards, cards)
 		return
 	}
 
@@ -55,6 +56,11 @@ func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
 	}
 
 	self.add_play(pos, cards)
+}
+
+func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
+
+	return
 }
 
 // ----------------------------------------------------------------------------

@@ -99,20 +99,21 @@ func (self *AILogic) PlayBroadcast(pos int32, first bool) {
 
 	poker.CardsSort(self.cards)
 
-	msg := &pb.PlayRequest{}
-
+	ok := false
 	cards := []poker.Card{}
 
-	if first {
+	cards, ok = ai.play(first)
+
+	if !ok && first {
 		l := len(self.cards)
 		cards = self.cards[l-1:]
-		self.cards = self.cards[:l-1]
 	}
 
-	msg.Cards = poker.CardsToInt32(cards)
+	msg := &pb.PlayRequest{
+		Cards: poker.CardsToInt32(cards),
+	}
 
-	log.Info("出牌: %v", poker.CardsToString(cards))
-	log.Info("剩下的牌为: %v", poker.CardsToString(self.cards))
+	log.Info("[我]出牌: %v", poker.CardsToString(cards))
 
 	self.c.SendMessage(msg)
 }
@@ -130,6 +131,10 @@ func (self *AILogic) PlayResultBroadcast(pos int32, first bool, arr []int32) {
 	log.Info("%v 出牌 ：%v", pos_to_string(pos), poker.CardsToString(cards))
 
 	self.on_play(pos, first, cards)
+
+	if pos == self.pos {
+		log.Info("[我]剩下的牌为: %v", poker.CardsToString(self.cards))
+	}
 }
 
 func (self *AILogic) DeckEndBroadcast(score []int32) {
