@@ -127,6 +127,42 @@ func CardsSort(cards []Card) {
 	})
 }
 
+func CardsExist(cards []Card, c Card) bool {
+	for _, v := range cards {
+		if v == c {
+			return true
+		}
+	}
+
+	return false
+}
+
+func CardsRemove(src []Card, dst []Card) ([]Card, bool) {
+	if len(src) == 0 {
+		return src, false
+	}
+
+	if len(dst) == 0 {
+		return src, true
+	}
+
+	for _, c := range dst {
+		if !CardsExist(src, c) {
+			return src, false
+		}
+	}
+
+	cards := []Card{}
+
+	for _, c := range src {
+		if !CardsExist(dst, c) {
+			cards = append(cards, c)
+		}
+	}
+
+	return cards, true
+}
+
 func CardsAnalyse(cards []Card) *CardsInfo {
 	CardsSort(cards)
 

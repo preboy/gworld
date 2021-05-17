@@ -278,6 +278,8 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	// 删除手牌
 	self.seats[pos].RemoveCards(cards)
 
+	first := self.play_idx == 0
+
 	self.play_idx++
 	self.play_pass = 0
 	self.play_cards = ci
@@ -285,6 +287,7 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	// 通知谁出了牌
 	self.Broadcast(&pb.PlayResultBroadcast{
 		Pos:   int32(self.play_pos),
+		First: first,
 		Cards: poker.CardsToInt32(cards),
 	})
 
@@ -325,6 +328,7 @@ func (self *Table) PlayPass() {
 	// 通知谁出了牌
 	self.Broadcast(&pb.PlayResultBroadcast{
 		Pos:   int32(self.play_pos),
+		First: false,
 		Cards: nil,
 	})
 

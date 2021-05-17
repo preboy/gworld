@@ -108,7 +108,8 @@ message PlayResponse {
 message PlayResultBroadcast {
     optional int32      OP              = 1 [default = 2010 ];
     required int32      pos             = 2;
-    repeated int32      cards           = 3;
+    required bool       first           = 3;
+    repeated int32      cards           = 4;
 }
 
 message DeckEndBroadcast {

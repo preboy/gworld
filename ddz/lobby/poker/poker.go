@@ -20,7 +20,7 @@ type BuildParam struct {
 // ----------------------------------------------------------------------------
 // export
 
-func CreatePoker() (cards []Card) {
+func NewPoker() (cards []Card) {
 	// 3 ~ A * 4
 	for p := CardPoint_3; p <= CardPoint_A; p++ {
 		for c := CardColor_Heart; c <= CardColor_Club; c++ {
@@ -37,9 +37,13 @@ func CreatePoker() (cards []Card) {
 	cards = append(cards, NewCardFromValue(CardValue_J1))
 	cards = append(cards, NewCardFromValue(CardValue_J2))
 
-	cards_shuffle(cards)
-
 	return
+}
+
+func CreatePoker() []Card {
+	cards := NewPoker()
+	cards_shuffle(cards)
+	return cards
 }
 
 func BuildPoker(params []*BuildParam) (cards []Card) {

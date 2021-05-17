@@ -148,7 +148,7 @@ func handler_PlayResponse(c *connector, res comp.IMessage) {
 
 func handler_PlayResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayResultBroadcast)
-	ai.PlayResultBroadcast(s.Pos, s.Cards)
+	ai.PlayResultBroadcast(s.Pos, s.First, s.Cards)
 }
 
 func handler_DeckEndBroadcast(c *connector, res comp.IMessage) {

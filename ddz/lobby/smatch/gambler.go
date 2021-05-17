@@ -41,18 +41,10 @@ func (self *gambler_table_t) ExistCards(cards []poker.Card) bool {
 		panic("nil cards")
 	}
 
-	local := []poker.Card{}
-	for _, v := range self.data.cards {
-		local = append(local, v)
-	}
-
 	for _, c := range cards {
-		l, e := remove_card(local, c)
-		if !e {
+		if !poker.CardsExist(self.data.cards, c) {
 			return false
 		}
-
-		local = l
 	}
 
 	return true
@@ -63,16 +55,12 @@ func (self *gambler_table_t) RemoveCards(cards []poker.Card) {
 		return
 	}
 
-	new_cards := []poker.Card{}
+	new_cards, ok := poker.CardsRemove(self.data.cards, cards)
 
-	for _, c := range self.data.cards {
-		if !exist_card(cards, c) {
-			new_cards = append(new_cards, c)
-		}
+	if ok {
+		poker.CardsSort(new_cards)
+		self.data.cards = new_cards
 	}
-
-	self.data.cards = new_cards
-	poker.CardsSort(self.data.cards)
 }
 
 func (self *gambler_table_t) IsVictory() bool {
@@ -84,29 +72,4 @@ func (self *gambler_table_t) SendMessage(msg comp.IMessage) {
 	if gbr != nil {
 		gbr.SendMessage(msg)
 	}
-}
-
-// ----------------------------------------------------------------------------
-// local
-
-func exist_card(cards []poker.Card, c poker.Card) bool {
-	for _, v := range cards {
-		if v == c {
-			return true
-		}
-	}
-	return false
-}
-
-func remove_card(cards []poker.Card, card poker.Card) (left []poker.Card, e bool) {
-	for k, v := range cards {
-		if v == card {
-			e = true
-			left = append(left, cards[:k]...)
-			left = append(left, cards[k+1:]...)
-			return
-		}
-	}
-
-	return cards, false
 }

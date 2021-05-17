@@ -17,9 +17,16 @@ var (
 type AILogic struct {
 	c *connector
 
-	// base
-	pos   int32
-	cards []poker.Card
+	pos        int32        // 我的位置
+	lord_pos   int32        // 地主位置
+	lord_cards []poker.Card // 底牌
+
+	cards      []poker.Card // 我手上的牌
+	left_cards []poker.Card // 其它人手上的的牌
+
+	plrs map[int32]*data
+
+	rounds []*round // 本副出牌记录
 }
 
 // ----------------------------------------------------------------------------
@@ -41,6 +48,8 @@ func (self *AILogic) Init(c *connector, pos int32, arr []int32) {
 	self.cards = cards
 
 	log.Info("一副开始了: pos=%v, cards=%v", pos_to_string(pos), poker.CardsToString(cards))
+
+	self.on_init()
 }
 
 func (self *AILogic) CallScoreBroadcast(pos int32, score []int32) {
@@ -74,6 +83,11 @@ func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, 
 		poker.CardsSort(self.cards)
 		log.Info("%v 的地主牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
 	}
+
+	self.lord_pos = lord
+	self.lord_cards = cards
+
+	self.on_calc()
 }
 
 func (self *AILogic) PlayBroadcast(pos int32, first bool) {
@@ -111,9 +125,11 @@ func (self *AILogic) PlayResponse(err_code int32) {
 	}
 }
 
-func (self *AILogic) PlayResultBroadcast(pos int32, arr []int32) {
+func (self *AILogic) PlayResultBroadcast(pos int32, first bool, arr []int32) {
 	cards, _ := poker.CardsFromInt32(arr)
 	log.Info("%v 出牌 ：%v", pos_to_string(pos), poker.CardsToString(cards))
+
+	self.on_play(pos, first, cards)
 }
 
 func (self *AILogic) DeckEndBroadcast(score []int32) {
@@ -122,6 +138,7 @@ func (self *AILogic) DeckEndBroadcast(score []int32) {
 
 // ----------------------------------------------------------------------------
 // local
+
 func pos_to_string(pos int32) string {
 	switch pos {
 	case 0:
