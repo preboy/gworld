@@ -279,19 +279,22 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	self.seats[pos].RemoveCards(cards)
 
 	first := self.play_idx == 0
+	play_pos := self.play_pos
 
 	self.play_idx++
 	self.play_pass = 0
 	self.play_cards = ci
 
-	// 通知谁出了牌
-	self.Broadcast(&pb.PlayResultBroadcast{
-		Pos:   int32(self.play_pos),
-		First: first,
-		Cards: poker.CardsToInt32(cards),
+	loop.Next(func() {
+		// 通知谁出了牌
+		self.Broadcast(&pb.PlayResultBroadcast{
+			Pos:   int32(play_pos),
+			First: first,
+			Cards: poker.CardsToInt32(cards),
+		})
 	})
 
-	self.l.Info("%v 出牌：%v", pos_to_string(pos), poker.CardsToString(cards))
+	self.l.Info("%v 出牌：%v, 首出: %v", pos_to_string(pos), poker.CardsToString(cards), first)
 	self.l.Info("%v 剩余的牌为: %v", pos_to_string(self.play_pos), poker.CardsToString(self.seats[self.play_pos].data.cards))
 
 	self.deck_info.play_info = append(self.deck_info.play_info, &play_info_t{})
@@ -307,10 +310,12 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 
 	self.play_pos = next_seat(self.play_pos)
 
-	// 通知下一家出牌
-	self.Broadcast(&pb.PlayBroadcast{
-		Pos:   int32(self.play_pos),
-		First: self.play_idx == 0,
+	loop.Next(func() {
+		// 通知下一家出牌
+		self.Broadcast(&pb.PlayBroadcast{
+			Pos:   int32(self.play_pos),
+			First: false,
+		})
 	})
 
 	self.l.Info("该 %v 出牌了， 首出：%v", pos_to_string(self.play_pos), self.play_idx == 0)
@@ -325,11 +330,15 @@ func (self *Table) PlayPass() {
 		self.play_pass = 0
 	}
 
-	// 通知谁出了牌
-	self.Broadcast(&pb.PlayResultBroadcast{
-		Pos:   int32(self.play_pos),
-		First: false,
-		Cards: nil,
+	play_pos := self.play_pos
+
+	loop.Next(func() {
+		// 通知谁出了牌
+		self.Broadcast(&pb.PlayResultBroadcast{
+			Pos:   int32(play_pos),
+			First: false,
+			Cards: nil,
+		})
 	})
 
 	self.l.Info("%v PASS", pos_to_string(self.play_pos))
@@ -337,10 +346,12 @@ func (self *Table) PlayPass() {
 
 	self.play_pos = next_seat(self.play_pos)
 
-	// 通知下一家出牌
-	self.Broadcast(&pb.PlayBroadcast{
-		Pos:   int32(self.play_pos),
-		First: self.play_idx == 0,
+	loop.Next(func() {
+		// 通知下一家出牌
+		self.Broadcast(&pb.PlayBroadcast{
+			Pos:   int32(self.play_pos),
+			First: self.play_idx == 0,
+		})
 	})
 
 	self.l.Info("该 %v 出牌了， 首出：%v", pos_to_string(self.play_pos), self.play_idx == 0)

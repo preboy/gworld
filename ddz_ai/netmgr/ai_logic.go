@@ -81,7 +81,7 @@ func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, 
 	if lord == self.pos {
 		self.cards = append(self.cards, cards_lord...)
 		poker.CardsSort(self.cards)
-		log.Info("%v 的地主牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
+		log.Info("%v 的牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
 	}
 
 	self.lord_pos = lord

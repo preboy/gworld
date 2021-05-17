@@ -41,21 +41,22 @@ func (self *AILogic) on_calc() {
 }
 
 func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
-	if self.pos == pos {
-		self.cards, _ = poker.CardsRemove(self.cards, cards)
-		return
-	}
-
-	self.left_cards, _ = poker.CardsRemove(self.left_cards, cards)
-
-	self.plrs[pos].deal_cards = append(self.plrs[pos].deal_cards, cards...)
-	self.plrs[pos].left_count -= int32(len(cards))
-
 	if first {
 		self.rounds = append(self.rounds, &round{})
 	}
 
 	self.add_play(pos, cards)
+
+	if self.pos == pos {
+		self.cards, _ = poker.CardsRemove(self.cards, cards)
+		return
+	}
+
+	if len(cards) != 0 {
+		self.left_cards, _ = poker.CardsRemove(self.left_cards, cards)
+		self.plrs[pos].deal_cards = append(self.plrs[pos].deal_cards, cards...)
+		self.plrs[pos].left_count -= int32(len(cards))
+	}
 }
 
 func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
