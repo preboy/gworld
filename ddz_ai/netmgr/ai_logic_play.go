@@ -71,7 +71,19 @@ func (self *AILogic) is_lord() bool {
 }
 
 func (self *AILogic) get_friend_pos() int32 {
-	return 0
+	if ai.is_lord() {
+		panic("is lord")
+	}
+
+	for i := int32(0); i < 3; i++ {
+		if i == self.lord_pos || i == self.pos {
+			continue
+		}
+
+		return i
+	}
+
+	panic("not found friend")
 }
 
 func (self *AILogic) add_play(pos int32, cards []poker.Card) {
