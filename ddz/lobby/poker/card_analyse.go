@@ -43,6 +43,7 @@ type AnalysedPoint struct {
 }
 
 // ----------------------------------------------------------------------------
+// Analyse
 
 func NewAnalyse(cards []Card) *Analyse {
 	a := &Analyse{
@@ -75,6 +76,8 @@ func (self *Analyse) GetPoints() (ret []*AnalysedPoint) {
 
 	return
 }
+
+// ----------------------------------------------------------------------------
 
 func (self *CardsInfo) IsBomb() bool {
 	return self.Type == CardsTypeAAAA || self.Type == CardsTypeJJ

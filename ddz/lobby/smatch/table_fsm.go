@@ -320,7 +320,7 @@ func init() {
 					}
 
 					// 是否合法的牌型
-					if ci.Type == poker.CardsTypeNIL {
+					if cards_type_valid(ci, nil) {
 						s.ErrCode = gconst.Err_CardTypeInvalid
 						return
 					}
@@ -330,8 +330,8 @@ func init() {
 					if len(r.Cards) == 0 {
 						t.PlayPass()
 					} else {
-						// 是否合法的牌型
-						if ci.Type != t.play_cards.Type || ci.Max <= t.play_cards.Max || ci.Len != t.play_cards.Len {
+
+						if cards_type_valid(ci, t.play_ci) {
 							s.ErrCode = gconst.Err_CardTypeInvalid
 							return
 						}
@@ -452,4 +452,30 @@ func pos_to_string(pos int32) string {
 	default:
 		panic("方位错误" + strconv.Itoa(int(pos)))
 	}
+}
+
+// 是否合法的牌型
+func cards_type_valid(curr, prev *poker.CardsInfo) (ret bool) {
+	if curr.Type == poker.CardsTypeNIL {
+		return
+	}
+
+	if prev == nil {
+		return true
+	}
+
+	if curr.Type == prev.Type {
+		if curr.Len != prev.Len {
+			return
+		}
+		if curr.Max <= prev.Max {
+			return
+		}
+	} else {
+		if !curr.IsBomb() {
+			return
+		}
+	}
+
+	return true
 }

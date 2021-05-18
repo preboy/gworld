@@ -50,10 +50,10 @@ type Table struct {
 	call_pos seat // 叫分方位
 
 	// play
-	play_pos   seat             // 当前出牌的位置
-	play_idx   int32            // 出牌顺序(round)
-	play_pass  int32            // pass数量
-	play_cards *poker.CardsInfo // 牌型
+	play_pos  seat             // 当前出牌的位置
+	play_idx  int32            // 出牌顺序(round)
+	play_pass int32            // pass数量
+	play_ci   *poker.CardsInfo // 牌型
 
 	bombs int32        // 炸弹数
 	cards []poker.Card // 本副牌
@@ -281,9 +281,9 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	first := self.play_idx == 0
 	play_pos := self.play_pos
 
+	self.play_ci = ci
 	self.play_idx++
 	self.play_pass = 0
-	self.play_cards = ci
 
 	loop.Next(func() {
 		// 通知谁出了牌
@@ -326,6 +326,7 @@ func (self *Table) PlayPass() {
 	self.play_pass++
 
 	if self.play_pass == 2 {
+		self.play_ci = nil
 		self.play_idx = 0
 		self.play_pass = 0
 	}

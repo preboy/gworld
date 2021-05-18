@@ -61,6 +61,25 @@ func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
 
 func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
 
+	a1 := poker.NewAnalyse(self.cards)
+	a2 := poker.NewAnalyse(self.left_cards)
+
+	if first {
+
+	} else {
+		cards_prev := self.prev_play()
+		if cards_prev == nil {
+			panic("cards_prev == nil")
+		}
+
+		// 上一首不为Nil的牌
+		ci := poker.CardsAnalyse(cards_prev)
+
+		// 找到大过他的牌
+		a1.Exceed(ci)
+
+	}
+
 	return
 }
 
@@ -91,4 +110,17 @@ func (self *AILogic) add_play(pos int32, cards []poker.Card) {
 	l := len(self.rounds)
 	r := self.rounds[l-1]
 	r.hands = append(r.hands, &hand{pos, cards})
+}
+
+func (self *AILogic) prev_play() []poker.Card {
+	l := len(self.rounds)
+	r := self.rounds[l-1]
+
+	for i := len(r.hands) - 1; i >= 0; i-- {
+		if len(r.hands[i].cards) != 0 {
+			return r.hands[i].cards
+		}
+	}
+
+	return nil
 }
