@@ -25,11 +25,19 @@ const (
 	CardPoint_K int32 = 13
 	CardPoint_A int32 = 14
 	CardPoint_2 int32 = 16
+
+	CardPoint_J1 int32 = 18
+	CardPoint_J2 int32 = 20
 )
 
 const (
 	CardValue_J1 int32 = 18000
 	CardValue_J2 int32 = 20000
+)
+
+const (
+	Card_PlaceHolder_A  int32 = -1
+	Card_PlaceHolder_AA int32 = -2
 )
 
 // ----------------------------------------------------------------------------
@@ -51,6 +59,14 @@ func NewCard(color int32, point int32) Card {
 	}
 
 	return NewCardFromValue(point*1000 + color)
+}
+
+func NewCard_PlaceHolder_A() Card {
+	return Card(Card_PlaceHolder_A)
+}
+
+func NewCard_PlaceHolder_AA() Card {
+	return Card(Card_PlaceHolder_AA)
 }
 
 func (c Card) Color() int32 {
@@ -86,6 +102,11 @@ func (c Card) Valid() bool {
 	return true
 }
 
+func (c Card) IsPlaceHolder() bool {
+	v := c.Value()
+	return v == Card_PlaceHolder_A || v == Card_PlaceHolder_AA
+}
+
 func (c Card) ToString() string {
 	if c.Value() == CardValue_J1 {
 		return "Joker1"
@@ -93,6 +114,15 @@ func (c Card) ToString() string {
 
 	if c.Value() == CardValue_J2 {
 		return "Joker2"
+	}
+
+	if c.IsPlaceHolder() {
+		if c.Value() == Card_PlaceHolder_A {
+			return "[_]"
+		}
+		if c.Value() == Card_PlaceHolder_AA {
+			return "[__]"
+		}
 	}
 
 	return fmt.Sprintf("%s%s", stringify_type(c.Color()), stringify_point(c.Point()))

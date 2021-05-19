@@ -1,6 +1,9 @@
 package netmgr
 
-import "gworld/ddz/lobby/poker"
+import (
+	"gworld/core/log"
+	"gworld/ddz/lobby/poker"
+)
 
 type data struct {
 	left_count int32        // 剩余牌数量
@@ -65,8 +68,12 @@ func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
 	a2 := poker.NewAnalyse(self.left_cards)
 
 	if first {
+		// 首出
 
 	} else {
+
+		// 跟牌
+
 		cards_prev := self.prev_play()
 		if cards_prev == nil {
 			panic("cards_prev == nil")
@@ -76,8 +83,10 @@ func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
 		ci := poker.CardsAnalyse(cards_prev)
 
 		// 找到大过他的牌
-		a1.Exceed(ci)
-
+		ret := a1.Exceed(ci)
+		for i, v := range ret {
+			log.Println("the <%d> groups: %v", i, poker.CardsToString(v))
+		}
 	}
 
 	return
