@@ -67,6 +67,8 @@ func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
 	a1 := poker.NewAnalyse(self.cards)
 	a2 := poker.NewAnalyse(self.left_cards)
 
+	_ = a2
+
 	if first {
 		// 首出
 
@@ -85,7 +87,7 @@ func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
 		// 找到大过他的牌
 		ret := a1.Exceed(ci)
 		for i, v := range ret {
-			log.Println("the <%d> groups: %v", i, poker.CardsToString(v))
+			log.Info("the <%d> groups: %v", i, poker.CardsToString(v))
 		}
 	}
 
@@ -130,6 +132,155 @@ func (self *AILogic) prev_play() []poker.Card {
 			return r.hands[i].cards
 		}
 	}
+
+	return nil
+}
+
+// ----------------------------------------------------------------------------
+
+type divide_type int32
+
+const (
+	divide_type_A divide_type = iota + 0
+	divide_type_AA
+	divide_type_AAA
+	divide_type_AAAA
+	divide_type_ABCDE
+)
+
+// ----------------------------------------------------------------------------
+
+type divide_t struct {
+	dtype divide_type
+	items [][]poker.Card
+}
+
+type class_t struct {
+	divides map[divide_type]*divide_t
+}
+
+// ----------------------------------------------------------------------------
+// member
+
+func new_class() *class_t {
+	return &class_t{
+		divides: map[divide_type]*divide_t{},
+	}
+}
+
+func (self *class_t) get(dtype divide_type) *divide_t {
+	if self.divides[dtype] == nil {
+		self.divides[dtype] = &divide_t{dtype: dtype}
+	}
+
+	return self.divides[dtype]
+}
+
+func (self *class_t) add(dtype divide_type, cards []poker.Card) {
+	d := self.get(dtype)
+	d.items = append(d.items, cards)
+}
+
+func (self *class_t) pull_a(cards []poker.Card) []poker.Card {
+	a := poker.NewAnalyse(cards)
+
+	for _, set := range a.Cards {
+		if len(set) == 1 {
+			self.add(divide_type_A, set)
+			cards, _ = poker.CardsRemove(cards, set)
+		}
+	}
+
+	return cards
+}
+
+func (self *class_t) pull_aa(cards []poker.Card) []poker.Card {
+	a := poker.NewAnalyse(cards)
+
+	for _, set := range a.Cards {
+		if len(set) == 2 {
+			self.add(divide_type_AA, set)
+			cards, _ = poker.CardsRemove(cards, set)
+		}
+	}
+
+	return cards
+}
+
+func (self *class_t) pull_aaa(cards []poker.Card) []poker.Card {
+	a := poker.NewAnalyse(cards)
+
+	for _, set := range a.Cards {
+		if len(set) == 3 {
+			self.add(divide_type_AAA, set)
+			cards, _ = poker.CardsRemove(cards, set)
+		}
+	}
+
+	return cards
+}
+
+func (self *class_t) pull_aaaa(cards []poker.Card) []poker.Card {
+	a := poker.NewAnalyse(cards)
+
+	for _, set := range a.Cards {
+		if len(set) == 4 {
+			self.add(divide_type_AAAA, set)
+			cards, _ = poker.CardsRemove(cards, set)
+		}
+	}
+
+	return cards
+}
+
+func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
+	for i := poker.CardPoint_7; i <= poker.CardPoint_A; i++ {
+		a := poker.NewAnalyse(cards)
+		seq := a.GetSeq(i, 5, 1)
+		if len(seq) != 0 {
+			self.add(divide_type_ABCDE, seq)
+			cards, _ = poker.CardsRemove(cards, seq)
+		}
+	}
+
+	return cards
+}
+
+// ----------------------------------------------------------------------------
+
+func cards_divide(cards []poker.Card) (ret []*class_t) {
+	// 1
+	c := cards_divide_abdef(cards)
+	if c != nil {
+		ret = append(ret, c)
+	}
+
+	// 2
+	c = cards_divide_aaa(cards)
+	if c != nil {
+		ret = append(ret, c)
+	}
+
+	return
+}
+
+func cards_divide_abdef(cards []poker.Card) *class_t {
+	c := new_class()
+
+	cards = c.pull_abcde(cards)
+	cards = c.pull_aaaa(cards)
+	cards = c.pull_aaa(cards)
+	cards = c.pull_aa(cards)
+	cards = c.pull_a(cards)
+
+	if len(cards) != 0 {
+		panic("not empty")
+	}
+
+	return c
+}
+
+func cards_divide_aaa(cards []poker.Card) *class_t {
 
 	return nil
 }

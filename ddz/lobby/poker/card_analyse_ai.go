@@ -17,7 +17,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeA:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 1)
+			cards := self.GetSeq(i, 1, 1)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -25,7 +25,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeA_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 1)
+			cards := self.GetSeq(i, ci.Len, 1)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -33,7 +33,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAA_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 2)
+			cards := self.GetSeq(i, ci.Len, 2)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -41,7 +41,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAA:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 3)
+			cards := self.GetSeq(i, 1, 3)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -49,7 +49,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAA_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 3)
+			cards := self.GetSeq(i, ci.Len, 3)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -57,7 +57,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAX:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 3)
+			cards := self.GetSeq(i, 1, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A())
 				ret = append(ret, cards)
@@ -66,7 +66,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAX_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 3)
+			cards := self.GetSeq(i, ci.Len, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A())
 				ret = append(ret, cards)
@@ -75,7 +75,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAXX:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 3)
+			cards := self.GetSeq(i, 1, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA())
 				ret = append(ret, cards)
@@ -84,7 +84,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAXX_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 3)
+			cards := self.GetSeq(i, ci.Len, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA())
 				ret = append(ret, cards)
@@ -93,7 +93,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAA:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 4)
+			cards := self.GetSeq(i, 1, 4)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -101,7 +101,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAA_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 4)
+			cards := self.GetSeq(i, ci.Len, 4)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
@@ -109,7 +109,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAAXY:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 4)
+			cards := self.GetSeq(i, 1, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A(), NewCard_PlaceHolder_A())
 				ret = append(ret, cards)
@@ -118,7 +118,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAAXY_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 4)
+			cards := self.GetSeq(i, ci.Len, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A(), NewCard_PlaceHolder_A())
 				ret = append(ret, cards)
@@ -127,7 +127,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAAXXYY:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, 1, 4)
+			cards := self.GetSeq(i, 1, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA(), NewCard_PlaceHolder_AA())
 				ret = append(ret, cards)
@@ -136,7 +136,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	case CardsTypeAAAAXXYY_SEQ:
 		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.get_seq(i, ci.Len, 4)
+			cards := self.GetSeq(i, ci.Len, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA(), NewCard_PlaceHolder_AA())
 				ret = append(ret, cards)
@@ -149,11 +149,11 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 
 	// 其它的牌型把炸弹加上
 	if !ci.IsBomb() {
-		for _, v := range self.get_bombs() {
+		for _, v := range self.GetBombs() {
 			ret = append(ret, v)
 		}
 	} else {
-		jj := self.get_jj()
+		jj := self.GetJJ()
 		if len(jj) > 0 {
 			ret = append(ret, jj)
 		}
@@ -165,7 +165,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 // ----------------------------------------------------------------------------
 // aux
 
-func (self *Analyse) get_seq(point int32, length int32, count int) (ret []Card) {
+func (self *Analyse) GetSeq(point int32, length int32, count int) (ret []Card) {
 	for i := point - length + 1; i <= point; i++ {
 		if len(self.Cards[i]) < count {
 			return nil
@@ -177,7 +177,7 @@ func (self *Analyse) get_seq(point int32, length int32, count int) (ret []Card) 
 	return
 }
 
-func (self *Analyse) get_jj() (ret []Card) {
+func (self *Analyse) GetJJ() (ret []Card) {
 	if len(self.Cards[CardPoint_J1]) == 1 && len(self.Cards[CardPoint_J2]) == 1 {
 		ret = append(ret, self.Cards[CardPoint_J1][0], self.Cards[CardPoint_J2][0])
 	}
@@ -185,14 +185,14 @@ func (self *Analyse) get_jj() (ret []Card) {
 	return
 }
 
-func (self *Analyse) get_bombs() (ret [][]Card) {
+func (self *Analyse) GetBombs() (ret [][]Card) {
 	for _, v := range self.Cards {
 		if len(v) == 4 {
 			ret = append(ret, v)
 		}
 	}
 
-	jj := self.get_jj()
+	jj := self.GetJJ()
 	if len(jj) > 0 {
 		ret = append(ret, jj)
 	}

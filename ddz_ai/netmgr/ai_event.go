@@ -29,7 +29,7 @@ func ai_event_error(c *connector, err string) {
 func ai_handler(c *connector, p *tcp.Packet) {
 	e, ok := _msg_executor[int32(p.Opcode)]
 	if !ok {
-		log.Warning("Unknown packet : %s %d", c.id, p.Opcode)
+		log.Warning("Unknown packet : %v %v", c.id, p.Opcode)
 		return
 	}
 
