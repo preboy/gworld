@@ -246,6 +246,37 @@ func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 	return cards
 }
 
+func (self *class_t) merge_aa() {
+	// ...
+}
+
+func (self *class_t) merge_aaa() {
+}
+
+func (self *class_t) merge_aaaa() {
+	// DO NOTHING NOW
+}
+
+func (self *class_t) merge_abcde() {
+	// 1 can ?
+
+	// 2 need ?
+}
+
+func (self *class_t) merge() {
+	self.merge_aa()
+	self.merge_aaa()
+	self.merge_aaaa()
+	self.merge_abcde()
+}
+
+func (self *class_t) evaluate() int32 {
+	// 评分：
+	// 单牌、单对越少越好
+
+	return 0
+}
+
 // ----------------------------------------------------------------------------
 
 func cards_divide(cards []poker.Card) (ret []*class_t) {
@@ -276,6 +307,8 @@ func cards_divide_abdef(cards []poker.Card) *class_t {
 	if len(cards) != 0 {
 		panic("not empty")
 	}
+
+	c.merge()
 
 	return c
 }
