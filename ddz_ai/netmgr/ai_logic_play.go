@@ -148,6 +148,16 @@ const (
 	divide_type_ABCDE
 )
 
+var (
+	divide_string = []string{
+		"divide_type_A    ",
+		"divide_type_AA   ",
+		"divide_type_AAA  ",
+		"divide_type_AAAA ",
+		"divide_type_ABCDE",
+	}
+)
+
 // ----------------------------------------------------------------------------
 
 type divide_t struct {
@@ -160,7 +170,22 @@ type class_t struct {
 }
 
 // ----------------------------------------------------------------------------
-// member
+// divide_t
+func (self *divide_t) dump() string {
+	ret := divide_string[self.dtype] + ": "
+
+	ret += "{ "
+	for _, v := range self.items {
+		ret += poker.CardsToString(v)
+		ret += ", "
+	}
+	ret += " }"
+
+	return ret
+}
+
+// ----------------------------------------------------------------------------
+// class_t
 
 func new_class() *class_t {
 	return &class_t{
@@ -247,10 +272,12 @@ func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 }
 
 func (self *class_t) merge_aa() {
-	// ...
+	// 现有的牌能否连起2顺
+	// 甚至向其它地方(3带)借一对，能还连起2顺
 }
 
 func (self *class_t) merge_aaa() {
+	// 能否连成飞机
 }
 
 func (self *class_t) merge_aaaa() {
@@ -275,6 +302,18 @@ func (self *class_t) evaluate() int32 {
 	// 单牌、单对越少越好
 
 	return 0
+}
+
+func (self *class_t) dump() (ret string) {
+	ret += "\n"
+
+	for _, v := range self.divides {
+		ret += "\t"
+		ret += v.dump()
+		ret += "\n"
+	}
+
+	return
 }
 
 // ----------------------------------------------------------------------------

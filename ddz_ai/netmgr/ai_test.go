@@ -19,7 +19,7 @@ func TestAI(t *testing.T) {
 
 		6001,
 
-		7001, 8001, 9001, 10001, 11001,
+		7001, 8001, 9001, 10001, 11001, 13001, 13002, 13003,
 	}
 
 	cards, ok := poker.CardsFromInt32(arr)
@@ -29,5 +29,5 @@ func TestAI(t *testing.T) {
 
 	c := cards_divide_abdef(cards)
 
-	fmt.Println("class:", c, poker.CardsToString(cards))
+	fmt.Println("class:", c.dump())
 }
