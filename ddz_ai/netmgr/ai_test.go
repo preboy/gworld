@@ -2,9 +2,16 @@ package netmgr
 
 import (
 	"fmt"
+	"gworld/core"
 	"gworld/ddz/lobby/poker"
 	"testing"
 )
+
+func TestBasic(t *testing.T) {
+	var keys = []int32{4, 45, 6, 7, 43, 23, 2, 5}
+	core.SortInt32s(keys)
+	fmt.Println(keys)
+}
 
 func TestAI(t *testing.T) {
 	arr := []int32{

@@ -1,6 +1,7 @@
 package netmgr
 
 import (
+	"gworld/core"
 	"gworld/core/log"
 	"gworld/ddz/lobby/poker"
 )
@@ -148,16 +149,6 @@ const (
 	divide_type_ABCDE
 )
 
-var (
-	divide_string = []string{
-		"divide_type_A    ",
-		"divide_type_AA   ",
-		"divide_type_AAA  ",
-		"divide_type_AAAA ",
-		"divide_type_ABCDE",
-	}
-)
-
 // ----------------------------------------------------------------------------
 
 type divide_t struct {
@@ -172,7 +163,15 @@ type class_t struct {
 // ----------------------------------------------------------------------------
 // divide_t
 func (self *divide_t) dump() string {
-	ret := divide_string[self.dtype] + ": "
+	divide_type_string := []string{
+		"divide_type_A    ",
+		"divide_type_AA   ",
+		"divide_type_AAA  ",
+		"divide_type_AAAA ",
+		"divide_type_ABCDE",
+	}
+
+	ret := divide_type_string[self.dtype] + ": "
 
 	ret += "{ "
 	for _, v := range self.items {
@@ -182,6 +181,20 @@ func (self *divide_t) dump() string {
 	ret += " }"
 
 	return ret
+}
+
+func (self *divide_t) merge(length int) {
+	var keys []int32
+
+	for _, v := range self.items {
+		if len(v) > 0 {
+			keys = append(keys, v[0].Point())
+		}
+	}
+
+	core.SortInt32s(keys)
+
+	// ...
 }
 
 // ----------------------------------------------------------------------------
@@ -273,6 +286,15 @@ func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 
 func (self *class_t) merge_aa() {
 	// 现有的牌能否连起2顺
+	{
+		ptr := self.divides[divide_type_AA]
+		if ptr == nil {
+			return
+		}
+
+		ptr.merge(3)
+	}
+
 	// 甚至向其它地方(3带)借一对，能还连起2顺
 }
 
