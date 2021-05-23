@@ -117,7 +117,7 @@ func CardsToString(cards []Card) string {
 
 	for _, c := range cards {
 		ret += c.ToString()
-		ret += ","
+		ret += " "
 	}
 
 	ret += "]"

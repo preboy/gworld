@@ -183,9 +183,12 @@ func (self *divide_t) dump() string {
 	return ret
 }
 
-func (self *divide_t) merge(length int) {
-	var keys []int32
+func (self *divide_t) merge(length int32) {
+	if len(self.items) < 3 {
+		return
+	}
 
+	var keys []int32
 	for _, v := range self.items {
 		if len(v) > 0 {
 			keys = append(keys, v[0].Point())
@@ -193,8 +196,52 @@ func (self *divide_t) merge(length int) {
 	}
 
 	core.SortInt32s(keys)
+	ss := find_section(keys, length)
 
-	// ...
+	_ = ss
+	// 抽出来，新类型
+}
+
+// ----------------------------------------------------------------------------
+
+type section struct {
+	p1 int32
+	p2 int32
+}
+
+func (self *section) push(v int32) {
+	if self.p1 == 0 {
+		self.p1 = v
+	}
+
+	self.p2 = v
+}
+
+func (self *section) conform(length int32) bool {
+	return self.p2-self.p1+1 >= length
+}
+
+func find_section(src []int32, l int32) (ret []*section) {
+	var p int32
+	var s = &section{}
+
+	for _, v := range src {
+		if v != p+1 {
+			if s.conform(l) {
+				ret = append(ret, s)
+			}
+			s = &section{}
+		}
+
+		p = v
+		s.push(v)
+	}
+
+	if s.conform(l) {
+		ret = append(ret, s)
+	}
+
+	return
 }
 
 // ----------------------------------------------------------------------------
