@@ -6,7 +6,6 @@ import (
 	"gworld/ddz/gconst"
 	"gworld/ddz/lobby/poker"
 	"gworld/ddz/pb"
-	"math/rand"
 	"strconv"
 )
 
@@ -57,9 +56,17 @@ func (self *AILogic) CallScoreBroadcast(pos int32, score []int32) {
 
 	if pos == self.pos {
 		msg := &pb.CallScoreRequest{
-			Score: rand.Int31n(4),
+			Score: self.ai_call(),
 		}
 		self.c.SendMessage(msg)
+	}
+}
+
+func (self *AILogic) CallScoreResponse(err int32) {
+	if err == gconst.Err_OK {
+		log.Info("叫分OK")
+	} else {
+		log.Info("叫分Error")
 	}
 }
 
@@ -76,18 +83,17 @@ func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, 
 	cards, _ := poker.CardsFromInt32(arr)
 	log.Info("%v 是地主，叫了 %v 分, 底牌: %v", pos_to_string(lord), score, poker.CardsToString(cards))
 
-	// me
-	cards_lord, _ := poker.CardsFromInt32(arr)
+	// lord is me
 	if lord == self.pos {
-		self.cards = append(self.cards, cards_lord...)
+		self.cards = append(self.cards, cards...)
 		poker.CardsSort(self.cards)
-		log.Info("%v 的牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
+		log.Info("%v 是我，我的最终牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
 	}
 
 	self.lord_pos = lord
 	self.lord_cards = cards
 
-	self.on_calc()
+	self.on_call_calc()
 }
 
 func (self *AILogic) PlayBroadcast(pos int32, first bool) {
@@ -97,17 +103,7 @@ func (self *AILogic) PlayBroadcast(pos int32, first bool) {
 		return
 	}
 
-	poker.CardsSort(self.cards)
-
-	ok := false
-	cards := []poker.Card{}
-
-	cards, ok = ai.play(first)
-
-	if !ok && first {
-		l := len(self.cards)
-		cards = self.cards[l-1:]
-	}
+	cards := self.ai_play(first)
 
 	msg := &pb.PlayRequest{
 		Cards: poker.CardsToInt32(cards),

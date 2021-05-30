@@ -2,7 +2,6 @@ package netmgr
 
 import (
 	"gworld/core/block"
-	"gworld/core/log"
 	"gworld/ddz/comp"
 	"gworld/ddz/gconst"
 	"gworld/ddz/pb"
@@ -119,11 +118,7 @@ func handler_CallScoreBroadcast(c *connector, res comp.IMessage) {
 
 func handler_CallScoreResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResponse)
-	if s.ErrCode == gconst.Err_OK {
-		log.Info("叫分OK")
-	} else {
-		log.Info("叫分Error")
-	}
+	ai.CallScoreResponse(s.ErrCode)
 }
 
 func handler_CallScoreResultBroadcast(c *connector, res comp.IMessage) {

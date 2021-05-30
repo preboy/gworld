@@ -1,6 +1,8 @@
 package netmgr
 
 import (
+	"math/rand"
+
 	"gworld/core"
 	"gworld/core/log"
 	"gworld/ddz/lobby/poker"
@@ -36,7 +38,7 @@ func (self *AILogic) on_init() {
 	self.left_cards, _ = poker.CardsRemove(poker.NewPoker(), self.cards)
 }
 
-func (self *AILogic) on_calc() {
+func (self *AILogic) on_call_calc() {
 	self.plrs[self.lord_pos].left_count += 3
 
 	if self.lord_pos == self.pos {
@@ -63,7 +65,26 @@ func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
 	}
 }
 
-func (self *AILogic) play(first bool) (cards []poker.Card, ok bool) {
+// ----------------------------------------------------------------------------
+// ai
+
+func (self *AILogic) ai_call() int32 {
+	// TODO
+	return rand.Int31n(4)
+}
+
+func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
+
+	// AI NOT exist
+	if true {
+		if first {
+			poker.CardsSort(self.cards)
+			l := len(self.cards)
+			cards = self.cards[l-1:]
+		}
+
+		return
+	}
 
 	a1 := poker.NewAnalyse(self.cards)
 	a2 := poker.NewAnalyse(self.left_cards)
@@ -138,6 +159,42 @@ func (self *AILogic) prev_play() []poker.Card {
 }
 
 // ----------------------------------------------------------------------------
+// ai analyse
+
+type section struct {
+	init bool
+	p1   int32
+	p2   int32
+}
+
+func (self *section) push(v int32) bool {
+	if !self.init {
+		self.init = true
+
+		self.p1 = v
+		self.p2 = v
+
+		return true
+	}
+
+	if v != self.p2+1 {
+		return false
+	}
+
+	self.p2 = v
+
+	return true
+}
+
+func (self *section) length() int32 {
+	return self.p2 - self.p1 + 1
+}
+
+func (self *section) conform(l int32) bool {
+	return self.length() >= l
+}
+
+// ----------------------------------------------------------------------------
 
 type divide_type int32
 
@@ -147,6 +204,8 @@ const (
 	divide_type_AAA
 	divide_type_AAAA
 	divide_type_ABCDE
+	divide_type_AABBCC
+	divide_type_AAABBB
 )
 
 // ----------------------------------------------------------------------------
@@ -164,11 +223,13 @@ type class_t struct {
 // divide_t
 func (self *divide_t) dump() string {
 	divide_type_string := []string{
-		"divide_type_A    ",
-		"divide_type_AA   ",
-		"divide_type_AAA  ",
-		"divide_type_AAAA ",
-		"divide_type_ABCDE",
+		"divide_type_A    	",
+		"divide_type_AA   	",
+		"divide_type_AAA  	",
+		"divide_type_AAAA 	",
+		"divide_type_ABCDE	",
+		"divide_type_AABBCC	",
+		"divide_type_AAABBB	",
 	}
 
 	ret := divide_type_string[self.dtype] + ": "
@@ -183,63 +244,99 @@ func (self *divide_t) dump() string {
 	return ret
 }
 
-func (self *divide_t) merge(length int32) {
-	if len(self.items) < 3 {
+func (self *divide_t) add(cards []poker.Card) {
+	self.items = append(self.items, cards)
+}
+
+func (self *divide_t) keys() (ret []int32) {
+	for _, v := range self.items {
+		if len(v) > 0 {
+			ret = append(ret, v[0].Point())
+		}
+	}
+
+	core.SortInt32s(ret)
+	return
+}
+
+func (self *divide_t) empty() bool {
+	if len(self.items) == 0 {
+		return true
+	}
+
+	for _, v := range self.items {
+		if len(v) != 0 {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (self *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
+	if len(self.items) < int(l) {
 		return
 	}
 
-	var keys []int32
-	for _, v := range self.items {
-		if len(v) > 0 {
-			keys = append(keys, v[0].Point())
-		}
+	if self.dtype != divide_type_AA && self.dtype != divide_type_AAA && self.dtype != divide_type_AAAA {
+		panic("error dtype in take_sequence")
 	}
 
-	core.SortInt32s(keys)
-	ss := find_section(keys, length)
+	var arr []*section
 
-	_ = ss
-	// 抽出来，新类型
-}
+	// find
+	{
+		sec := &section{}
+		for _, v := range self.keys() {
+			if !sec.push(v) {
 
-// ----------------------------------------------------------------------------
+				b := sec.conform(l)
+				if b {
+					arr = append(arr, sec)
+				}
 
-type section struct {
-	p1 int32
-	p2 int32
-}
-
-func (self *section) push(v int32) {
-	if self.p1 == 0 {
-		self.p1 = v
-	}
-
-	self.p2 = v
-}
-
-func (self *section) conform(length int32) bool {
-	return self.p2-self.p1+1 >= length
-}
-
-func find_section(src []int32, l int32) (ret []*section) {
-	var p int32
-	var s = &section{}
-
-	for _, v := range src {
-		if v != p+1 {
-			if s.conform(l) {
-				ret = append(ret, s)
+				sec = &section{}
+				if !b {
+					sec.push(v)
+				}
 			}
-			s = &section{}
 		}
 
-		p = v
-		s.push(v)
+		if sec.conform(l) {
+			arr = append(arr, sec)
+		}
 	}
 
-	if s.conform(l) {
-		ret = append(ret, s)
+	// extract
+	for _, v := range arr {
+		cards := self.extract(v.p1, v.p2)
+
+		if len(cards) > 0 {
+			ret = append(ret, cards)
+		}
 	}
+
+	return
+}
+
+func (self *divide_t) extract(p1, p2 int32) (cards []poker.Card) {
+	var items [][]poker.Card
+
+	for _, v := range self.items {
+		if len(v) == 0 {
+			continue
+		}
+
+		p := v[0].Point()
+
+		if p >= p1 && p <= p2 {
+			cards = append(cards, v...)
+		} else {
+			items = append(items, v)
+		}
+	}
+
+	self.items = items
 
 	return
 }
@@ -255,15 +352,20 @@ func new_class() *class_t {
 
 func (self *class_t) get(dtype divide_type) *divide_t {
 	if self.divides[dtype] == nil {
-		self.divides[dtype] = &divide_t{dtype: dtype}
+		self.divides[dtype] = &divide_t{
+			dtype: dtype,
+		}
 	}
 
 	return self.divides[dtype]
 }
 
 func (self *class_t) add(dtype divide_type, cards []poker.Card) {
-	d := self.get(dtype)
-	d.items = append(d.items, cards)
+	self.get(dtype).add(cards)
+}
+
+func (self *class_t) del(dtype divide_type) {
+	delete(self.divides, dtype)
 }
 
 func (self *class_t) pull_a(cards []poker.Card) []poker.Card {
@@ -332,21 +434,34 @@ func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 }
 
 func (self *class_t) merge_aa() {
-	// 现有的牌能否连起2顺
-	{
-		ptr := self.divides[divide_type_AA]
-		if ptr == nil {
-			return
-		}
-
-		ptr.merge(3)
+	ptr, ok := self.divides[divide_type_AA]
+	if !ok {
+		return
 	}
 
-	// 甚至向其它地方(3带)借一对，能还连起2顺
+	// 从现有的牌中抽出2顺
+	for _, cards := range ptr.take_sequence(3) {
+		self.add(divide_type_AABBCC, cards)
+	}
+
+	if ptr.empty() {
+		self.del(ptr.dtype)
+	}
+
+	// TODO 甚至向其它地方(3带)借一对，能还连起2顺
 }
 
 func (self *class_t) merge_aaa() {
 	// 能否连成飞机
+	ptr := self.divides[divide_type_AAA]
+	if ptr == nil {
+		return
+	}
+
+	// 从现有的牌中抽出3顺
+	for _, cards := range ptr.take_sequence(2) {
+		self.add(divide_type_AAABBB, cards)
+	}
 }
 
 func (self *class_t) merge_aaaa() {
@@ -357,13 +472,6 @@ func (self *class_t) merge_abcde() {
 	// 1 can ?
 
 	// 2 need ?
-}
-
-func (self *class_t) merge() {
-	self.merge_aa()
-	self.merge_aaa()
-	self.merge_aaaa()
-	self.merge_abcde()
 }
 
 func (self *class_t) evaluate() int32 {
@@ -416,12 +524,31 @@ func cards_divide_abdef(cards []poker.Card) *class_t {
 		panic("not empty")
 	}
 
-	c.merge()
+	c.merge_aa()
+	c.merge_aaa()
+	c.merge_aaaa()
+	c.merge_abcde()
 
 	return c
 }
 
 func cards_divide_aaa(cards []poker.Card) *class_t {
+	c := new_class()
 
-	return nil
+	cards = c.pull_aaa(cards)
+	cards = c.pull_abcde(cards)
+	cards = c.pull_aaaa(cards)
+	cards = c.pull_aa(cards)
+	cards = c.pull_a(cards)
+
+	if len(cards) != 0 {
+		panic("not empty")
+	}
+
+	c.merge_aa()
+	c.merge_aaa()
+	c.merge_aaaa()
+	c.merge_abcde()
+
+	return c
 }
