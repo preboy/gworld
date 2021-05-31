@@ -436,6 +436,7 @@ func (self *divide_t) join_card(c poker.Card) bool {
 
 		if c.Point() == v[0].Point()-1 {
 			self.items[k] = append([]poker.Card{c}, v...)
+			return true
 		}
 
 		if c.Point() == v[l-1].Point()+1 {
@@ -576,7 +577,7 @@ func (self *class_t) merge_aaaa() {
 }
 
 func (self *class_t) merge_abcde() {
-	ptr := self.divides[divide_type_AAA]
+	ptr := self.divides[divide_type_ABCDE]
 	if ptr == nil {
 		return
 	}
@@ -592,7 +593,9 @@ func (self *class_t) merge_abcde() {
 		items = append(items, []poker.Card{c})
 	}
 
-	ptr.items = items
+	if p != nil {
+		p.items = items
+	}
 }
 
 func (self *class_t) evaluate() int32 {
