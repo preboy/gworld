@@ -273,6 +273,13 @@ func (self *divide_t) empty() bool {
 	return true
 }
 
+func (self *divide_t) all_cards() (ret []poker.Card) {
+	for _, v := range self.items {
+		ret = append(ret, v...)
+	}
+	return
+}
+
 func (self *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
 	if len(self.items) < int(l) {
 		return
@@ -339,6 +346,106 @@ func (self *divide_t) extract(p1, p2 int32) (cards []poker.Card) {
 	self.items = items
 
 	return
+}
+
+func (self *divide_t) merge_sequence(cards []poker.Card) []poker.Card {
+
+REPEAT:
+
+	for {
+		if self.merge_internal() {
+			break
+		}
+	}
+
+	for _, c := range cards {
+		if self.join_card(c) {
+			cards = poker.CardsRemoveOne(cards, c)
+			goto REPEAT
+		}
+	}
+
+	return cards
+}
+
+func (self *divide_t) merge_internal() bool {
+	l := len(self.items)
+	if l < 2 {
+		return true
+	}
+
+	for i := 0; i < l-1; i++ {
+		for j := i + 1; j < l; j++ {
+			if self.join(i, j) {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
+func (self *divide_t) join(i, j int) bool {
+	s1 := self.items[i]
+	s2 := self.items[j]
+
+	if len(s1) == 0 || len(s2) == 0 {
+		return false
+	}
+
+	s1_1 := s1[0]
+	s1_2 := s1[len(s1)-1]
+	s2_1 := s2[0]
+	s2_2 := s2[len(s2)-1]
+
+	var join bool
+	var item []poker.Card
+
+	if s1_2.Point()+1 == s2_1.Point() {
+		item = append(s1, s2...)
+		join = true
+	}
+
+	if s2_2.Point()+1 == s1_1.Point() {
+		item = append(s2, s1...)
+		join = true
+	}
+
+	if join {
+		var items [][]poker.Card
+
+		for k, v := range self.items {
+			if k != i && k != j {
+				items = append(items, v)
+			}
+		}
+
+		items = append(items, item)
+		self.items = items
+	}
+
+	return join
+}
+
+func (self *divide_t) join_card(c poker.Card) bool {
+	for k, v := range self.items {
+		l := len(v)
+		if l == 0 {
+			continue
+		}
+
+		if c.Point() == v[0].Point()-1 {
+			self.items[k] = append([]poker.Card{c}, v...)
+		}
+
+		if c.Point() == v[l-1].Point()+1 {
+			self.items[k] = append(v, c)
+			return true
+		}
+
+	}
+
+	return false
 }
 
 // ----------------------------------------------------------------------------
@@ -469,9 +576,23 @@ func (self *class_t) merge_aaaa() {
 }
 
 func (self *class_t) merge_abcde() {
-	// 1 can ?
+	ptr := self.divides[divide_type_AAA]
+	if ptr == nil {
+		return
+	}
 
-	// 2 need ?
+	var cards []poker.Card
+	p := self.divides[divide_type_A]
+	if p != nil {
+		cards = p.all_cards()
+	}
+
+	var items [][]poker.Card
+	for _, c := range ptr.merge_sequence(cards) {
+		items = append(items, []poker.Card{c})
+	}
+
+	ptr.items = items
 }
 
 func (self *class_t) evaluate() int32 {

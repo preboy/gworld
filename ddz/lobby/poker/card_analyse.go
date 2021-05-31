@@ -166,6 +166,28 @@ func CardsRemove(src []Card, dst []Card) ([]Card, bool) {
 	return cards, true
 }
 
+func CardsRemoveOne(src []Card, c Card) (cards []Card) {
+	if len(src) == 0 {
+		return src
+	}
+
+	b := false
+
+	for _, v := range src {
+		if v != c {
+			cards = append(cards, v)
+		} else {
+			b = true
+		}
+	}
+
+	if !b {
+		return src
+	}
+
+	return
+}
+
 func CardsAnalyse(cards []Card) *CardsInfo {
 	CardsSort(cards)
 
