@@ -156,7 +156,7 @@ func (self *AILogic) DeckEndBroadcast(score []int32) {
 }
 
 // ----------------------------------------------------------------------------
-// expand
+// local member
 
 func (self *AILogic) on_init() {
 	self.plrs = map[int32]*pos_data{}
@@ -195,6 +195,49 @@ func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
 		self.plrs[pos].cards_deal = append(self.plrs[pos].cards_deal, cards...)
 		self.plrs[pos].left_count -= int32(len(cards))
 	}
+}
+
+func (self *AILogic) is_lord() bool {
+	return self.pos == self.pos_lord
+}
+
+func (self *AILogic) get_friend_pos() int32 {
+	if ai.is_lord() {
+		panic("is lord")
+	}
+
+	for i := int32(0); i < 3; i++ {
+		if i == self.pos_lord || i == self.pos {
+			continue
+		}
+
+		return i
+	}
+
+	panic("not found friend")
+}
+
+func (self *AILogic) add_play(pos int32, cards []poker.Card) {
+	l := len(self.rounds)
+	r := self.rounds[l-1]
+	r.hands = append(r.hands, &hand{pos, cards})
+}
+
+func (self *AILogic) prev_play() []poker.Card {
+	l := len(self.rounds)
+	if l == 0 {
+		return nil
+	}
+
+	r := self.rounds[l-1]
+
+	for i := len(r.hands) - 1; i >= 0; i-- {
+		if len(r.hands[i].cards) != 0 {
+			return r.hands[i].cards
+		}
+	}
+
+	return nil
 }
 
 // ----------------------------------------------------------------------------

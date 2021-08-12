@@ -32,6 +32,8 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 	a1 := poker.NewAnalyse(self.cards)
 	a2 := poker.NewAnalyse(self.cards_left)
 
+	// TODO  计算其它方位可能有的牌
+
 	_ = a2
 
 	if first {
@@ -57,48 +59,6 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 	}
 
 	return
-}
-
-// ----------------------------------------------------------------------------
-// local
-
-func (self *AILogic) is_lord() bool {
-	return self.pos == self.pos_lord
-}
-
-func (self *AILogic) get_friend_pos() int32 {
-	if ai.is_lord() {
-		panic("is lord")
-	}
-
-	for i := int32(0); i < 3; i++ {
-		if i == self.pos_lord || i == self.pos {
-			continue
-		}
-
-		return i
-	}
-
-	panic("not found friend")
-}
-
-func (self *AILogic) add_play(pos int32, cards []poker.Card) {
-	l := len(self.rounds)
-	r := self.rounds[l-1]
-	r.hands = append(r.hands, &hand{pos, cards})
-}
-
-func (self *AILogic) prev_play() []poker.Card {
-	l := len(self.rounds)
-	r := self.rounds[l-1]
-
-	for i := len(r.hands) - 1; i >= 0; i-- {
-		if len(r.hands[i].cards) != 0 {
-			return r.hands[i].cards
-		}
-	}
-
-	return nil
 }
 
 // ----------------------------------------------------------------------------
