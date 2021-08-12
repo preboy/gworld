@@ -8,53 +8,98 @@ import (
 	"gworld/ddz/lobby/poker"
 )
 
+const (
+	STRATEGY = 3 // AI策略 (1: 分析		2: 能大就大		3: 能不出就不出)
+)
+
 // ----------------------------------------------------------------------------
 // ai
 
 func (self *AILogic) ai_call() int32 {
-	// TODO
+	if STRATEGY == 1 {
+		return rand.Int31n(4)
+	}
+
 	return rand.Int31n(4)
 }
 
 func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 
-	// AI NOT exist
-	if true {
-		if first {
-			poker.CardsSort(self.cards)
-			l := len(self.cards)
-			cards = self.cards[l-1:]
+	switch STRATEGY {
+	case 1:
+		{
+			a1 := poker.NewAnalyse(self.cards)
+			a2 := poker.NewAnalyse(self.cards_left)
+
+			// TODO  计算其它方位可能有的牌
+
+			_ = a2
+
+			if first {
+				// 首出
+
+			} else {
+
+				// 跟牌
+
+				cards_prev := self.prev_play()
+				if cards_prev == nil {
+					panic("cards_prev == nil")
+				}
+
+				// 上一首不为Nil的牌
+				ci := poker.CardsAnalyse(cards_prev)
+
+				// 找到大过他的牌
+				ret := a1.Exceed(ci)
+				for i, v := range ret {
+					log.Info("the <%d> groups: %v", i, poker.CardsToString(v))
+				}
+			}
+
+			return
 		}
 
-		return
-	}
+	case 2:
+		{
 
-	a1 := poker.NewAnalyse(self.cards)
-	a2 := poker.NewAnalyse(self.cards_left)
+			if first {
+				// todo 随机出一手
 
-	// TODO  计算其它方位可能有的牌
+			} else {
+				a1 := poker.NewAnalyse(self.cards)
 
-	_ = a2
+				cards_prev := self.prev_play()
+				if cards_prev == nil {
+					panic("cards_prev == nil")
+				}
 
-	if first {
-		// 首出
+				// 上一首不为Nil的牌
+				ci := poker.CardsAnalyse(cards_prev)
 
-	} else {
+				// 找到大过他的牌
+				ret := a1.Exceed(ci)
+				for i, v := range ret {
+					log.Info("the <%d> Exceed er: %v", i, poker.CardsToString(v))
+				}
 
-		// 跟牌
+				if len(ret) > 0 {
+					cards = ret[0]
+				}
+			}
 
-		cards_prev := self.prev_play()
-		if cards_prev == nil {
-			panic("cards_prev == nil")
+			return
 		}
 
-		// 上一首不为Nil的牌
-		ci := poker.CardsAnalyse(cards_prev)
+	case 3:
+		{
+			if first {
+				poker.CardsSort(self.cards)
+				l := len(self.cards)
+				cards = self.cards[l-1:]
+			}
 
-		// 找到大过他的牌
-		ret := a1.Exceed(ci)
-		for i, v := range ret {
-			log.Info("the <%d> groups: %v", i, poker.CardsToString(v))
+			return
 		}
 	}
 
