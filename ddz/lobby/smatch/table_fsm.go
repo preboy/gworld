@@ -320,7 +320,7 @@ func init() {
 					}
 
 					// 是否合法的牌型
-					if cards_type_valid(ci, nil) {
+					if !cards_type_valid(ci, nil) {
 						s.ErrCode = gconst.Err_CardTypeInvalid
 						return
 					}
@@ -331,7 +331,7 @@ func init() {
 						t.PlayPass()
 					} else {
 
-						if cards_type_valid(ci, t.play_ci) {
+						if !cards_type_valid(ci, t.play_ci) {
 							s.ErrCode = gconst.Err_CardTypeInvalid
 							return
 						}
