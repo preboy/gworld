@@ -13,17 +13,35 @@ var (
 	ai = &AILogic{}
 )
 
+// 方位数据(对自己来说没意义)
+type pos_data struct {
+	left_count int32        // 剩余牌数量
+	cards_poss []poker.Card // 可能的牌 	自己(空)
+	cards_deal []poker.Card // 出过的牌
+}
+
+// 一手
+type hand struct {
+	pos   int32
+	cards []poker.Card
+}
+
+// 一回合
+type round struct {
+	hands []*hand
+}
+
 type AILogic struct {
 	c *connector
 
-	pos        int32        // 我的位置
-	lord_pos   int32        // 地主位置
-	lord_cards []poker.Card // 底牌
+	pos      int32 // 我的位置
+	pos_lord int32 // 地主位置
 
-	cards      []poker.Card // 我手上的牌
-	left_cards []poker.Card // 其它人手上的的牌
+	cards        []poker.Card // 我手上的牌
+	cards_left   []poker.Card // 其它人手上的牌之和(除去已被打出的)
+	cards_bottom []poker.Card // 底牌(归地主所有)
 
-	plrs map[int32]*data
+	plrs map[int32]*pos_data
 
 	rounds []*round // 本副出牌记录
 }
@@ -64,9 +82,9 @@ func (self *AILogic) CallScoreBroadcast(pos int32, score []int32) {
 
 func (self *AILogic) CallScoreResponse(err int32) {
 	if err == gconst.Err_OK {
-		log.Info("叫分OK")
+		log.Info("叫分 OK")
 	} else {
-		log.Info("叫分Error")
+		log.Info("叫分 Error")
 	}
 }
 
@@ -83,15 +101,15 @@ func (self *AILogic) CallScoreCalcBroadcast(draw bool, lord int32, score int32, 
 	cards, _ := poker.CardsFromInt32(arr)
 	log.Info("%v 是地主，叫了 %v 分, 底牌: %v", pos_to_string(lord), score, poker.CardsToString(cards))
 
+	self.pos_lord = lord
+	self.cards_bottom = cards
+
 	// lord is me
 	if lord == self.pos {
 		self.cards = append(self.cards, cards...)
 		poker.CardsSort(self.cards)
-		log.Info("%v 是我，我的最终牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
+		log.Info("%v 是我<地主>，我的最终牌: %v", pos_to_string(self.pos), poker.CardsToString(self.cards))
 	}
-
-	self.lord_pos = lord
-	self.lord_cards = cards
 
 	self.on_call_calc()
 }
@@ -116,7 +134,7 @@ func (self *AILogic) PlayBroadcast(pos int32, first bool) {
 
 func (self *AILogic) PlayResponse(err_code int32) {
 	if err_code == gconst.Err_OK {
-		log.Info("出牌返回OK")
+		log.Info("出牌返回 OK")
 	} else {
 		log.Info("出牌返回 ERR")
 	}
@@ -135,6 +153,48 @@ func (self *AILogic) PlayResultBroadcast(pos int32, first bool, arr []int32) {
 
 func (self *AILogic) DeckEndBroadcast(score []int32) {
 	log.Info("结算: %v", score)
+}
+
+// ----------------------------------------------------------------------------
+// expand
+
+func (self *AILogic) on_init() {
+	self.plrs = map[int32]*pos_data{}
+
+	for i := int32(0); i < 3; i++ {
+		self.plrs[i] = &pos_data{
+			left_count: 17,
+		}
+	}
+
+	self.cards_left, _ = poker.CardsRemove(poker.NewPoker(), self.cards)
+}
+
+func (self *AILogic) on_call_calc() {
+	self.plrs[self.pos_lord].left_count += 3
+
+	if self.pos_lord == self.pos {
+		self.cards_left, _ = poker.CardsRemove(self.cards_left, self.cards_bottom)
+	}
+}
+
+func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
+	if first {
+		self.rounds = append(self.rounds, &round{})
+	}
+
+	self.add_play(pos, cards)
+
+	if self.pos == pos {
+		self.cards, _ = poker.CardsRemove(self.cards, cards)
+	} else {
+		self.cards_left, _ = poker.CardsRemove(self.cards_left, cards)
+	}
+
+	if len(cards) != 0 {
+		self.plrs[pos].cards_deal = append(self.plrs[pos].cards_deal, cards...)
+		self.plrs[pos].left_count -= int32(len(cards))
+	}
 }
 
 // ----------------------------------------------------------------------------

@@ -8,63 +8,6 @@ import (
 	"gworld/ddz/lobby/poker"
 )
 
-type data struct {
-	left_count int32        // 剩余牌数量
-	left_cards []poker.Card // 自己(空)  其它人（可能的牌）
-	deal_cards []poker.Card // 出过的牌
-}
-
-type hand struct {
-	pos   int32
-	cards []poker.Card
-}
-
-type round struct {
-	hands []*hand
-}
-
-// ----------------------------------------------------------------------------
-// event
-
-func (self *AILogic) on_init() {
-	self.plrs = map[int32]*data{}
-
-	for i := int32(0); i < 3; i++ {
-		self.plrs[i] = &data{
-			left_count: 17,
-		}
-	}
-
-	self.left_cards, _ = poker.CardsRemove(poker.NewPoker(), self.cards)
-}
-
-func (self *AILogic) on_call_calc() {
-	self.plrs[self.lord_pos].left_count += 3
-
-	if self.lord_pos == self.pos {
-		self.left_cards, _ = poker.CardsRemove(self.left_cards, self.lord_cards)
-	}
-}
-
-func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
-	if first {
-		self.rounds = append(self.rounds, &round{})
-	}
-
-	self.add_play(pos, cards)
-
-	if self.pos == pos {
-		self.cards, _ = poker.CardsRemove(self.cards, cards)
-		return
-	}
-
-	if len(cards) != 0 {
-		self.left_cards, _ = poker.CardsRemove(self.left_cards, cards)
-		self.plrs[pos].deal_cards = append(self.plrs[pos].deal_cards, cards...)
-		self.plrs[pos].left_count -= int32(len(cards))
-	}
-}
-
 // ----------------------------------------------------------------------------
 // ai
 
@@ -87,7 +30,7 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 	}
 
 	a1 := poker.NewAnalyse(self.cards)
-	a2 := poker.NewAnalyse(self.left_cards)
+	a2 := poker.NewAnalyse(self.cards_left)
 
 	_ = a2
 
@@ -120,7 +63,7 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 // local
 
 func (self *AILogic) is_lord() bool {
-	return self.pos == self.lord_pos
+	return self.pos == self.pos_lord
 }
 
 func (self *AILogic) get_friend_pos() int32 {
@@ -129,7 +72,7 @@ func (self *AILogic) get_friend_pos() int32 {
 	}
 
 	for i := int32(0); i < 3; i++ {
-		if i == self.lord_pos || i == self.pos {
+		if i == self.pos_lord || i == self.pos {
 			continue
 		}
 
