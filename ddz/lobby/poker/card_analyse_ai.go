@@ -164,8 +164,7 @@ func (self *Analyse) ExceedRough(ci *CardsInfo) (ret [][]Card) {
 
 // 寻找大过对方的牌（优雅的）
 func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
-	// TODO
-	return
+	return self.ExceedRough(ci)
 }
 
 // ----------------------------------------------------------------------------

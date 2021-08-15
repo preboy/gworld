@@ -9,6 +9,15 @@ import (
 	"strconv"
 )
 
+type seat_t int32
+
+const (
+	seat_lord      seat_t = 0 + iota // 地主位
+	seat_lord_next                   // 地主下一家
+	seat_lord_prev                   // 地主上一家
+	seat_lord_oppo                   // 地主对面（团体赛中才有用）
+)
+
 var (
 	ai = &AILogic{}
 )
@@ -36,6 +45,8 @@ type AILogic struct {
 
 	pos      int32 // 我的位置
 	pos_lord int32 // 地主位置
+
+	seat seat_t
 
 	cards        []poker.Card // 我手上的牌
 	cards_left   []poker.Card // 其它人手上的牌之和(除去已被打出的)
@@ -173,9 +184,11 @@ func (self *AILogic) on_init() {
 func (self *AILogic) on_call_calc() {
 	self.plrs[self.pos_lord].left_count += 3
 
-	if self.pos_lord == self.pos {
+	if self.is_lord() {
 		self.cards_left, _ = poker.CardsRemove(self.cards_left, self.cards_bottom)
 	}
+
+	self.calc_seat()
 }
 
 func (self *AILogic) on_play(pos int32, first bool, cards []poker.Card) {
@@ -215,6 +228,19 @@ func (self *AILogic) get_friend_pos() int32 {
 	}
 
 	panic("not found friend")
+}
+
+// 计算我的座次信息
+func (self *AILogic) calc_seat() {
+	if self.is_lord() {
+		self.seat = seat_lord
+	} else {
+		if (self.pos_lord+1)%3 == self.pos {
+			self.seat = seat_lord_next
+		} else {
+			self.seat = seat_lord_prev
+		}
+	}
 }
 
 func (self *AILogic) add_play(pos int32, cards []poker.Card) {

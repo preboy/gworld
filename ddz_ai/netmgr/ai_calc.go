@@ -8,15 +8,23 @@ import (
 	"gworld/ddz/lobby/poker"
 )
 
+type STRATEGY int
+
 const (
-	STRATEGY = 3 // AI策略 (1: 分析		2: 能大就大		3: 能不出就不出)
+	STRATEGY_CALC STRATEGY = 1 + iota // 分析
+	STRATEGY_MUST                     // 能大就大
+	STRATEGY_PASS                     // 能不出就不出
+)
+
+const (
+	STRATEGY_METHOD = STRATEGY_MUST
 )
 
 // ----------------------------------------------------------------------------
 // ai
 
 func (self *AILogic) ai_call() int32 {
-	if STRATEGY == 1 {
+	if STRATEGY_METHOD == STRATEGY_CALC {
 		return rand.Int31n(4)
 	}
 
@@ -25,8 +33,9 @@ func (self *AILogic) ai_call() int32 {
 
 func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 
-	switch STRATEGY {
-	case 1:
+	switch STRATEGY_METHOD {
+
+	case STRATEGY_CALC:
 		{
 			a1 := poker.NewAnalyse(self.cards)
 			a2 := poker.NewAnalyse(self.cards_left)
@@ -56,18 +65,17 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 					log.Info("the <%d> groups: %v", i, poker.CardsToString(v))
 				}
 			}
-
-			return
 		}
 
-	case 2:
+	case STRATEGY_MUST:
 		{
+			a1 := poker.NewAnalyse(self.cards)
 
 			if first {
-				// todo 随机出一手
-
+				// TODO 随机出一手，尽量能回收，切不把手里的牌搞乱
+				c := cards_divide_abdef(self.cards)
+				cards = c.first()
 			} else {
-				a1 := poker.NewAnalyse(self.cards)
 
 				cards_prev := self.prev_play()
 				if cards_prev == nil {
@@ -83,23 +91,21 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 					log.Info("the <%d> Exceed er: %v", i, poker.CardsToString(v))
 				}
 
+				// TODO 处理带牌的情况
+
 				if len(ret) > 0 {
 					cards = ret[0]
 				}
 			}
-
-			return
 		}
 
-	case 3:
+	case STRATEGY_PASS:
 		{
 			if first {
 				poker.CardsSort(self.cards)
 				l := len(self.cards)
 				cards = self.cards[l-1:]
 			}
-
-			return
 		}
 	}
 
@@ -640,6 +646,70 @@ func (self *class_t) dump() (ret string) {
 	}
 
 	return
+}
+
+// 首出:尽量找出能回手的牌
+// 是否有更大的牌（或者自己就是最大的牌）
+func (self *class_t) first() []poker.Card {
+
+	// 顺子
+
+	// divide_type_ABCDE
+	// divide_type_AABBCC
+	// divide_type_AAABBB
+
+	if self.divides[divide_type_ABCDE] != nil {
+		for _, cards := range self.divides[divide_type_ABCDE].items {
+			return cards
+		}
+	}
+
+	// 3带1
+	if self.divides[divide_type_AABBCC] != nil {
+		for _, cards := range self.divides[divide_type_AABBCC].items {
+			return cards
+		}
+	}
+
+	if self.divides[divide_type_AAABBB] != nil {
+		for _, cards := range self.divides[divide_type_AAABBB].items {
+			return cards
+		}
+	}
+
+	if self.divides[divide_type_AAA] != nil {
+		for _, cards := range self.divides[divide_type_AAA].items {
+			return cards
+		}
+	}
+
+	if self.divides[divide_type_AAA] != nil {
+		for _, cards := range self.divides[divide_type_AAA].items {
+			return cards
+		}
+	}
+
+	if self.divides[divide_type_AAAA] != nil {
+		for _, cards := range self.divides[divide_type_AAAA].items {
+			return cards
+		}
+	}
+
+	if self.divides[divide_type_A] != nil {
+		for _, cards := range self.divides[divide_type_A].items {
+			return cards
+		}
+	}
+
+	if self.divides[divide_type_AA] != nil {
+		for _, cards := range self.divides[divide_type_AA].items {
+			return cards[0:]
+		}
+	}
+
+	// 实在没有就出一张单牌
+
+	panic("未找到牌型: " + self.dump())
 }
 
 // ----------------------------------------------------------------------------
