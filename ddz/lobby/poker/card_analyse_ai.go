@@ -3,8 +3,8 @@ package poker
 // ----------------------------------------------------------------------------
 // Analyse for ai
 
-// 找到大过ci的牌
-func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
+// 寻找大过对方的牌（粗暴）
+func (self *Analyse) ExceedRough(ci *CardsInfo) (ret [][]Card) {
 	if ci.Type == CardsTypeNIL {
 		panic("CardsTypeNIL")
 	}
@@ -16,7 +16,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 	switch ci.Type {
 
 	case CardsTypeA:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 1)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
@@ -24,23 +24,23 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeA_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 1)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 1)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
 		}
 
 	case CardsTypeAA_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 2)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 2)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
 		}
 
 	case CardsTypeAAA:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 3)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
@@ -48,15 +48,15 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAA_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 3)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 3)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
 		}
 
 	case CardsTypeAAAX:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A())
@@ -65,8 +65,8 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAX_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 3)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A())
 				ret = append(ret, cards)
@@ -74,7 +74,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAXX:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA())
@@ -83,8 +83,8 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAXX_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 3)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 3)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA())
 				ret = append(ret, cards)
@@ -92,7 +92,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAA:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 4)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
@@ -100,15 +100,15 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAA_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 4)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 4)
 			if len(cards) > 0 {
 				ret = append(ret, cards)
 			}
 		}
 
 	case CardsTypeAAAAXY:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A(), NewCard_PlaceHolder_A())
@@ -117,8 +117,8 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAAXY_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 4)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_A(), NewCard_PlaceHolder_A())
 				ret = append(ret, cards)
@@ -126,7 +126,7 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAAXXYY:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
 			cards := self.GetSeq(i, 1, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA(), NewCard_PlaceHolder_AA())
@@ -135,8 +135,8 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 
 	case CardsTypeAAAAXXYY_SEQ:
-		for i := ci.Max + 1; i <= CardPoint_A; i++ {
-			cards := self.GetSeq(i, ci.Len, 4)
+		for i := ci.MainMax + 1; i <= CardPoint_A; i++ {
+			cards := self.GetSeq(i, ci.MainLen, 4)
 			if len(cards) > 0 {
 				cards = append(cards, NewCard_PlaceHolder_AA(), NewCard_PlaceHolder_AA())
 				ret = append(ret, cards)
@@ -159,6 +159,12 @@ func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
 		}
 	}
 
+	return
+}
+
+// 寻找大过对方的牌（优雅的）
+func (self *Analyse) Exceed(ci *CardsInfo) (ret [][]Card) {
+	// TODO
 	return
 }
 

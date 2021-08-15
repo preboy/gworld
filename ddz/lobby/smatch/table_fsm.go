@@ -465,10 +465,10 @@ func cards_type_valid(curr, prev *poker.CardsInfo) (ret bool) {
 	}
 
 	if curr.Type == prev.Type {
-		if curr.Len != prev.Len {
+		if curr.MainLen != prev.MainLen {
 			return
 		}
-		if curr.Max <= prev.Max {
+		if curr.MainMax <= prev.MainMax {
 			return
 		}
 	} else {

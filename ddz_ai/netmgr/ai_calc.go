@@ -489,9 +489,9 @@ func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 	return cards
 }
 
-func (self *class_t) merge_aa() {
-	ptr, ok := self.divides[divide_type_AA]
-	if !ok {
+func (self *class_t) merge_aabbcc() {
+	ptr := self.divides[divide_type_AA]
+	if ptr == nil {
 		return
 	}
 
@@ -507,7 +507,7 @@ func (self *class_t) merge_aa() {
 	// TODO 甚至向其它地方(3带)借一对，能还连起2顺
 }
 
-func (self *class_t) merge_aaa() {
+func (self *class_t) merge_aaabbb() {
 	// 能否连成飞机
 	ptr := self.divides[divide_type_AAA]
 	if ptr == nil {
@@ -546,11 +546,88 @@ func (self *class_t) merge_abcde() {
 	}
 }
 
-func (self *class_t) evaluate() int32 {
+func (self *class_t) evaluate() int {
+
 	// 评分：
 	// 单牌、单对越少越好
+	// NOTE 暂时未考虑已出牌的情况
 
-	return 0
+	single_card_count := 0
+
+	{
+		if self.divides[divide_type_A] != nil {
+			for _, v := range self.divides[divide_type_A].items {
+				if len(v) == 0 {
+					continue
+				}
+
+				if int32(v[0]) == poker.CardValue_J1 {
+					continue
+				}
+
+				single_card_count++
+			}
+		}
+
+		if self.divides[divide_type_AA] != nil {
+			for _, v := range self.divides[divide_type_AA].items {
+				if len(v) != 0 {
+					single_card_count++
+				}
+
+				// 对二， 对王 等最大的单牌不急算入内
+				if int32(v[0]) == poker.CardPoint_2 {
+					continue
+				}
+
+				single_card_count++
+			}
+		}
+
+		if self.divides[divide_type_AAA] != nil {
+			for _, v := range self.divides[divide_type_AAA].items {
+				if len(v) != 0 {
+					continue
+				}
+
+				single_card_count--
+
+				if int32(v[0]) >= poker.CardPoint_J {
+					continue
+				}
+
+				single_card_count++
+			}
+		}
+
+		if self.divides[divide_type_ABCDE] != nil {
+			for _, v := range self.divides[divide_type_ABCDE].items {
+				if len(v) == 0 {
+					continue
+				}
+
+				if len(v) > 6 {
+					continue
+				}
+
+				if len(v) == 5 {
+					if int32(v[0]) >= poker.CardPoint_7 {
+						continue
+					}
+				}
+
+				if len(v) == 6 {
+					if int32(v[0]) >= poker.CardPoint_6 {
+						continue
+					}
+				}
+
+				single_card_count++
+			}
+		}
+	}
+
+	return single_card_count
 }
 
 func (self *class_t) dump() (ret string) {
@@ -596,8 +673,8 @@ func cards_divide_abdef(cards []poker.Card) *class_t {
 		panic("not empty")
 	}
 
-	c.merge_aa()
-	c.merge_aaa()
+	c.merge_aabbcc()
+	c.merge_aaabbb()
 	c.merge_aaaa()
 	c.merge_abcde()
 
@@ -617,8 +694,8 @@ func cards_divide_aaa(cards []poker.Card) *class_t {
 		panic("not empty")
 	}
 
-	c.merge_aa()
-	c.merge_aaa()
+	c.merge_aabbcc()
+	c.merge_aaabbb()
 	c.merge_aaaa()
 	c.merge_abcde()
 

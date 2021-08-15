@@ -32,9 +32,9 @@ type Analyse struct {
 }
 
 type CardsInfo struct {
-	Type CardsType // 牌类型
-	Max  int32     // 主牌最大点
-	Len  int32     // 主牌长度(SEQ)
+	Type    CardsType // 牌类型
+	MainMax int32     // 主牌最小点
+	MainLen int32     // 主牌长度(SEQ)
 }
 
 type AnalysedPoint struct {
@@ -80,11 +80,19 @@ func (self *Analyse) GetPoints() (ret []*AnalysedPoint) {
 // ----------------------------------------------------------------------------
 
 func (self *CardsInfo) IsBomb() bool {
-	return self.Type == CardsTypeAAAA || self.Type == CardsTypeJJ
+	return self.Type == CardsTypeAAAA || self.Type == CardsTypeAAAA_SEQ || self.Type == CardsTypeJJ
+}
+
+func (self *CardsInfo) GetBombPower() int32 {
+	if !self.IsBomb() {
+		return 0
+	}
+
+	return self.MainLen
 }
 
 func (self *CardsInfo) ToString() string {
-	return fmt.Sprintf("%v %v %v", self.Type, self.Max, self.Len)
+	return fmt.Sprintf("%v %v %v", self.Type, self.MainMax, self.MainLen)
 }
 
 // ----------------------------------------------------------------------------
@@ -196,7 +204,9 @@ func CardsAnalyse(cards []Card) *CardsInfo {
 	cnt_points := len(points)
 
 	ci := &CardsInfo{
-		Type: CardsTypeNIL,
+		Type:    CardsTypeNIL,
+		MainMax: 0,
+		MainLen: 0,
 	}
 
 	cnt_cards := int32(len(cards))
@@ -205,29 +215,35 @@ func CardsAnalyse(cards []Card) *CardsInfo {
 
 	case 1: // CardsTypeA
 		ci.Type = CardsTypeA
-		ci.Max = cards[0].Point()
+		ci.MainMax = cards[0].Point()
+		ci.MainLen = 1
 
 	case 2: // CardsTypeJJ
 		if cards[0].Value() == CardValue_J2 && cards[1].Value() == CardValue_J1 {
 			ci.Type = CardsTypeJJ
+			ci.MainMax = CardValue_J2
+			ci.MainLen = 1
 		}
 
 	case 3: // CardsTypeAAA
 		if cnt_points == 1 {
 			ci.Type = CardsTypeAAA
-			ci.Max = points[0].Point
+			ci.MainMax = points[0].Point
+			ci.MainLen = 1
 		}
 
 	case 4: // CardsTypeAAAA CardsTypeAAAX
 		if cnt_points == 1 {
 			ci.Type = CardsTypeAAAA
-			ci.Max = points[0].Point
+			ci.MainMax = points[0].Point
+			ci.MainLen = 1
 			break
 		}
 
 		if cnt_points == 2 && points[0].Count == 3 {
 			ci.Type = CardsTypeAAAX
-			ci.Max = points[0].Point
+			ci.MainMax = points[0].Point
+			ci.MainLen = 1
 		}
 
 	case 5: // CardsTypeA_SEQ CardsTypeAAAXX
@@ -237,7 +253,8 @@ func CardsAnalyse(cards []Card) *CardsInfo {
 
 		if cnt_points == 2 && points[0].Count == 3 {
 			ci.Type = CardsTypeAAAXX
-			ci.Max = points[0].Point
+			ci.MainMax = points[0].Point
+			ci.MainLen = 1
 		}
 
 	case 6: // CardsTypeA_SEQ CardsTypeAA_SEQ CardsTypeAAA_SEQ CardsTypeAAAAXY
@@ -255,7 +272,8 @@ func CardsAnalyse(cards []Card) *CardsInfo {
 
 		if (cnt_points == 2 || cnt_points == 3) && points[0].Count == 4 {
 			ci.Type = CardsTypeAAAAXY
-			ci.Max = points[0].Point
+			ci.MainMax = points[0].Point
+			ci.MainLen = 1
 			break
 		}
 
@@ -414,8 +432,8 @@ func Is_CardsTypeA_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInfo) 
 
 	if b {
 		ci.Type = CardsTypeA_SEQ
-		ci.Max = points[0].Point
-		ci.Len = seq_length
+		ci.MainMax = points[0].Point
+		ci.MainLen = seq_length
 	}
 
 	return b
@@ -439,8 +457,8 @@ func Is_CardsTypeAA_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInfo)
 
 	if b {
 		ci.Type = CardsTypeAA_SEQ
-		ci.Max = points[0].Point
-		ci.Len = seq_length
+		ci.MainMax = points[0].Point
+		ci.MainLen = seq_length
 	}
 
 	return b
@@ -464,8 +482,8 @@ func Is_CardsTypeAAA_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInfo
 
 	if b {
 		ci.Type = CardsTypeAAA_SEQ
-		ci.Max = points[0].Point
-		ci.Len = seq_length
+		ci.MainMax = points[0].Point
+		ci.MainLen = seq_length
 	}
 
 	return b
@@ -489,11 +507,12 @@ func Is_CardsTypeAAAX_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInf
 		return false
 	}
 
-	ci.Type = CardsTypeAAAX_SEQ
-	ci.Max = points[0].Point
-	ci.Len = seq_length
+	// NOTE 不考虑副牌是炸弹的情况
 
-	// example: 3333 5555 6666
+	ci.Type = CardsTypeAAAX_SEQ
+	ci.MainMax = points[0].Point
+	ci.MainLen = seq_length
+
 	return true
 }
 
@@ -516,8 +535,8 @@ func Is_CardsTypeAAAA_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsInf
 	}
 
 	ci.Type = CardsTypeAAAA_SEQ
-	ci.Max = points[0].Point
-	ci.Len = seq_length
+	ci.MainMax = points[0].Point
+	ci.MainLen = seq_length
 
 	return true
 }
@@ -536,21 +555,21 @@ func Is_CardsTypeAAAXX_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsIn
 		}
 	}
 
+	if points[0].Point-points[seq_length-1].Point != seq_length-1 {
+		return false
+	}
+
+	// NOTE 不考虑副牌是炸弹的情况
+
 	for i := int32(seq_length); i < seq_length*2; i++ {
 		if points[i].Count < 2 {
 			return false
 		}
 	}
 
-	if points[0].Point-points[seq_length-1].Point != seq_length-1 {
-		return false
-	}
-
-	// 不考虑副牌是炸弹的情况
-
 	ci.Type = CardsTypeAAAXX_SEQ
-	ci.Max = points[0].Point
-	ci.Len = seq_length
+	ci.MainMax = points[0].Point
+	ci.MainLen = seq_length
 
 	return true
 }
@@ -576,8 +595,8 @@ func Is_CardsTypeAAAAXY_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *CardsI
 	// 不考虑副牌凑成炸弹的情况
 
 	ci.Type = CardsTypeAAAAXY_SEQ
-	ci.Max = points[0].Point
-	ci.Len = seq_length
+	ci.MainMax = points[0].Point
+	ci.MainLen = seq_length
 
 	return true
 }
@@ -596,21 +615,20 @@ func Is_CardsTypeAAAAXXYY_SEQ(points []*AnalysedPoint, cnt_cards int32, ci *Card
 		}
 	}
 
+	if points[0].Point-points[seq_length-1].Point != seq_length-1 {
+		return false
+	}
+
+	// 不考虑副牌凑成炸弹的情况
 	for i := int32(seq_length); i < seq_length*3; i++ {
 		if points[i].Count < 2 {
 			return false
 		}
 	}
 
-	if points[0].Point-points[seq_length-1].Point != seq_length-1 {
-		return false
-	}
-
-	// 不考虑副牌凑成炸弹的情况
-
 	ci.Type = CardsTypeAAAAXXYY_SEQ
-	ci.Max = points[0].Point
-	ci.Len = seq_length
+	ci.MainMax = points[0].Point
+	ci.MainLen = seq_length
 
 	return true
 }

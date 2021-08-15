@@ -272,7 +272,7 @@ func (self *Table) PlayHand(cards []poker.Card, ci *poker.CardsInfo) {
 	pos := self.play_pos
 
 	if ci.IsBomb() {
-		self.bombs++
+		self.bombs += ci.GetBombPower()
 	}
 
 	// 删除手牌
