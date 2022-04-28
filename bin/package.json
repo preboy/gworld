@@ -5,7 +5,7 @@
   "description": "all web projects",
   "main": "index.js",
   "dependencies": {
-    "async": "^2.6.2",
+    "async": "^2.6.4",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
     "express": "^4.16.4",
