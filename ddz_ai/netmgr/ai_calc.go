@@ -23,7 +23,7 @@ const (
 // ----------------------------------------------------------------------------
 // ai
 
-func (self *AILogic) ai_call() int32 {
+func (ai *AILogic) ai_call() int32 {
 	if STRATEGY_METHOD == STRATEGY_CALC {
 		return rand.Int31n(4)
 	}
@@ -31,14 +31,14 @@ func (self *AILogic) ai_call() int32 {
 	return rand.Int31n(4)
 }
 
-func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
+func (ai *AILogic) ai_play(first bool) (cards []poker.Card) {
 
 	switch STRATEGY_METHOD {
 
 	case STRATEGY_CALC:
 		{
-			a1 := poker.NewAnalyse(self.cards)
-			a2 := poker.NewAnalyse(self.cards_left)
+			a1 := poker.NewAnalyse(ai.cards)
+			a2 := poker.NewAnalyse(ai.cards_left)
 
 			// TODO  计算其它方位可能有的牌
 
@@ -51,7 +51,7 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 
 				// 跟牌
 
-				cards_prev := self.prev_play()
+				cards_prev := ai.prev_play()
 				if cards_prev == nil {
 					panic("cards_prev == nil")
 				}
@@ -69,15 +69,15 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 
 	case STRATEGY_MUST:
 		{
-			a1 := poker.NewAnalyse(self.cards)
+			a1 := poker.NewAnalyse(ai.cards)
 
 			if first {
 				// TODO 随机出一手，尽量能回收，切不把手里的牌搞乱
-				c := cards_divide_abdef(self.cards)
+				c := cards_divide_abdef(ai.cards)
 				cards = c.first()
 			} else {
 
-				cards_prev := self.prev_play()
+				cards_prev := ai.prev_play()
 				if cards_prev == nil {
 					panic("cards_prev == nil")
 				}
@@ -102,9 +102,9 @@ func (self *AILogic) ai_play(first bool) (cards []poker.Card) {
 	case STRATEGY_PASS:
 		{
 			if first {
-				poker.CardsSort(self.cards)
-				l := len(self.cards)
-				cards = self.cards[l-1:]
+				poker.CardsSort(ai.cards)
+				l := len(ai.cards)
+				cards = ai.cards[l-1:]
 			}
 		}
 	}
@@ -121,31 +121,31 @@ type section struct {
 	p2   int32
 }
 
-func (self *section) push(v int32) bool {
-	if !self.init {
-		self.init = true
+func (ai *section) push(v int32) bool {
+	if !ai.init {
+		ai.init = true
 
-		self.p1 = v
-		self.p2 = v
+		ai.p1 = v
+		ai.p2 = v
 
 		return true
 	}
 
-	if v != self.p2+1 {
+	if v != ai.p2+1 {
 		return false
 	}
 
-	self.p2 = v
+	ai.p2 = v
 
 	return true
 }
 
-func (self *section) length() int32 {
-	return self.p2 - self.p1 + 1
+func (ai *section) length() int32 {
+	return ai.p2 - ai.p1 + 1
 }
 
-func (self *section) conform(l int32) bool {
-	return self.length() >= l
+func (ai *section) conform(l int32) bool {
+	return ai.length() >= l
 }
 
 // ----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ type class_t struct {
 
 // ----------------------------------------------------------------------------
 // divide_t
-func (self *divide_t) dump() string {
+func (ai *divide_t) dump() string {
 	divide_type_string := []string{
 		"divide_type_A    	",
 		"divide_type_AA   	",
@@ -186,10 +186,10 @@ func (self *divide_t) dump() string {
 		"divide_type_AAABBB	",
 	}
 
-	ret := divide_type_string[self.dtype] + ": "
+	ret := divide_type_string[ai.dtype] + ": "
 
 	ret += "{ "
-	for _, v := range self.items {
+	for _, v := range ai.items {
 		ret += poker.CardsToString(v)
 		ret += ", "
 	}
@@ -198,12 +198,12 @@ func (self *divide_t) dump() string {
 	return ret
 }
 
-func (self *divide_t) add(cards []poker.Card) {
-	self.items = append(self.items, cards)
+func (ai *divide_t) add(cards []poker.Card) {
+	ai.items = append(ai.items, cards)
 }
 
-func (self *divide_t) keys() (ret []int32) {
-	for _, v := range self.items {
+func (ai *divide_t) keys() (ret []int32) {
+	for _, v := range ai.items {
 		if len(v) > 0 {
 			ret = append(ret, v[0].Point())
 		}
@@ -213,12 +213,12 @@ func (self *divide_t) keys() (ret []int32) {
 	return
 }
 
-func (self *divide_t) empty() bool {
-	if len(self.items) == 0 {
+func (ai *divide_t) empty() bool {
+	if len(ai.items) == 0 {
 		return true
 	}
 
-	for _, v := range self.items {
+	for _, v := range ai.items {
 		if len(v) != 0 {
 			return false
 		}
@@ -227,19 +227,19 @@ func (self *divide_t) empty() bool {
 	return true
 }
 
-func (self *divide_t) all_cards() (ret []poker.Card) {
-	for _, v := range self.items {
+func (ai *divide_t) all_cards() (ret []poker.Card) {
+	for _, v := range ai.items {
 		ret = append(ret, v...)
 	}
 	return
 }
 
-func (self *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
-	if len(self.items) < int(l) {
+func (ai *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
+	if len(ai.items) < int(l) {
 		return
 	}
 
-	if self.dtype != divide_type_AA && self.dtype != divide_type_AAA && self.dtype != divide_type_AAAA {
+	if ai.dtype != divide_type_AA && ai.dtype != divide_type_AAA && ai.dtype != divide_type_AAAA {
 		panic("error dtype in take_sequence")
 	}
 
@@ -248,7 +248,7 @@ func (self *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
 	// find
 	{
 		sec := &section{}
-		for _, v := range self.keys() {
+		for _, v := range ai.keys() {
 			if !sec.push(v) {
 
 				b := sec.conform(l)
@@ -270,7 +270,7 @@ func (self *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
 
 	// extract
 	for _, v := range arr {
-		cards := self.extract(v.p1, v.p2)
+		cards := ai.extract(v.p1, v.p2)
 
 		if len(cards) > 0 {
 			ret = append(ret, cards)
@@ -280,10 +280,10 @@ func (self *divide_t) take_sequence(l int32) (ret [][]poker.Card) {
 	return
 }
 
-func (self *divide_t) extract(p1, p2 int32) (cards []poker.Card) {
+func (ai *divide_t) extract(p1, p2 int32) (cards []poker.Card) {
 	var items [][]poker.Card
 
-	for _, v := range self.items {
+	for _, v := range ai.items {
 		if len(v) == 0 {
 			continue
 		}
@@ -297,23 +297,23 @@ func (self *divide_t) extract(p1, p2 int32) (cards []poker.Card) {
 		}
 	}
 
-	self.items = items
+	ai.items = items
 
 	return
 }
 
-func (self *divide_t) merge_sequence(cards []poker.Card) []poker.Card {
+func (ai *divide_t) merge_sequence(cards []poker.Card) []poker.Card {
 
 REPEAT:
 
 	for {
-		if self.merge_internal() {
+		if ai.merge_internal() {
 			break
 		}
 	}
 
 	for _, c := range cards {
-		if self.join_card(c) {
+		if ai.join_card(c) {
 			cards = poker.CardsRemoveOne(cards, c)
 			goto REPEAT
 		}
@@ -322,15 +322,15 @@ REPEAT:
 	return cards
 }
 
-func (self *divide_t) merge_internal() bool {
-	l := len(self.items)
+func (ai *divide_t) merge_internal() bool {
+	l := len(ai.items)
 	if l < 2 {
 		return true
 	}
 
 	for i := 0; i < l-1; i++ {
 		for j := i + 1; j < l; j++ {
-			if self.join(i, j) {
+			if ai.join(i, j) {
 				return false
 			}
 		}
@@ -339,9 +339,9 @@ func (self *divide_t) merge_internal() bool {
 	return true
 }
 
-func (self *divide_t) join(i, j int) bool {
-	s1 := self.items[i]
-	s2 := self.items[j]
+func (ai *divide_t) join(i, j int) bool {
+	s1 := ai.items[i]
+	s2 := ai.items[j]
 
 	if len(s1) == 0 || len(s2) == 0 {
 		return false
@@ -368,33 +368,33 @@ func (self *divide_t) join(i, j int) bool {
 	if join {
 		var items [][]poker.Card
 
-		for k, v := range self.items {
+		for k, v := range ai.items {
 			if k != i && k != j {
 				items = append(items, v)
 			}
 		}
 
 		items = append(items, item)
-		self.items = items
+		ai.items = items
 	}
 
 	return join
 }
 
-func (self *divide_t) join_card(c poker.Card) bool {
-	for k, v := range self.items {
+func (ai *divide_t) join_card(c poker.Card) bool {
+	for k, v := range ai.items {
 		l := len(v)
 		if l == 0 {
 			continue
 		}
 
 		if c.Point() == v[0].Point()-1 {
-			self.items[k] = append([]poker.Card{c}, v...)
+			ai.items[k] = append([]poker.Card{c}, v...)
 			return true
 		}
 
 		if c.Point() == v[l-1].Point()+1 {
-			self.items[k] = append(v, c)
+			ai.items[k] = append(v, c)
 			return true
 		}
 
@@ -412,30 +412,30 @@ func new_class() *class_t {
 	}
 }
 
-func (self *class_t) get(dtype divide_type) *divide_t {
-	if self.divides[dtype] == nil {
-		self.divides[dtype] = &divide_t{
+func (ai *class_t) get(dtype divide_type) *divide_t {
+	if ai.divides[dtype] == nil {
+		ai.divides[dtype] = &divide_t{
 			dtype: dtype,
 		}
 	}
 
-	return self.divides[dtype]
+	return ai.divides[dtype]
 }
 
-func (self *class_t) add(dtype divide_type, cards []poker.Card) {
-	self.get(dtype).add(cards)
+func (ai *class_t) add(dtype divide_type, cards []poker.Card) {
+	ai.get(dtype).add(cards)
 }
 
-func (self *class_t) del(dtype divide_type) {
-	delete(self.divides, dtype)
+func (ai *class_t) del(dtype divide_type) {
+	delete(ai.divides, dtype)
 }
 
-func (self *class_t) pull_a(cards []poker.Card) []poker.Card {
+func (ai *class_t) pull_a(cards []poker.Card) []poker.Card {
 	a := poker.NewAnalyse(cards)
 
 	for _, set := range a.Cards {
 		if len(set) == 1 {
-			self.add(divide_type_A, set)
+			ai.add(divide_type_A, set)
 			cards, _ = poker.CardsRemove(cards, set)
 		}
 	}
@@ -443,12 +443,12 @@ func (self *class_t) pull_a(cards []poker.Card) []poker.Card {
 	return cards
 }
 
-func (self *class_t) pull_aa(cards []poker.Card) []poker.Card {
+func (ai *class_t) pull_aa(cards []poker.Card) []poker.Card {
 	a := poker.NewAnalyse(cards)
 
 	for _, set := range a.Cards {
 		if len(set) == 2 {
-			self.add(divide_type_AA, set)
+			ai.add(divide_type_AA, set)
 			cards, _ = poker.CardsRemove(cards, set)
 		}
 	}
@@ -456,12 +456,12 @@ func (self *class_t) pull_aa(cards []poker.Card) []poker.Card {
 	return cards
 }
 
-func (self *class_t) pull_aaa(cards []poker.Card) []poker.Card {
+func (ai *class_t) pull_aaa(cards []poker.Card) []poker.Card {
 	a := poker.NewAnalyse(cards)
 
 	for _, set := range a.Cards {
 		if len(set) == 3 {
-			self.add(divide_type_AAA, set)
+			ai.add(divide_type_AAA, set)
 			cards, _ = poker.CardsRemove(cards, set)
 		}
 	}
@@ -469,12 +469,12 @@ func (self *class_t) pull_aaa(cards []poker.Card) []poker.Card {
 	return cards
 }
 
-func (self *class_t) pull_aaaa(cards []poker.Card) []poker.Card {
+func (ai *class_t) pull_aaaa(cards []poker.Card) []poker.Card {
 	a := poker.NewAnalyse(cards)
 
 	for _, set := range a.Cards {
 		if len(set) == 4 {
-			self.add(divide_type_AAAA, set)
+			ai.add(divide_type_AAAA, set)
 			cards, _ = poker.CardsRemove(cards, set)
 		}
 	}
@@ -482,12 +482,12 @@ func (self *class_t) pull_aaaa(cards []poker.Card) []poker.Card {
 	return cards
 }
 
-func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
+func (ai *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 	for i := poker.CardPoint_7; i <= poker.CardPoint_A; i++ {
 		a := poker.NewAnalyse(cards)
 		seq := a.GetSeq(i, 5, 1)
 		if len(seq) != 0 {
-			self.add(divide_type_ABCDE, seq)
+			ai.add(divide_type_ABCDE, seq)
 			cards, _ = poker.CardsRemove(cards, seq)
 		}
 	}
@@ -495,49 +495,49 @@ func (self *class_t) pull_abcde(cards []poker.Card) []poker.Card {
 	return cards
 }
 
-func (self *class_t) merge_aabbcc() {
-	ptr := self.divides[divide_type_AA]
+func (ai *class_t) merge_aabbcc() {
+	ptr := ai.divides[divide_type_AA]
 	if ptr == nil {
 		return
 	}
 
 	// 从现有的牌中抽出2顺
 	for _, cards := range ptr.take_sequence(3) {
-		self.add(divide_type_AABBCC, cards)
+		ai.add(divide_type_AABBCC, cards)
 	}
 
 	if ptr.empty() {
-		self.del(ptr.dtype)
+		ai.del(ptr.dtype)
 	}
 
 	// TODO 甚至向其它地方(3带)借一对，能还连起2顺
 }
 
-func (self *class_t) merge_aaabbb() {
+func (ai *class_t) merge_aaabbb() {
 	// 能否连成飞机
-	ptr := self.divides[divide_type_AAA]
+	ptr := ai.divides[divide_type_AAA]
 	if ptr == nil {
 		return
 	}
 
 	// 从现有的牌中抽出3顺
 	for _, cards := range ptr.take_sequence(2) {
-		self.add(divide_type_AAABBB, cards)
+		ai.add(divide_type_AAABBB, cards)
 	}
 }
 
-func (self *class_t) merge_aaaa() {
+func (ai *class_t) merge_aaaa() {
 	// DO NOTHING NOW
 }
 
-func (self *class_t) merge_abcde() {
-	ptr := self.divides[divide_type_ABCDE]
+func (ai *class_t) merge_abcde() {
+	ptr := ai.divides[divide_type_ABCDE]
 	if ptr == nil {
 		return
 	}
 
 	var cards []poker.Card
-	p := self.divides[divide_type_A]
+	p := ai.divides[divide_type_A]
 	if p != nil {
 		cards = p.all_cards()
 	}
@@ -552,7 +552,7 @@ func (self *class_t) merge_abcde() {
 	}
 }
 
-func (self *class_t) evaluate() int {
+func (ai *class_t) evaluate() int {
 
 	// 评分：
 	// 单牌、单对越少越好
@@ -561,8 +561,8 @@ func (self *class_t) evaluate() int {
 	single_card_count := 0
 
 	{
-		if self.divides[divide_type_A] != nil {
-			for _, v := range self.divides[divide_type_A].items {
+		if ai.divides[divide_type_A] != nil {
+			for _, v := range ai.divides[divide_type_A].items {
 				if len(v) == 0 {
 					continue
 				}
@@ -575,8 +575,8 @@ func (self *class_t) evaluate() int {
 			}
 		}
 
-		if self.divides[divide_type_AA] != nil {
-			for _, v := range self.divides[divide_type_AA].items {
+		if ai.divides[divide_type_AA] != nil {
+			for _, v := range ai.divides[divide_type_AA].items {
 				if len(v) != 0 {
 					single_card_count++
 				}
@@ -590,8 +590,8 @@ func (self *class_t) evaluate() int {
 			}
 		}
 
-		if self.divides[divide_type_AAA] != nil {
-			for _, v := range self.divides[divide_type_AAA].items {
+		if ai.divides[divide_type_AAA] != nil {
+			for _, v := range ai.divides[divide_type_AAA].items {
 				if len(v) != 0 {
 					continue
 				}
@@ -606,8 +606,8 @@ func (self *class_t) evaluate() int {
 			}
 		}
 
-		if self.divides[divide_type_ABCDE] != nil {
-			for _, v := range self.divides[divide_type_ABCDE].items {
+		if ai.divides[divide_type_ABCDE] != nil {
+			for _, v := range ai.divides[divide_type_ABCDE].items {
 				if len(v) == 0 {
 					continue
 				}
@@ -636,10 +636,10 @@ func (self *class_t) evaluate() int {
 	return single_card_count
 }
 
-func (self *class_t) dump() (ret string) {
+func (ai *class_t) dump() (ret string) {
 	ret += "\n"
 
-	for _, v := range self.divides {
+	for _, v := range ai.divides {
 		ret += "\t"
 		ret += v.dump()
 		ret += "\n"
@@ -650,7 +650,7 @@ func (self *class_t) dump() (ret string) {
 
 // 首出:尽量找出能回手的牌
 // 是否有更大的牌（或者自己就是最大的牌）
-func (self *class_t) first() []poker.Card {
+func (ai *class_t) first() []poker.Card {
 
 	// 顺子
 
@@ -658,58 +658,58 @@ func (self *class_t) first() []poker.Card {
 	// divide_type_AABBCC
 	// divide_type_AAABBB
 
-	if self.divides[divide_type_ABCDE] != nil {
-		for _, cards := range self.divides[divide_type_ABCDE].items {
+	if ai.divides[divide_type_ABCDE] != nil {
+		for _, cards := range ai.divides[divide_type_ABCDE].items {
 			return cards
 		}
 	}
 
 	// 3带1
-	if self.divides[divide_type_AABBCC] != nil {
-		for _, cards := range self.divides[divide_type_AABBCC].items {
+	if ai.divides[divide_type_AABBCC] != nil {
+		for _, cards := range ai.divides[divide_type_AABBCC].items {
 			return cards
 		}
 	}
 
-	if self.divides[divide_type_AAABBB] != nil {
-		for _, cards := range self.divides[divide_type_AAABBB].items {
+	if ai.divides[divide_type_AAABBB] != nil {
+		for _, cards := range ai.divides[divide_type_AAABBB].items {
 			return cards
 		}
 	}
 
-	if self.divides[divide_type_AAA] != nil {
-		for _, cards := range self.divides[divide_type_AAA].items {
+	if ai.divides[divide_type_AAA] != nil {
+		for _, cards := range ai.divides[divide_type_AAA].items {
 			return cards
 		}
 	}
 
-	if self.divides[divide_type_AAA] != nil {
-		for _, cards := range self.divides[divide_type_AAA].items {
+	if ai.divides[divide_type_AAA] != nil {
+		for _, cards := range ai.divides[divide_type_AAA].items {
 			return cards
 		}
 	}
 
-	if self.divides[divide_type_AAAA] != nil {
-		for _, cards := range self.divides[divide_type_AAAA].items {
+	if ai.divides[divide_type_AAAA] != nil {
+		for _, cards := range ai.divides[divide_type_AAAA].items {
 			return cards
 		}
 	}
 
-	if self.divides[divide_type_A] != nil {
-		for _, cards := range self.divides[divide_type_A].items {
+	if ai.divides[divide_type_A] != nil {
+		for _, cards := range ai.divides[divide_type_A].items {
 			return cards
 		}
 	}
 
-	if self.divides[divide_type_AA] != nil {
-		for _, cards := range self.divides[divide_type_AA].items {
+	if ai.divides[divide_type_AA] != nil {
+		for _, cards := range ai.divides[divide_type_AA].items {
 			return cards[0:]
 		}
 	}
 
 	// 实在没有就出一张单牌
 
-	panic("未找到牌型: " + self.dump())
+	panic("未找到牌型: " + ai.dump())
 }
 
 // ----------------------------------------------------------------------------

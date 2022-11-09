@@ -85,7 +85,6 @@ func init() {
 
 func handler_Register(c *connector, res comp.IMessage) {
 	s := res.(*pb.RegisterResponse)
-	_ = s
 
 	if s.ErrCode != gconst.Err_OK {
 		block.Done()

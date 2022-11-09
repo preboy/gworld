@@ -32,63 +32,63 @@ func NewConnector(h func(*connector, *tcp.Packet)) *connector {
 	}
 }
 
-func (self *connector) Start(addr string) {
-	self.packet_q = make(chan *tcp.Packet, 0x100)
+func (c *connector) Start(addr string) {
+	c.packet_q = make(chan *tcp.Packet, 0x100)
 
-	self.id = tcp.AsyncConnect(addr, func(conn *net.TCPConn, err error) {
+	c.id = tcp.AsyncConnect(addr, func(conn *net.TCPConn, err error) {
 		if conn == nil {
-			self.Fire("error", err.Error())
+			c.Fire("error", err.Error())
 			return
 		}
 
-		self.socket = tcp.NewSocket(conn, self)
-		self.socket.Start()
+		c.socket = tcp.NewSocket(conn, c)
+		c.socket.Start()
 	})
 }
 
-func (self *connector) Close() {
-	self.socket.Stop()
+func (c *connector) Close() {
+	c.socket.Stop()
 }
 
-func (self *connector) Update() {
+func (c *connector) Update() {
 	for {
 		select {
-		case p := <-self.packet_q:
-			self.handler(self, p)
+		case p := <-c.packet_q:
+			c.handler(c, p)
 		default:
 			return
 		}
 	}
 }
 
-func (self *connector) On(evt string, fn func(*connector, []interface{})) *connector {
-	self.events[evt] = fn
-	return self
+func (c *connector) On(evt string, fn func(*connector, []interface{})) *connector {
+	c.events[evt] = fn
+	return c
 }
 
-func (self *connector) Fire(evt string, args ...interface{}) {
-	if fn, ok := self.events[evt]; ok {
-		fn(self, args)
+func (c *connector) Fire(evt string, args ...interface{}) {
+	if fn, ok := c.events[evt]; ok {
+		fn(c, args)
 	}
 }
 
 // ----------------------------------------------------------------------------
 // impl for ISession
 
-func (self *connector) OnRecvPacket(packet *tcp.Packet) {
-	self.packet_q <- packet
+func (c *connector) OnRecvPacket(packet *tcp.Packet) {
+	c.packet_q <- packet
 }
 
-func (self *connector) OnOpened() {
-	self.Fire("opened")
+func (c *connector) OnOpened() {
+	c.Fire("opened")
 }
 
-func (self *connector) OnClosed() {
-	self.Fire("closed")
+func (c *connector) OnClosed() {
+	c.Fire("closed")
 }
 
-func (self *connector) SendPacket(opcode uint16, data []byte) {
-	if self.socket == nil {
+func (c *connector) SendPacket(opcode uint16, data []byte) {
+	if c.socket == nil {
 		return
 	}
 
@@ -98,22 +98,22 @@ func (self *connector) SendPacket(opcode uint16, data []byte) {
 	binary.Write(buf, binary.LittleEndian, l)
 	binary.Write(buf, binary.LittleEndian, opcode)
 	binary.Write(buf, binary.LittleEndian, data)
-	self.socket.Send(buf.Bytes())
+	c.socket.Send(buf.Bytes())
 }
 
-func (self *connector) SendMessage(msg comp.IMessage) {
+func (c *connector) SendMessage(msg comp.IMessage) {
 	str := utils.ObjectToString(msg)
-	log.Info("SEND packet: %v, %v, %v", self.id, msg.GetOP(), str)
+	log.Info("SEND packet: %v, %v, %v", c.id, msg.GetOP(), str)
 
-	self.SendProtobufMessage(uint16(msg.GetOP()), msg)
+	c.SendProtobufMessage(uint16(msg.GetOP()), msg)
 }
 
-func (self *connector) SendProtobufMessage(opcode uint16, msg proto.Message) {
+func (c *connector) SendProtobufMessage(opcode uint16, msg proto.Message) {
 	data, err := proto.Marshal(msg)
 	if err != nil {
-		log.Error("proto.Marshal ERROR: %v %v %v", self.id, opcode, err)
+		log.Error("proto.Marshal ERROR: %v %v %v", c.id, opcode, err)
 		return
 	}
 
-	self.SendPacket(opcode, data)
+	c.SendPacket(opcode, data)
 }
