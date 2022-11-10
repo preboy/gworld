@@ -34,7 +34,7 @@ func TestAI(t *testing.T) {
 		panic("invalid arr")
 	}
 
-	c := cards_divide_abdef(cards)
+	c := cards_divide_abcde(cards)
 
 	fmt.Println("class:", c.dump())
 }

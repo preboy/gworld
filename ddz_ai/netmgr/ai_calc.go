@@ -2,101 +2,8 @@ package netmgr
 
 import (
 	"gworld/core"
-	"gworld/core/log"
 	"gworld/ddz/lobby/poker"
 )
-
-const (
-	STRATEGY_METHOD = STRATEGY_MUST
-)
-
-// ----------------------------------------------------------------------------
-// ai
-
-func (ai *AILogic) ai_call() int32 {
-	return _strategies[STRATEGY_METHOD].on_call()
-}
-
-func (ai *AILogic) ai_play(first bool) (cards []poker.Card) {
-
-	switch STRATEGY_METHOD {
-
-	case STRATEGY_CALC:
-		{
-			a1 := poker.NewAnalyse(ai.cards)
-			a2 := poker.NewAnalyse(ai.cards_left)
-
-			// TODO  计算其它方位可能有的牌
-
-			_ = a2
-
-			if first {
-				// 首出
-
-			} else {
-
-				// 跟牌
-
-				cards_prev := ai.prev_play()
-				if cards_prev == nil {
-					panic("cards_prev == nil")
-				}
-
-				// 上一首不为Nil的牌
-				ci := poker.CardsAnalyse(cards_prev)
-
-				// 找到大过他的牌
-				ret := a1.Exceed(ci)
-				for i, v := range ret {
-					log.Info("the <%d> groups: %v", i, poker.CardsToString(v))
-				}
-			}
-		}
-
-	case STRATEGY_MUST:
-		{
-			a1 := poker.NewAnalyse(ai.cards)
-
-			if first {
-				// TODO 随机出一手，尽量能回收，切不把手里的牌搞乱
-				c := cards_divide_abdef(ai.cards)
-				cards = c.first()
-			} else {
-
-				cards_prev := ai.prev_play()
-				if cards_prev == nil {
-					panic("cards_prev == nil")
-				}
-
-				// 上一首不为Nil的牌
-				ci := poker.CardsAnalyse(cards_prev)
-
-				// 找到大过他的牌
-				ret := a1.Exceed(ci)
-				for i, v := range ret {
-					log.Info("the <%d> Exceed er: %v", i, poker.CardsToString(v))
-				}
-
-				// TODO 处理带牌的情况
-
-				if len(ret) > 0 {
-					cards = ret[0]
-				}
-			}
-		}
-
-	case STRATEGY_PASS:
-		{
-			if first {
-				poker.CardsSort(ai.cards)
-				l := len(ai.cards)
-				cards = ai.cards[l-1:]
-			}
-		}
-	}
-
-	return
-}
 
 // ----------------------------------------------------------------------------
 // ai analyse
@@ -702,7 +609,7 @@ func (ai *class_t) first() []poker.Card {
 
 func cards_divide(cards []poker.Card) (ret []*class_t) {
 	// 1
-	c := cards_divide_abdef(cards)
+	c := cards_divide_abcde(cards)
 	if c != nil {
 		ret = append(ret, c)
 	}
@@ -716,7 +623,7 @@ func cards_divide(cards []poker.Card) (ret []*class_t) {
 	return
 }
 
-func cards_divide_abdef(cards []poker.Card) *class_t {
+func cards_divide_abcde(cards []poker.Card) *class_t {
 	c := new_class()
 
 	cards = c.pull_abcde(cards)
