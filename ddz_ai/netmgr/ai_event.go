@@ -16,10 +16,14 @@ func ai_event_opened(c *connector) {
 	c.SendMessage(&pb.RegisterRequest{
 		Name: args.NickName,
 	})
+
+	_ai.SetConnector(c)
 }
 
 func ai_event_closed(c *connector) {
 	log.Info("ai closed")
+
+	_ai.SetConnector(nil)
 }
 
 func ai_event_error(c *connector, err string) {

@@ -107,45 +107,45 @@ func handler_SitResponse(c *connector, res comp.IMessage) {
 
 func handler_DealCardNotify(c *connector, res comp.IMessage) {
 	s := res.(*pb.DealCardNotify)
-	ai.Init(c, s.Pos, s.Cards)
+	_ai.DealCard(s.Pos, s.Cards)
 }
 
 func handler_CallScoreBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreBroadcast)
-	ai.CallScoreBroadcast(s.Pos, s.History)
+	_ai.CallScoreBroadcast(s.Pos, s.History)
 }
 
 func handler_CallScoreResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResponse)
-	ai.CallScoreResponse(s.ErrCode)
+	_ai.CallScoreResponse(s.ErrCode)
 }
 
 func handler_CallScoreResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreResultBroadcast)
-	ai.CallScoreResultBroadcast(s.Pos, s.Score)
+	_ai.CallScoreResultBroadcast(s.Pos, s.Score)
 }
 
 func handler_CallScoreCalcBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.CallScoreCalcBroadcast)
-	ai.CallScoreCalcBroadcast(s.Draw, s.Lord, s.Score, s.Cards)
+	_ai.CallScoreCalcBroadcast(s.Draw, s.Lord, s.Score, s.Cards)
 }
 
 func handler_PlayBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayBroadcast)
-	ai.PlayBroadcast(s.Pos, s.First)
+	_ai.PlayBroadcast(s.Pos, s.First)
 }
 
 func handler_PlayResponse(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayResponse)
-	ai.PlayResponse(s.ErrCode)
+	_ai.PlayResponse(s.ErrCode)
 }
 
 func handler_PlayResultBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.PlayResultBroadcast)
-	ai.PlayResultBroadcast(s.Pos, s.First, s.Cards)
+	_ai.PlayResultBroadcast(s.Pos, s.First, s.Cards)
 }
 
 func handler_DeckEndBroadcast(c *connector, res comp.IMessage) {
 	s := res.(*pb.DeckEndBroadcast)
-	ai.DeckEndBroadcast(s.Score)
+	_ai.DeckEndBroadcast(s.Score)
 }

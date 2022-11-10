@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	_ai *connector
+	_conn *connector
 )
 
 func init() {
@@ -18,8 +18,8 @@ func init() {
 // local
 
 func update() {
-	if _ai != nil {
-		_ai.Update()
+	if _conn != nil {
+		_conn.Update()
 	}
 }
 
@@ -27,10 +27,10 @@ func update() {
 // export
 
 func Init() {
-	_ai = NewConnector(ai_handler)
-	_ai.Start("127.0.0.1:12345")
+	_conn = NewConnector(ai_handler)
+	_conn.Start("127.0.0.1:12345")
 
-	_ai.On("error", func(c *connector, args []interface{}) {
+	_conn.On("error", func(c *connector, args []interface{}) {
 		loop.Post(func() {
 			ai_event_error(c, args[0].(string))
 		})
@@ -42,12 +42,12 @@ func Init() {
 		loop.Post(func() {
 			ai_event_closed(c)
 		})
-		_ai = nil
+		_conn = nil
 	})
 }
 
 func Release() {
-	if _ai != nil {
-		_ai.Close()
+	if _conn != nil {
+		_conn.Close()
 	}
 }

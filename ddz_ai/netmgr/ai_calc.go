@@ -1,19 +1,9 @@
 package netmgr
 
 import (
-	"math/rand"
-
 	"gworld/core"
 	"gworld/core/log"
 	"gworld/ddz/lobby/poker"
-)
-
-type STRATEGY int
-
-const (
-	STRATEGY_CALC STRATEGY = 1 + iota // 分析
-	STRATEGY_MUST                     // 能大就大
-	STRATEGY_PASS                     // 能不出就不出
 )
 
 const (
@@ -24,11 +14,7 @@ const (
 // ai
 
 func (ai *AILogic) ai_call() int32 {
-	if STRATEGY_METHOD == STRATEGY_CALC {
-		return rand.Int31n(4)
-	}
-
-	return rand.Int31n(4)
+	return _strategies[STRATEGY_METHOD].on_call()
 }
 
 func (ai *AILogic) ai_play(first bool) (cards []poker.Card) {

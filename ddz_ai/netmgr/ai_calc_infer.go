@@ -14,7 +14,7 @@ func (self *AILogic) infer() {
 		for _, h := range r.hands {
 
 			// me
-			if h.pos == self.pos {
+			if h.pos == self.pos_me {
 				continue
 			}
 
